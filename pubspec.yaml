@@ -1,0 +1,36 @@
+name: shooting_app
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  font_awesome_flutter: ^8.7.0
+  #flutter_statusbarcolor: ^0.2.3
+  provider: any
+  dotted_decoration: ^2.0.0
+  image_picker: ^0.8.4+11
+  permission_handler: ^9.2.0
+  shared_preferences: ^2.0.13
+  cached_network_image: ^3.2.0
+  get_it: ^7.2.0
+  dio: ^4.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - images/khanegreen/
+    - images/
