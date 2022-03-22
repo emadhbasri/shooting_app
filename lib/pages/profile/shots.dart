@@ -4,6 +4,7 @@ import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../classes/states/profile_state.dart';
 
+
 class Shots extends StatefulWidget {
   const Shots({Key? key}) : super(key: key);
 
@@ -18,7 +19,9 @@ class _ShotsState extends State<Shots> {
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
-        PostFromShot(post: e,onTapTag: (f){},)
+            PostFromShotProfile(post: e,onTapTag: (f){},
+          person: state.personalInformation!,
+        )
     ).toList(),
     );
   }

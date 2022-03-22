@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
-import 'package:shooting_app/pages/mach/match_list.dart';
+import '../classes/states/main_state.dart';
+import '../main.dart';
+import 'home/mach/match_list.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
 
 import '../classes/functions.dart';
 import '../dataTypes.dart';
-import 'Home.dart';
+import 'home/Home.dart';
 import 'Search.dart';
+import 'my_profile/edit_profile/settings.dart';
+import 'my_profile/my_profile.dart';
 import 'notification.dart';
-import 'profile/edit_profile/settings.dart';
-import 'profile/profile.dart';
 import 'shoot/shoot.dart';
 
 class AppPage extends StatefulWidget {
@@ -104,7 +105,11 @@ class _AppPageState extends State<AppPage> {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          Go.pushSlideAnimSheet(context, Shoot());
+                          MainState mainS = getIt<MainState>();
+                          print('shoot Go ${mainS.match} ${mainS.isOnMatchPage}');
+                          // if(mainS.match!=null && mainS.isOnMatchPage)
+                            Go.pushSlideAnimSheet(context, Shoot());
+
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -259,8 +264,13 @@ class _AppPageState extends State<AppPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        statusSet(trans);
-        return true;
+        // statusSet(trans);
+        MainState mainS = getIt<MainState>();
+        if(mainS.isOnMatchPage && currentIndex==0){
+            return true;
+        }else{
+          return false;
+        }
       },
       child: Scaffold(
         appBar: appBar,
@@ -273,7 +283,7 @@ class _AppPageState extends State<AppPage> {
             } else if (currentIndex == 3) {
               return outButtonClick(MyNotification());
             } else {
-              return outButtonClick(ProfileBuilder());
+              return outButtonClick(MyProfileBuilder());
             }
           },
         ),

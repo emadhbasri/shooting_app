@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'classes/my_service.dart';
+import 'classes/states/chat_state.dart';
 import 'classes/states/main_state.dart';
+import 'classes/states/match_state.dart';
+import 'classes/states/my_profile_state.dart';
 import 'dataTypes.dart';
 import 'classes/functions.dart';
-import 'pages/AppPage.dart';
-import 'pages/chat/chat_list.dart';
 import 'pages/intro.dart';
-import 'ui_items/bottom_sheet.dart';
-import 'pages/profile/edit_profile/change_email.dart';
-import 'pages/profile/edit_profile/change_email_done.dart';
-import 'pages/profile/edit_profile/verify_phone.dart';
-import 'ui_items/drawer.dart';
 
 final getIt = GetIt.instance;
 void main() {
   print(DateTime.now().toString());
   GetIt.I.registerLazySingleton(() => MyService());
   GetIt.I.registerLazySingleton(() => MainState());
+  GetIt.I.registerLazySingleton(() => MatchState());
+  GetIt.I.registerLazySingleton(() => MyProfileState());
+  GetIt.I.registerLazySingleton(() => ChatState());
   runApp(MyApp());
 }
 
@@ -59,6 +58,7 @@ class _AppFirstState extends State<AppFirst> with WidgetsBindingObserver {
     // private chat room c6f7abba-ed26-4837-a427-08da071ec138
 
     // setString('userid', '3530f18b-a1ed-406e-0914-08da04b81c0f');
+    // setString('username', 'emadbasri');
     // setString('applicationUserId', 'c7c54d63-b3bb-42a1-838d-ff7a2666975f');
   }
 
@@ -68,3 +68,7 @@ class _AppFirstState extends State<AppFirst> with WidgetsBindingObserver {
     return Intro();
   }
 }
+
+
+
+//"messages":"Sorry, we are unable to provide RapidAPI services to your location. RapidAPI is required to comply with US laws that restrict the use of our services in embargoed countries. If you believe you receiving this message in error, please contact support@rapidapi.com."

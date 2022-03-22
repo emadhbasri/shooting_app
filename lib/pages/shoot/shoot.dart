@@ -5,8 +5,8 @@ import 'package:shooting_app/classes/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/functions.dart';
+import '../../classes/models.dart';
 import '../../dataTypes.dart';
 
 class Shoot extends StatefulWidget {
@@ -20,7 +20,7 @@ class _ShootState extends State<Shoot> {
   double? position;
   double? positionStart;
   double pos = 0;
-  String imagePath='';
+  List<XFile> images=[];
   MyService service = getIt<MyService>();
   TextEditingController controller = TextEditingController();
   bool sending=false;
@@ -29,12 +29,16 @@ class _ShootState extends State<Shoot> {
     setState(() {
       sending=true;
     });
-    DataPost? back = await ShotsService.createShot(service, details: controller.value.text);
+    DataPost? back = await ShotsService.createShot(service,
+        images: images,
+        details: controller.value.text);
     setState(() {
       sending=false;
     });
     print('back $back');
-    // Go.pop(context);
+    if (back !=null) {
+      Go.pop(context);
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -106,43 +110,66 @@ class _ShootState extends State<Shoot> {
                                     ),
                               ),
                             ),
-                            if(imagePath!='')
+                            if(images.isNotEmpty)
                             SizedBox(
-                              width: doubleWidth(20),
-                              height: doubleWidth(20),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: SizedBox(
-                                      width: doubleWidth(20),
-                                      height: doubleWidth(20),
-                                      child: Image.file(
-                                        File(imagePath),
-                                        fit: BoxFit.fill,
+                              width: double.maxFinite,
+                              height: doubleWidth(22),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: images.map((e) => Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        width: doubleWidth(22),
+                                        height: doubleWidth(22),
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: SizedBox(
+                                                width: doubleWidth(20),
+                                                height: doubleWidth(20),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  child: SizedBox(
+                                                    width: doubleWidth(20),
+                                                    height: doubleWidth(20),
+                                                    child: Image.file(
+                                                      File(e.path),
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    // Image.asset(
+                                                    //   'images/1668011.jpg',
+                                                    //   fit: BoxFit.fill,
+                                                    // ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topRight,
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  setState(() {
+                                                    images.remove(e);
+                                                  });
+                                                },
+                                                child: CircleAvatar(
+                                                  radius: doubleWidth(2.5),
+                                                  backgroundColor: Color.fromRGBO(107, 79, 187, 1),
+                                                  child: Icon(Icons.close,color: Colors.white,size: 15,),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      // Image.asset(
-                                      //   'images/1668011.jpg',
-                                      //   fit: BoxFit.fill,
-                                      // ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment(1.3,-1.3),
-                                    child: GestureDetector(
-                                      onTap: (){
-                                        setState(() {
-                                          imagePath='';
-                                        });
-                                      },
-                                      child: CircleAvatar(
-                                        radius: doubleWidth(2.5),
-                                        backgroundColor: Color.fromRGBO(107, 79, 187, 1),
-                                        child: Icon(Icons.close,color: Colors.white,size: 15,),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                      if(e!=images.last)
+                                        SizedBox(width: doubleWidth(3)),
+                                    ],
+                                  )).toList(),
+                                ),
                               ),
                             )
                           ],
@@ -217,8 +244,9 @@ class _ShootState extends State<Shoot> {
                         onPressed: () async{
                           XFile? file =await ImagePicker().pickImage(source: ImageSource.camera);
                           if(file!=null){
+
                             setState(() {
-                              imagePath=file.path;
+                              images.add(file);
                             });
                           }
                         },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'live_match_model.dart';
+
 ///
 ///
 ///
@@ -270,6 +272,7 @@ class DataPost {
     isPublic = convertData(data, 'isPublic', DataType.bool);
     postLikes = convertDataList<DataPostLike>(data, 'postLikes', 'DataPostLike');
     postComments = convertDataList<DataPostComment>(data, 'postComments', 'DataPostComment');
+    print('datamediaTypes ${data['mediaTypes']}');
     mediaTypes = convertDataList<DataMediaType>(data, 'mediaTypes', 'DataMediaType');
     isEdited = convertData(data, 'isEdited', DataType.bool);
     postLikeCount = convertData(data, 'postLikeCount', DataType.int);
@@ -281,7 +284,7 @@ class DataPost {
     blockedByMe = convertData(data, 'blockedByMe', DataType.bool);
     blockedMe = convertData(data, 'blockedMe', DataType.bool);
   }
-
+//postId: c355e671-1d7f-4d06-eee7-08da0b5c8158, id: b8392f1e-8da6-4b1e-073a-08da0b5db436
   late bool blockedByMe;
   late bool blockedMe;
   late DateTime createdAt;
@@ -294,7 +297,7 @@ class DataPost {
   late bool isFriend;
   late bool isPublic;
   late List<DataMediaType> mediaTypes;
-  late DataPersonalInformationViewModel person;
+  DataPersonalInformationViewModel? person;
   late String personalInformationId; //($uuid)
   late int postCommentCount;
   late List<DataPostComment> postComments;
@@ -492,7 +495,7 @@ class DataPersonalInformation {
     location = convertData(data, 'location', DataType.string);
     dob = convertData(data, 'dob', DataType.datetime);
     otpDate = convertData(data, 'otpDate', DataType.datetime);
-    profilePhoto=convertData(data,'profilePhoto', DataType.clas,classType: 'DataProfileMediaType');
+    profilePhoto=convertData(data,'profilePhoto', DataType.string);//todo DataProfileMediaType
     isOnline = convertData(data, 'isOnline', DataType.bool);
     is2FA = convertData(data, 'is2FA', DataType.bool);
     roles=convertDataList<String>(data,'roles', 'String');
@@ -546,13 +549,13 @@ class DataPersonalInformation {
   String? phoneNumber;
   late int postCount;
   List<DataPost> posts = [];
-  DataProfileMediaType? profilePhoto;
+  String? profilePhoto;//todo
   List<DataRefreshToken?> refreshTokens = [];
   List<String?> roles = [];
   List<DataShortVideoStory?> shortVideoStories = [];
   DataTeam? team;
   String? teamId; //($uuid)
-  List<DataUserFollower?> userFollowers = [];
+  List<DataUserFollower> userFollowers = [];
   List<DataUserFollowing?> userFollowings = [];
   String? userName;
 }
@@ -1054,6 +1057,28 @@ dynamic makeClass(Map<String, dynamic> data, String type) {
       return DataEditCommentDTO.fromJson(data);
     case 'DataWeatherForecast':
       return DataWeatherForecast.fromJson(data);
+
+///------------------------------------------
+    case 'DataCountry':
+      return DataCountry.fromJson(data);
+    case 'DataLeague':
+      return DataLeague.fromJson(data);
+    case 'DataLeagueMain':
+      return DataLeagueMain.fromJson(data);
+    case 'DataMatch1':
+      return DataMatch1.fromJson(data);
+    case 'DataFixture':
+      return DataFixture.fromJson(data);
+    case 'DataMatchTeam':
+      return DataMatchTeam.fromJson(data);
+      case 'DataStatistics':
+      return DataStatistics.fromJson(data);
+      case 'DataEvent':
+      return DataEvent.fromJson(data);
+      case 'DataLineUps':
+      return DataLineUps.fromJson(data);
+      case 'DataPlayer':
+      return DataPlayer.fromJson(data);
   }
 }
 List<Type> convertDataList<Type>(Map<String, dynamic> data, String key,String classType){
@@ -1064,6 +1089,7 @@ List<Type> convertDataList<Type>(Map<String, dynamic> data, String key,String cl
   } else {
     List<Type> temp = [];
     for (int j = 0; j < data[key].length; j++) {
+      // print('$j j ${data[key][j].runtimeType}');
       temp.add(makeClass(data[key][j], classType));
     }
     return temp;
@@ -1118,3 +1144,8 @@ dynamic convertData<Type>(Map<String, dynamic> data, String key, DataType type,
       }
   }
 }
+
+
+
+
+

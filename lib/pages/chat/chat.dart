@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/dataTypes.dart';
+import 'package:shooting_app/main.dart';
 
 import '../../classes/states/chat_state.dart';
 import 'chat_list.dart';
@@ -75,13 +77,13 @@ class _ChatState extends State<Chat> {
                               children: [
                                 if(
                                 state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!=null &&
-                                state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!.media!=null
+                                state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!=null
                                 )
                                 CircleAvatar(
                                   radius: doubleWidth(8),
                                   backgroundColor: Colors.white,
                                   backgroundImage:
-                                  networkImage(state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!.media!),
+                                  networkImage(state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!),
                                 ),
                                 SizedBox(height: doubleHeight(1)),
                                 Row(
@@ -231,7 +233,8 @@ class _ChatItemState extends State<ChatItem> {
   @override
   Widget build(BuildContext context) {
     print('message ${widget.message} ${widget.hasDate}');
-    bool isMine=widget.message.name==widget.person.userName;
+
+    bool isMine=widget.message.name==getIt<MainState>().userName;
     return Align(
       alignment:
       isMine ? Alignment.centerRight : Alignment.centerLeft,

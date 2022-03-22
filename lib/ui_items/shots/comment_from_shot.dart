@@ -45,6 +45,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               color: white,
                               borderRadius: BorderRadius.circular(100),
                               image: DecorationImage(
+                                  fit: BoxFit.fill,
                                 image: networkImage(comment
                                         .personalInformationViewModel
                                         .profilePhoto ??
@@ -131,7 +132,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           MyService service = await getIt<MyService>();
                           String? userId = await getString('userid');
                           bool back = await ShotsService.commentLike(service,
-                              userId: userId!, postCommentId: comment.id);
+                               postCommentId: comment.id);
                           if (back)
                             setState(() {
                               comment.commentLikedBythisUser = true;
@@ -184,10 +185,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async{
-                            String? userId = await getString('userid');
                             print('controller.value.text ${controller.value.text}');
                             DataCommentReply? back = await ShotsService.commentReply(getIt<MyService>(),
-                                userId: userId!,
                                 commentId:  comment.id,
                                 reply: controller.value.text);
                             setState(() {

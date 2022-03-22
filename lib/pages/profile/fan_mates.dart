@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
+import 'package:shooting_app/classes/models.dart';
 
 import '../../classes/states/profile_state.dart';
 import '../../dataTypes.dart';
@@ -23,8 +24,9 @@ class _FanMatesState extends State<FanMates> {
         padding: EdgeInsets.symmetric(
           vertical: doubleHeight(1)
         ),
-        itemCount: state.fans.length,
-        itemBuilder: (BuildContext context, int index)=>FanMateItem(fan: state.fans[index]),
+        itemCount: state.personalInformation!.userFollowers.length,
+        itemBuilder: (BuildContext context, int index)=>FanMateItem(
+            fan: state.personalInformation!.userFollowers[index]),
         separatorBuilder: (BuildContext context, int index)=>
         Divider(
           endIndent: doubleWidth(4),
@@ -39,31 +41,17 @@ class _FanMatesState extends State<FanMates> {
   }
 }
 
-class DataFan{
-  String name='Mason Moreno';
-  String image='images/158023.png';
-  String teamImage='images/unnamed.png';
-  String username='masonmoreno';
-  bool isFollowed=false;
-  DataFan(
-      {required this.name,
-      required this.image,
-      required this.teamImage,
-      required this.username,
-      required this.isFollowed});
-  DataFan.fromDefault();
-}
 
 class FanMateItem extends StatefulWidget {
   const FanMateItem({Key? key,required this.fan}) : super(key: key);
-final DataFan fan;
+final DataUserFollower fan;
 
   @override
   State<FanMateItem> createState() => _FanMateItemState();
 }
 
 class _FanMateItemState extends State<FanMateItem> {
-  late DataFan fan;
+  late DataUserFollower fan;
 @override
   void initState() {
     super.initState();
@@ -81,30 +69,32 @@ class _FanMateItemState extends State<FanMateItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: doubleHeight(1)),
-              Text(fan.name),SizedBox(height: doubleHeight(0.5)),
+              Text(fan.personalInformationViewModel.fullName??''),SizedBox(height: doubleHeight(0.5)),
               Text(
-                '@${fan.username}',
+                '@${fan.personalInformationViewModel.userName??''}',
                 style: TextStyle(color: grayCall, fontSize: 12),
               ),SizedBox(height: doubleHeight(0.5)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Consumer<ProfileState>(builder: (context, value, child) {
-                    int index = value.fans.indexOf(fan);
+                    // int index = value.fans.indexOf(fan);
                     return ElevatedButton(
                       onPressed: () {
                         print('click');
-                        value.fans[index].isFollowed=!value.fans[index].isFollowed;
-                        value.notify();
+                        // value.fans[index].isFollowed=!value.fans[index].isFollowed;
+                        // value.notify();
                       },
-                      child: Text(value.fans[index].isFollowed?'Follow':'Following',style: TextStyle(color: Colors.black),),
+                      child: Text(fan.followingMe?'Follow':'Following',style: TextStyle(color: Colors.black),),
                       style: ButtonStyle(
                         backgroundColor:
                         MaterialStateProperty.all(
-                            value.fans[index].isFollowed?Color.fromRGBO(216, 216, 216, 1):Color.fromRGBO(78, 255, 187, 1)
+                            fan.followingMe?//todo
+                            Color.fromRGBO(216, 216, 216, 1):Color.fromRGBO(78, 255, 187, 1)
                         ),
                         elevation: MaterialStateProperty.all(0),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -127,7 +117,9 @@ class _FanMateItemState extends State<FanMateItem> {
                 children: [
                   ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: Image.asset(fan.image)),
+                      child: fan.personalInformationViewModel.profilePhoto
+                          !=null?
+                      imageNetwork(fan.personalInformationViewModel.profilePhoto??'',fit: BoxFit.fill):null),
                   Align(
                     alignment: Alignment(0.9, -0.9),
                     child: SizedBox(
@@ -140,9 +132,10 @@ class _FanMateItemState extends State<FanMateItem> {
                             Border.all(color: Colors.white, width: 3),
                             borderRadius:
                             BorderRadius.circular(100),
-                            image: DecorationImage(
-                              image: AssetImage(fan.teamImage),
-                            )),
+                              image: fan.personalInformationViewModel.team!=null && fan.personalInformationViewModel.team!.team_badge!=null?DecorationImage(
+                                image: networkImage(fan.personalInformationViewModel.team!.team_badge!),
+                              ):null,
+                            ),
                       ),
                     ),
                   )

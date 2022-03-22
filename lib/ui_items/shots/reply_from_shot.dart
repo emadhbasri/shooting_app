@@ -43,7 +43,7 @@ class _CommentReplyState extends State<CommentReply> {
                               color: white,
                               borderRadius:
                               BorderRadius.circular(100),
-                              image: DecorationImage(
+                              image: DecorationImage(fit: BoxFit.fill,
                                 image: networkImage(
                                     comment.personalInformationViewModel.profilePhoto??''
                                 ),
@@ -109,9 +109,8 @@ class _CommentReplyState extends State<CommentReply> {
                   GestureDetector(
                     onTap: () async {
                       MyService service = await getIt<MyService>();
-                      String? userId = await getString('userid');
                       bool back = await ShotsService.replyLike(service,
-                          userId: userId!, commentReplyId: comment.id);
+                           commentReplyId: comment.id);
                       if (back)
                         setState(() {
                           comment.replyLikedBythisUser = true;

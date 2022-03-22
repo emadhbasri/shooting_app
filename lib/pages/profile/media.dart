@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
 
 import '../../classes/states/profile_state.dart';
-import '../../dataTypes.dart';
+
 
 class Media extends StatefulWidget {
   const Media({Key? key}) : super(key: key);

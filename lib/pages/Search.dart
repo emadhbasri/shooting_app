@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/data.dart';
-import 'package:shooting_app/pages/Home.dart';
 
 import '../classes/functions.dart';
 import '../dataTypes.dart';
+import 'home/fan_feeds.dart';
 
 class Search extends StatefulWidget {
   final String? search;

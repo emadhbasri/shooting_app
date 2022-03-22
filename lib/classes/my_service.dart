@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
@@ -9,23 +10,6 @@ import 'package:shooting_app/main.dart';
 import 'models.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-//import axios from "axios";
-//
-// const options = {
-//   method: 'GET',
-//   url: 'https://api-football-v1.p.rapidapi.com/v3/timezone',
-//   headers: {
-//     'x-rapidapi-host': 'api-football-v1.p.rapidapi.com',
-//     'x-rapidapi-key': 'c52704a0f1mshce78bef813e31f1p1f4499jsn6cd34369fc03'
-//   }
-// };
-//
-// axios.request(options).then(function (response) {
-// 	console.log(response.data);
-// }).catch(function (error) {
-// 	console.error(error);
-// });
-
 
 class MyService{
 
@@ -36,13 +20,17 @@ class MyService{
   }
   bool hasAccess = false;
   Future<bool> getToken() async {
+
     debugPrint('getToken()');
     // await deviceData();
     _refresh = await getString('refresh');
     _access = await getString('access');
     debugPrint('_refresh $_refresh');
     debugPrint('_access $_access');
-    return _access==null?false:true;
+    if(_access==null) return false;
+    MainState state = getIt<MainState>();
+    state.init();
+    return true;
     // if (_refresh != null) await getAccess();
   }
 
@@ -306,7 +294,10 @@ class ChatService{
     debugPrint('getPrivateChat()');//3530f18b-a1ed-406e-0914-08da04b81c0f
     Map<String, dynamic> back = await service.httpGet('/api/v1/Message/getChatRoomById$chatId');
     debugPrint('back ${back}');
-    return convertDataList<DataChatMessage>(back['data']['data'], 'chatMessages', 'DataChatMessage');
+    debugPrint('data ${back['data']}');
+    debugPrint('datadata ${back['data']['data']}');
+
+    return convertDataList<DataChatMessage>(back['data'], 'results', 'DataChatMessage');
   }
   static Future<Map<String,dynamic>> getMyPrivateChats(MyService service,{
     int pageNumber=1,
@@ -350,6 +341,11 @@ class AuthenticationService{
   static logOut(){
     removeShare('refresh');
     removeShare('access');
+    MainState state = getIt<MainState>();
+    state.userId='';
+    state.userName='';
+    removeShare('userid');
+    removeShare('username');
   }
   static Future<bool> register(MyService service,{
     required String fullName,
@@ -365,7 +361,7 @@ class AuthenticationService{
       "userName": userName,
       "phoneNumber": phoneNumber,
       "notificationToken": "string",
-      "is2FA": true,
+      "is2FA": false,
       "isOnline": true,
       "email": email,
       "password": password,
@@ -388,7 +384,12 @@ class AuthenticationService{
     debugPrint('back ${back}');
     service.setToken(refresh: back['data']['data']['refreshToken'], access: back['data']['data']['accessToken']);
     MainState state = getIt<MainState>();
-    state.personalInformation= DataPersonalInformation.fromJson(back['data']['data']);
+    DataPersonalInformation pif = DataPersonalInformation.fromJson(back['data']['data']);
+    state.userId=pif.id;
+    state.userName=pif.userName!;
+    setString('userid', pif.id);
+    setString('username', pif.userName!);
+
     return back['status'];
   }
 
@@ -429,22 +430,49 @@ class UsersService{
       return DataPersonalInformation.fromJson(back['data']['data']);
     else return null;
   }
+  static Future<DataPersonalInformation?> getUser(MyService service,String username) async {
+    debugPrint('shotsComment()');
+    // print({
+    //   "UserId": userId,
+    //   "PostId": postId,
+    //   "Comment": comment,
+    //   // "MediaType": ""
+    // });
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Administration/getByUsername?userName=$username&myID=${getIt<MainState>().userId}');
+    debugPrint('back ${back}');
+    if(back['status'])
+      return DataPersonalInformation.fromJson(back['data']['data']);
+    else return null;
+  }
 }
 
 class ShotsService{
-  static Future<DataPost> createShot(MyService service,{
+  static Future<DataPost?> createShot(MyService service,{
+    required List<XFile> images,
     required String details,
-    bool isFriend=true,
+    bool isFriend=false,
     bool isPublic=true,
   }) async {
     debugPrint('createShot()');
-    Map<String, dynamic> back = await service.httpPostMulti1('/api/v1/Shots/add',
-    FormData.fromMap({
+    Map<String,dynamic> map = {
       'Details':details,
       'IsFriend':isFriend,
       'IsPublic':isPublic,
+      // 'MatchId':'1234',
       'createdAt':DateTime.now().toString()
-    }));
+    };
+    if(images.isNotEmpty) {
+      List<MultipartFile> temp =[];
+      for(int j=0;j<images.length;j++){
+        MultipartFile file = await MultipartFile.fromFile(images[j].path, filename: images[j].name);
+        temp.add(file);
+      }
+      map['MediaType'] = temp;
+    }
+    print('map $map');
+    Map<String, dynamic> back = await service.httpPostMulti1('/api/v1/Shots/add',
+    FormData.fromMap(map));
     debugPrint('back ${back}');
 
     // List backList = convertData(back['data'], 'results', DataType.list,classType: 'DataPost');
@@ -465,28 +493,51 @@ class ShotsService{
   static Future<List<DataPost>> shotsAll(MyService service,{
     int pageNumber=1
   }) async {
-    debugPrint('login()');
+    debugPrint('shotsAll()');
     Map<String, dynamic> back = await service.httpGet('/api/v1/Shots/all?pageNumber=$pageNumber');
     debugPrint('back ${back}');
     return convertDataList<DataPost>(back['data'], 'results', 'DataPost');
   }
+  static Future<DataPost> getShotById(MyService service,String shotId) async {
+    debugPrint('getShotById($shotId)');
+    Map<String, dynamic> back = await service.httpGet('/api/v1/Shots/PostById$shotId');
+    debugPrint('back ${back}');
+
+      return convertData(back['data'], 'data', DataType.clas,classType: 'DataPost');
+  }
+  static Future<List<DataPost>> getMatchUps(MyService service,{
+    required int teamHomeId,
+    required int teamAwayId,
+    required String date,
+  }) async {
+    debugPrint('getMatchUps(${{
+      'team1_key':'$teamHomeId',
+      'team2_key':'$teamAwayId',
+      'date':date,
+      'userId':getIt<MainState>().userId,
+    }})');
+    // return [];
+
+    Map<String, dynamic> back = await service.httpGet('/api/v1/Shots/getmatchups?team1_key=$teamHomeId'
+        '&team2_key=$teamAwayId&date=$date'
+        // '&userId=${getIt<MainState>().userId}'
+    );
+    debugPrint('back111 ${back}');
+    return convertDataList<DataPost>(back['data'], 'data', 'DataPost');
+  }
 
   // Future<DataPost> shotsById({required String id})async {
-  //   debugPrint('login()');
-  //   Map<String, dynamic> back = await httpGet('/api/v1/Shots/PostById$id');
-  //   debugPrint('back ${back}');
-  //
-  //   return convertDataList<DataPost>(back['data'], 'results', 'DataPost');
+
   // }
 
   static Future<DataPostComment?> shotsComment(MyService service,{
-    required String userId,
     required String postId,
     required String comment,
   }) async {
     debugPrint('shotsComment()');
+    MainState mainS = getIt<MainState>();
     Map<String, dynamic> back = await service.httpPost('/api/v1/Shots/comment', {
-      "UserId": userId,
+      "UserId": mainS.userId,
       "PostId": postId,
       "Comment": comment,
       'createdAt':DateTime.now().toString()
@@ -499,13 +550,12 @@ class ShotsService{
   }
 
   static Future<DataCommentReply?> commentReply(MyService service,{
-    required String userId,
     required String commentId,
     required String reply,
   }) async {
     debugPrint('shotsComment()');
     Map<String, dynamic> back = await service.httpPost('/api/v1/Shots/comment/reply', {
-      "UserId": userId,
+      "UserId": getIt<MainState>().userId,
       "PostCommentId": commentId,
       "ReplyDetail": reply,
       'createdAt':DateTime.now().toString()
@@ -517,28 +567,28 @@ class ShotsService{
     else return null;
   }
 
-  static Future<bool> shotLike(MyService service,{required String userId,
+  static Future<bool> shotLike(MyService service,{
     required String postId,}) async {
     debugPrint('shotLike()');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/like$postId?userId=$userId',{});
+        '/api/v1/Shots/like$postId?userId=${getIt<MainState>().userId}',{});
     // debugPrint('back $back');
     return back['status'];
   }
-  static Future<bool> commentLike(MyService service,{required String userId,
+  static Future<bool> commentLike(MyService service,{
     required String postCommentId,}) async {
     debugPrint('commentLike()');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/comment/like$postCommentId?userId=$userId',{},jsonType: false);
+        '/api/v1/Shots/comment/like$postCommentId?userId=${getIt<MainState>().userId}',{},jsonType: false);
     debugPrint('back $back');
     return back['status'];
   }
-  static Future<bool> replyLike(MyService service,{required String userId,
+  static Future<bool> replyLike(MyService service,{
     required String commentReplyId,}) async {
-    debugPrint('replyLike(userId:$userId,commentReplyId:$commentReplyId)');
-    print('url: /api/v1/Shots/comment/likeReply$commentReplyId?userId=$userId');
+    // debugPrint('replyLike(userId:$userId,commentReplyId:$commentReplyId)');
+    // print('url: /api/v1/Shots/comment/likeReply$commentReplyId?userId=$userId');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/comment/likeReply$commentReplyId?userId=$userId',{},jsonType: false);
+        '/api/v1/Shots/comment/likeReply$commentReplyId?userId=${getIt<MainState>().userId}',{},jsonType: false);
     debugPrint('back $back');
     return back['status'];
   }

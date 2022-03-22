@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/dataTypes.dart';
-import 'package:shooting_app/pages/mach/match_list.dart';
-import 'package:shooting_app/pages/profile/edit_profile/settings.dart';
+// import '../pages/home/mach/match_list.dart';
 
 import '../classes/functions.dart';
 import '../pages/AppPage.dart';
+import '../pages/my_profile/edit_profile/settings.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key,required this.page}) : super(key: key);
@@ -117,28 +117,28 @@ class _MyDrawerState extends State<MyDrawer>
                       size: 20,
                     ),
                   ),
-                  ListTile(
-                    onTap: (){
-                      if(widget.page=='live scores'){
-                        _controller.reverse().then((value) => Go.pop(context, null));
-                      }else{
-                        _controller.reverse().then((value) {
-                          Go.pop(context, null);
-                          Go.pushSlideAnim(context, MatchListBuilder());
-                        });
-                      }
-                    },
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    title: Text(
-                      'Live Scores',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                      size: 20,
-                    ),
-                  ),
+                  // ListTile(
+                  //   onTap: (){
+                  //     if(widget.page=='live scores'){
+                  //       _controller.reverse().then((value) => Go.pop(context, null));
+                  //     }else{
+                  //       _controller.reverse().then((value) {
+                  //         Go.pop(context, null);
+                  //         Go.pushSlideAnim(context, MatchListBuilder());
+                  //       });
+                  //     }
+                  //   },
+                  //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                  //   title: Text(
+                  //     'Live Scores',
+                  //     style: TextStyle(fontWeight: FontWeight.bold),
+                  //   ),
+                  //   trailing: Icon(
+                  //     Icons.arrow_forward_ios,
+                  //     color: Colors.black,
+                  //     size: 20,
+                  //   ),
+                  // ),
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     title: Row(

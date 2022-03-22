@@ -75,7 +75,7 @@ class ChatListItem extends StatelessWidget {
             ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: chat.personalInformations[1].personalInformation!.profilePhoto==null?null:
-          imageNetwork(chat.personalInformations[1].personalInformation!.profilePhoto!.media??'')),
+          imageNetwork(chat.personalInformations[1].personalInformation!.profilePhoto??'',fit: BoxFit.fill)),
             if(chat.personalInformations[1].personalInformation!.isOnline)
             Align(
               alignment: Alignment(0.9,0.9),

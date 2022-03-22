@@ -22,16 +22,13 @@ class _ShotState extends State<Shot> {
   MyService service = getIt<MyService>();
   DataPost? post;
   getData() async {
-    // post = await service.shotsAll();
-    // setState(() {});
-    // print('allPosts ${allPosts.length}');
+    post = await ShotsService.getShotById(service,widget.postId!);
+    setState(() {});
   }
 
   addComment()async{
-    String? userId = await getString('userid');
     print('controller.value.text ${controller.value.text}');
     DataPostComment? back = await ShotsService.shotsComment(service,
-        userId: userId!,
         postId: post!.id,
         comment: controller.value.text);
     setState(() {
@@ -43,7 +40,7 @@ class _ShotState extends State<Shot> {
   @override
   void initState() {
     super.initState();
-
+  print('widget.post $widget.post');
     if(widget.post!=null){
       post=widget.post;
     }else{

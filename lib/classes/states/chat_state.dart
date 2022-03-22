@@ -7,33 +7,6 @@ import 'package:shooting_app/classes/my_service.dart';
 import '../../main.dart';
 
 class ChatState extends ChangeNotifier {
-  static DataChat defaultChat = DataChat(
-      image: profileImageDefault,
-      username: 'missssipi',
-      name: 'Vernon Bradley',
-      messages: [
-        DataMessage(
-          date: DateTime.now(),
-          isMine: false,
-          message: 'Nadal, Can you please let me know the price of that condo?',
-          read: true,
-        ),
-        DataMessage(
-          date: DateTime.now(),
-          isMine: false,
-          message: 'I am thinking to take it!!',
-          read: true,
-        ),
-        DataMessage(
-          date: DateTime.now(),
-          isMine: true,
-          message: 'Hey Melvin. I need to check. That post is quite old.',
-          read: true,
-        ),
-      ],
-      newMessages: 1,
-      isOnline: true
-  );
 
   List<DataChatRoom> listChats=[];
   List<DataChatMessage> chats=[];
@@ -42,7 +15,6 @@ class ChatState extends ChangeNotifier {
   init()async{
     print('init()');
     getChatsList();
-
   }
   getChatsList()async{
     Map<String,dynamic> back = await ChatService.getMyPrivateChats(service,pageNumber: 1);
@@ -63,36 +35,6 @@ class ChatState extends ChangeNotifier {
   notify() => notifyListeners();
 }
 
-class DataChat {
-  final String image;
-  final String name;
-  final String username;
-  List<DataMessage> messages = [];
-  final int newMessages;
-  bool isOnline = false;
-
-  DataChat(
-      {required this.username,
-        required this.image,
-      required this.name,
-      required this.messages,
-      required this.newMessages,
-      required this.isOnline});
-
-}
-
-class DataMessage {
-  final String message;
-  final DateTime date;
-  final bool isMine;
-  bool read = false;
-
-  DataMessage(
-      {required this.message,
-      required this.date,
-      required this.isMine,
-      required this.read});
-}
 
 class ChatStateProvider extends StatelessWidget {
   final Widget child;
@@ -101,7 +43,7 @@ class ChatStateProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableProvider<ChatState>(
-      create: (context) => state??ChatState(),
+      create: (context) => state??getIt<ChatState>(),
       child: child,
     );
   }

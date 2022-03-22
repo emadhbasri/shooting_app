@@ -1,130 +1,142 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/live_match_model.dart';
+import 'package:shooting_app/classes/live_match_service.dart';
+import 'package:shooting_app/classes/my_service.dart';
 import 'package:shooting_app/ui_items/comment.dart';
 
+import '../../main.dart';
+import '../models.dart';
+
 class MatchState extends ChangeNotifier {
+  bool matchPage=false;
 
-  static DataComment defaultComment = DataComment(
-      comments: [],
-      isLiked: false,
-      time: '2s',
-      profileImage: 'images/158023.png',
-      profilename: 'Mason Moreno',
-      teamImage: 'images/unnamed.png',
-      comment: 'What is the loop of #Creation ? How is there something from nothing? '
-          'In spite of the fact that it is impossible to prove that anythin',
-      userName: 'masonmoreno',
-      commentCount: '1k',
-      likeCount: '2');
+  LiveMatchService liveMatch = LiveMatchService();
+  MyService service = getIt<MyService>();
 
-  List<DataComment> listComment =[
-    DataComment(
-        comments: [defaultComment,defaultComment],
-        isLiked: defaultComment.isLiked,
-        time: defaultComment.time,
-        profileImage: defaultComment.profileImage,
-        profilename: defaultComment.profilename,
-        teamImage: defaultComment.teamImage,
-        comment: defaultComment.comment,
-        userName: defaultComment.userName,
-        commentCount: defaultComment.commentCount,
-        likeCount: defaultComment.likeCount),
-    DataComment(
-        comments: [defaultComment],
-        isLiked: defaultComment.isLiked,
-        time: defaultComment.time,
-        profileImage: defaultComment.profileImage,
-        profilename: defaultComment.profilename,
-        teamImage: defaultComment.teamImage,
-        comment: defaultComment.comment,
-        userName: defaultComment.userName,
-        commentCount: defaultComment.commentCount,
-        likeCount: defaultComment.likeCount),
-    defaultComment
-  ];
+  List<DataCountry> countries = [];
+  DataCountry? country;
+  getCountries()async{
+    if(countries.isNotEmpty)return;
+    countries = await liveMatch.countries();
+    print('countries ${countries.length}');
+    country=countries.singleWhere((element) => element.name=='England');//England
+    notifyListeners();
+    getLeagues();
+  }
+  List<DataLeagueMain> leagues = [];
+  getLeagues()async{
+    leagues = await liveMatch.leagues(country: country!.name,);
+    print('leagues ${leagues.length}');
+    notifyListeners();
+  }
+  late int selectedLeagueIndex;
+  getMatchs()async{
+    leagues[selectedLeagueIndex].matchs = await liveMatch.matchs(date: '${selectedDateTime.year}-${selectedDateTime.month.toString().padLeft(2,'0')}-${selectedDateTime.day.toString().padLeft(2,'0')}', league: leagues[selectedLeagueIndex].league.id, season: leagues[selectedLeagueIndex].latestSeason);
+    print('matchs ${leagues[selectedLeagueIndex].matchs.length}');
+    notifyListeners();
+  }
+  late int selectedMatchIndex;
+  late DataMatch1 selectedMatch;
+  getMatchStatics()async{
+    if(selectedMatch.homeStatistics.isNotEmpty && selectedMatch.awayStatistics.isNotEmpty)return;
+    Map<String,List<DataStatistics>> map = await liveMatch.matchStatics(fixture: selectedMatch.fixture.id);
+    if(leagues[selectedLeagueIndex].matchs.isNotEmpty){
+      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeStatistics=map['home']!;
+      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayStatistics=map['away']!;
+      selectedMatch.homeStatistics=map['home']!;
+      selectedMatch.awayStatistics=map['away']!;
+    }
+    notifyListeners();
+  }
+  getMatchEvents()async{
+    if(selectedMatch.events.isNotEmpty)return;
+    List<DataEvent> back = await liveMatch.matchEvents(fixture: selectedMatch.fixture.id);
+    selectedMatch.events=back;
+    leagues[selectedLeagueIndex].matchs[selectedMatchIndex].events=back;
+    notifyListeners();
+  }
+  bool loadingLineUps=true;
+  getMatchLineUps()async{
+    if(selectedMatch.homeLineUps!=null && selectedMatch.awayLineUps!=null)return;
+    Map<String,DataLineUps?> map = await liveMatch.matchLineUps(fixture: selectedMatch.fixture.id);
+    loadingLineUps=false;
+    notifyListeners();
+    if(map['home']!=null){
+      if(leagues[selectedLeagueIndex].matchs.isNotEmpty){
+        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeLineUps=map['home']!;
+        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayLineUps=map['away']!;
+        selectedMatch.homeLineUps=map['home']!;
+        selectedMatch.awayLineUps=map['away']!;
+      }
+      notifyListeners();
+    }
+
+  }
+
+  getMatchUps()async{
+    print('getMatchUps()');
+    if(selectedMatch.matchUps.isNotEmpty)return;
+    List<DataPost> back = await ShotsService.getMatchUps(service,
+        teamHomeId:selectedMatch.home.id,
+        teamAwayId:selectedMatch.away.id,
+        date: '${selectedMatch.fixture.date!.year}-'
+            '${selectedMatch.fixture.date!.month.toString().padLeft(2,'0')}-'
+            '${selectedMatch.fixture.date!.day.toString().padLeft(2,'0')}'
+    );
+    selectedMatch.matchUps=back;
+    leagues[selectedLeagueIndex].matchs[selectedMatchIndex].matchUps=back;
+    notifyListeners();
+    print('matchUps.length ${selectedMatch.matchUps.length}');
+    notifyListeners();
+  }
 
 
-  List<String> leagues = ['England','Spanish'];
-  String selectedLeague='England';
+  // List<String> leagues = ['England','Spanish'];
 
-  List<String> dates = ['17 Dec', 'Yesterday', 'Today', '20 Dec', '21 Dec'];
+  static DateTime date = DateTime.now();
+  List<String> dates = [
+    '${date.add(Duration(days: -2)).day} ${getMonString(date.add(Duration(days: -2)))}',
+    'Yesterday', 'Today',
+    '${date.add(Duration(days: 1)).day} ${getMonString(date.add(Duration(days: 1)))}',
+    '${date.add(Duration(days: 2)).day} ${getMonString(date.add(Duration(days: 2)))}'];
+  List<DateTime> dateTimes = [
+    date.add(Duration(days: -2)),
+    date.add(Duration(days: -1)),
+    date,
+    date.add(Duration(days: 1)),
+    date.add(Duration(days: 2))];
   String selectedDate = 'Today';
-
-  List<DataMatch> premierLeagueListMatch=[
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/arsenal.png',
-        teamBImage: 'images/barcelona.png',
-        teamAName: 'Arsenal',
-        teamBName: 'Barcelona',
-        teamAGoals: 0,
-        teamBGoals: 3,
-        isCup: true),
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-  ];
-  List<DataMatch> FACupListMatch=[
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-    DataMatch(
-        date: DateTime.now(),
-        kikOffTime: 24,
-        teamAImage: 'images/manchester-united.png',
-        teamBImage: 'images/unnamed.png',
-        teamAName: 'Home Team',
-        teamBName: 'Away Team',
-        teamAGoals: 0,
-        teamBGoals: 0,
-        isCup: false),
-
-  ];
+  DateTime selectedDateTime = date;
+  static String getMonString(DateTime date){
+    switch(date.month){
+      case 1:
+        return 'Jan';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Apr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'Jun';
+      case 7:
+        return 'Jul';
+      case 8:
+        return 'Aug';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'dec';
+      default:return '';
+    }
+  }
 
   List<String> tabs = ['Matchups', 'Lineups', 'Goals', 'Cards', 'Stats'];
   String selectedTab = 'Matchups';
@@ -255,7 +267,7 @@ class MatchStateProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableProvider<MatchState>(
-      create: (context) => MatchState(),
+      create: (context) => getIt<MatchState>(),
       child: child,
     );
   }
