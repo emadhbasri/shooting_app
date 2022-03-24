@@ -40,34 +40,34 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(
-        builder: (context, state, child)=>
-            Scaffold(
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.maxFinite,
-                      height: doubleHeight(17),
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: double.maxFinite,
-                            color: mainBlue,
-                            height: doubleHeight(6),
-                            padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-                            alignment: Alignment(-0.9, 0),
-                            child: GestureDetector(
-                              onTap: (){
-                                Go.pop(context, false);
-                              },
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                                size: 35,
-                              ),
+        builder: (context, state, child){
+          return Scaffold(
+            body: SafeArea(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.maxFinite,
+                    height: doubleHeight(17),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: double.maxFinite,
+                          color: mainBlue,
+                          height: doubleHeight(6),
+                          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+                          alignment: Alignment(-0.9, 0),
+                          child: GestureDetector(
+                            onTap: (){
+                              Go.pop(context, false);
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 35,
                             ),
                           ),
-                          if(state.selectedChat.personalInformations[1].personalInformation!=null)
+                        ),
+                        if(state.selectedChat.personalInformations[1].personalInformation!=null)
                           Positioned(
                             left: 0,
                             right: 0,
@@ -77,14 +77,14 @@ class _ChatState extends State<Chat> {
                               children: [
                                 if(
                                 state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!=null &&
-                                state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!=null
+                                    state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!=null
                                 )
-                                CircleAvatar(
-                                  radius: doubleWidth(8),
-                                  backgroundColor: Colors.white,
-                                  backgroundImage:
-                                  networkImage(state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!),
-                                ),
+                                  CircleAvatar(
+                                    radius: doubleWidth(8),
+                                    backgroundColor: Colors.white,
+                                    backgroundImage:
+                                    networkImage(state.selectedChat.personalInformations[1].personalInformation!.profilePhoto!),
+                                  ),
                                 SizedBox(height: doubleHeight(1)),
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -106,114 +106,115 @@ class _ChatState extends State<Chat> {
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                      ],
                     ),
-                    Flexible(
-                        child: Container(
-                          color: Colors.white,
-                          child: ListView.separated(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: doubleWidth(4), vertical: doubleHeight(2)),
-                              itemBuilder: (_, index) {
-                                //state.chats[index].name==state.selectedChat.personalInformations[0].personalInformation.userName
-                                // print('index $index ${state.selectedChat.messages.length}');
+                  ),
+                  Flexible(
+                      child: Container(
+                        color: Colors.white,
+                        child: ListView.separated(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: doubleWidth(4), vertical: doubleHeight(2)),
+                            itemBuilder: (_, index) {
+                              //state.chats[index].name==state.selectedChat.personalInformations[0].personalInformation.userName
+                              // print('index $index ${state.selectedChat.messages.length}');
 
-                                if(index+1!=state.chats.length){
-                                  bool first = state.chats[index].name==state.selectedChat.personalInformations[0].personalInformation!.userName;
-                                  bool second = state.chats[index+1].name==state.selectedChat.personalInformations[0].personalInformation!.userName;
+                              if(index+1!=state.chats.length){
+                                bool first = state.chats[index].name==state.selectedChat.personalInformations[0].personalInformation!.userName;
+                                bool second = state.chats[index+1].name==state.selectedChat.personalInformations[0].personalInformation!.userName;
 
-                                  return ChatItem(
-                                      person: state.selectedChat.personalInformations[0].personalInformation!,
-                                      message: state.chats[index],
-                                      hasDate: (first==second)?false:true,
-                                    );
+                                return ChatItem(
+                                  person: state.selectedChat.personalInformations[0].personalInformation!,
+                                  message: state.chats[index],
+                                  hasDate: (first==second)?false:true,
+                                );
 
-                                    // return ChatItem(
-                                    //   message: state.chats[index],
-                                    //   hasDate: true,
-                                    // );
+                                // return ChatItem(
+                                //   message: state.chats[index],
+                                //   hasDate: true,
+                                // );
 
-                                }else{
-                                  return ChatItem(
-                                    person: state.selectedChat.personalInformations[0].personalInformation!,
-                                    message: state.chats[index],
-                                    hasDate: true,
-                                  );
-                                }
+                              }else{
+                                return ChatItem(
+                                  person: state.selectedChat.personalInformations[0].personalInformation!,
+                                  message: state.chats[index],
+                                  hasDate: true,
+                                );
+                              }
 
-                              },
-                              separatorBuilder: (_, index) =>
-                                  SizedBox(height: doubleHeight(1)),
-                              itemCount: state.chats.length),
-                        )),
-                    Container(
-                      color: Colors.white,
-                      width: double.maxFinite,
-                      child: Row(
-                        children: [
-                          SizedBox(width: doubleWidth(4)),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(244, 244, 244, 1),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: doubleWidth(8), vertical: doubleHeight(0.5)),
-                              child: TextField(
-                                controller: controller,
-                                // onChanged: (e){
-                                //   setState(() {
-                                //     text=e;
-                                //   });
-                                // },
-                                decoration: InputDecoration(
-                                    hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
-                                    hintText: 'Write your message...',
-                                    border: InputBorder.none),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: doubleWidth(4)),
-                          GestureDetector(
-                            onTap: (){
-                              // state.chats.add(
-                              //     DataChatMessage.fromJson(
-                              //         {
-                              //   "name": "emadbasri",
-                              //   "text": "message 1",
-                              //   "timeStamp": "123456",
-                              //   "chatRoomId":
-                              //       "",
-                              //   "id": ""
-                              // })
-                              // );
-                              state.sendMessage(controller.value.text);
-                              state.notify();
-                              controller.clear();
                             },
-                            child: Container(
-                              padding: EdgeInsets.all(doubleWidth(4)),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: greenCall,
-                              ),
-                              child: Icon(Icons.arrow_upward,color: Colors.black,),
+                            separatorBuilder: (_, index) =>
+                                SizedBox(height: doubleHeight(1)),
+                            itemCount: state.chats.length),
+                      )),
+                  Container(
+                    color: Colors.white,
+                    width: double.maxFinite,
+                    child: Row(
+                      children: [
+                        SizedBox(width: doubleWidth(4)),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(244, 244, 244, 1),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: doubleWidth(8), vertical: doubleHeight(0.5)),
+                            child: TextField(
+                              controller: controller,
+                              // onChanged: (e){
+                              //   setState(() {
+                              //     text=e;
+                              //   });
+                              // },
+                              decoration: InputDecoration(
+                                  hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
+                                  hintText: 'Write your message...',
+                                  border: InputBorder.none),
                             ),
                           ),
-                          SizedBox(width: doubleWidth(4)),
-                        ],
-                      ),
+                        ),
+                        SizedBox(width: doubleWidth(4)),
+                        GestureDetector(
+                          onTap: (){
+                            // state.chats.add(
+                            //     DataChatMessage.fromJson(
+                            //         {
+                            //   "name": "emadbasri",
+                            //   "text": "message 1",
+                            //   "timeStamp": "123456",
+                            //   "chatRoomId":
+                            //       "",
+                            //   "id": ""
+                            // })
+                            // );
+                            state.sendMessage(controller.value.text);
+                            state.notify();
+                            controller.clear();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(doubleWidth(4)),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: greenCall,
+                            ),
+                            child: Icon(Icons.arrow_upward,color: Colors.black,),
+                          ),
+                        ),
+                        SizedBox(width: doubleWidth(4)),
+                      ],
                     ),
-                    Container(
-                        height: doubleHeight(2),
-                        color: Colors.white
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                      height: doubleHeight(2),
+                      color: Colors.white
+                  ),
+                ],
               ),
-            )
+            ),
+          );
+        }
     );
 
     }

@@ -1,20 +1,21 @@
 
-import '../../classes/my_service.dart';
+import '../../classes/services/my_service.dart';
+import '../../classes/services/shots_service.dart';
 import '../../main.dart';
 import 'index.dart';
 class CommentReply extends StatefulWidget {
-  const CommentReply({Key? key,required this.comment}) : super(key: key);
-  final DataCommentReply comment;
+  const CommentReply({Key? key,required this.reply}) : super(key: key);
+  final DataCommentReply reply;
   @override
   _CommentReplyState createState() => _CommentReplyState();
 }
 
 class _CommentReplyState extends State<CommentReply> {
-  late DataCommentReply comment;
+  late DataCommentReply reply;
   @override
   void initState() {
     super.initState();
-    comment=widget.comment;
+    reply=widget.reply;
   }
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class _CommentReplyState extends State<CommentReply> {
                               BorderRadius.circular(100),
                               image: DecorationImage(fit: BoxFit.fill,
                                 image: networkImage(
-                                    comment.personalInformationViewModel.profilePhoto??''
+                                    reply.personalInformationViewModel.profilePhoto??''
                                 ),
                               )),
                         ),
@@ -63,9 +64,9 @@ class _CommentReplyState extends State<CommentReply> {
                                   color: white, width: 2),
                               borderRadius:
                               BorderRadius.circular(100),
-                              image: comment.personalInformationViewModel.team!=null?DecorationImage(
+                              image: reply.personalInformationViewModel.team!=null?DecorationImage(
                                 image: networkImage(
-                                    comment.personalInformationViewModel.team!.team_badge??''),
+                                    reply.personalInformationViewModel.team!.team_badge??''),
                               ):null),
                         ),
                       ),
@@ -74,13 +75,13 @@ class _CommentReplyState extends State<CommentReply> {
                 ),
               ),
               title: Text(
-                comment.personalInformationViewModel.fullName??'',
+                reply.personalInformationViewModel.fullName??'',
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              subtitle: Text('@${comment.personalInformationViewModel.userName??''}',
+              subtitle: Text('@${reply.personalInformationViewModel.userName??''}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,
@@ -88,7 +89,7 @@ class _CommentReplyState extends State<CommentReply> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(makeDurationToString(comment.createdAt),
+                  Text(makeDurationToString(reply.createdAt),
                       style: TextStyle(
                           color: grayCall,
                           fontWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _CommentReplyState extends State<CommentReply> {
             ),
             // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
-            convertHashtag(comment.replyDetail??'',(e){}),
+            convertHashtag(reply.replyDetail??'',(e){}),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -109,18 +110,27 @@ class _CommentReplyState extends State<CommentReply> {
                   GestureDetector(
                     onTap: () async {
                       MyService service = await getIt<MyService>();
-                      bool back = await ShotsService.replyLike(service,
-                           commentReplyId: comment.id);
-                      if (back)
-                        setState(() {
-                          comment.replyLikedBythisUser = true;
-                        });
+                      if (!reply.replyLikedBythisUser) {
+                        bool back = await ShotsService.replyLike(service,
+                             commentReplyId: reply.id);
+                        if (back)
+                          setState(() {
+                            reply.replyLikedBythisUser = true;
+                          });
+                      }else{
+                        bool back = await ShotsService.deleteReplyLike(service,
+                            replyId: reply.id);
+                        if (back)
+                          setState(() {
+                            reply.replyLikedBythisUser = false;
+                          });
+                      }
                     },
-                    child: Icon(comment.replyLikedBythisUser?Icons.favorite:Icons.favorite_border,
-                        color: comment.replyLikedBythisUser?Colors.pink:null),
+                    child: Icon(reply.replyLikedBythisUser?Icons.favorite:Icons.favorite_border,
+                        color: reply.replyLikedBythisUser?Colors.pink:null),
                   ),
                   sizew(doubleWidth(1)),
-                  Text('${comment.replyLikeCount}')
+                  Text(makeCount(reply.replyLikeCount))
                   // SizedBox(
                   //     width: doubleWidth(5),
                   //     height: doubleWidth(5),

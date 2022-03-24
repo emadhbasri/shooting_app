@@ -14,3 +14,68 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+##profile
+*my profile
+*profile
+*followers
+*my profile shots
+*profile shots
+*my media
+media
+*follow
+*unfollow
+
+search
+*user
+*post
+come to app
+
+edit profile
+*image
+email
+*team
+phone
+mame
+
+setting
+
+match
+matchup comment
+
+post
+*make post
+*comment
+*reply
+*share
+*like
+
+
+story
+create
+story list
+story show
+story read not read
+
+message
+*get all
+*get message
+create message
+timer
+
+auth
+*login
+sign up
+otp
+log out
+
+get error
+
+notif
+
+
+pagination
+
+
+

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 
 import '../../main.dart';
+import '../services/chat_service.dart';
 
 class ChatState extends ChangeNotifier {
 
-  List<DataChatRoom> listChats=[];
+  List<DataChatRoom>? listChats;
   List<DataChatMessage> chats=[];
   late DataChatRoom selectedChat;
   MyService service = getIt<MyService>();
   init()async{
+    if(listChats!=null)return;
     print('init()');
     getChatsList();
   }
   getChatsList()async{
+    listChats=null;
+    notifyListeners();
     Map<String,dynamic> back = await ChatService.getMyPrivateChats(service,pageNumber: 1);
     listChats =back['chats'];
     print('listChats $listChats');

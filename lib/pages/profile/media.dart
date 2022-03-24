@@ -16,28 +16,35 @@ class _MediaState extends State<Media> {
   @override
   Widget build(BuildContext context) {
     final ProfileState state = Provider.of<ProfileState>(context, listen: false);
+    List<String> first=[];
+    List<String> second=[];
+    for(int j=0;j<state.personalInformation!.posts.length;j++){
+      if(j%2==0)
+        first.addAll(state.personalInformation!.posts[j].mediaTypes.map((e) => e.media));
+      else
+        second.addAll(state.personalInformation!.posts[j].mediaTypes.map((e) => e.media));
+    }
+
     return Container(
       color: Color.fromRGBO(245, 244, 248, 1),
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(
-          horizontal: doubleWidth(4),
-          vertical: doubleHeight(2)
+            horizontal: doubleWidth(4),
+            vertical: doubleHeight(2)
         ),
         child: Row(
           children: [
             Expanded(child: Column(
-              children: state.medias.where((element) =>
-              state.medias.indexOf(element)%2==0).map((e) =>
+              children: first.map((e) =>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: double.maxFinite,
-                        child: Image.asset(e,fit: BoxFit.fitWidth,),
+                        child: imageNetwork(e,fit: BoxFit.fitWidth,),
                       ),
-                      if(e!=state.medias.where((element) =>
-                      state.medias.indexOf(element)%2==1).last)
+                      if(e!=first.last)
                         SizedBox(height: doubleHeight(1)),
                     ],
                   )
@@ -47,18 +54,16 @@ class _MediaState extends State<Media> {
             Expanded(child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: state.medias.where((element) =>
-              state.medias.indexOf(element)%2==1).map((e) =>
+              children: second.map((e) =>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: double.maxFinite,
-                        child: Image.asset(e,fit: BoxFit.fitWidth,
+                        child: imageNetwork(e,fit: BoxFit.fitWidth,
                         ),
                       ),
-                      if(e!=state.medias.where((element) =>
-                      state.medias.indexOf(element)%2==1).last)
+                      if(e!=second.last)
                         SizedBox(height: doubleHeight(1)),
                     ],
                   )

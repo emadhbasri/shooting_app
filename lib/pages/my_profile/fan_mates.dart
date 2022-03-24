@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 
-import '../../classes/states/my_profile_state.dart';
+import '../../classes/services/user_service.dart';
 import '../../dataTypes.dart';
+import '../../main.dart';
 
 class FanMates extends StatefulWidget {
   const FanMates({Key? key}) : super(key: key);
@@ -17,7 +20,7 @@ class FanMates extends StatefulWidget {
 class _FanMatesState extends State<FanMates> {
   @override
   Widget build(BuildContext context) {
-    final MyProfileState state = Provider.of<MyProfileState>(context, listen: false);
+    final MainState state = Provider.of<MainState>(context, listen: false);
     return Container(
       color: Color.fromRGBO(244, 244, 244, 1),
       child: ListView.separated(
@@ -86,19 +89,29 @@ class _FanMateItemState extends State<FanMateItem> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Consumer<MyProfileState>(builder: (context, value, child) {
+                    Consumer<MainState>(builder: (context, value, child) {
                       // int index = value.fans.indexOf(fan);
                       return ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async{
                           print('click');
-                          // value.fans[index].isFollowed=!value.fans[index].isFollowed;
-                          // value.notify();
+                          print(fan.followByMe);
+                          MyService service = getIt<MyService>();
+                          if(fan.followByMe){
+                            //unfollow
+                            bool backUser = await UsersService.unFollowUser(service, fan.followerId);
+                            print('unfollow $backUser');
+                          }else{
+                            bool backUser = await UsersService.followUser(service, fan.followerId);
+                            print('follow $backUser');
+                          }
+                          fan.followByMe=!fan.followByMe;
+                          value.notify();
                         },
-                        child: Text(fan.followingMe?'Follow':'Following',style: TextStyle(color: Colors.black),),
+                        child: Text(!fan.followByMe?'add as fan mates':'remove as fan mates',style: TextStyle(color: Colors.black),),
                         style: ButtonStyle(
                           backgroundColor:
                           MaterialStateProperty.all(
-                              fan.followingMe?//todo
+                              fan.followByMe?
                               Color.fromRGBO(216, 216, 216, 1):Color.fromRGBO(78, 255, 187, 1)
                           ),
                           elevation: MaterialStateProperty.all(0),
@@ -106,7 +119,7 @@ class _FanMateItemState extends State<FanMateItem> {
                             borderRadius: BorderRadius.circular(7),
                           )),
                           padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                              horizontal: doubleWidth(7))),
+                              horizontal: doubleWidth(2))),
                         ),
                       );
                     }),

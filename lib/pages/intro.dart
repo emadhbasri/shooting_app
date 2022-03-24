@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 
@@ -21,7 +21,7 @@ class _IntroState extends State<Intro> {
     service.getToken().then((bool value) {
       if(value){
         Future.delayed(
-            Duration(seconds: 2), () => Go.pushSlideAnim(context, AppPage()));
+            Duration(seconds: 2), () => Go.pushSlideAnim(context, AppPageBuilder()));
       }else{
         Future.delayed(
             Duration(seconds: 2), () => Go.pushSlideAnim(context, Auth()));

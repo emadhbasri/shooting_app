@@ -1,20 +1,22 @@
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 
+import '../../classes/services/shots_service.dart';
 import '../../main.dart';
 import '../../pages/shot/shot.dart';
 import 'index.dart';
 
 class PostFromShot extends StatefulWidget {
-  const PostFromShot({Key? key, required this.post, required this.onTapTag})
+  const PostFromShot({Key? key,this.canTouch=true, required this.post, required this.onTapTag})
       : super(key: key);
   final DataPost post;
-  final Function(String) onTapTag;
+  final Function(BuildContext,String,bool) onTapTag;
+  final bool canTouch;
   @override
   State<PostFromShot> createState() => _PostFromShotState();
 }
 
 class _PostFromShotState extends State<PostFromShot> {
-  Widget _convertHashtag(String text) {
+  Widget _convertHashtag(context,String text) {
     List<String> split = text.split(' ');
     return Wrap(
       alignment: WrapAlignment.start,
@@ -25,13 +27,13 @@ class _PostFromShotState extends State<PostFromShot> {
         if (e[0] == '#') {
           return GestureDetector(
               onTap: () {
-                widget.onTapTag(e);
+                widget.onTapTag(context,e,false);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e[0] == '@') {
           return GestureDetector(
               onTap: () {
-                widget.onTapTag(e);
+                widget.onTapTag(context,e,true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
@@ -63,13 +65,13 @@ class _PostFromShotState extends State<PostFromShot> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              onTap: () {
+              onTap: widget.canTouch?() {
                 Go.pushSlideAnim(
                     context,
                     Shot(
                       post: widget.post,
                     ));
-              },
+              }:null,
               contentPadding: EdgeInsets.zero,
               dense: true,
               leading: SizedBox(
@@ -168,7 +170,7 @@ class _PostFromShotState extends State<PostFromShot> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () {
-                      Go.pushSlideAnimSheet(context, MyBottomSheet());
+                      Go.pushSlideAnimSheet(context, MyBottomSheet(widget.post));
                     },
                     child: Container(
                       width: doubleWidth(6),
@@ -184,7 +186,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 ],
               ),
             ),
-            _convertHashtag(widget.post.details ?? ''),
+            _convertHashtag(context,widget.post.details ?? ''),
             sizeh(doubleHeight(1)),
             if(widget.post.mediaTypes.isNotEmpty)
               ClipRRect(
@@ -196,7 +198,7 @@ class _PostFromShotState extends State<PostFromShot> {
                     physics: BouncingScrollPhysics(),
 
                     itemCount: widget.post.mediaTypes.length,
-                    itemBuilder: (_,index)=>imageNetwork(widget.post.mediaTypes[index].media!,fit: BoxFit.fill,),
+                    itemBuilder: (_,index)=>imageNetwork(widget.post.mediaTypes[index].media,fit: BoxFit.fill,),
                   ),
                 ),
               ),
@@ -214,7 +216,7 @@ class _PostFromShotState extends State<PostFromShot> {
                           height: doubleWidth(5),
                           child: Image.asset('images/chat(2).png')),
                       sizew(doubleWidth(1)),
-                      Text('${widget.post.postCommentCount}k')
+                      Text(makeCount(widget.post.postCommentCount))
                     ],
                   ),
                   // Row(
@@ -250,12 +252,14 @@ class _PostFromShotState extends State<PostFromShot> {
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
-                      Text('${widget.post.postLikeCount}k')
+                      Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
                   GestureDetector(
                     onTap: () {
-                      showDialog(context: context, builder: (_) => Dialog2());
+                      showDialog(context: context, builder: (_) => ShareDialog(
+                        post: widget.post,
+                      ));
                     },
                     child: SizedBox(
                         width: doubleWidth(5),
@@ -282,13 +286,13 @@ class PostFromShotProfile extends StatefulWidget {
       : super(key: key);
   final DataPost post;
   final DataPersonalInformation person;
-  final Function(String) onTapTag;
+  final Function(BuildContext,String,bool) onTapTag;
   @override
   State<PostFromShotProfile> createState() => _PostFromShotProfileState();
 }
 
 class _PostFromShotProfileState extends State<PostFromShotProfile> {
-  Widget _convertHashtag(String text) {
+  Widget _convertHashtag(context,String text) {
     List<String> split = text.split(' ');
     return Wrap(
       alignment: WrapAlignment.start,
@@ -299,13 +303,13 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
         if (e[0] == '#') {
           return GestureDetector(
               onTap: () {
-                widget.onTapTag(e);
+                widget.onTapTag(context,e,false);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e[0] == '@') {
           return GestureDetector(
               onTap: () {
-                widget.onTapTag(e);
+                widget.onTapTag(context,e,true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
@@ -433,7 +437,9 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () {
-                      Go.pushSlideAnimSheet(context, MyBottomSheet());
+                      Go.pushSlideAnimSheet(context, MyBottomSheet(
+                        widget.post
+                      ));
                     },
                     child: Container(
                       width: doubleWidth(6),
@@ -449,22 +455,64 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 ],
               ),
             ),
-            _convertHashtag(widget.post.details ?? ''),
+            _convertHashtag(context,widget.post.details ?? ''),
             sizeh(doubleHeight(1)),
             if(widget.post.mediaTypes.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: SizedBox(
-                  width: max,
-                  height: doubleHeight(15),
-                  child: PageView.builder(
-                    physics: BouncingScrollPhysics(),
-
-                    itemCount: widget.post.mediaTypes.length,
-                      itemBuilder: (_,index)=>imageNetwork(widget.post.mediaTypes[index].media!,fit: BoxFit.fill,),
-                  ),
+              SizedBox(
+                width: max,
+                height: doubleHeight(20),
+                child: PageView.builder(
+                  controller: PageController(initialPage: 0,viewportFraction: 0.85),
+                  physics: BouncingScrollPhysics(),
+                  itemCount: widget.post.mediaTypes.length,
+                    itemBuilder: (_,index)=>
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: widget.post.mediaTypes.length-1!=index?doubleHeight(2):0
+                          ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: imageNetwork(widget.post.mediaTypes[index].media,
+                                fit: BoxFit.fill,)),
+                        ),
                 ),
               ),
+            // sizeh(doubleHeight(1)),
+            // if(widget.post.mediaTypes.isNotEmpty)
+            //   SizedBox(
+            //     width: max,
+            //     height: doubleHeight(20),
+            //     child: SingleChildScrollView(
+            //       scrollDirection: Axis.horizontal,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           ...widget.post.mediaTypes.map((e) =>
+            //               Padding(
+            //                 padding: EdgeInsets.only(
+            //                     right: widget.post.mediaTypes.last!=e?doubleHeight(2):0
+            //                 ),
+            //                 child: ClipRRect(
+            //                     borderRadius: BorderRadius.circular(10),
+            //                     child: imageNetwork(e.media,
+            //                       fit: BoxFit.fill,)),
+            //               )
+            //           ).toList(),
+            //           ...widget.post.mediaTypes.map((e) =>
+            //               Padding(
+            //                 padding: EdgeInsets.only(
+            //                     right: widget.post.mediaTypes.last!=e?doubleHeight(2):0
+            //                 ),
+            //                 child: ClipRRect(
+            //                     borderRadius: BorderRadius.circular(10),
+            //                     child: imageNetwork(e.media,
+            //                       fit: BoxFit.fill,)),
+            //               )
+            //           ).toList(),
+            //         ]
+            //       ),
+            //     )
+            //   ),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -478,8 +526,8 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           width: doubleWidth(5),
                           height: doubleWidth(5),
                           child: Image.asset('images/chat(2).png')),
-                      // sizew(doubleWidth(1)),
-                      // Text('${widget.post.postCommentCount}k')
+                      sizew(doubleWidth(1)),
+                      Text(makeCount(widget.post.postCommentCount))
                     ],
                   ),
                   // Row(
@@ -514,13 +562,15 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 ? Colors.pink
                                 : null),
                       ),
-                      // sizew(doubleWidth(1)),
-                      // Text('${widget.post.postLikeCount}k')
+                      sizew(doubleWidth(1)),
+                      Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
                   GestureDetector(
                     onTap: () {
-                      showDialog(context: context, builder: (_) => Dialog2());
+                      showDialog(context: context, builder: (_) => ShareDialog(
+                        post: widget.post,
+                      ));
                     },
                     child: SizedBox(
                         width: doubleWidth(5),

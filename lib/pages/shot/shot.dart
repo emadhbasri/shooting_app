@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
-import 'package:shooting_app/ui_items/comment.dart';
+import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
+import '../../classes/services/shots_service.dart';
 import '../../ui_items/shots/comment_from_shot.dart';
 import '../chat/chat_list.dart';
 
@@ -50,9 +51,10 @@ class _ShotState extends State<Shot> {
   @override
   Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(title: Text('Comments'),),
+        appBar: AppBar(title: Text('Shot'),),
         body: post==null?circle():Column(
           children: [
+            PostFromShot(post: post!,canTouch: false, onTapTag: gogo),
             Flexible(
               child: ListView.builder(
                 itemCount: post!.postComments.length,

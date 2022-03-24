@@ -1,26 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../main.dart';
 import 'match/match.dart';
-import 'package:shooting_app/ui_items/drawer.dart';
 
-class MatchListBuilder extends StatelessWidget {
-  const MatchListBuilder({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MatchStateProvider(
-      child: MatchList(),
-    );
-  }
-}
 class MatchList extends StatefulWidget {
   const MatchList({Key? key}) : super(key: key);
 

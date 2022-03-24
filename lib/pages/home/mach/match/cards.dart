@@ -12,10 +12,7 @@ class Cards extends StatelessWidget {
   Widget build(BuildContext context) {
     final MatchState state = Provider.of(context, listen: false);
 
-    List<DataCard> all = [
-      ...state.teamACard,
-      ...state.teamBCard,
-    ]..sort((b, a) => a.time.compareTo(b.time));
+
     List<DataEvent> first = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.home.id).toList();
     List<DataEvent> second = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.away.id).toList();
     return ListView(
@@ -90,86 +87,6 @@ class Cards extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
-      ],
-    );
-    return ListView(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(
-                    horizontal: doubleWidth(3), vertical: doubleHeight(0.5)),
-                decoration: DottedDecoration(
-                    shape: Shape.line, linePosition: LinePosition.right),
-                child: Column(
-                  textDirection: TextDirection.rtl,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: all
-                      .map((e) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if(state.teamACard.contains(e))
-                        Row(
-                          textDirection: TextDirection.rtl,
-                          children: [
-                            PlayCard(isRed: e.isRed),
-                            SizedBox(width: doubleWidth(2)),
-                            Text('${e.time}\''),
-                            SizedBox(width: doubleWidth(2)),
-                            Text(e.name)
-                          ],
-                        )
-                      else SizedBox(height: doubleHeight(3)),
-                      if (e != all.last)
-                        SizedBox(
-                          height: doubleHeight(2),
-                        ),
-                    ],
-                  ))
-                      .toList(),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(
-                    horizontal: doubleWidth(3), vertical: doubleHeight(0.5)),
-                child: Column(
-                  textDirection: TextDirection.ltr,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: all
-                      .map((e) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if(state.teamBCard.contains(e))
-                        Row(
-                          textDirection: TextDirection.ltr,
-                          children: [
-                            PlayCard(isRed: e.isRed),
-                            SizedBox(width: doubleWidth(2)),
-                            Text('${e.time}\''),
-                            SizedBox(width: doubleWidth(2)),
-                            Text(e.name)
-                          ],
-                        )
-                      else SizedBox(height: doubleHeight(3)),
-                      if (e != all.last)
-                        SizedBox(
-                          height: doubleHeight(2),
-                        ),
-                    ],
-                  ))
-                      .toList(),
-                ),
-              ),
-            )
           ],
         ),
       ],

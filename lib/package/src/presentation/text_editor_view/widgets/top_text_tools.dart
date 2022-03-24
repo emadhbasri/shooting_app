@@ -39,13 +39,13 @@ class TopTextTools extends StatelessWidget {
                         child: !editorNotifier.isFontFamily
                             ? const ImageIcon(
                                 AssetImage('assets/icons/text.png',
-                                    package: 'stories_editor'),
+                                    ),
                                 size: 20,
                                 color: Colors.white,
                               )
                             : Image.asset(
                                 'assets/icons/circular_gradient.png',
-                                package: 'stories_editor',
+
                               )),
                   ),
 
@@ -74,7 +74,7 @@ class TopTextTools extends StatelessWidget {
                             padding: EdgeInsets.only(left: 5, bottom: 3),
                             child: ImageIcon(
                               AssetImage('assets/icons/font_backGround.png',
-                                  package: 'stories_editor'),
+                                  ),
                               color: Colors.white,
                             ),
                           ),
@@ -115,7 +115,7 @@ class TopTextTools extends StatelessWidget {
                             padding: EdgeInsets.all(0),
                             child: ImageIcon(
                               AssetImage('assets/icons/video_trim.png',
-                                  package: 'stories_editor'),
+                                  ),
                               color: Colors.white,
                             ),
                           ),

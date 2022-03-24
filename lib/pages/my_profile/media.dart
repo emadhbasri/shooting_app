@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
 
-import '../../classes/states/my_profile_state.dart';
-import '../../dataTypes.dart';
+import '../../classes/states/main_state.dart';
 
 class Media extends StatefulWidget {
   const Media({Key? key}) : super(key: key);
@@ -15,7 +14,16 @@ class Media extends StatefulWidget {
 class _MediaState extends State<Media> {
   @override
   Widget build(BuildContext context) {
-    final MyProfileState state = Provider.of<MyProfileState>(context, listen: false);
+    final MainState state = Provider.of<MainState>(context, listen: false);
+    List<String> first=[];
+    List<String> second=[];
+    for(int j=0;j<state.personalInformation!.posts.length;j++){
+      if(j%2==0)
+        first.addAll(state.personalInformation!.posts[j].mediaTypes.map((e) => e.media));
+      else
+        second.addAll(state.personalInformation!.posts[j].mediaTypes.map((e) => e.media));
+    }
+
     return Container(
       color: Color.fromRGBO(245, 244, 248, 1),
       child: SingleChildScrollView(
@@ -27,17 +35,15 @@ class _MediaState extends State<Media> {
         child: Row(
           children: [
             Expanded(child: Column(
-              children: state.medias.where((element) =>
-              state.medias.indexOf(element)%2==0).map((e) =>
+              children: first.map((e) =>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: double.maxFinite,
-                        child: Image.asset(e,fit: BoxFit.fitWidth,),
+                        child: imageNetwork(e,fit: BoxFit.fitWidth,),
                       ),
-                      if(e!=state.medias.where((element) =>
-                      state.medias.indexOf(element)%2==1).last)
+                      if(e!=first.last)
                         SizedBox(height: doubleHeight(1)),
                     ],
                   )
@@ -47,18 +53,16 @@ class _MediaState extends State<Media> {
             Expanded(child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: state.medias.where((element) =>
-              state.medias.indexOf(element)%2==1).map((e) =>
+              children: second.map((e) =>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: double.maxFinite,
-                        child: Image.asset(e,fit: BoxFit.fitWidth,
+                        child: imageNetwork(e,fit: BoxFit.fitWidth,
                         ),
                       ),
-                      if(e!=state.medias.where((element) =>
-                      state.medias.indexOf(element)%2==1).last)
+                      if(e!=second.last)
                         SizedBox(height: doubleHeight(1)),
                     ],
                   )

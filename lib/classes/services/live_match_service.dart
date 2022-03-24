@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
-import 'models.dart';
+import '../models.dart';
 import 'package:http/http.dart' as http;
 
 class LiveMatchService {
@@ -55,6 +55,18 @@ class LiveMatchService {
     // debugPrint('back ${back}');
     return convertDataList<DataLeagueMain>(
         back['data'], 'response', 'DataLeagueMain');
+  }
+  Future<List<DataMatchTeam>> teams({required String search}) async {
+    debugPrint('teams()');
+    Map<String, dynamic> back = await httpGet('teams?search=$search');
+    List<DataMatchTeam> out = [];
+    for(int j=0;j<back['data']['response'].length;j++){
+          out.add(
+            convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
+          );
+    }
+    // debugPrint('back ${back}');
+    return out;
   }
   Future<List<DataMatch1>> matchs({
     required String date,

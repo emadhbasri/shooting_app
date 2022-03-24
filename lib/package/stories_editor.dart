@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-library stories_editor;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

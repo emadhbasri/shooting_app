@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 import 'live_match_model.dart';
 
@@ -250,7 +249,7 @@ class DataMediaType {
   }
 
   late String id; //($uuid)
-  String? media;
+  late String media;
   late String postId; //($uuid)
 }
 
@@ -318,11 +317,11 @@ class DataUserFollower {
     followerId = convertData(data, 'followerId', DataType.string);
     personalInformationViewModel =
         convertData(data, 'personalInformationViewModel', DataType.clas,classType: 'DataPersonalInformationViewModel');
-    followingMe = convertData(data, 'followingMe', DataType.bool);
+    followByMe = convertData(data, 'followByMe', DataType.bool);
   }
 
   late String followerId;
-  late bool followingMe;
+  late bool followByMe;
   late String id; //($uuid)
   late String personalInformationId;
   late DataPersonalInformationViewModel personalInformationViewModel;

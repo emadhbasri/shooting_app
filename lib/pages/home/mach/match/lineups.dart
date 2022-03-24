@@ -1,9 +1,7 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
-import '../../../../classes/functions.dart';
 import '../../../../classes/states/match_state.dart';
 
 class LineUps extends StatelessWidget {

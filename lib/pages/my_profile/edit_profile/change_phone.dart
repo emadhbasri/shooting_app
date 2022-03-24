@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/dataTypes.dart';
-import 'change_email_done.dart';
 import 'verify_phone.dart';
 
 import '../../../classes/functions.dart';

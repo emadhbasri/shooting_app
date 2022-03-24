@@ -6,14 +6,14 @@ import 'package:shooting_app/pages/chat/chat.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../dataTypes.dart';
-class ChatListBuilder extends StatelessWidget {
-  const ChatListBuilder({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChatStateProvider(child: ChatList());
-  }
-}
+// class ChatListBuilder extends StatelessWidget {
+//   const ChatListBuilder({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChatStateProvider(child: ChatList());
+//   }
+// }
 
 class ChatList extends StatefulWidget {
   const ChatList({Key? key}) : super(key: key);
@@ -33,24 +33,30 @@ class _ChatListState extends State<ChatList> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: ()async{
-          await state.getChatsList();
-        },
-        child: ListView.separated(
-          padding: EdgeInsets.symmetric(
-            vertical: doubleHeight(2),
-            horizontal: doubleWidth(4)
-          ),
-            itemBuilder: (context, index) => ChatListItem(
-                chat: state.listChats[index],
-            state: state,
+    return Consumer<ChatState>(
+      builder: (context, state, child) {
+        if(state.listChats==null)return circle();
+        else if(state.listChats!.isEmpty)return Center(child: Text('no message'),);
+        return Scaffold(
+          body: RefreshIndicator(
+            onRefresh: ()async{
+              await state.getChatsList();
+            },
+            child: ListView.separated(
+                padding: EdgeInsets.symmetric(
+                    vertical: doubleHeight(2),
+                    horizontal: doubleWidth(4)
+                ),
+                itemBuilder: (context, index) => ChatListItem(
+                  chat: state.listChats![index],
+                  state: state,
+                ),
+                separatorBuilder: (context,index)=>Divider(color: grayCallDark),
+                itemCount: state.listChats!.length
             ),
-            separatorBuilder: (context,index)=>Divider(color: grayCallDark),
-            itemCount: state.listChats.length
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

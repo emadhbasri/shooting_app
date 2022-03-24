@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
-import '../../classes/states/my_profile_state.dart';
+import '../../classes/functions.dart';
 
 class Shots extends StatefulWidget {
   const Shots({Key? key}) : super(key: key);
@@ -14,11 +15,11 @@ class Shots extends StatefulWidget {
 class _ShotsState extends State<Shots> {
   @override
   Widget build(BuildContext context) {
-    final MyProfileState state = Provider.of<MyProfileState>(context, listen: false);
+    final MainState state = Provider.of<MainState>(context, listen: false);
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
-            PostFromShotProfile(post: e,onTapTag: (f){},
+            PostFromShotProfile(post: e,onTapTag: gogo,
           person: state.personalInformation!,
         )
     ).toList(),

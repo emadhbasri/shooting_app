@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/classes/models.dart';
-import 'package:shooting_app/classes/my_service.dart';
-import 'package:shooting_app/pages/Search.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/home/mach/match_list.dart';
-import 'package:shooting_app/ui_items/bottom_sheet.dart';
 
-import '../../classes/data.dart';
 import '../../classes/functions.dart';
 import '../../dataTypes.dart';
 import '../../main.dart';
-import '../../ui_items/dialogs/dialog2.dart';
-import '../../ui_items/shots/post_from_shot.dart';
 import 'fan_feeds.dart';
+import 'story/story_list.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -23,18 +18,18 @@ enum MyTab{
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   MyTab tab = MyTab.fanFeed;
 
-  List<DataPost> allPosts = [];
+  // List<DataPost> allPosts = [];
   MyService service = getIt<MyService>();
   getData() async {
-    allPosts = await ShotsService.shotsAll(service);
-    setState(() {});
-    print('allPosts ${allPosts.length}');
+    // allPosts = await ShotsService.shotsAll(service);
+    // setState(() {});
+    // print('allPosts ${allPosts.length}');
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    // getData();
   }
 
   @override
@@ -131,11 +126,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 builder: (context) {
                   switch(tab){
                     case MyTab.games:
-                      return MatchListBuilder();
+                      return MatchList();
                     case MyTab.fanFeed:
                       return FanFeeds();
                     case MyTab.stories:
-                      return const SizedBox();
+                      return const StoryList();
                     default:return const SizedBox();
                   }
                 },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
+import '../../classes/functions.dart';
 import '../../classes/states/profile_state.dart';
 
 
@@ -19,7 +20,7 @@ class _ShotsState extends State<Shots> {
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
-            PostFromShotProfile(post: e,onTapTag: (f){},
+            PostFromShotProfile(post: e,onTapTag: gogo,
           person: state.personalInformation!,
         )
     ).toList(),

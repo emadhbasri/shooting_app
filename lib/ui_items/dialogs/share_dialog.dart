@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../classes/functions.dart';
+import '../../classes/models.dart';
 import '../../dataTypes.dart';
 
-class Dialog2 extends StatelessWidget {
+class ShareDialog extends StatelessWidget {
+  final DataPost post;
+  const ShareDialog({Key? key,required this.post}) : super(key: key);
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -16,19 +19,23 @@ class Dialog2 extends StatelessWidget {
               children: [
                 SizedBox(height: doubleHeight(4)),
             TextButton(
-                onPressed: (){}, child: Text('Share',style: TextStyle(
+                onPressed: (){
+                  sharePost(post.id);
+                }, child: Text('Share',style: TextStyle(
               color: Colors.black
             ),)),
                 SizedBox(height: doubleHeight(1)),
                 TextButton(
-                    onPressed: (){}, child: Text('Copy share link',style: TextStyle(
+                    onPressed: (){
+                      copyText('check out the post ${'www.google.com'}');
+                    }, child: Text('Copy share link',style: TextStyle(
                     color: Colors.black
                 ),)),
-                SizedBox(height: doubleHeight(1)),
-                TextButton(
-                    onPressed: (){}, child: Text('Analyrics',style: TextStyle(
-                    color: Colors.black
-                ),)),
+                // SizedBox(height: doubleHeight(1)),
+                // TextButton(
+                //     onPressed: (){}, child: Text('Analyrics',style: TextStyle(
+                //     color: Colors.black
+                // ),)),
                 SizedBox(height: doubleHeight(1)),
                 TextButton(
                     onPressed: (){}, child: Text('Delete this Shot',

@@ -256,7 +256,7 @@ String search = '';
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () {
-                          Go.pushSlideAnim(context, AppPage());
+                          Go.pushSlideAnim(context, AppPageBuilder());
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),

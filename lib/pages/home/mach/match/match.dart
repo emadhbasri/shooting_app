@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/dataTypes.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../../classes/states/main_state.dart';
 import '../../../../main.dart';
@@ -8,7 +6,6 @@ import 'goals.dart';
 import 'lineups.dart';
 import 'stats.dart';
 
-import '../../../../classes/functions.dart';
 import '../../../../classes/states/match_state.dart';
 import 'cards.dart';
 import 'matchups.dart';

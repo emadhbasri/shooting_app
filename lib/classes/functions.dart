@@ -1,9 +1,14 @@
-
-
 import 'dart:async';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../dataTypes.dart';
+import '../pages/Search.dart';
+import '../pages/profile/profile.dart';
 
 late Size screenSize;
 double doubleHeight(double value, {double height= 0}) {
@@ -55,40 +60,49 @@ String makeDurationToString(DateTime date){
   }else return '';
 }
 
-class MyDivider extends StatelessWidget {
-  const MyDivider({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-
-    );
-  }
-}
 const String profileImageDefault='images/158023.png';
 const String profileTeamDefault='images/unnamed.png';
 
+copyText(String text,{String payam='text copied to clipboard'})=>
+    FlutterClipboard.copy(text).then((value) => toast(payam));
 
+sharePost(String text,{String payam='text copied to clipboard'})=>
+    Share.share('check out the post $text');
 
-//Future<String> startUploadImage(File data)async{
-//  String uploadEndPoint = '${address}upload.php';
-//  var Data = await http.post(uploadEndPoint, body: {
-//    "image": base64Encode(data.readAsBytesSync()),
-//  }).catchError((error) {
-//    print('null2');
-//    toast(101);
-//    return '';
-//  });
-//
-//
-//  print('resultresultresult  ${Data.body}');
-//
-//  print('${address}image${Data.body}.png');
-//  String go = '${address}image${Data.body}.png';
-//  return go;
-//
-//
-//}
+toast(String str,{Toast duration = Toast.LENGTH_SHORT}) {
+    Fluttertoast.showToast(
+        msg: str,
+        toastLength: duration,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: mainBlue,
+        textColor: Colors.white,
+        fontSize: 16.0);
+}
+
+gogo(BuildContext context,String str,bool isUser){
+  if(isUser){
+    Go.pushSlideAnim(context, ProfileBuilder(username: str));
+  }else{
+    Go.pushSlideAnim(
+        context,
+        Search(
+          search: str,
+        ));
+  }
+}
+
+String makeCount(int num){
+  if(num<1000){
+    return num.toString();
+  }else if(num<1000000){
+    return '${(num~/1000)}k';
+  }else{
+    return '${(num~/1000000)}m';
+  }
+}
+
 abstract class Go {
 
   static void pushAndRemoveSlideAnim(BuildContext context, Widget page,
@@ -115,11 +129,11 @@ abstract class Go {
         }), (route) => false).catchError((e) => print('Error 1 $e'));
   }
 
-  static void pushSlideAnim(BuildContext context, Widget page,
+  static Future<dynamic> pushSlideAnim(BuildContext context, Widget page,
       {bool full: false, var first, var second}) {
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
-    Navigator.push(
+    return Navigator.push(
         context,
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
@@ -302,7 +316,6 @@ CachedNetworkImage imageNetwork(
       double? width,
       double? height,
     }) {
-  // debugPrint('networkimageProvider $url');
   return CachedNetworkImage(
     imageUrl: url,
     color: color,
@@ -315,14 +328,16 @@ CachedNetworkImage imageNetwork(
           width: 50,
           height: 50,
           child: CircularProgressIndicator(
-            backgroundColor: Colors.red,
+            // valueColor: AlwaysStoppedAnimation(mainBlue),
+            // backgroundColor: mainBlue,
           ),
         ),
       );
     },
     errorWidget: (context, url, error) =>
         CircularProgressIndicator(
-          backgroundColor: Colors.red,
+        // valueColor: AlwaysStoppedAnimation(mainBlue),
+          // backgroundColor: mainBlue,
         )
   );
 }

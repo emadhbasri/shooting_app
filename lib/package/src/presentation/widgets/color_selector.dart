@@ -35,7 +35,7 @@ class ColorSelector extends StatelessWidget {
                     border: Border.all(color: Colors.white, width: 1.5)),
                 child: ImageIcon(
                   const AssetImage('assets/icons/pickColor.png',
-                      package: 'stories_editor'),
+                      ),
                   color: controlProvider.isPainting
                       ? (paintingProvider.lineColor == 0
                           ? Colors.black

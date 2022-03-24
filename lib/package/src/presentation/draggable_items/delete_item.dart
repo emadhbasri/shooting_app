@@ -39,7 +39,7 @@ class DeleteItem extends StatelessWidget {
                 ),
                 child: const ImageIcon(
                   AssetImage('assets/icons/trash.png',
-                      package: 'stories_editor'),
+                      ),
                   color: Colors.white,
                   size: 23,
                 ),

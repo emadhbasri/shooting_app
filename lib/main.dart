@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'classes/my_service.dart';
+import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
 import 'classes/states/main_state.dart';
 import 'classes/states/match_state.dart';
-import 'classes/states/my_profile_state.dart';
 import 'dataTypes.dart';
 import 'classes/functions.dart';
 import 'pages/intro.dart';
@@ -15,7 +14,6 @@ void main() {
   GetIt.I.registerLazySingleton(() => MyService());
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
-  GetIt.I.registerLazySingleton(() => MyProfileState());
   GetIt.I.registerLazySingleton(() => ChatState());
   runApp(MyApp());
 }
@@ -29,7 +27,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Color.fromRGBO(244, 244, 244, 1),
         primaryColor: mainBlue,
+        primarySwatch: mainColor,
         appBarTheme: AppBarTheme(
+            elevation: 0,
           centerTitle: true,
           color: mainBlue
         )
@@ -38,6 +38,22 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+MaterialColor mainColor = MaterialColor(
+  mainBlue.value,
+  <int, Color>{
+    50: mainBlue,
+    100: mainBlue,
+    200: mainBlue,
+    300: mainBlue,
+    400: mainBlue,
+    500: mainBlue,
+    600: mainBlue,
+    700: mainBlue,
+    800: mainBlue,
+    900: mainBlue,
+  },
+);
 
 class AppFirst extends StatefulWidget {
   @override
@@ -54,7 +70,8 @@ class _AppFirstState extends State<AppFirst> with WidgetsBindingObserver {
     // "refreshToken": "NQmDBrsrL0KlbFhBk3dMrn6ti0GCJL/YbVyx5kEJGT4=",
     // "applicationUserId": "6b5e7c46-c06e-4dfb-b455-53c588d40a0c",
     // "id": "99f90779-d731-4518-0d83-08da0694f611"
-
+    // setString('userid', '99f90779-d731-4518-0d83-08da0694f611');
+    // setString('username', 'emadhbasri');
     // private chat room c6f7abba-ed26-4837-a427-08da071ec138
 
     // setString('userid', '3530f18b-a1ed-406e-0914-08da04b81c0f');

@@ -101,7 +101,7 @@ class _MyDrawerState extends State<MyDrawer>
                       }else{
                         _controller.reverse().then((value) {
                           Go.pop(context, null);
-                          Go.pushAndRemoveSlideAnim(context, AppPage());
+                          Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
 
                         });
                       }

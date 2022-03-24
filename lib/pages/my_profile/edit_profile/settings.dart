@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/dataTypes.dart';
+import '../../../classes/services/authentication_service.dart';
+import '../../../classes/services/my_service.dart';
+import '../../../main.dart';
 import 'change_phone.dart';
 
 import 'change_email.dart';
@@ -14,6 +17,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  MyService service = getIt<MyService>();
   bool check=true;
   bool switched=true;
   @override
@@ -146,7 +150,9 @@ class _SettingsState extends State<Settings> {
                         padding: MaterialStateProperty.all(
                             EdgeInsets.symmetric(vertical: doubleHeight(2.5),horizontal: doubleWidth(4)))
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      AuthenticationService.logOut(context);
+                    },
                     child: SizedBox(
                       width: double.maxFinite,
                       child: Stack(

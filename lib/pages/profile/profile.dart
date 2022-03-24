@@ -1,5 +1,8 @@
 import 'package:provider/provider.dart';
+import '../../classes/services/my_service.dart';
+import '../../classes/services/user_service.dart';
 import '../../classes/states/profile_state.dart';
+import '../../main.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
@@ -42,6 +45,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         return circle();
       }else{
         return Scaffold(
+          appBar: AppBar(
+            title: Text('Profile'),
+            elevation: 0,
+          ),
           backgroundColor: Colors.white,
           body: SafeArea(
             child: Column(
@@ -100,64 +107,76 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     ],
                   ),
                 ),
-                SizedBox(height: doubleHeight(1)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.postCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Shots')
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.followersCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Followers')
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.followingCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Following')
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: doubleHeight(2)),
-                // Consumer<ProfileState>(builder: (context, value, child) =>
-                //     ElevatedButton(
-                //       onPressed: () {
-                //         value.isFollowed=!value.isFollowed;
-                //         value.notify();
-                //       },
-                //       child: Text(value.isFollowed?'Follow':'Following',style: TextStyle(color: Colors.black),),
-                //       style: ButtonStyle(
-                //         backgroundColor:
-                //         MaterialStateProperty.all(
-                //             value.isFollowed?Color.fromRGBO(216, 216, 216, 1):Color.fromRGBO(78, 255, 187, 1)
-                //         ),
-                //         elevation: MaterialStateProperty.all(0),
-                //         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(7),
-                //         )),
-                //         padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                //             vertical: doubleHeight(1.7),
-                //             horizontal: doubleWidth(10))),
+                // SizedBox(height: doubleHeight(1)),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.postCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Shots')
+                //         ],
                 //       ),
-                //     ),),
+                //     ),
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.followersCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Followers')
+                //         ],
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.followingCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Following')
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                SizedBox(height: doubleHeight(2)),
+                Consumer<ProfileState>(builder: (context, value, child) =>
+                    ElevatedButton(
+                      onPressed: () async{
+                        print('click');
+                        print(value.personalInformation!.followedByMe);
+                        MyService service = getIt<MyService>();
+                        if(value.personalInformation!.followedByMe){
+                          //unfollow
+                          bool backUser = await UsersService.unFollowUser(service, value.personalInformation!.id);
+                          print('unfollow $backUser');
+                        }else{
+                          bool backUser = await UsersService.followUser(service, value.personalInformation!.id);
+                          print('follow $backUser');
+                        }
+                        value.personalInformation!.followedByMe=!value.personalInformation!.followedByMe;
+                        value.notify();
+                      },
+                      child: Text(!value.personalInformation!.followedByMe?'add as fan mates':'remove as fan mates',style: TextStyle(color: Colors.black),),
+                      style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(
+                            value.personalInformation!.followedByMe?
+                            Color.fromRGBO(216, 216, 216, 1):Color.fromRGBO(78, 255, 187, 1)
+                        ),
+                        elevation: MaterialStateProperty.all(0),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        )),
+                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+                            vertical: doubleHeight(1.7),
+                            horizontal: doubleWidth(4))),
+                      ),
+                    ),),
                 SizedBox(height: doubleHeight(2)),
                 Expanded(
                     child: Column(

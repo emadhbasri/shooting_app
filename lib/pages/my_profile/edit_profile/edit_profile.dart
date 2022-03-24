@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:shooting_app/classes/live_match_model.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/services/user_service.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
+import 'package:shooting_app/pages/team_search.dart';
 
 import '../../../classes/functions.dart';
+import '../../../classes/models.dart';
 import '../../../dataTypes.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
-
+  const EditProfile(this.person,{Key? key}) : super(key: key);
+  final DataPersonalInformation person;
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  MyService service = getIt<MyService>();
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -71,7 +78,8 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         child: CircleAvatar(
                           radius: doubleWidth(7),
-                          backgroundImage: AssetImage('images/mohammad.jpg'),
+                          backgroundImage: widget.person.profilePhoto!=null?
+                          NetworkImage(widget.person.profilePhoto!):null,
                           child: CircleAvatar(
                             radius: doubleWidth(4.5),
                             backgroundColor: greenCall.withOpacity(0.4),
@@ -95,7 +103,7 @@ class _EditProfileState extends State<EditProfile> {
                         style: TextStyle(
                           color: grayCallDark
                         ),
-                        initialValue: 'Mason Moreno',
+                        initialValue: widget.person.fullName,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           prefixText: 'Name    ',
@@ -120,7 +128,7 @@ class _EditProfileState extends State<EditProfile> {
                         style: TextStyle(
                             color: grayCallDark
                         ),
-                        initialValue: '@masonmoreno',
+                        initialValue: widget.person.userName,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             prefixText: 'Username    ',
@@ -132,28 +140,59 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     SizedBox(height: doubleHeight(1)),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(244, 244, 244, 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: doubleWidth(8),
-                        // vertical: doubleHeight(1)
-                      ),
-                      child: TextFormField(
-                        style: TextStyle(
-                            color: grayCallDark
+
+                    GestureDetector(
+                      onTap: ()async{
+                        DataMatchTeam? backTeam = await Go.pushSlideAnim(context, TeamSearch());
+                        print('backTeam $backTeam');
+                        if(backTeam!=null){
+                          bool backUser = await UsersService.changeTeam(service, backTeam.id.toString());
+                          print('backUser $backUser');
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(244, 244, 244, 1),
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        initialValue: 'Borussia Dortmund',
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            prefixText: 'Team    ',
-                            prefixStyle: TextStyle(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: doubleWidth(8),
+                          vertical: doubleHeight(2)
+                        ),
+                        child: Row(
+                          children: [
+                            Text('Team    ',style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black
-                            ),
-                            border: InputBorder.none),
+                            ),),
+                            Text(widget.person.team==null?'no team selected':
+                            widget.person.team!.team_name!),
+                            // TextFormField(
+                            //   style: TextStyle(
+                            //       color: grayCallDark
+                            //   ),
+                            //   initialValue:
+                            //   widget.person.team==null?'no team selected':
+                            //   widget.person.team!.team_name,
+                            //   keyboardType: TextInputType.text,
+                            //   onFieldSubmitted: (e){
+                            //     print('submit $e');
+                            //   },
+                            //   decoration: InputDecoration(
+                            //       prefixText: 'Team    ',
+                            //       prefixStyle: TextStyle(
+                            //           fontWeight: FontWeight.w600,
+                            //           color: Colors.black
+                            //       ),
+                            //       suffixIcon: GestureDetector(
+                            //           onTap: (){
+                            //             print('search');
+                            //           },
+                            //           child: Icon(Icons.search)),
+                            //       border: InputBorder.none),
+                            // ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: doubleHeight(2)),

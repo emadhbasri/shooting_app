@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/dataTypes.dart';
 
 import '../classes/functions.dart';
+import '../classes/models.dart';
 
 class MyBottomSheet extends StatelessWidget {
-  const MyBottomSheet({Key? key}) : super(key: key);
-
+  const MyBottomSheet(this.post,{Key? key}) : super(key: key);
+  final DataPost post;
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -21,27 +22,27 @@ class MyBottomSheet extends StatelessWidget {
               SizedBox(height: doubleHeight(4)),
               ListTile(
                 title: Text('Engagement'),
-                subtitle: Text('800'),
+                subtitle: Text(post.engagement.toString()),
               ),
               ListTile(
                 title: Text('Reach'),
-                subtitle: Text('1000'),
+                subtitle: Text(post.reach.toString()),
               ),
               ListTile(
                 title: Text('Replies'),
-                subtitle: Text('721'),
+                subtitle: Text(post.postCommentCount.toString()),
               ),
               ListTile(
                 title: Text('Shares'),
-                subtitle: Text('225'),
+                subtitle: Text(post.shares.toString()),
               ),
               ListTile(
                 title: Text('Likes'),
-                subtitle: Text('62'),
+                subtitle: Text(post.postLikeCount.toString()),
               ),
               ListTile(
                 title: Text('Profile Clicks'),
-                subtitle: Text('5'),
+                subtitle: Text(post.profileClicks.toString()),
               ),
               SizedBox(
                   width: double.maxFinite,

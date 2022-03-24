@@ -298,7 +298,7 @@ class _MainViewState extends State<MainView> {
                           child: Text('Tap to type',
                               style: TextStyle(
                                   fontFamily: 'Alegreya',
-                                  package: 'stories_editor',
+
                                   fontWeight: FontWeight.w500,
                                   fontSize: 30,
                                   color: Colors.white.withOpacity(0.5),

@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
+import '../../classes/services/shots_service.dart';
 import '../../dataTypes.dart';
 
 class Shoot extends StatefulWidget {

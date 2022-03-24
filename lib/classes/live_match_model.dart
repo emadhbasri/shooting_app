@@ -137,4 +137,9 @@ class DataMatchTeam {
     logo = convertData(data, 'logo', DataType.string);
     winner = convertData(data, 'winner', DataType.bool);
   }
+
+  @override
+  String toString() {
+    return 'DataMatchTeam{id: $id, name: $name, logo: $logo, winner: $winner}';
+  }
 }

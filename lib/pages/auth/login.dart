@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:shooting_app/classes/my_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 
 import '../../classes/functions.dart';
+import '../../classes/services/authentication_service.dart';
 import '../../dataTypes.dart';
 import 'register.dart';
-import 'team.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
                         onPressed: () async{
                           bool back = await AuthenticationService.login(service,username: username, password: password);
                           if(back){
-                            Go.push(context, AppPage());
+                            Go.push(context, AppPageBuilder());
                           }else{
                             print('nononono');
                           }

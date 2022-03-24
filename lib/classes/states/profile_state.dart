@@ -3,21 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../main.dart';
 import '../models.dart';
-import '../my_service.dart';
+import '../services/my_service.dart';
+import '../services/user_service.dart';
 
 class ProfileState extends ChangeNotifier {
   MyService service = getIt<MyService>();
 
-  // bool isFollowed = false;
-
-  List<String> medias = [
-    'images/stadium.jpg',
-    'images/Untitled-12.png',
-    'images/Untitled-13.png',
-    'images/fskldf.jpg',
-    'images/boxfinal.png',
-    'images/1668011.jpg',
-  ];
 
 
   String selectedTab = 'Shots';

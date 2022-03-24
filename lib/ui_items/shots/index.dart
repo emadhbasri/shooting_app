@@ -5,7 +5,7 @@
 export 'reply_from_shot.dart';
 
 export '../bottom_sheet.dart';
-export '../dialogs/dialog2.dart';
+export '../dialogs/share_dialog.dart';
 export '../../classes/functions.dart';
 
 export '../../classes/models.dart';

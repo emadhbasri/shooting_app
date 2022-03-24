@@ -101,7 +101,6 @@ class BottomTools extends StatelessWidget {
                         children: [
                           Image.asset(
                             'assets/images/instagram_logo.png',
-                            package: 'stories_editor',
                             color: Colors.white,
                             height: 42,
                           ),

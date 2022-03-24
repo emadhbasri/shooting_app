@@ -1,45 +1,32 @@
 import 'package:provider/provider.dart';
+import '../../classes/services/my_service.dart';
+import '../../classes/states/main_state.dart';
+import '../../main.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
-import '../../classes/states/my_profile_state.dart';
 import 'edit_profile/edit_profile.dart';
 import 'media.dart';
 import 'shots.dart';
 
-class MyProfileBuilder extends StatelessWidget {
-  const MyProfileBuilder({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MyProfileStateProvider(
-      child: MyProfile(),
-    );
-  }
-}
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
-
   @override
   _MyProfileState createState() => _MyProfileState();
 }
 
 class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMixin {
-  late TabController controller;
+  MyService service = getIt<MyService>();
 
-  @override
-  void initState() {
-    super.initState();
-    MyProfileState state=Provider.of<MyProfileState>(context, listen: false);
-    state.init();
-    print('personalInformation ${state.personalInformation}');
-    controller = TabController(length: 3, vsync: this, initialIndex: 0);
-  }
+  String selectedTab = 'Shots';
+  List<String> tabs = ['Shots', 'Media', 'Fan Mates'];
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MyProfileState>(builder: (context, state, child) {
+    final MainState state = Provider.of<MainState>(context, listen: false);
+    // return Consumer<MainState>(builder: (context, state, child) {
       if(state.personalInformation==null){
         return circle();
       }else{
@@ -64,7 +51,7 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    ClipRRect(//todo add photo
+                                    ClipRRect(
                                         borderRadius: BorderRadius.circular(100),
                                         child: state.personalInformation!.profilePhoto
                                             !=null?
@@ -105,7 +92,9 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                           width: doubleWidth(25),
                           child: ElevatedButton(
                               onPressed: () {
-                                Go.pushSlideAnimSheet(context, EditProfile());
+                                Go.pushSlideAnimSheet(context, EditProfile(
+                                  state.personalInformation!
+                                ));
                               },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
@@ -144,42 +133,42 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                     ],
                   ),
                 ),
-                SizedBox(height: doubleHeight(1)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.postCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Shots')
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.followersCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Followers')
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(state.personalInformation!.followingCount.toString()),
-                          SizedBox(height: doubleHeight(1)),
-                          Text('Following')
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                // SizedBox(height: doubleHeight(1)),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.postCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Shots')
+                //         ],
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.followersCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Followers')
+                //         ],
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Text(state.personalInformation!.followingCount.toString()),
+                //           SizedBox(height: doubleHeight(1)),
+                //           Text('Following')
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: doubleHeight(2)),
                 Expanded(
                     child: Column(
@@ -189,11 +178,11 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                           height: doubleHeight(6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: state.tabs
+                            children: tabs
                                 .map((e) => GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  state.selectedTab = e;
+                                  selectedTab = e;
                                 });
                               },
                               child: Container(
@@ -216,7 +205,7 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                                           ),
                                         ),
                                       ),
-                                      state.selectedTab == e
+                                      selectedTab == e
                                           ? Align(
                                         alignment: Alignment.bottomCenter,
                                         child: Container(
@@ -244,7 +233,7 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                         ),
                         Expanded(child: Builder(
                           builder: (context) {
-                            switch (state.selectedTab) {
+                            switch (selectedTab) {
                               case 'Shots':
                                 return Shots();
                               case 'Media':
@@ -263,8 +252,8 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
           ),
         );
       }
-    }
-    );
+    // }
+    // );
 
   }
 }

@@ -1,4 +1,5 @@
-import '../../classes/my_service.dart';
+import '../../classes/services/my_service.dart';
+import '../../classes/services/shots_service.dart';
 import '../../main.dart';
 import 'index.dart';
 
@@ -121,7 +122,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           height: doubleWidth(5),
                           child: Image.asset('images/chat(2).png')),
                       sizew(doubleWidth(1)),
-                      Text('${comment.commentReplies.length}')
+                      Text(makeCount(comment.commentReplyCount))
                     ],
                   ),
                   Row(
@@ -130,17 +131,22 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       GestureDetector(
                         onTap: () async {
                           MyService service = await getIt<MyService>();
-                          String? userId = await getString('userid');
-                          bool back = await ShotsService.commentLike(service,
-                               postCommentId: comment.id);
-                          if (back)
-                            setState(() {
-                              comment.commentLikedBythisUser = true;
-                            });
+                          if (!comment.commentLikedBythisUser) {
+                            bool back = await ShotsService.commentLike(service,
+                                 postCommentId: comment.id);
+                            if (back)
+                              setState(() {
+                                comment.commentLikedBythisUser = true;
+                              });
+                          }else{
+                            bool back = await ShotsService.deleteCommentLike(service,
+                                commentId: comment.id);
+                            if (back)
+                              setState(() {
+                                comment.commentLikedBythisUser = false;
+                              });
+                          }
                         },
-                        // setState(() {
-                        //   comment.commentLikedBythisUser=!comment.commentLikedBythisUser;
-                        // });
                         child: Icon(
                             comment.commentLikedBythisUser
                                 ? Icons.favorite
@@ -150,22 +156,22 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
-                      Text('${comment.commentLikeCount}')
+                      Text(makeCount(comment.commentLikeCount))
                       // SizedBox(
                       //     width: doubleWidth(5),
                       //     height: doubleWidth(5),
                       //     child: Image.asset('images/heart.png'))
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(context: context, builder: (_) => Dialog2());
-                    },
-                    child: SizedBox(
-                        width: doubleWidth(5),
-                        height: doubleWidth(5),
-                        child: Image.asset('images/share.png')),
-                  )
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     showDialog(context: context, builder: (_) => ShareDialog());
+                  //   },
+                  //   child: SizedBox(
+                  //       width: doubleWidth(5),
+                  //       height: doubleWidth(5),
+                  //       child: Image.asset('images/share.png')),
+                  // )
                 ],
               ),
             ),
@@ -173,7 +179,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
             ...comment.commentReplies
                 .map((e) => Padding(
                       padding: EdgeInsets.only(left: doubleWidth(4)),
-                      child: CommentReply(comment: e),
+                      child: CommentReply(reply: e),
                     ))
                 .toList()
               ..add(Padding(
