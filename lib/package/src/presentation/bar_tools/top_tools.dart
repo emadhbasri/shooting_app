@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../domain/providers/notifiers/control_provider.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
@@ -67,8 +68,7 @@ class _TopToolsState extends State<TopTools> {
                       }),
                 ToolButton(
                     child: const ImageIcon(
-                      AssetImage('assets/icons/download.png',
-                          package: 'stories_editor'),
+                      AssetImage('assets/icons/download.png'),
                       color: Colors.white,
                       size: 20,
                     ),
@@ -88,19 +88,40 @@ class _TopToolsState extends State<TopTools> {
                       }
                     }),
                 ToolButton(
-                    child: const ImageIcon(
-                      AssetImage('assets/icons/stickers.png',
-                          package: 'stories_editor'),
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                    child: Icon(Icons.share,color: Colors.white,size: 20,),
                     backGroundColor: Colors.black12,
-                    onTap: () => createGiphyItem(
-                        context: context, giphyKey: controlNotifier.giphyKey)),
+                    onTap: () async{
+                      String pngUri;
+                      await takePicture(
+                          contentKey: widget.contentKey,
+                          context: context,
+                          saveToGallery: false)
+                          .then((bytes) {
+                        if (bytes != null) {
+                          pngUri = bytes;
+                          print('emad $pngUri');
+                          Share.shareFiles(
+                            [pngUri],
+                            mimeTypes: ['image/png'],
+                          );
+                        } else {}
+                      });
+                    }
+                ),
+                // ToolButton(
+                //     child: const ImageIcon(
+                //       AssetImage('assets/icons/stickers.png',
+                //           ),
+                //       color: Colors.white,
+                //       size: 20,
+                //     ),
+                //     backGroundColor: Colors.black12,
+                //     onTap: () => createGiphyItem(
+                //         context: context, giphyKey: controlNotifier.giphyKey)),
                 ToolButton(
                     child: const ImageIcon(
                       AssetImage('assets/icons/draw.png',
-                          package: 'stories_editor'),
+                          ),
                       color: Colors.white,
                       size: 20,
                     ),
@@ -112,7 +133,7 @@ class _TopToolsState extends State<TopTools> {
                 // ToolButton(
                 //   child: ImageIcon(
                 //     const AssetImage('assets/icons/photo_filter.png',
-                //         package: 'stories_editor'),
+                //         ),
                 //     color: controlNotifier.isPhotoFilter ? Colors.black : Colors.white,
                 //     size: 20,
                 //   ),
@@ -123,7 +144,7 @@ class _TopToolsState extends State<TopTools> {
                 ToolButton(
                   child: const ImageIcon(
                     AssetImage('assets/icons/text.png',
-                        package: 'stories_editor'),
+                        ),
                     color: Colors.white,
                     size: 20,
                   ),

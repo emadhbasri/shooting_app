@@ -18,6 +18,13 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  late TextEditingController nameController;
+  @override
+  void initState() {
+    super.initState();
+    nameController=TextEditingController(text: widget.person.fullName);
+  }
+
   MyService service = getIt<MyService>();
   @override
   Widget build(BuildContext context) {
@@ -99,11 +106,11 @@ class _EditProfileState extends State<EditProfile> {
                           horizontal: doubleWidth(8),
                           // vertical: doubleHeight(1)
                       ),
-                      child: TextFormField(
+                      child: TextField(
+                        controller: nameController,
                         style: TextStyle(
                           color: grayCallDark
                         ),
-                        initialValue: widget.person.fullName,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           prefixText: 'Name    ',
@@ -115,31 +122,31 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     SizedBox(height: doubleHeight(1)),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(244, 244, 244, 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: doubleWidth(8),
-                        // vertical: doubleHeight(1)
-                      ),
-                      child: TextFormField(
-                        style: TextStyle(
-                            color: grayCallDark
-                        ),
-                        initialValue: widget.person.userName,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            prefixText: 'Username    ',
-                            prefixStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black
-                            ),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    SizedBox(height: doubleHeight(1)),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     color: Color.fromRGBO(244, 244, 244, 1),
+                    //     borderRadius: BorderRadius.circular(5),
+                    //   ),
+                    //   padding: EdgeInsets.symmetric(
+                    //     horizontal: doubleWidth(8),
+                    //     // vertical: doubleHeight(1)
+                    //   ),
+                    //   child: TextFormField(
+                    //     style: TextStyle(
+                    //         color: grayCallDark
+                    //     ),
+                    //     initialValue: widget.person.userName,
+                    //     keyboardType: TextInputType.emailAddress,
+                    //     decoration: InputDecoration(
+                    //         prefixText: 'Username    ',
+                    //         prefixStyle: TextStyle(
+                    //             fontWeight: FontWeight.w600,
+                    //             color: Colors.black
+                    //         ),
+                    //         border: InputBorder.none),
+                    //   ),
+                    // ),
+                    // SizedBox(height: doubleHeight(1)),
 
                     GestureDetector(
                       onTap: ()async{
@@ -208,7 +215,9 @@ class _EditProfileState extends State<EditProfile> {
                             'Save',
                             style: TextStyle(color: Colors.white),
                           ),
-                          onPressed: () {},
+                          onPressed: () async{
+                            bool back = await UsersService.changeName(service, nameController.value.text);
+                          },
                         )),
                     SizedBox(height: doubleHeight(4)),
                   ],
@@ -221,4 +230,6 @@ class _EditProfileState extends State<EditProfile> {
     );
 
   }
+
+
 }

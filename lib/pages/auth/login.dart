@@ -6,6 +6,7 @@ import 'package:shooting_app/pages/AppPage.dart';
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../dataTypes.dart';
+import '../../main.dart';
 import 'register.dart';
 class Login extends StatefulWidget {
   @override
@@ -99,7 +100,9 @@ class _LoginState extends State<Login> {
                         onPressed: () async{
                           bool back = await AuthenticationService.login(service,username: username, password: password);
                           if(back){
-                            Go.push(context, AppPageBuilder());
+                            service.getToken().then((bool value) {
+                              Go.pushSlideAnim(context, AppPageBuilder());
+                            });
                           }else{
                             print('nononono');
                           }

@@ -27,7 +27,6 @@ dependencies:
 
   dashed_circle: ^0.0.2
   story: ^0.6.0
-#  stories_editor: 0.1.8
   modal_gif_picker: ^0.0.1
   fluttertoast: ^8.0.9
   align_positioned: ^3.0.0
@@ -39,9 +38,16 @@ dependencies:
   image: ^3.1.3
   animated_text_kit: ^4.2.1
 
+  cloud_firestore: ^3.1.10
+  firebase_messaging: ^11.2.11
+  firebase_core: ^1.13.1
+  flutter_local_notifications: ^9.4.0
+
   share_plus: ^4.0.2
   clipboard: ^0.1.3
   uni_links: ^0.5.1
+  video_player:
+    path: ./packages/video_player
 
 dev_dependencies:
   flutter_test:

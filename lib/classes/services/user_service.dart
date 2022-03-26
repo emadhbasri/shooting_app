@@ -62,6 +62,16 @@ class UsersService{
     debugPrint('changeTeamBack ${back}');
     return back['status'];
   }
+
+  static Future<bool> changeName(MyService service,String name)async{
+    debugPrint('changeName($name)');
+    Map<String, dynamic> back = await service.httpPut(
+        '/api/v1/Administration/editUser',{
+          'fullName':name
+    },jsonType: true);
+    debugPrint('changeNameBack ${back}');
+    return back['status'];
+  }
 //{
 //   "email": "RD7m3G@HUwjf.pkte",
 //   "userName": "tempor",

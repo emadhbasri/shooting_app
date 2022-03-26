@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
+import '../../../../main.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/scroll_notifier.dart';
 
@@ -99,11 +103,11 @@ class BottomTools extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
-                            'assets/images/instagram_logo.png',
-                            color: Colors.white,
-                            height: 42,
-                          ),
+                          // Image.asset(
+                          //   'assets/images/instagram_logo.png',
+                          //   color: Colors.white,
+                          //   height: 42,
+                          // ),
                           const Text(
                             'Stories Creator',
                             style: TextStyle(
@@ -125,47 +129,37 @@ class BottomTools extends StatelessWidget {
                   scale: 0.9,
                   child: AnimatedOnTapButton(
                       onTap: () async {
-                        String pngUri;
-                        await takePicture(
+
+                            debugPrint('creating image');
+                            await takePicture(
                                 contentKey: contentKey,
                                 context: context,
                                 saveToGallery: false)
-                            .then((bytes) {
-                          if (bytes != null) {
-                            pngUri = bytes;
-                            onDone(pngUri);
-                          } else {}
-                        });
+                                .then((pngUri) {
+                              if (pngUri != null) {
+                                MyService service = getIt<MyService>();
+                                service.createStory(mediaURI: XFile(pngUri,mimeType: 'png'));
+                              } else {}
+                            });
+
+
+
+                        ///---------------------
+
+                        //todo add to story
                       },
-                      child: onDoneButtonStyle ??
-                          Container(
-                            padding: const EdgeInsets.only(
-                                left: 12, right: 5, top: 4, bottom: 4),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                    color: Colors.white, width: 1.5)),
-                            child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                  Text(
-                                    'Share',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        letterSpacing: 1.5,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ]),
-                          )),
+                      child: AbsorbPointer(
+                        absorbing: true,
+                        child: FloatingActionButton(
+                          onPressed: (){},
+                          heroTag: 'add story to server',
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            // size: 15,
+                          ),
+                        ),
+                      )),
                 ),
               ),
             ],

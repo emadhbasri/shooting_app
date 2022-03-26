@@ -48,10 +48,7 @@ class FontSelector extends StatelessWidget {
                     child: Text(
                       'Aa',
                       style: TextStyle(
-                              fontFamily: controlNotifier.fontList![index],
-                              package: controlNotifier.isCustomFontList
-                                  ? null
-                                  : 'stories_editor')
+                              fontFamily: controlNotifier.fontList![index])
                           .copyWith(
                               color: index == editorNotifier.fontFamilyIndex
                                   ? Colors.red

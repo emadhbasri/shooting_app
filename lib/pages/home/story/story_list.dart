@@ -57,91 +57,121 @@
 // ),
 import 'package:provider/provider.dart';
 import 'package:dashed_circle/dashed_circle.dart';
+import 'package:shooting_app/pages/home/story/story_view.dart';
 
 import '../../../classes/states/main_state.dart';
 import '../../../package/dashed_color_circle/dashed_color_circle.dart';
 import '../../../package/stories_editor.dart';
 import '../../../ui_items/shots/index.dart';
 
-class StoryList extends StatelessWidget {
+class StoryList extends StatefulWidget {
   const StoryList({Key? key}) : super(key: key);
 
   @override
+  State<StoryList> createState() => _StoryListState();
+}
+
+class _StoryListState extends State<StoryList> {
+
+  @override
+  void initState() {
+    super.initState();
+    MainState state = Provider.of(context,listen: false);
+    state.getStories();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final String url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Bill_Gates_Buys_Skype_%285707954468%29.jpg/2560px-Bill_Gates_Buys_Skype_%285707954468%29.jpg';
+    final String url =
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Bill_Gates_Buys_Skype_%285707954468%29.jpg/2560px-Bill_Gates_Buys_Skype_%285707954468%29.jpg';
 
     return Consumer<MainState>(
       builder: (context, state, child) {
         return RefreshIndicator(
           onRefresh: () async {
-            await state.getFanFeed();
+            // await state.getFanFeed();
           },
           child: Scaffold(
             body: ListView(
               children: [
                 ListTile(
-                  onTap: (){
-                    // Go.pop(context,teams[index]);
+                  onTap: () {
+                    Go.push(
+                        context,
+                        StoriesEditor(
+                          giphyKey: 'story 1',
+                          onDone: (uri) {
+                            debugPrint(uri);
+                            // Share.shareFiles([uri]);
+                          },
+                        ));
                   },
                   leading:
                   //teams[index].logo==null?null:
                   SizedBox(
                       width: doubleWidth(15),
                       height: doubleWidth(15),
-                      child: DashedCircle(
-                        dashes: 4,
-                        color: mainBlue,
-                        child: Padding(padding: EdgeInsets.all(6.0),
-                          child: CircleAvatar(
-                            radius: 70.0,
-                            backgroundImage: NetworkImage(url),
-                          ),
-                        ),
-                      )),
-                  title: Text('title'),
-                  subtitle: Text('subtitle'),
-                ),
-                ListTile(
-                  onTap: (){
-                    // Go.pop(context,teams[index]);
-                  },
-                  leading:
-                  //teams[index].logo==null?null:
-                  SizedBox(
-                      width: doubleWidth(15),
-                      height: doubleWidth(15),
-                      child: DashedColorCircle(
-                        dashes: 4,
-                        emptyColor: Colors.grey,
-                        filledColor: mainBlue,
-                        fillCount: 2,
-                        gapSize: 5,
-                        strokeWidth: 4,
-                        child: Padding(padding: EdgeInsets.all(6.0),
-                          child: CircleAvatar(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
                             radius: 70.0,
                             backgroundImage: networkImage(url),
                           ),
-                        ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Icon(Icons.add,size: 15,color: black,),
+                            ),
+                          )
+                        ],
                       )),
-                  title: Text('title'),
-                  subtitle: Text('subtitle'),
+                  title: Text('My stories'),
+                  subtitle: Text('Tap to add story'),
+                  trailing: AbsorbPointer(
+                    absorbing: true,
+                    child: FloatingActionButton(
+                      mini: true,
+                      onPressed: () {},
+                      heroTag: 'story add top',
+                      child: Icon(Icons.edit),
+                    ),
+                  ),
                 ),
+                // Divider(color: grayCall,indent: doubleWidth(24)),
+                if(state.newStories.isNotEmpty)
+                  ExpansionTile(
+                  trailing: const SizedBox(),
+                  initiallyExpanded: true,
+                  title: Text('Recent Stories'),
+                children: state.newStories.map((e) => StoryListItem(storyUser: e)).toList()),
+                if(state.storyViewed.isNotEmpty)
+                  ExpansionTile(
+                  trailing: const SizedBox(),
+                  initiallyExpanded: true,
+                  title: Text('Viewed Stories'),
+                  children: state.storyViewed.map((e) => StoryListItem(storyUser: e)).toList()),
               ],
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: (){
-Go.push(context, StoriesEditor(
-  giphyKey: 'story 1',
+              onPressed: () {
+                Go.push(
+                    context,
+                    StoriesEditor(
 
-  onDone: (uri){
-    debugPrint(uri);
-    // Share.shareFiles([uri]);
-  },
-));
+                      giphyKey: 'story 1',
+                      onDone: (uri) {
+                        debugPrint(uri);
+                        // Share.shareFiles([uri]);
+                      },
+                    ));
               },
               heroTag: 'story add',
-child: Icon(Icons.add_circle),
+              child: Icon(Icons.add_circle),
             ),
           ),
         );
@@ -149,6 +179,43 @@ child: Icon(Icons.add_circle),
     );
   }
 }
+class StoryListItem extends StatelessWidget {
+  const StoryListItem({Key? key,required this.storyUser}) : super(key: key);
+  final DataStoryUser storyUser;
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Go.pushSlideAnim(context, StoryPage());
+      },
+      leading: SizedBox(
+          width: doubleWidth(15),
+          height: doubleWidth(15),
+          child: DashedColorCircle(
+            dashes: storyUser.notSeen.length + storyUser.seen.length,
+            emptyColor: Colors.grey,
+            filledColor: mainBlue,
+            fillCount: 3,//storyUser.seen.length
+            gapSize: 5,
+            strokeWidth: 4,
+            child: Padding(
+              padding: EdgeInsets.all(6.0),
+              child:
+              storyUser.person.profilePhoto!=null?CircleAvatar(
+                radius: 70.0,
+                backgroundImage: networkImage(storyUser.person.profilePhoto!),
+              ):null,
+            ),
+          )),
+      title: Text(storyUser.person.fullName??''),
+      subtitle: Text(storyUser.person.userName??'')
+      // Text('${getMonString(DateTime.now())} ${DateTime.now().day}, ${DateTime.now().year}'),
+    );
+  }
+}
+
+
+
 //StoriesEditor(
 //     giphyKey: '[YOUR GIPHY API KEY]', /// (String) required param
 //     onDone: (String uri){

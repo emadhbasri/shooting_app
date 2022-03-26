@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import '../models.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +24,7 @@ class LiveMatchService {
     if (utf.statusCode == 403 && utf.body == 'nonet') {
       return {'status': false, "data": false};
     }
-    debugPrint('body ${utf.body}');
+    debugPrint('body ${utf.statusCode} ${utf.body}');
 
     try {
       var json = utf8.decode(utf.bodyBytes);
@@ -33,7 +35,7 @@ class LiveMatchService {
           utf.statusCode == 204) {
         return {'status': true, 'data': jsonn};
       } else {
-        return {'status': false, 'error': jsonn['message']};
+        return {'status': false, 'error': jsonn['messages']};
       }
     } catch (e) {
       debugPrint('cathc e $e');
@@ -41,8 +43,29 @@ class LiveMatchService {
     }
   }
 
+  Future<http.StreamedResponse?> httpGetStream(String url) async {
+    Map<String, String> headers = {
+      'x-rapidapi-host': 'api-football-v1.p.rapidapi.com',
+      "x-rapidapi-key": "c52704a0f1mshce78bef813e31f1p1f4499jsn6cd34369fc03",
+    };
+    http.Request request = http.Request('GET', Uri.parse(_server + url));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send()
+        .catchError((e) {
+      FutureOr<http.StreamedResponse> out = http.StreamedResponse(Stream<List<int>>.empty(),403);
+      return out;
+    });
+    if (response.statusCode == 403) {
+      return null;
+    }
+return response;
+
+
+
+  }
+
   Future<List<DataCountry>> countries() async {
-    debugPrint('shotsAll()');
+    debugPrint('countries()');
     Map<String, dynamic> back = await httpGet('countries');
     // debugPrint('back ${back}');
     return convertDataList<DataCountry>(
@@ -57,15 +80,32 @@ class LiveMatchService {
         back['data'], 'response', 'DataLeagueMain');
   }
   Future<List<DataMatchTeam>> teams({required String search}) async {
-    debugPrint('teams()');
+    debugPrint('teams($search)');
     Map<String, dynamic> back = await httpGet('teams?search=$search');
+    if(back['status']){
+      List<DataMatchTeam> out = [];
+      for(int j=0;j<back['data']['response'].length;j++){
+        out.add(
+            convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
+        );
+      }
+      // debugPrint('back ${back}');
+      return out;
+    }else{
+      print('back $back');
+      toast(back['error'],duration: Toast.LENGTH_LONG);
+      return [];
+    }
+  }
+  Future<List<DataMatchTeam>> getTeams({required int league,required int season}) async {
+    debugPrint('getTeams($league,$season)');
+    Map<String, dynamic> back = await httpGet('teams?league=$league&season=$season');
     List<DataMatchTeam> out = [];
     for(int j=0;j<back['data']['response'].length;j++){
-          out.add(
-            convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
-          );
+      out.add(
+          convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
+      );
     }
-    // debugPrint('back ${back}');
     return out;
   }
   Future<List<DataMatch1>> matchs({
@@ -99,14 +139,14 @@ class LiveMatchService {
   }
 
   Future<List<DataEvent>> matchEvents({required int fixture}) async {
-    debugPrint('matchStatics()');
+    debugPrint('matchEvents($fixture)');
     Map<String, dynamic> back = await httpGet('fixtures/events?fixture=$fixture');
     // debugPrint('back ${back}');
     return convertDataList<DataEvent>(
         back['data'], 'response', 'DataEvent');
   }
   Future<Map<String,DataLineUps?>> matchLineUps({required int fixture}) async {
-    debugPrint('matchLineUps()');
+    debugPrint('matchLineUps($fixture)');
     Map<String, dynamic> back = await httpGet('fixtures/lineups?fixture=$fixture');
     debugPrint('back ${back}');
     List<DataLineUps> list=convertDataList<DataLineUps>(

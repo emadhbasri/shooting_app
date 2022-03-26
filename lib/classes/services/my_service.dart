@@ -2,7 +2,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
 
@@ -27,7 +29,7 @@ class MyService{
     debugPrint('_access $_access');
     if(_access==null) return false;
     MainState state = getIt<MainState>();
-    state.init();
+    await state.init();
     return true;
     // if (_refresh != null) await getAccess();
   }
@@ -92,7 +94,11 @@ class MyService{
     if (utf.statusCode == 201 || utf.statusCode == 200 || utf.statusCode == 204) {
       return {'status': true, 'data': jsonn};
     } else {
-      return {'status': false, 'error': jsonn['message']};
+      if(jsonn.containsKey('errors')){
+        return {'status': false, 'error': jsonn['errors']};
+      }else{
+        return {'status': false, 'error': jsonn['message']};
+              }
     }
   }
 
@@ -159,7 +165,7 @@ class MyService{
     if (utf.statusCode == 403 && utf.body == 'nonet') {
       return {'status': false, "data": false};
     }
-    debugPrint('body $utf');
+    debugPrint('body $url $utf');
 
     try {
       var json = utf8.decode(utf.bodyBytes);
@@ -172,7 +178,7 @@ class MyService{
       }
     } catch (e) {
       debugPrint('cathc e $e');
-      return {'status': false, "data": false};
+      return {'status': false, "data": null};
     }
     // finally{
     //   debugPrint('finaly');
@@ -266,6 +272,35 @@ print('formData ${formData.fields}');
     }
   }
 
+
+  Future<DataShortVideoStory?> createStory({
+    required XFile mediaURI,
+    String? caption,
+    String? color,
+    String? font,
+    String? content,
+  }) async {
+    debugPrint('createShot()');
+    Map<String,dynamic> map = {
+      'mimeType':mediaURI.mimeType,
+      'createdAt':DateTime.now().toString()
+    };
+    MultipartFile file = await MultipartFile.fromFile(mediaURI.path, filename: mediaURI.name);
+    map['mediaURI']=file;
+
+    print('map $map');
+    return null;
+    Map<String, dynamic> back = await httpPostMulti('/api/v1/VideoStory/create',
+        FormData.fromMap(map));
+    debugPrint('back ${back}');
+    return convertData(back['data'], 'data', DataType.clas,classType: 'DataShortVideoStory');
+  }
+  Future<List<DataStoryMain>> getStories() async {
+    debugPrint('getStories()');
+    Map<String, dynamic> back = await httpGet('/api/v1/VideoStory/all/friends');
+    debugPrint('backgetStories ${back}');
+    return convertDataList<DataStoryMain>(back['data'], 'data', 'DataStoryMain');
+  }
 
 }
 

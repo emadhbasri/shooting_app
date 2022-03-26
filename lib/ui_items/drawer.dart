@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/dataTypes.dart';
 // import '../pages/home/mach/match_list.dart';
 
 import '../classes/functions.dart';
+import '../main.dart';
 import '../pages/AppPage.dart';
 import '../pages/my_profile/edit_profile/settings.dart';
 
 class MyDrawer extends StatefulWidget {
-  const MyDrawer({Key? key,required this.page}) : super(key: key);
+  const MyDrawer({Key? key, required this.page}) : super(key: key);
   final String page;
   @override
   _MyDrawerState createState() => _MyDrawerState();
@@ -46,14 +48,14 @@ class _MyDrawerState extends State<MyDrawer>
       ),
       body: SizedBox.expand(
           child: Stack(
-            children: [
-              GestureDetector(
-                onTap: (){
-                  _controller.reverse().then((value) => Go.pop(context, null));
-                },
-              ),
-              AlignTransition(
-        child: Container(
+        children: [
+          GestureDetector(
+            onTap: () {
+              _controller.reverse().then((value) => Go.pop(context, null));
+            },
+          ),
+          AlignTransition(
+            child: Container(
               padding: EdgeInsets.symmetric(
                   horizontal: doubleWidth(8), vertical: doubleHeight(2)),
               width: double.maxFinite,
@@ -62,6 +64,7 @@ class _MyDrawerState extends State<MyDrawer>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if(getIt<MainState>().personalInformation!=null)
                   ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     leading: Container(
@@ -72,7 +75,9 @@ class _MyDrawerState extends State<MyDrawer>
                           children: [
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.asset(profileImageDefault)),
+                                child: getIt<MainState>().personalInformation!.profilePhoto
+                                    !=null?
+                                imageNetwork(getIt<MainState>().personalInformation!.profilePhoto??'',fit: BoxFit.fill):null),
                             Align(
                               alignment: Alignment(1, -0.9),
                               child: SizedBox(
@@ -81,28 +86,31 @@ class _MyDrawerState extends State<MyDrawer>
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: white,
-                                      border: Border.all(color: white, width: 3),
+                                      border:
+                                          Border.all(color: white, width: 3),
                                       borderRadius: BorderRadius.circular(100),
-                                      image: DecorationImage(
-                                        image: AssetImage(profileTeamDefault),
-                                      )),
+                                      image: getIt<MainState>().personalInformation!.team!=null
+                                          && getIt<MainState>().personalInformation!.team!.team_badge!=null?DecorationImage(
+                                        image: networkImage(getIt<MainState>().personalInformation!.team!.team_badge!),
+                                      ):null),
                                 ),
                               ),
                             )
                           ],
                         )),
-                    title: Text('Mason Moreno'),
-                    subtitle: Text('@masonmoreno'),
+                    title: Text(getIt<MainState>().personalInformation!.fullName??''),
+                    subtitle: Text('@${getIt<MainState>().personalInformation!.userName??''}'),
                   ),
                   ListTile(
-                    onTap: (){
-                      if(widget.page=='home'){
-                        _controller.reverse().then((value) => Go.pop(context, null));
-                      }else{
+                    onTap: () {
+                      if (widget.page == 'home') {
+                        _controller
+                            .reverse()
+                            .then((value) => Go.pop(context, null));
+                      } else {
                         _controller.reverse().then((value) {
                           Go.pop(context, null);
                           Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
-
                         });
                       }
                     },
@@ -163,7 +171,7 @@ class _MyDrawerState extends State<MyDrawer>
                   ),
                   Divider(color: Colors.black),
                   ListTile(
-                    onTap: (){
+                    onTap: () {
                       _controller.reverse().then((value) {
                         Go.pop(context, null);
                         Go.pushSlideAnim(context, Settings());
@@ -182,13 +190,13 @@ class _MyDrawerState extends State<MyDrawer>
                   ),
                 ],
               ),
-        ),
-        alignment:
+            ),
+            alignment:
                 Tween<Alignment>(begin: Alignment(0, -3), end: Alignment(0, -1))
                     .animate(_controller),
-      ),
-            ],
-          )),
+          ),
+        ],
+      )),
     );
   }
 }

@@ -9,6 +9,7 @@ import 'stats.dart';
 import '../../../../classes/states/match_state.dart';
 import 'cards.dart';
 import 'matchups.dart';
+import 'package:http/http.dart' as http;
 
 class MatchBuilder extends StatelessWidget {
   const MatchBuilder({Key? key}) : super(key: key);
@@ -29,6 +30,26 @@ class Match extends StatefulWidget {
 }
 
 class _MatchState extends State<Match> {
+
+  gett()async{
+    var headers = {
+      'x-rapidapi-key': 'XxXxXxXxXxXxXxXxXxXxXxXx',
+      'x-rapidapi-host': 'v3.football.api-sports.io'
+    };
+    var request = http.Request('GET', Uri.parse('https://v3.football.api-sports.io/{endpoint}'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+  }
+
   @override
   void initState() {
     // MatchState state = Provider.of(context,listen: false);

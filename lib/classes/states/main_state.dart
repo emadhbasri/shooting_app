@@ -44,10 +44,39 @@ class MainState extends ChangeNotifier {
   ///story
 
 
+  List<DataStoryUser> storyViewed=[];
+  List<DataStoryUser> newStories=[];
+  getStories()async{
+    List<DataStoryMain> all = await service.getStories();print('all ${all.length}');
+    List<DataPersonalInformationViewModel> persons=[];
+    List<List<DataStoryMain>> out = [];
+    for(int j=0;j<all.length;j++){
+      int index = hasPerson(persons,all[j].person);
+      if(index==-1){
+        persons.add(all[j].person);
+        out.add([all[j]]);
+      }else{
+        out[index].add(all[j]);
+      }
+    }
+    List<DataStoryUser> allstoryUsers=[];
+    for(int j=0;j<out.length;j++){
+      allstoryUsers.add(DataStoryUser.fromList(out[j]));
+    }
+    storyViewed=allstoryUsers.where((element) => element.isAllSeen==true).toList();
+    newStories=allstoryUsers.where((element) => element.isAllSeen==false).toList();
+
+    notifyListeners();
+    print('storyViewed ${storyViewed.length}');
+    print('newStories ${newStories.length}');
+  }
 
   notify() => notifyListeners();
 
 }
+int hasPerson(List<DataPersonalInformationViewModel> persons,DataPersonalInformationViewModel person)=>
+    persons.indexWhere((element) => element.personalInformationId==person.personalInformationId);
+
 class MainStateProvider extends StatelessWidget {
   final Widget child;
   const MainStateProvider({Key? key, required this.child}) : super(key: key);

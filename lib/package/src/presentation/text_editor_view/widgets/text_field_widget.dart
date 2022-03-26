@@ -59,7 +59,6 @@ class TextFieldWidget extends StatelessWidget {
       textAlign: editorNotifier.textAlign,
       style: TextStyle(
           fontFamily: controlNotifier.fontList![editorNotifier.fontFamilyIndex],
-          package: controlNotifier.isCustomFontList ? null : 'stories_editor',
           shadows: <Shadow>[
             Shadow(
                 offset: const Offset(1.0, 1.0),
@@ -96,8 +95,6 @@ class TextFieldWidget extends StatelessWidget {
       style: TextStyle(
               fontFamily:
                   controlNotifier.fontList![editorNotifier.fontFamilyIndex],
-              package:
-                  controlNotifier.isCustomFontList ? null : 'stories_editor',
               shadows: <Shadow>[
                 Shadow(
                     offset: const Offset(1.0, 1.0),

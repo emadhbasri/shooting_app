@@ -15,7 +15,7 @@ class TeamSearch extends StatefulWidget {
 class _TeamSearchState extends State<TeamSearch> {
   LiveMatchService service = LiveMatchService();
   late final TextEditingController controller;
-  List<DataMatchTeam> teams=[];
+  List<DataMatchTeam>? teams;
   @override
   void initState() {
     statusSet(mainBlue);
@@ -30,7 +30,6 @@ class _TeamSearchState extends State<TeamSearch> {
   }
   @override
   Widget build(BuildContext context) {
-    print('controller.value.text ${controller.value.text}');
     return WillPopScope(
       onWillPop: () async {
         // statusSet(trans);
@@ -66,6 +65,7 @@ class _TeamSearchState extends State<TeamSearch> {
                           controller: controller,
                           onSubmitted: (e)async{
                             if(controller.value.text.length<3)return;
+                            teams=[];
                             teams=await service.teams(search: controller.value.text);
                             setState(() {});
                           },
@@ -88,24 +88,22 @@ class _TeamSearchState extends State<TeamSearch> {
         body: SizedBox.expand(
           child: Builder(
             builder: (context) {
-              print('team ${teams.length}');
-              if(controller.value.text=='')
-              return Text('waiting for user search');
+              if(controller.value.text=='' || teams==null)
+              return Center(child: Text('waiting for user search'));
               else
-                // return Text('no results');
-                return teams.isEmpty?Text('no results'):
+                return teams!.isEmpty?Center(child: Text('no results')):
                   ListView.builder(
-                    itemCount: teams.length,
+                    itemCount: teams!.length,
                     itemBuilder: (context, index) =>
                         ListTile(
                           onTap: (){
-                            Go.pop(context,teams[index]);
+                            Go.pop(context,teams![index]);
                           },
-                          leading: teams[index].logo==null?null:SizedBox(
+                          leading: teams![index].logo==null?null:SizedBox(
                               width: doubleWidth(15),
                               height: doubleWidth(15),
-                              child: imageNetwork(teams[index].logo!)),
-                          title: Text(teams[index].name),
+                              child: imageNetwork(teams![index].logo!)),
+                          title: Text(teams![index].name),
                         ),
                     physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.symmetric(horizontal: doubleWidth(5),vertical: doubleHeight(2)),

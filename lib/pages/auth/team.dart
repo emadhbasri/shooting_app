@@ -1,9 +1,16 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shooting_app/classes/live_match_model.dart';
+import 'package:shooting_app/classes/services/user_service.dart';
 
 import '../../classes/functions.dart';
+import '../../classes/services/live_match_service.dart';
+import '../../classes/services/my_service.dart';
 import '../../dataTypes.dart';
+import '../../main.dart';
 import '../AppPage.dart';
+import '../team_search.dart';
 
 class Team extends StatefulWidget {
   @override
@@ -11,77 +18,43 @@ class Team extends StatefulWidget {
 }
 
 class _TeamState extends State<Team> {
-  String? countrie;
-  List<DropdownMenuItem<String>> countries = [
-    DropdownMenuItem(child:
-      Text(
-        'country 1'
-      ),
-      value: 'country 1',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'country 2'
-    ),
-      value: 'country 2',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'country 3'
-    ),
-      value: 'country 3',
-    ),
-  ];
+  LiveMatchService liveMatch = LiveMatchService();
+  MyService service = getIt<MyService>();
 
-  String? legue;
-  List<DropdownMenuItem<String>> legues = [
-    DropdownMenuItem(child:
-    Text(
-        'legue 1'
-    ),
-      value: 'legue 1',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'legue 2'
-    ),
-      value: 'legue 2',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'legue 3'
-    ),
-      value: 'legue 3',
-    ),
-  ];
-  String? team;
-  List<DropdownMenuItem<String>> teams = [
-    DropdownMenuItem(child:
-    Text(
-        'team 1'
-    ),
-      value: 'team 1',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'team 2'
-    ),
-      value: 'team 2',
-    ),
-    DropdownMenuItem(child:
-    Text(
-        'team 3'
-    ),
-      value: 'team 3',
-    ),
-  ];
+  List<DataCountry> countries = [];
+  DataCountry? country;
 
-String search = '';
+
+
+  getCountries()async{
+    if(countries.isNotEmpty)return;
+    countries = await liveMatch.countries();
+    print('countries ${countries.length}');
+    country=countries.singleWhere((element) => element.name=='England');//England
+    getLeagues();
+  }
+  List<DataLeagueMain> leagues = [];
+  DataLeagueMain? league;
+  getLeagues()async{
+    leagues = await liveMatch.leagues(country: country!.name,);
+    setState(() {});
+    print('leagues ${leagues.length}');
+  }
+  DataMatchTeam? team;
+  List<DataMatchTeam> teams = [];
+  DataMatchTeam? searchTeam;
+  getTeams()async{
+    teams = await liveMatch.getTeams(league: league!.league.id,season: league!.latestSeason);
+    setState(() {});
+    print('leagues ${leagues.length}');
+  }
+
 
   @override
   void initState() {
-    statusSet(trans);
     super.initState();
+    statusSet(trans);
+    getCountries();
   }
 
   @override
@@ -100,22 +73,36 @@ String search = '';
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
 
-                  ClipRRect(
-                    child: Container(
-                      width: max,
-                      height: doubleHeight(7),
-                      color: Color.fromRGBO(216, 216, 216, 1),
-                      child: Center(
-                        child: TextField(
-                          decoration: InputDecoration(
-                              prefixText: '        ',
-                              border: InputBorder.none,
-                              hintText: 'Search for teams...'
-                          ),
-                        ),
+                  GestureDetector(
+                    onTap: ()async{
+                      DataMatchTeam? team = await Go.pushSlideAnim(context, TeamSearch());
+                      setState(() {
+                        searchTeam=team;
+                      });
+                    },
+                    child:
+
+                    ClipRRect(
+                      child: Container(
+                        width: max,
+                        padding: EdgeInsets.symmetric(horizontal: doubleWidth(5),
+                        vertical: doubleHeight(2)),
+                        color: Color.fromRGBO(216, 216, 216, 1),
+                        child: searchTeam==null?Text('Search for teams...'):Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if(searchTeam!.logo!=null)
+                              SizedBox(
+                                  width: doubleWidth(8),
+                                  height: doubleWidth(8),
+                                  child: imageNetwork(searchTeam!.logo!,fit: BoxFit.fill)),
+                            SizedBox(width: doubleWidth(2)),
+                            Text(searchTeam!.name)
+                          ],
+                        )
                       ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    borderRadius: BorderRadius.circular(10),
                   ),
                   sizeh(doubleHeight(3)),
                   Container(
@@ -180,18 +167,40 @@ String search = '';
                       padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: DropdownButton<String>(
+                        child: DropdownButton<DataCountry>(
+                          items: countries.map((e) =>
+                              DropdownMenuItem<DataCountry>(child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if(e.flag!=null)
+                                    SizedBox(
+                                      width: doubleWidth(5),
+                                      height: doubleWidth(5),
+                                      child: SvgPicture.network(e.flag!),
+                                    ),
+                                  SizedBox(width: doubleWidth(2)),
+                                  Text(
+                                      '${e.name} '+ '${e.code!=null?'(${e.code})':''}'
+                                  ),
+                                ],
+                              ),
+                                value: e,)
+                          ).toList(),
+                          onChanged: (e){
+                            if(e!=null){
+                              setState(() {
+                                country=e;
+                              });
+                              getLeagues();
+                            }
+                          },
                           underline: non,isDense: true,
-                          value: countrie,
+                          iconSize: 30,
+                          borderRadius: BorderRadius.circular(10),
+                          value: country,
                           isExpanded: true,
                           hint: Text('Countries'),
                           icon: Icon(Icons.keyboard_arrow_down),
-                          onChanged: (val){
-                            setState(() {
-                              countrie=val;
-                            });
-                          },
-                          items: countries,
                         ),
                       ),
                     ),
@@ -205,18 +214,34 @@ String search = '';
                       padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: DropdownButton<String>(
+                        child: DropdownButton<DataLeagueMain>(
+                          items: leagues.map((e) =>
+                              DropdownMenuItem<DataLeagueMain>(child:Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if(e.league.logo!=null)
+                                    imageNetwork(e.league.logo!),
+                                  SizedBox(width: doubleWidth(2)),
+                                  Text(e.league.name)
+                                ],
+                              ),
+                                value: e,)
+                          ).toList(),
+                          onChanged: (e){
+                            if(e!=null){
+                              setState(() {
+                                league=e;
+                              });
+                              getTeams();
+                            }
+                          },
                           underline: non,isDense: true,
-                          value: legue,
+                          iconSize: 30,
+                          borderRadius: BorderRadius.circular(10),
+                          value: league,
                           isExpanded: true,
-                          hint: Text('League'),
+                          hint: Text('Leagues'),
                           icon: Icon(Icons.keyboard_arrow_down),
-                          onChanged: (val){
-                            setState(() {
-                              legue=val;
-                            });
-                          },
-                          items: legues,
                         ),
                       ),
                     ),
@@ -230,18 +255,34 @@ String search = '';
                       padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: DropdownButton<String>(
+                        child: DropdownButton<DataMatchTeam>(
+                          items: teams.map((e) =>
+                              DropdownMenuItem<DataMatchTeam>(child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if(e.logo!=null)
+                                    imageNetwork(e.logo!),
+                                  SizedBox(width: doubleWidth(2)),
+                                  Text(e.name)
+                                ],
+                              ),
+                                value: e,)
+                          ).toList(),
+                          onChanged: (e){
+                            if(e!=null){
+                              setState(() {
+                                team=e;
+                                searchTeam=e;
+                              });
+                            }
+                          },
                           underline: non,isDense: true,
+                          iconSize: 30,
+                          borderRadius: BorderRadius.circular(10),
                           value: team,
                           isExpanded: true,
-                          hint: Text('Team'),
+                          hint: Text('Teams'),
                           icon: Icon(Icons.keyboard_arrow_down),
-                          onChanged: (val){
-                            setState(() {
-                              team=val;
-                            });
-                          },
-                          items: teams,
                         ),
                       ),
                     ),
@@ -255,8 +296,15 @@ String search = '';
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
-                        onPressed: () {
-                          Go.pushSlideAnim(context, AppPageBuilder());
+                        onPressed: () async{
+                          if(searchTeam==null || team==null){
+                            toast('Please pick a team.');
+                          }else{
+                            bool back = await UsersService.changeTeam(getIt<MyService>(), searchTeam!.id.toString());
+                            if (back) {
+                              Go.pushSlideAnim(context, AppPageBuilder());
+                            }
+                          }
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),

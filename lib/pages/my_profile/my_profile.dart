@@ -69,7 +69,8 @@ class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMix
                                               Border.all(color: white, width: 3),
                                               borderRadius:
                                               BorderRadius.circular(100),
-                                              image: state.personalInformation!.team!=null && state.personalInformation!.team!.team_badge!=null?DecorationImage(
+                                              image: state.personalInformation!.team!=null
+                                                  && state.personalInformation!.team!.team_badge!=null?DecorationImage(
                                                 image: networkImage(state.personalInformation!.team!.team_badge!),
                                               ):null),
                                         ),

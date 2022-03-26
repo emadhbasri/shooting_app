@@ -97,6 +97,7 @@ class _StoriesEditorState extends State<StoriesEditor> {
         ChangeNotifierProvider(create: (_) => TextEditingNotifier()),
       ],
       child: MainView(
+
         giphyKey: widget.giphyKey,
         onDone: widget.onDone,
         fontFamilyList: widget.fontFamilyList,

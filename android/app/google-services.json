@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1070447520557",
+    "project_id": "footballbuzz-app",
+    "storage_bucket": "footballbuzz-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070447520557:android:5ac27125a3cd6a401e81a4",
+        "android_client_info": {
+          "package_name": "com.footballbuzz.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe8pRBEKyPaVsOivPtAeyYX1VVaUNs2Xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070447520557:android:5fa6faedc11a47e91e81a4",
+        "android_client_info": {
+          "package_name": "com.footballbuzz.toptal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe8pRBEKyPaVsOivPtAeyYX1VVaUNs2Xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

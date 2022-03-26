@@ -5,6 +5,7 @@ import 'package:shooting_app/classes/services/live_match_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 
 import '../../main.dart';
+import '../functions.dart';
 import '../models.dart';
 import '../services/shots_service.dart';
 
@@ -108,35 +109,7 @@ class MatchState extends ChangeNotifier {
     date.add(Duration(days: 2))];
   String selectedDate = 'Today';
   DateTime selectedDateTime = date;
-  static String getMonString(DateTime date){
-    switch(date.month){
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'May';
-      case 6:
-        return 'Jun';
-      case 7:
-        return 'Jul';
-      case 8:
-        return 'Aug';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Oct';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'dec';
-      default:return '';
-    }
-  }
+
 
   List<String> tabs = ['Matchups', 'Lineups', 'Goals', 'Cards', 'Stats'];
   String selectedTab = 'Matchups';

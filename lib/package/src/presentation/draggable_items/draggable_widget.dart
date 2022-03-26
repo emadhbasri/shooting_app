@@ -226,7 +226,6 @@ class DraggableWidget extends StatelessWidget {
       bool background = false}) {
     return TextStyle(
       fontFamily: controlNotifier.fontList![draggableWidget.fontFamily],
-      package: controlNotifier.isCustomFontList ? null : 'stories_editor',
       fontWeight: FontWeight.w500,
       // shadows: <Shadow>[
       //   Shadow(

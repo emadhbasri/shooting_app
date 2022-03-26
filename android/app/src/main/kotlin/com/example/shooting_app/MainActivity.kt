@@ -1,4 +1,4 @@
-package com.example.shooting_app
+package com.footballbuzz.android
 
 import io.flutter.embedding.android.FlutterActivity
 

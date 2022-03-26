@@ -23,7 +23,7 @@ samples, guidance on mobile development, and a full API reference.
 *my profile shots
 *profile shots
 *my media
-media
+*media
 *follow
 *unfollow
 
@@ -37,7 +37,7 @@ edit profile
 email
 *team
 phone
-mame
+*name
 
 setting
 
@@ -53,7 +53,7 @@ post
 
 
 story
-create
+*create
 story list
 story show
 story read not read
@@ -66,7 +66,7 @@ timer
 
 auth
 *login
-sign up
+*sign up
 otp
 log out
 

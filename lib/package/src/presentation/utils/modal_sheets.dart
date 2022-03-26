@@ -25,7 +25,7 @@ Future createGiphyItem(
     backDropColor: Colors.black,
     crossAxisCount: 3,
     childAspectRatio: 1.2,
-    topDragColor: Colors.white.withOpacity(0.2),
+    topDragColor: Colors.black.withOpacity(0.2),
   );
 
   /// create item of type GIF
@@ -57,11 +57,12 @@ Future<bool> exitDialog({required context, required contentKey}) async {
               height: 280,
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  color: HexColor.fromHex('#262626'),
+                  color:Colors.white,
+                  // HexColor.fromHex('#262626'),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
-                        color: Colors.white10,
+                        color: Colors.black12,
                         offset: Offset(0, 1),
                         blurRadius: 4),
                   ]),
@@ -73,7 +74,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: Colors.black,
                         letterSpacing: 0.5),
                   ),
                   const SizedBox(
@@ -84,7 +85,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white54,
+                        color: Colors.black54,
                         letterSpacing: 0.1),
                     textAlign: TextAlign.center,
                   ),
@@ -111,7 +112,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   const SizedBox(
                     height: 22,
                     child: Divider(
-                      color: Colors.white10,
+                      color: Colors.black38,
                     ),
                   ),
 
@@ -144,7 +145,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                       'Save Draft',
                       style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5),
                       textAlign: TextAlign.center,
@@ -153,7 +154,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   const SizedBox(
                     height: 22,
                     child: Divider(
-                      color: Colors.white10,
+                      color: Colors.black38,
                     ),
                   ),
 
@@ -166,7 +167,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                       'Cancel',
                       style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5),
                       textAlign: TextAlign.center,

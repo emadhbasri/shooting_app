@@ -49,10 +49,7 @@ class AnimationSelector extends StatelessWidget {
                   child: DefaultTextStyle(
                     style: TextStyle(
                             fontFamily: controlNotifier
-                                .fontList![editorNotifier.fontFamilyIndex],
-                            package: controlNotifier.isCustomFontList
-                                ? null
-                                : 'stories_editor')
+                                .fontList![editorNotifier.fontFamilyIndex])
                         .copyWith(
                             color: index == editorNotifier.fontAnimationIndex
                                 ? Colors.red

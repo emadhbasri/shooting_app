@@ -160,7 +160,7 @@ class DataPersonalInformationViewModel {
   String? fullName;
   String? profilePhoto;
   String? notificationToken;
-  String? personalInformationId; //($uuid)
+  late String personalInformationId; //($uuid)
   DataTeam? team;
   String? userName;
 }
@@ -271,7 +271,6 @@ class DataPost {
     isPublic = convertData(data, 'isPublic', DataType.bool);
     postLikes = convertDataList<DataPostLike>(data, 'postLikes', 'DataPostLike');
     postComments = convertDataList<DataPostComment>(data, 'postComments', 'DataPostComment');
-    print('datamediaTypes ${data['mediaTypes']}');
     mediaTypes = convertDataList<DataMediaType>(data, 'mediaTypes', 'DataMediaType');
     isEdited = convertData(data, 'isEdited', DataType.bool);
     postLikeCount = convertData(data, 'postLikeCount', DataType.int);
@@ -492,9 +491,9 @@ class DataPersonalInformation {
     notificationToken = convertData(data, 'notificationToken', DataType.string);
     bio = convertData(data, 'bio', DataType.string);
     location = convertData(data, 'location', DataType.string);
-    dob = convertData(data, 'dob', DataType.datetime);
+    // dob = convertData(data, 'dob', DataType.datetime);
     otpDate = convertData(data, 'otpDate', DataType.datetime);
-    profilePhoto=convertData(data,'profilePhoto', DataType.string);//todo DataProfileMediaType
+    profilePhoto=convertData(data,'profilePhoto', DataType.string);
     isOnline = convertData(data, 'isOnline', DataType.bool);
     is2FA = convertData(data, 'is2FA', DataType.bool);
     roles=convertDataList<String>(data,'roles', 'String');
@@ -527,7 +526,7 @@ class DataPersonalInformation {
   late bool blockedMe;
   List<DataChatRoomUser?> chatRooms = [];
   late DateTime dateTemporaryBlocked;
-  late DateTime dob;
+  // late DateTime dob;
   String? email;
   late bool followedByMe;
   late int followersCount;
@@ -548,7 +547,7 @@ class DataPersonalInformation {
   String? phoneNumber;
   late int postCount;
   List<DataPost> posts = [];
-  String? profilePhoto;//todo
+  String? profilePhoto;
   List<DataRefreshToken?> refreshTokens = [];
   List<String?> roles = [];
   List<DataShortVideoStory?> shortVideoStories = [];
@@ -597,7 +596,7 @@ class DataChatMessage {
   }
 
 
-  DataChatRoom? chatRoom;//todo
+  DataChatRoom? chatRoom;
   late String chatRoomId;
   late String id;
   String? name;
@@ -954,6 +953,50 @@ class DataRoleDTO {
   String? roleName;
 }
 
+class DataStoryUser{
+  late DataPersonalInformationViewModel person;
+  List<DataStory> seen=[];
+  List<DataStory> notSeen=[];
+  late bool isAllSeen;
+
+  DataStoryUser.fromList(List<DataStoryMain> data){
+    person=data.first.person;
+    for(int j=0;j<data.length;j++){
+       if(data[j].seenStatus){
+         seen.add(DataStory.fromStoryMain(data[j]));
+       }else{
+         notSeen.add(DataStory.fromStoryMain(data[j]));
+       }
+    }
+    isAllSeen=notSeen.isEmpty;
+  }
+}
+class DataStoryMain{
+  late DataPersonalInformationViewModel person;
+  late String id;
+  late String mediaURL;
+  late String mimeType;
+  late bool seenStatus;
+  DataStoryMain.fromJson(Map<String,dynamic> data){
+    person=convertData(data, 'personalInformationViewModel', DataType.clas,classType: 'DataPersonalInformationViewModel');
+    id=convertData(data, 'id', DataType.string);
+    mediaURL=convertData(data, 'mediaURL', DataType.string);
+    mimeType=convertData(data, 'mimeType', DataType.string);
+    seenStatus=convertData(data, 'seenStatus', DataType.bool);
+  }
+}
+class DataStory{
+  late String id;
+  late String mediaURL;
+  late String mimeType;
+  late bool seenStatus;
+  DataStory.fromStoryMain(DataStoryMain data){
+    id=data.id;
+    mediaURL=data.mediaURL;
+    mimeType=data.mimeType;
+    seenStatus=data.seenStatus;
+  }
+}
 enum DataType { datetime, int, double, string, bool, boolint, clas }
 
 dynamic makeClass(Map<String, dynamic> data, String type) {
@@ -1056,6 +1099,8 @@ dynamic makeClass(Map<String, dynamic> data, String type) {
       return DataEditCommentDTO.fromJson(data);
     case 'DataWeatherForecast':
       return DataWeatherForecast.fromJson(data);
+      case 'DataStoryMain':
+      return DataStoryMain.fromJson(data);
 
 ///------------------------------------------
     case 'DataCountry':
