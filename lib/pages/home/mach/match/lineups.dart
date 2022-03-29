@@ -13,7 +13,7 @@ class LineUps extends StatelessWidget {
     if(state.loadingLineUps)
       return circle();
 
-    if(state.selectedMatch.homeLineUps==null || state.selectedMatch.awayLineUps==null)
+    if(state.selectedMatch.isLive==0)
     return SizedBox.expand(
       child: Center(
         child: Text('Match is not started'),

@@ -3,7 +3,9 @@ import 'package:gallery_media_picker/gallery_media_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../../main.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/scroll_notifier.dart';
@@ -129,29 +131,28 @@ class BottomTools extends StatelessWidget {
                   scale: 0.9,
                   child: AnimatedOnTapButton(
                       onTap: () async {
-
-                            debugPrint('creating image');
-                            await takePicture(
+                        debugPrint('creating image');
+                        await takePicture(
                                 contentKey: contentKey,
                                 context: context,
                                 saveToGallery: false)
-                                .then((pngUri) {
-                              if (pngUri != null) {
-                                MyService service = getIt<MyService>();
-                                service.createStory(mediaURI: XFile(pngUri,mimeType: 'png'));
-                              } else {}
-                            });
+                            .then((pngUri) async {
+                          if (pngUri != null) {
+                            MyService service = getIt<MyService>();
+                            DataShortVideoStory? back =
+                                await service.createStory(
+                                    mediaURI: XFile(pngUri),mimeType: '.png');
+                            if (back != null) {
+                              Go.pop(context);
+                            }
+                          }
+                        });
 
-
-
-                        ///---------------------
-
-                        //todo add to story
                       },
                       child: AbsorbPointer(
                         absorbing: true,
                         child: FloatingActionButton(
-                          onPressed: (){},
+                          onPressed: () {},
                           heroTag: 'add story to server',
                           child: Icon(
                             Icons.arrow_forward_ios,

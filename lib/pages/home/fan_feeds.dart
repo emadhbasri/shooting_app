@@ -13,14 +13,27 @@ class FanFeeds extends StatefulWidget {
   _FanFeedsState createState() => _FanFeedsState();
 }
 
-class _FanFeedsState extends State<FanFeeds> with SingleTickerProviderStateMixin {
+class _FanFeedsState extends State<FanFeeds> {
+  late ScrollController _listController;
 
   @override
   void initState() {
     super.initState();
     print('FanFeeds init');
-    MainState state = Provider.of(context,listen: false);
-    state.getFanFeed();
+    MainState state = Provider.of(context, listen: false);
+    if (state.allPosts.isEmpty) state.getFanFeed();
+
+    _listController = ScrollController()
+      ..addListener(() {
+        if (state.allPosts.isNotEmpty) if (_listController.position.atEdge &&
+            _listController.offset != 0.0) {
+          debugPrint("state.dataSearchPage!.hasNext ${state.postsHasNext}");
+          if (state.postsHasNext) {
+            state.postsPageNumber++;
+            state.getFanFeed(add: true);
+          }
+        }
+      });
   }
 
   @override
@@ -28,19 +41,33 @@ class _FanFeedsState extends State<FanFeeds> with SingleTickerProviderStateMixin
     return Consumer<MainState>(
       builder: (context, state, child) {
         return RefreshIndicator(
-          onRefresh: ()async{
-            await state.getFanFeed();
-          },
-          child: ListView.builder(
-            itemCount: state.allPosts.length,
-            itemBuilder: (context, index) => PostFromShot(
-              post: state.allPosts[index],
-              onTapTag: gogo,
-            ),
-          ),
-        );
+            onRefresh: () async {
+              state.postsPageNumber = 1;
+              state.postsHasNext = false;
+              await state.getFanFeed();
+            },
+            child: ListView(
+              controller: _listController,
+              physics: AlwaysScrollableScrollPhysics(),
+              children: [
+                ...state.allPosts
+                    .map((e) => PostFromShot(
+                          post: e,
+                          onTapTag: gogo,
+                        ))
+                    .toList(),
+                if (state.postsHasNext)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: doubleHeight(1)),
+                      CircularProgressIndicator(),
+                      SizedBox(height: doubleHeight(1)),
+                    ],
+                  )
+              ],
+            ));
       },
     );
   }
 }
-

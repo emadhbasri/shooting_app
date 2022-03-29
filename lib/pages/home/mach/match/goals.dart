@@ -11,6 +11,12 @@ class Goals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MatchState state = Provider.of(context, listen: false);
+    if(state.selectedMatch.isLive==0)
+      return SizedBox.expand(
+        child: Center(
+          child: Text('Match is not started'),
+        ),
+      );
     List first = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.home.id).toList();
     List second = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.away.id).toList();
     return ListView(

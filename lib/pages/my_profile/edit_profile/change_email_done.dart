@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/dataTypes.dart';
+import 'package:shooting_app/classes/dataTypes.dart';
 
 import '../../../classes/functions.dart';
 
@@ -33,8 +33,7 @@ class ChangeEmailDone extends StatelessWidget {
                       side: MaterialStateProperty.all(
                           BorderSide(color: mainBlue)),
                       padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(
-                              vertical: doubleHeight(2.5)))),
+                          EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                   child: Text(
                     'Back to Profile',
                     style: TextStyle(color: mainBlue),

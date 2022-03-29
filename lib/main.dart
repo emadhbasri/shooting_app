@@ -4,30 +4,30 @@ import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
 import 'classes/states/main_state.dart';
 import 'classes/states/match_state.dart';
-import 'dataTypes.dart';
+import 'classes/dataTypes.dart';
 import 'classes/functions.dart';
 import 'pages/intro.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'test/file_picker.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'high_inportance_chanel',
-    'high importance notif',
-  description: 'this channel is used for important notif',
-  importance: Importance.high,
-  playSound: true,
-  showBadge: true,
-);
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=
-    FlutterLocalNotificationsPlugin();
-late FirebaseMessaging messaging;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
-  print('A bg message just showed up1 : ${message.messageId}');
-  await Firebase.initializeApp();
-  print('A bg message just showed up : ${message.messageId}');
-}
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//     'high_inportance_chanel',
+//     'high importance notif',
+//   description: 'this channel is used for important notif',
+//   importance: Importance.high,
+//   playSound: true,
+//   showBadge: true,
+// );
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=
+//     FlutterLocalNotificationsPlugin();
+// late FirebaseMessaging messaging;
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
+//   print('A bg message just showed up1 : ${message.messageId}');
+//   await Firebase.initializeApp();
+//   print('A bg message just showed up : ${message.messageId}');
+// }
 
 final getIt = GetIt.instance;
 void main() async{
@@ -37,31 +37,31 @@ void main() async{
   GetIt.I.registerLazySingleton(() => MatchState());
   GetIt.I.registerLazySingleton(() => ChatState());
 
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  await flutterLocalNotificationsPlugin
-  .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-  ?.createNotificationChannel(channel);
-  messaging =FirebaseMessaging.instance;
-
-  //dBfVfFtNTYS-zgXx1v_Yvy:APA91bFr9tIwAdu0BqF_JCNVHTbjaYtM43dl8VtmyC4Qi6yRZ91BSzk0et2G8WALVlbG7yD4n9F1l-iGmzKYneOfebRhUrfXgycwMY26mQ61fBQsD9ZVmf4mP66lABusVNXLbZNBA_L8
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-  print('settings ${settings}');
-
-  await messaging.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+  // await Firebase.initializeApp();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  //
+  // await flutterLocalNotificationsPlugin
+  // .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  // ?.createNotificationChannel(channel);
+  // messaging =FirebaseMessaging.instance;
+  //
+  // //dBfVfFtNTYS-zgXx1v_Yvy:APA91bFr9tIwAdu0BqF_JCNVHTbjaYtM43dl8VtmyC4Qi6yRZ91BSzk0et2G8WALVlbG7yD4n9F1l-iGmzKYneOfebRhUrfXgycwMY26mQ61fBQsD9ZVmf4mP66lABusVNXLbZNBA_L8
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+  // print('settings ${settings}');
+  //
+  // await messaging.setForegroundNotificationPresentationOptions(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
 
 
   runApp(MyApp());
@@ -115,55 +115,55 @@ class _AppFirstState extends State<AppFirst> with WidgetsBindingObserver {
     super.initState();
     statusSet(mainBlue);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('message come');
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if(notification!=null && android!=null){
-        print('message.notification!.title:${message.notification!.title}');
-        print('message.notification!.body:${message.notification!.body}');
-        print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                playSound: true,
-                color: mainBlue,
-                channelShowBadge: true,
-                // icon: '@mipmap/ic_launcher',
-                channelDescription: channel.description
-              )
-            ));
-      }
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('message come in');
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if(notification!=null && android!=null){
-        print('message.notification!.title:${message.notification!.title}');
-        print('message.notification!.body:${message.notification!.body}');
-        print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
-        showDialog(context: context, builder: (_){
-          return AlertDialog(
-            title: Text('${notification.title}'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('${notification.body}')
-              ],
-            ),
-          );
-        });
-      }
-    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //     print('message come');
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if(notification!=null && android!=null){
+    //     print('message.notification!.title:${message.notification!.title}');
+    //     print('message.notification!.body:${message.notification!.body}');
+    //     print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
+    //     flutterLocalNotificationsPlugin.show(
+    //         notification.hashCode,
+    //         notification.title,
+    //         notification.body,
+    //         NotificationDetails(
+    //           android: AndroidNotificationDetails(
+    //             channel.id,
+    //             channel.name,
+    //             playSound: true,
+    //             color: mainBlue,
+    //             channelShowBadge: true,
+    //             // icon: '@mipmap/ic_launcher',
+    //             channelDescription: channel.description
+    //           )
+    //         ));
+    //   }
+    // });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print('message come in');
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if(notification!=null && android!=null){
+    //     print('message.notification!.title:${message.notification!.title}');
+    //     print('message.notification!.body:${message.notification!.body}');
+    //     print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
+    //     showDialog(context: context, builder: (_){
+    //       return AlertDialog(
+    //         title: Text('${notification.title}'),
+    //         content: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             Text('${notification.body}')
+    //           ],
+    //         ),
+    //       );
+    //     });
+    //   }
+    // });
+    //
 
-
-
+///
 
 
     // statusSet(Colors.white);

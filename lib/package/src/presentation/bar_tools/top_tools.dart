@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shooting_app/classes/functions.dart';
+import 'package:video_player/video_player.dart';
 
+import '../../../../classes/models.dart';
+import '../../../../classes/services/my_service.dart';
+import '../../../../main.dart';
 import '../../domain/providers/notifiers/control_provider.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/painting_notifier.dart';
@@ -23,6 +31,7 @@ class TopTools extends StatefulWidget {
 }
 
 class _TopToolsState extends State<TopTools> {
+  bool loading=false;
   @override
   Widget build(BuildContext context) {
     return Consumer3<ControlNotifier, PaintingNotifier,
@@ -151,6 +160,54 @@ class _TopToolsState extends State<TopTools> {
                   backGroundColor: Colors.black12,
                   onTap: () => controlNotifier.isTextEditing =
                       !controlNotifier.isTextEditing,
+                ),
+                if(loading)
+                  SizedBox(
+                      width: doubleWidth(7),
+                      height: doubleWidth(7),
+                      child: CircularProgressIndicator())
+                else
+                ToolButton(
+                    child: Icon(Icons.video_library_outlined,color: Colors.white,size: 20,),
+                    backGroundColor: Colors.black12,
+                    onTap: () async{
+                      final XFile? video = await ImagePicker()
+                          .pickVideo(source: ImageSource.gallery);
+                      setState(() {
+                        loading=true;
+                      });
+                      if (video != null) {
+                        print('video.mimeType ${video.name}');
+
+                        if(!video.name.endsWith('.mp4')){
+                          toast('The video format should be mp4');
+                          setState(() {
+                            loading=false;
+                          });
+                          return;
+                        }
+                        VideoPlayerController _controller=VideoPlayerController.file(File(video.path));
+                        await _controller.initialize();
+                        Duration duration = _controller.value.duration;
+                        if(duration.inSeconds<=10){
+                          MyService service = getIt<MyService>();
+                          DataShortVideoStory? back =
+                          await service.createStory(mimeType: '.mp4',
+                              mediaURI: video);
+                          setState(() {
+                            loading=false;
+                          });
+                          if (back != null) {
+                            Go.pop(context);
+                          }
+                        }else{
+                          setState(() {
+                            loading=false;
+                          });
+                          toast('The video should be less than 10 seconds.',duration: Toast.LENGTH_LONG);
+                        }
+                      }
+                    }
                 ),
               ],
             ),

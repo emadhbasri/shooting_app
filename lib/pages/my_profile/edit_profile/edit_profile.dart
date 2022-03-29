@@ -8,10 +8,10 @@ import 'package:shooting_app/pages/team_search.dart';
 
 import '../../../classes/functions.dart';
 import '../../../classes/models.dart';
-import '../../../dataTypes.dart';
+import '../../../classes/dataTypes.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile(this.person,{Key? key}) : super(key: key);
+  const EditProfile(this.person, {Key? key}) : super(key: key);
   final DataPersonalInformation person;
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController=TextEditingController(text: widget.person.fullName);
+    nameController = TextEditingController(text: widget.person.fullName);
   }
 
   MyService service = getIt<MyService>();
@@ -52,24 +52,28 @@ class _EditProfileState extends State<EditProfile> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Go.pop(context, null);
                               },
                               child: CircleAvatar(
                                 radius: doubleHeight(3),
-                                backgroundColor: Color.fromRGBO(109, 114, 120, 1),
-                                child: Icon(Icons.close,color: Colors.white,),
+                                backgroundColor:
+                                    Color.fromRGBO(109, 114, 120, 1),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                           Align(
-                            alignment: Alignment.center,
-                            child: Text('Edit profile',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold
-                            ),)
-                          ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Edit profile',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )),
                         ],
                       ),
                     ),
@@ -78,20 +82,19 @@ class _EditProfileState extends State<EditProfile> {
                       alignment: Alignment.centerLeft,
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: greenCall,width: 2
-                          ),
+                          border: Border.all(color: greenCall, width: 2),
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: CircleAvatar(
                           radius: doubleWidth(7),
-                          backgroundImage: widget.person.profilePhoto!=null?
-                          NetworkImage(widget.person.profilePhoto!):null,
+                          backgroundImage: widget.person.profilePhoto != null
+                              ? NetworkImage(widget.person.profilePhoto!)
+                              : null,
                           child: CircleAvatar(
                             radius: doubleWidth(4.5),
                             backgroundColor: greenCall.withOpacity(0.4),
-                            child: Icon(Icons.camera_alt,color: greenCall,
-                            size: 20),
+                            child: Icon(Icons.camera_alt,
+                                color: greenCall, size: 20),
                           ),
                         ),
                       ),
@@ -103,21 +106,18 @@ class _EditProfileState extends State<EditProfile> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       padding: EdgeInsets.symmetric(
-                          horizontal: doubleWidth(8),
-                          // vertical: doubleHeight(1)
+                        horizontal: doubleWidth(8),
+                        // vertical: doubleHeight(1)
                       ),
                       child: TextField(
                         controller: nameController,
-                        style: TextStyle(
-                          color: grayCallDark
-                        ),
+                        style: TextStyle(color: grayCallDark),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          prefixText: 'Name    ',
+                            prefixText: 'Name    ',
                             prefixStyle: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black
-                            ),
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
                             border: InputBorder.none),
                       ),
                     ),
@@ -149,11 +149,13 @@ class _EditProfileState extends State<EditProfile> {
                     // SizedBox(height: doubleHeight(1)),
 
                     GestureDetector(
-                      onTap: ()async{
-                        DataMatchTeam? backTeam = await Go.pushSlideAnim(context, TeamSearch());
+                      onTap: () async {
+                        DataMatchTeam? backTeam =
+                            await Go.pushSlideAnim(context, TeamSearch());
                         print('backTeam $backTeam');
-                        if(backTeam!=null){
-                          bool backUser = await UsersService.changeTeam(service, backTeam.id.toString());
+                        if (backTeam != null) {
+                          bool backUser = await UsersService.changeTeam(
+                              service, backTeam.id.toString());
                           print('backUser $backUser');
                         }
                       },
@@ -163,17 +165,19 @@ class _EditProfileState extends State<EditProfile> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         padding: EdgeInsets.symmetric(
-                          horizontal: doubleWidth(8),
-                          vertical: doubleHeight(2)
-                        ),
+                            horizontal: doubleWidth(8),
+                            vertical: doubleHeight(2)),
                         child: Row(
                           children: [
-                            Text('Team    ',style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black
-                            ),),
-                            Text(widget.person.team==null?'no team selected':
-                            widget.person.team!.team_name!),
+                            Text(
+                              'Team    ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
+                            ),
+                            Text(widget.person.team == null
+                                ? 'no team selected'
+                                : widget.person.team!.team_name!),
                             // TextFormField(
                             //   style: TextStyle(
                             //       color: grayCallDark
@@ -207,7 +211,8 @@ class _EditProfileState extends State<EditProfile> {
                         width: double.maxFinite,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(mainBlue),
+                              backgroundColor:
+                                  MaterialStateProperty.all(mainBlue),
                               padding: MaterialStateProperty.all(
                                   EdgeInsets.symmetric(
                                       vertical: doubleHeight(2.5)))),
@@ -215,8 +220,9 @@ class _EditProfileState extends State<EditProfile> {
                             'Save',
                             style: TextStyle(color: Colors.white),
                           ),
-                          onPressed: () async{
-                            bool back = await UsersService.changeName(service, nameController.value.text);
+                          onPressed: () async {
+                            bool back = await UsersService.changeName(
+                                service, nameController.value.text);
                           },
                         )),
                     SizedBox(height: doubleHeight(4)),
@@ -228,8 +234,5 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
-
   }
-
-
 }

@@ -10,7 +10,7 @@ import '../../ui_items/shots/comment_from_shot.dart';
 import '../chat/chat_list.dart';
 
 class Shot extends StatefulWidget {
-  const Shot({Key? key,this.post,this.postId}) : super(key: key);
+  const Shot({Key? key, this.post, this.postId}) : super(key: key);
   final DataPost? post;
   final String? postId;
   @override
@@ -23,15 +23,18 @@ class _ShotState extends State<Shot> {
   MyService service = getIt<MyService>();
   DataPost? post;
   getData() async {
-    post = await ShotsService.getShotById(service,widget.postId!);
+    post = await ShotsService.getShotById(service, widget.postId!);
     setState(() {});
   }
 
-  addComment()async{
+  addComment() async {
+    if(controller.value.text.trim()==''){
+      toast('please fill the comment field');
+      return;
+    }
     print('controller.value.text ${controller.value.text}');
     DataPostComment? back = await ShotsService.shotsComment(service,
-        postId: post!.id,
-        comment: controller.value.text);
+        postId: post!.id, comment: controller.value.text);
     setState(() {
       post!.postComments.add(back!);
     });
@@ -41,85 +44,94 @@ class _ShotState extends State<Shot> {
   @override
   void initState() {
     super.initState();
-  print('widget.post $widget.post');
-    if(widget.post!=null){
-      post=widget.post;
-    }else{
+    print('widget.post $widget.post');
+    if (widget.post != null) {
+      post = widget.post;
+    } else {
       getData();
     }
   }
+
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(title: Text('Shot'),),
-        body: post==null?circle():Column(
-          children: [
-            PostFromShot(post: post!,canTouch: false, onTapTag: gogo),
-            Flexible(
-              child: ListView.builder(
-                itemCount: post!.postComments.length,
-                itemBuilder: (context, index) =>
-                    CommentFromShot(comment: post!.postComments[index]),),
-            ),
-            Container(
-              color: Colors.white,
-              width: double.maxFinite,
-              padding: EdgeInsets.symmetric(vertical: doubleHeight(0.5)),
-              child: Row(
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Shot'),
+        ),
+        body: post == null
+            ? circle()
+            : Column(
                 children: [
-                  SizedBox(width: doubleWidth(4)),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(244, 244, 244, 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: doubleWidth(8), vertical: doubleHeight(0.5)),
-                      child: TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
-                            hintText: 'Write your comment...',
-                            border: InputBorder.none),
-                      ),
+                  PostFromShot(post: post!, canTouch: false, onTapTag: gogo),
+                  Flexible(
+                    child: ListView.builder(
+                      itemCount: post!.postComments.length,
+                      itemBuilder: (context, index) =>
+                          CommentFromShot(comment: post!.postComments[index],delete: (){
+                            setState(() {
+                              post!.postComments.removeAt(index);
+                            });
+                          }),
                     ),
                   ),
-                  SizedBox(width: doubleWidth(4)),
-                  GestureDetector(
-                    onTap: (){
-                      setState(() {
-
-                      });
-                      addComment();
-                      // state.selectedChat.messages.add(
-                      //     DataMessage(
-                      //         message: controller.value.text,
-                      //         date: DateTime.now(),
-                      //         isMine: true,
-                      //         read: false
-                      //     )
-                      // );
-                      // state.notify();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(doubleWidth(4)),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: greenCall,
-                      ),
-                      child: Icon(Icons.arrow_upward,color: Colors.black,),
+                  Container(
+                    color: Colors.white,
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(vertical: doubleHeight(0.5)),
+                    child: Row(
+                      children: [
+                        SizedBox(width: doubleWidth(4)),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(244, 244, 244, 1),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: doubleWidth(8),
+                                vertical: doubleHeight(0.5)),
+                            child: TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                  hintStyle: TextStyle(
+                                      color: Color.fromRGBO(214, 216, 217, 1)),
+                                  hintText: 'Write your comment...',
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: doubleWidth(4)),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {});
+                            addComment();
+                            // state.selectedChat.messages.add(
+                            //     DataMessage(
+                            //         message: controller.value.text,
+                            //         date: DateTime.now(),
+                            //         isMine: true,
+                            //         read: false
+                            //     )
+                            // );
+                            // state.notify();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(doubleWidth(4)),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: greenCall,
+                            ),
+                            child: Icon(
+                              Icons.arrow_upward,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: doubleWidth(4)),
+                      ],
                     ),
                   ),
-                  SizedBox(width: doubleWidth(4)),
                 ],
-              ),
-            ),
-
-          ],
-        )
-
-
-      );
+              ));
   }
 }

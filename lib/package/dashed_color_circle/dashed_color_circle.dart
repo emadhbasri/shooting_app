@@ -19,7 +19,7 @@ class DashedColorCircle extends StatelessWidget {
     this.gapSize = 24.0,
     this.strokeWidth = 8.0,
     this.size = 24.0,
-    this.fillCount = 0.0,
+    this.fillCount = 0,
     this.strokeCap = StrokeCap.round,
   }) : super(key: key);
   final Widget child;
@@ -42,7 +42,7 @@ class DashedColorCircle extends StatelessWidget {
   final double size;
 
   /// Count of dashes to be colored with [filledColor]
-  final double fillCount;
+  final int fillCount;
 
   /// [StrokeCap] for the dash style
   final StrokeCap strokeCap;

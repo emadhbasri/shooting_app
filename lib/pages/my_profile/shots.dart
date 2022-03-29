@@ -20,6 +20,12 @@ class _ShotsState extends State<Shots> {
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
             PostFromShotProfile(post: e,onTapTag: gogo,
+
+              canDelete: true,
+              delete: () {
+                state.personalInformation!.posts.remove(e);
+                state.notify();
+              },
           person: state.personalInformation!,
         )
     ).toList(),

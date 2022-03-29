@@ -72,23 +72,26 @@ class StoryList extends StatefulWidget {
 }
 
 class _StoryListState extends State<StoryList> {
-
   @override
   void initState() {
     super.initState();
-    MainState state = Provider.of(context,listen: false);
-    state.getStories();
+    MainState state = Provider.of(context, listen: false);
+    if(state.newStories==null || state.storyViewed==null)
+      state.getStories();
+    if(state.myStories==null)
+      state.getMyStories();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    final String url =
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Bill_Gates_Buys_Skype_%285707954468%29.jpg/2560px-Bill_Gates_Buys_Skype_%285707954468%29.jpg';
 
     return Consumer<MainState>(
       builder: (context, state, child) {
         return RefreshIndicator(
           onRefresh: () async {
+            await state.getStories();
+            await state.getMyStories();
             // await state.getFanFeed();
           },
           child: Scaffold(
@@ -96,65 +99,93 @@ class _StoryListState extends State<StoryList> {
               children: [
                 ListTile(
                   onTap: () {
-                    Go.push(
-                        context,
-                        StoriesEditor(
-                          giphyKey: 'story 1',
-                          onDone: (uri) {
-                            debugPrint(uri);
-                            // Share.shareFiles([uri]);
-                          },
-                        ));
+                    if(state.myStories!=null)
+                    Go.pushSlideAnim(context, StoryPage(storyUsers: [
+                      state.myStories!],));
                   },
                   leading:
-                  //teams[index].logo==null?null:
-                  SizedBox(
-                      width: doubleWidth(15),
-                      height: doubleWidth(15),
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 70.0,
-                            backgroundImage: networkImage(url),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                              padding: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Icon(Icons.add,size: 15,color: black,),
-                            ),
-                          )
-                        ],
-                      )),
+                      //teams[index].logo==null?null:
+                      SizedBox(
+                          width: doubleWidth(15),
+                          height: doubleWidth(15),
+                          child: Stack(
+                            children: [
+                              if(state.personalInformation!=null && state.personalInformation!.profilePhoto!=null)
+                                if(state.myStories!=null)
+                                DashedColorCircle(
+                                  dashes: state.myStories!.notSeen.length + state.myStories!.seen.length,
+                                  emptyColor: Colors.grey,
+                                  filledColor: mainBlue,
+                                  fillCount: state.myStories!.notSeen.length + state.myStories!.seen.length, //storyUser.seen.length
+                                  gapSize: 5,
+                                  strokeWidth: 4,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2),
+                                    child :
+                                        CircleAvatar(
+                                      radius: 70.0,
+                                      backgroundImage: networkImage(state.personalInformation!.profilePhoto!),
+                                    )
+                                  ),
+                                )
+                              else CircleAvatar(
+                                  radius: 70.0,
+                                  backgroundImage: networkImage(state.personalInformation!.profilePhoto!),
+                                )
+                              ,
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 15,
+                                    color: black,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
                   title: Text('My stories'),
                   subtitle: Text('Tap to add story'),
-                  trailing: AbsorbPointer(
-                    absorbing: true,
-                    child: FloatingActionButton(
-                      mini: true,
-                      onPressed: () {},
-                      heroTag: 'story add top',
-                      child: Icon(Icons.edit),
-                    ),
+                  trailing: FloatingActionButton(
+                    mini: true,
+                    onPressed: () {
+                      Go.push(
+                          context,
+                          StoriesEditor(
+                            giphyKey: 'story 1',
+                            onDone: (uri) {
+                              debugPrint(uri);
+                              // Share.shareFiles([uri]);
+                            },
+                          ));
+                    },
+                    heroTag: 'story add top',
+                    child: Icon(Icons.edit),
                   ),
                 ),
                 // Divider(color: grayCall,indent: doubleWidth(24)),
-                if(state.newStories.isNotEmpty)
+                if (state.newStories!=null && state.newStories!.isNotEmpty)
                   ExpansionTile(
-                  trailing: const SizedBox(),
-                  initiallyExpanded: true,
-                  title: Text('Recent Stories'),
-                children: state.newStories.map((e) => StoryListItem(storyUser: e)).toList()),
-                if(state.storyViewed.isNotEmpty)
+                      trailing: const SizedBox(),
+                      initiallyExpanded: true,
+                      title: Text('Recent Stories'),
+                      children: state.newStories!
+                          .map((e) => StoryListItem(storyUser: e,listStoryUser: state.newStories!,))
+                          .toList()),
+                if (state.storyViewed!=null && state.storyViewed!.isNotEmpty)
                   ExpansionTile(
-                  trailing: const SizedBox(),
-                  initiallyExpanded: true,
-                  title: Text('Viewed Stories'),
-                  children: state.storyViewed.map((e) => StoryListItem(storyUser: e)).toList()),
+                      trailing: const SizedBox(),
+                      initiallyExpanded: true,
+                      title: Text('Viewed Stories'),
+                      children: state.storyViewed!
+                          .map((e) => StoryListItem(storyUser: e,listStoryUser: state.storyViewed!))
+                          .toList()),
               ],
             ),
             floatingActionButton: FloatingActionButton(
@@ -162,7 +193,6 @@ class _StoryListState extends State<StoryList> {
                 Go.push(
                     context,
                     StoriesEditor(
-
                       giphyKey: 'story 1',
                       onDone: (uri) {
                         debugPrint(uri);
@@ -179,38 +209,45 @@ class _StoryListState extends State<StoryList> {
     );
   }
 }
+
 class StoryListItem extends StatelessWidget {
-  const StoryListItem({Key? key,required this.storyUser}) : super(key: key);
+  const StoryListItem({Key? key, required this.storyUser,required this.listStoryUser}) : super(key: key);
+
+  final List<DataStoryUser> listStoryUser;
   final DataStoryUser storyUser;
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        Go.pushSlideAnim(context, StoryPage());
-      },
-      leading: SizedBox(
-          width: doubleWidth(15),
-          height: doubleWidth(15),
-          child: DashedColorCircle(
-            dashes: storyUser.notSeen.length + storyUser.seen.length,
-            emptyColor: Colors.grey,
-            filledColor: mainBlue,
-            fillCount: 3,//storyUser.seen.length
-            gapSize: 5,
-            strokeWidth: 4,
-            child: Padding(
-              padding: EdgeInsets.all(6.0),
-              child:
-              storyUser.person.profilePhoto!=null?CircleAvatar(
-                radius: 70.0,
-                backgroundImage: networkImage(storyUser.person.profilePhoto!),
-              ):null,
-            ),
-          )),
-      title: Text(storyUser.person.fullName??''),
-      subtitle: Text(storyUser.person.userName??'')
-      // Text('${getMonString(DateTime.now())} ${DateTime.now().day}, ${DateTime.now().year}'),
-    );
+        onTap: () async{
+          await Go.pushSlideAnim(context, StoryPage(storyUsers: listStoryUser,));
+          MainState state = Provider.of(context, listen: false);
+          state.getStories();
+        },
+        leading: SizedBox(
+            width: doubleWidth(15),
+            height: doubleWidth(15),
+            child: DashedColorCircle(
+              dashes: storyUser.notSeen.length + storyUser.seen.length,
+              emptyColor: Colors.grey,
+              filledColor: mainBlue,
+              fillCount: 3, //storyUser.seen.length
+              gapSize: 5,
+              strokeWidth: 4,
+              child: Padding(
+                padding: EdgeInsets.all(2),
+                child: storyUser.person.profilePhoto != null
+                    ? CircleAvatar(
+                        radius: 70.0,
+                        backgroundImage:
+                            networkImage(storyUser.person.profilePhoto!),
+                      )
+                    : null,
+              ),
+            )),
+        title: Text(storyUser.person.fullName ?? ''),
+        subtitle: Text(storyUser.person.userName ?? '')
+        // Text('${getMonString(DateTime.now())} ${DateTime.now().day}, ${DateTime.now().year}'),
+        );
   }
 }
 

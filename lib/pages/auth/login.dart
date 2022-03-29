@@ -1,26 +1,27 @@
-
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
-import '../../dataTypes.dart';
+import '../../classes/dataTypes.dart';
 import '../../main.dart';
 import 'register.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  MyService service= MyService();
+  MyService service = getIt<MyService>();
   @override
   void initState() {
     statusSet(trans);
     super.initState();
   }
-  String username='',password='';
+
+  String username = '', password = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,14 +45,13 @@ class _LoginState extends State<Login> {
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
                         child: TextField(
-                          onChanged: (e){
-                            username=e;
+                          onChanged: (e) {
+                            username = e;
                           },
                           decoration: InputDecoration(
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'Username'
-                          ),
+                              hintText: 'Username'),
                         ),
                       ),
                     ),
@@ -65,14 +65,13 @@ class _LoginState extends State<Login> {
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
                         child: TextField(
-                          onChanged: (e){
-                            password=e;
+                          onChanged: (e) {
+                            password = e;
                           },
                           decoration: InputDecoration(
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'Password'
-                          ),
+                              hintText: 'Password'),
                         ),
                       ),
                     ),
@@ -83,10 +82,8 @@ class _LoginState extends State<Login> {
                     child: Text(
                       'Forgot Password?',
                       textAlign: TextAlign.right,
-                      style: TextStyle(
-                        color: mainGreen,
-                        fontSize: doubleWidth(3)
-                      ),
+                      style:
+                          TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
                     ),
                   ),
                   sizeh(doubleHeight(7)),
@@ -97,13 +94,14 @@ class _LoginState extends State<Login> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
-                        onPressed: () async{
-                          bool back = await AuthenticationService.login(service,username: username, password: password);
-                          if(back){
-                            service.getToken().then((bool value) {
+                        onPressed: () async {
+                          bool back = await AuthenticationService.login(service,
+                              username: username, password: password);
+                          if (back) {
+                            bool bbo = await service.getToken();
+                            if(bbo)
                               Go.pushSlideAnim(context, AppPageBuilder());
-                            });
-                          }else{
+                          } else {
                             print('nononono');
                           }
                         },
@@ -112,36 +110,32 @@ class _LoginState extends State<Login> {
                         color: mainBlue,
                         child: Text(
                           'Login',
-                          style: TextStyle(fontSize: doubleWidth(5), color: white),
+                          style:
+                              TextStyle(fontSize: doubleWidth(5), color: white),
                         ),
                       ),
                     ),
                   ),
                   sizeh(doubleHeight(3)),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Go.replace(context, Register());
                     },
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                          children:[
-                            TextSpan(
-                                text: 'Don\'t have an account?  '
-                            ),
+                          children: [
+                            TextSpan(text: 'Don\'t have an account?  '),
                             TextSpan(
                                 text: 'Sign Up',
                                 style: TextStyle(
                                     color: mainGreen,
-                                    fontStyle: FontStyle.italic
-                                )
-                            ),
+                                    fontStyle: FontStyle.italic)),
                           ],
                           style: TextStyle(
                             color: white,
                             fontSize: doubleWidth(4.5),
-                          )
-                      ),
+                          )),
                     ),
                   ),
                 ],
@@ -152,7 +146,7 @@ class _LoginState extends State<Login> {
               child: Text(
                 'WELCOME',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(5),
                     color: white),
               ),

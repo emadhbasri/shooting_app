@@ -11,6 +11,12 @@ class Stats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MatchState state = Provider.of(context,listen: false);
+    if(state.selectedMatch.isLive==0)
+      return SizedBox.expand(
+        child: Center(
+          child: Text('Match is not started'),
+        ),
+      );
     return ListView(
       padding: EdgeInsets.only(bottom: doubleHeight(1)),
       children: [

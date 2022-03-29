@@ -4,10 +4,11 @@ import 'package:shooting_app/classes/services/shots_service.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
-import '../dataTypes.dart';
+import '../classes/dataTypes.dart';
 import '../main.dart';
 import '../ui_items/shots/post_from_shot.dart';
 import 'profile/profile.dart';
+
 class Search extends StatefulWidget {
   final String? search;
   const Search({Key? key, this.search}) : super(key: key);
@@ -19,28 +20,28 @@ class _SearchState extends State<Search> {
   List<String> hashtags = ['YNWA', 'Salah', 'Watfold', 'Anfield', 'EPL'];
   late final TextEditingController controller;
   List<DataPost>? posts;
-  getData()async{
+  getData() async {
     setState(() {
-      posts=null;
+      posts = null;
     });
     MyService service = getIt<MyService>();
     posts = await ShotsService.search(service, search: controller.value.text);
     setState(() {});
   }
+
   @override
   void initState() {
     statusSet(mainBlue);
-    controller = TextEditingController(
-      text: widget.search??''
-    )..addListener(() {
-      setState(() {
+    controller = TextEditingController(text: widget.search ?? '')
+      ..addListener(() {
+        setState(() {});
       });
-    });
-    if(widget.search!=null){
+    if (widget.search != null) {
       getData();
     }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +72,7 @@ class _SearchState extends State<Search> {
                     child: Center(
                       child: TextField(
                         controller: controller,
-                        onSubmitted: (e){
+                        onSubmitted: (e) {
                           getData();
                         },
                         autofocus: true,
@@ -91,70 +92,72 @@ class _SearchState extends State<Search> {
         ),
       ),
       body: SizedBox.expand(
-        child: Builder(
-          builder: (context) {
-            if(controller.value.text=='')
+        child: Builder(builder: (context) {
+          if (controller.value.text == '')
             return ListView(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: doubleWidth(5),vertical: doubleHeight(2)),
-              children:
-              [
-                Text(
-                  'Trending Tags',
-                  style: TextStyle(
-                      color: black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: doubleWidth(6)),
-                ),
-                ...hashtags
-                    .map((e) => Container(
-                          decoration: BoxDecoration(
-                              border:
-                                  Border(bottom: BorderSide(color: grayCall))),
-                          child: ListTile(onTap: (){
-                              // controller.text=e;
-                              controller.value=TextEditingValue(text: e);
-                              getData();
-                          },
-
-                            dense: true,
-                            contentPadding: EdgeInsets.zero,
-                            leading: Text(
-                              ' # $e',
-                              style: TextStyle(
-                                  color: black, fontSize: doubleWidth(4)),
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                    horizontal: doubleWidth(5), vertical: doubleHeight(2)),
+                children: [
+                  Text(
+                    'Trending Tags',
+                    style: TextStyle(
+                        color: black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: doubleWidth(6)),
+                  ),
+                  ...hashtags
+                      .map((e) => Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(color: grayCall))),
+                            child: ListTile(
+                              onTap: () {
+                                // controller.text=e;
+                                controller.value = TextEditingValue(text: e);
+                                getData();
+                              },
+                              dense: true,
+                              contentPadding: EdgeInsets.zero,
+                              leading: Text(
+                                ' # $e',
+                                style: TextStyle(
+                                    color: black, fontSize: doubleWidth(4)),
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios,
+                                color: grayCall,
+                              ),
                             ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              color: grayCall,
-                            ),
-                          ),
-                        ))
-                    .toList()
-              ]
-            );
-            else{
-              if(posts==null){
-                return circle();
-              }else if(posts!.isEmpty){
-                return Center(child: Text('no posts'));
-              }else{
-                return ListView(
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(5),vertical: doubleHeight(2)),
-                    children:posts!.map((e) =>
-                        PostFromShot(post: e,onTapTag: (BuildContext context,String str,bool isUser){
-                          if(isUser){
-                            Go.pushSlideAnim(context, ProfileBuilder(username: str));
-                          }else{
-                            controller.value=TextEditingValue(text:str);
-                          }
-                        })).toList()
-                );
-              }
+                          ))
+                      .toList()
+                ]);
+          else {
+            if (posts == null) {
+              return circle();
+            } else if (posts!.isEmpty) {
+              return Center(child: Text('no posts'));
+            } else {
+              return ListView(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: doubleWidth(5), vertical: doubleHeight(2)),
+                  children: posts!
+                      .map((e) => PostFromShot(
+                          post: e,
+                          onTapTag:
+                              (BuildContext context, String str, bool isUser) {
+                            if (isUser) {
+                              Go.pushSlideAnim(
+                                  context, ProfileBuilder(username: str));
+                            } else {
+                              controller.value = TextEditingValue(text: str);
+                            }
+                          }))
+                      .toList());
             }
           }
-        ),
+        }),
       ),
     );
   }

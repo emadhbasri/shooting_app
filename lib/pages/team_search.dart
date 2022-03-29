@@ -3,7 +3,7 @@ import 'package:shooting_app/classes/live_match_model.dart';
 
 import '../classes/functions.dart';
 import '../classes/services/live_match_service.dart';
-import '../dataTypes.dart';
+import '../classes/dataTypes.dart';
 
 class TeamSearch extends StatefulWidget {
   final String? search;
@@ -19,15 +19,13 @@ class _TeamSearchState extends State<TeamSearch> {
   @override
   void initState() {
     statusSet(mainBlue);
-    controller = TextEditingController(
-      text: widget.search??''
-    )..addListener(() {
-      setState(() {
-
+    controller = TextEditingController(text: widget.search ?? '')
+      ..addListener(() {
+        setState(() {});
       });
-    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -63,10 +61,11 @@ class _TeamSearchState extends State<TeamSearch> {
                       child: Center(
                         child: TextField(
                           controller: controller,
-                          onSubmitted: (e)async{
-                            if(controller.value.text.length<3)return;
-                            teams=[];
-                            teams=await service.teams(search: controller.value.text);
+                          onSubmitted: (e) async {
+                            if (controller.value.text.length < 3) return;
+                            teams = [];
+                            teams = await service.teams(
+                                search: controller.value.text);
                             setState(() {});
                           },
                           autofocus: true,
@@ -86,32 +85,32 @@ class _TeamSearchState extends State<TeamSearch> {
           ),
         ),
         body: SizedBox.expand(
-          child: Builder(
-            builder: (context) {
-              if(controller.value.text=='' || teams==null)
+          child: Builder(builder: (context) {
+            if (controller.value.text == '' || teams == null)
               return Center(child: Text('waiting for user search'));
-              else
-                return teams!.isEmpty?Center(child: Text('no results')):
-                  ListView.builder(
-                    itemCount: teams!.length,
-                    itemBuilder: (context, index) =>
-                        ListTile(
-                          onTap: (){
-                            Go.pop(context,teams![index]);
-                          },
-                          leading: teams![index].logo==null?null:SizedBox(
-                              width: doubleWidth(15),
-                              height: doubleWidth(15),
-                              child: imageNetwork(teams![index].logo!)),
-                          title: Text(teams![index].name),
-                        ),
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(5),vertical: doubleHeight(2)),
-
-                );
-
-            }
-          ),
+            else
+              return teams!.isEmpty
+                  ? Center(child: Text('no results'))
+                  : ListView.builder(
+                      itemCount: teams!.length,
+                      itemBuilder: (context, index) => ListTile(
+                        onTap: () {
+                          Go.pop(context, teams![index]);
+                        },
+                        leading: teams![index].logo == null
+                            ? null
+                            : SizedBox(
+                                width: doubleWidth(15),
+                                height: doubleWidth(15),
+                                child: imageNetwork(teams![index].logo!)),
+                        title: Text(teams![index].name),
+                      ),
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: doubleWidth(5),
+                          vertical: doubleHeight(2)),
+                    );
+          }),
         ),
       ),
     );

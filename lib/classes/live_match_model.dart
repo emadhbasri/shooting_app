@@ -91,6 +91,7 @@ DataStatistics.fromJson(Map<String, dynamic> data) {
 }
 }
 class DataMatch1 {
+  late int isLive;// 0 not started 1 live 2 finished
   late DataFixture fixture;
   late DataMatchTeam home;
   late DataMatchTeam away;
@@ -106,6 +107,7 @@ class DataMatch1 {
     print('DataMatch1 $data');
     fixture =
         convertData(data, 'fixture', DataType.clas, classType: 'DataFixture');
+    isLive=fixture.isLive;
     home = convertData(data['teams'], 'home', DataType.clas, classType: 'DataMatchTeam');
     away = convertData(data['teams'], 'away', DataType.clas, classType: 'DataMatchTeam');
     homeGoals = convertData(data['goals'], 'home', DataType.int);
@@ -114,6 +116,7 @@ class DataMatch1 {
 }
 
 class DataFixture {
+  late int isLive;// 0 not started 1 live 2 finished
   late int id;
   late String status;
   DateTime? date;
@@ -123,6 +126,13 @@ class DataFixture {
     status = convertData(data['status'], 'long', DataType.string);
     elapsed = convertData(data['status'], 'elapsed', DataType.int);
     date=convertData(data, 'date', DataType.datetime);
+    if(status=='Match Finished'){
+      isLive=2;
+    }else if(elapsed ==null){
+      isLive=0;
+    }else{
+      isLive=1;
+    }
   }
 }
 

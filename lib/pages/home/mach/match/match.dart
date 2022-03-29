@@ -30,13 +30,13 @@ class Match extends StatefulWidget {
 }
 
 class _MatchState extends State<Match> {
-
-  gett()async{
+  gett() async {
     var headers = {
       'x-rapidapi-key': 'XxXxXxXxXxXxXxXxXxXxXxXx',
       'x-rapidapi-host': 'v3.football.api-sports.io'
     };
-    var request = http.Request('GET', Uri.parse('https://v3.football.api-sports.io/{endpoint}'));
+    var request = http.Request(
+        'GET', Uri.parse('https://v3.football.api-sports.io/{endpoint}'));
 
     request.headers.addAll(headers);
 
@@ -44,8 +44,7 @@ class _MatchState extends State<Match> {
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
   }
@@ -59,36 +58,39 @@ class _MatchState extends State<Match> {
     // state.getMatchUps();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MatchState>(
       builder: (context, state, child) => WillPopScope(
-        onWillPop: ()async{
+        onWillPop: () async {
           print('wilpop');
-          state.matchPage=false;
+          state.matchPage = false;
           state.notify();
           MainState mainS = getIt<MainState>();
-          mainS.match=null;
-          mainS.isOnMatchPage=false;
+          mainS.match = null;
+          mainS.isOnMatchPage = false;
           return false;
         },
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: trans,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back,color: Colors.black),
-              onPressed: (){
-                state.matchPage=false;
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                state.matchPage = false;
                 state.notify();
                 MainState mainS = getIt<MainState>();
-                mainS.match=null;
-                mainS.isOnMatchPage=false;
-
+                mainS.match = null;
+                mainS.isOnMatchPage = false;
               },
             ),
             elevation: 0,
             centerTitle: true,
-            title: Text('Match Stats',style: TextStyle(color: Colors.black),),
+            title: Text(
+              'Match Stats',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
           backgroundColor: Color.fromRGBO(244, 244, 244, 1),
           body: SizedBox.expand(
@@ -114,11 +116,14 @@ class _MatchState extends State<Match> {
                                 width: doubleWidth(10),
                                 height: doubleWidth(10),
                                 child: imageNetwork(
-                                  state.selectedMatch.home.logo??'',
+                                  state.selectedMatch.home.logo ?? '',
                                   fit: BoxFit.fill,
                                 )),
                             SizedBox(height: doubleHeight(1)),
-                            Text(state.selectedMatch.home.name,textAlign: TextAlign.center,)
+                            Text(
+                              state.selectedMatch.home.name,
+                              textAlign: TextAlign.center,
+                            )
                           ],
                         ),
                       ),
@@ -129,44 +134,52 @@ class _MatchState extends State<Match> {
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(state.selectedMatch.homeGoals==null?'0':state.selectedMatch.homeGoals.toString(),style: TextStyle(
-                                  color: mainBlue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24
-                                ),),
+                                Text(
+                                  state.selectedMatch.homeGoals == null
+                                      ? '0'
+                                      : state.selectedMatch.homeGoals
+                                          .toString(),
+                                  style: TextStyle(
+                                      color: mainBlue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
+                                ),
                                 SizedBox(
                                   width: doubleWidth(4),
                                 ),
-                                Text(':',style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24
-                                )),
+                                Text(':',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24)),
                                 SizedBox(
                                   width: doubleWidth(4),
                                 ),
-                                Text(state.selectedMatch.awayGoals==null?'0':state.selectedMatch.awayGoals.toString(),style: TextStyle(
-                                    color: Color.fromRGBO(127, 127, 127, 1),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24
-                                )),
+                                Text(
+                                    state.selectedMatch.awayGoals == null
+                                        ? '0'
+                                        : state.selectedMatch.awayGoals
+                                            .toString(),
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(127, 127, 127, 1),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24)),
                               ],
                             ),
                             SizedBox(height: doubleHeight(2)),
-                            Builder(
-                              builder: (context) {
-                                String out='';
-                                if(state.selectedMatch.fixture.status=='Match Finished'){
-                                  out='Full Time';
-                                }else if(state.selectedMatch.fixture.elapsed==null){
-                                  out='Not Started';
-                                }else out=state.selectedMatch.fixture.elapsed.toString();
-                                return Text(out,style: TextStyle(
-                                  color: grayCall,
-                                  fontSize: 10
-                                ));
-                              }
-                            )
+                            Builder(builder: (context) {
+                              String out = '';
+                              if (state.selectedMatch.isLive==2) {
+                                out = 'Full Time';
+                              } else if (state.selectedMatch.isLive==0) {
+                                out = 'Not Started';
+                              } else
+                                out = state.selectedMatch.fixture.elapsed
+                                    .toString();
+                              return Text(out,
+                                  style:
+                                      TextStyle(color: grayCall, fontSize: 10));
+                            })
                           ],
                         ),
                       ),
@@ -178,11 +191,14 @@ class _MatchState extends State<Match> {
                                 width: doubleWidth(10),
                                 height: doubleWidth(10),
                                 child: imageNetwork(
-                                  state.selectedMatch.away.logo??'',
+                                  state.selectedMatch.away.logo ?? '',
                                   fit: BoxFit.fill,
                                 )),
                             SizedBox(height: doubleHeight(1)),
-                            Text(state.selectedMatch.away.name,textAlign: TextAlign.center,)
+                            Text(
+                              state.selectedMatch.away.name,
+                              textAlign: TextAlign.center,
+                            )
                           ],
                         ),
                       ),
@@ -190,14 +206,14 @@ class _MatchState extends State<Match> {
                   ),
                 ),
                 SizedBox(
-                    height: doubleHeight(1),
+                  height: doubleHeight(1),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: state.tabs
                       .map((e) => TextButton(
                           onPressed: () {
-                            state.selectedTab=e;
+                            state.selectedTab = e;
                             state.notify();
                           },
                           child: Text(
@@ -211,17 +227,23 @@ class _MatchState extends State<Match> {
                       .toList(),
                 ),
                 SizedBox(
-                    height: doubleHeight(2),
+                  height: doubleHeight(2),
                 ),
                 Expanded(child: Builder(
                   builder: (context) {
-                    switch(state.selectedTab){
-                      case 'Matchups': return MatchUps();
-                      case 'Lineups': return LineUps();
-                      case 'Goals': return Goals();
-                      case 'Cards': return Cards();
-                      case 'Stats': return Stats();
-                      default:return SizedBox();
+                    switch (state.selectedTab) {
+                      case 'Matchups':
+                        return MatchUps();
+                      case 'Lineups':
+                        return LineUps();
+                      case 'Goals':
+                        return Goals();
+                      case 'Cards':
+                        return Cards();
+                      case 'Stats':
+                        return Stats();
+                      default:
+                        return SizedBox();
                     }
                   },
                 ))

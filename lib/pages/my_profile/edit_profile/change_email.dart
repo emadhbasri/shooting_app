@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/dataTypes.dart';
+import 'package:shooting_app/classes/dataTypes.dart';
 import 'change_email_done.dart';
 
 import '../../../classes/functions.dart';
@@ -7,9 +7,7 @@ import '../../../classes/functions.dart';
 class ChangeEmail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          title: Text('Change Email')),
+      appBar: AppBar(elevation: 0, title: Text('Change Email')),
       backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
@@ -31,8 +29,7 @@ class ChangeEmail extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: doubleWidth(8)),
+            padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
@@ -49,8 +46,7 @@ class ChangeEmail extends StatelessWidget {
                     elevation: MaterialStateProperty.all(0),
                     backgroundColor: MaterialStateProperty.all(mainBlue),
                     padding: MaterialStateProperty.all(
-                        EdgeInsets.symmetric(vertical: doubleHeight(2.5)))
-                ),
+                        EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                 onPressed: () {
                   Go.replaceSlideAnim(context, ChangeEmailDone());
                 },

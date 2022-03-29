@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../dataTypes.dart';
+import 'dataTypes.dart';
 import '../pages/Search.dart';
 import '../pages/profile/profile.dart';
 
@@ -26,8 +26,12 @@ statusSet(Color color) async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: color,
-      statusBarBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarDividerColor: Colors.white,
+
     ));
   } on PlatformException catch (e) {
     debugPrint('statusSet $e');
@@ -372,8 +376,12 @@ CachedNetworkImage imageNetwork(
           ),
         );
       },
-      errorWidget: (context, url, error) => CircularProgressIndicator(
-          // valueColor: AlwaysStoppedAnimation(mainBlue),
-          // backgroundColor: mainBlue,
-          ));
+      errorWidget: (context, url, error) => SizedBox(
+        width: 50,
+        height: 50,
+        child: CircularProgressIndicator(
+            // valueColor: AlwaysStoppedAnimation(mainBlue),
+            // backgroundColor: mainBlue,
+            ),
+      ));
 }

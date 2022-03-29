@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/dataTypes.dart';
+import 'package:shooting_app/classes/dataTypes.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
 
 class MyBottomSheet extends StatelessWidget {
-  const MyBottomSheet(this.post,{Key? key}) : super(key: key);
+  const MyBottomSheet(this.post, {Key? key}) : super(key: key);
   final DataPost post;
   @override
   Widget build(BuildContext context) {

@@ -30,6 +30,8 @@ samples, guidance on mobile development, and a full API reference.
 search
 *user
 *post
+
+
 come to app
 
 edit profile
@@ -42,7 +44,8 @@ phone
 setting
 
 match
-matchup comment
+*matchup comment
+match timer
 
 post
 *make post
@@ -54,15 +57,17 @@ post
 
 story
 *create
-story list
-story show
-story read not read
+*story list
+*story show photo
+story show video
+*story read not read
+*make story read
 
 message
 *get all
 *get message
-create message
-timer
+#create message
+*timer
 
 auth
 *login
@@ -72,7 +77,7 @@ log out
 
 get error
 
-notif
+*notif
 
 
 pagination

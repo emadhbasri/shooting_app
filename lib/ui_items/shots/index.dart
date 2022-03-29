@@ -1,7 +1,3 @@
-
-
-
-
 export 'reply_from_shot.dart';
 
 export '../bottom_sheet.dart';
@@ -12,10 +8,10 @@ export '../../classes/models.dart';
 
 import 'package:flutter/material.dart';
 export 'package:flutter/material.dart';
-import '../../dataTypes.dart';
-export '../../dataTypes.dart';
+import '../../classes/dataTypes.dart';
+export '../../classes/dataTypes.dart';
 
-Widget convertHashtag(String text,Function(String) onTapTag) {
+Widget convertHashtag(String text, Function(String) onTapTag) {
   List<String> split = text.split(' ');
   // List<String> split = text.split('#');
   // List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
@@ -34,7 +30,7 @@ Widget convertHashtag(String text,Function(String) onTapTag) {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
-        if(e.length>0){
+        if (e.length > 0) {
           if (e[0] == '#') {
             return GestureDetector(
                 onTap: () {

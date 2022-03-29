@@ -17,7 +17,7 @@ class DashPainter extends CustomPainter {
   final Color filledColor;
   final double gapSize;
   final double strokeWidth;
-  final double fillCount;
+  final int fillCount;
   final StrokeCap strokeCap;
 
   @override
@@ -27,7 +27,7 @@ class DashPainter extends CustomPainter {
 
     for (int i = 0; i < dashes; i++) {
       final Paint paint = Paint()
-        ..color = i + 1 > fillCount ? emptyColor : filledColor
+        ..color = i + 1 > fillCount.toDouble() ? emptyColor : filledColor
         ..strokeWidth = strokeWidth
         ..style = PaintingStyle.stroke
         ..strokeCap = strokeCap;

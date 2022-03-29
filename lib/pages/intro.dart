@@ -4,7 +4,7 @@ import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 
 import '../classes/functions.dart';
-import '../dataTypes.dart';
+import '../classes/dataTypes.dart';
 import 'auth/auth.dart';
 
 class Intro extends StatefulWidget {
@@ -19,15 +19,14 @@ class _IntroState extends State<Intro> {
     MyService service = getIt<MyService>();
     // service.logOut();
     service.getToken().then((bool value) {
-      if(value){
-        Future.delayed(
-            Duration(seconds: 2), () => Go.pushSlideAnim(context, AppPageBuilder()));
-      }else{
+      if (value) {
+        Future.delayed(Duration(seconds: 2),
+            () => Go.pushSlideAnim(context, AppPageBuilder()));
+      } else {
         Future.delayed(
             Duration(seconds: 2), () => Go.pushSlideAnim(context, Auth()));
       }
     });
-
   }
 
   @override

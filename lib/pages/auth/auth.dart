@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 
 import '../../classes/functions.dart';
-import '../../dataTypes.dart';
+import '../../classes/dataTypes.dart';
 import 'login.dart';
 import 'register.dart';
 
@@ -17,13 +16,14 @@ class _AuthState extends State<Auth> {
     statusSet(trans);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: decorImage(img: 'images/stadium.jpg'),
 //    color: black,
       child: WillPopScope(
-        onWillPop: ()async{
+        onWillPop: () async {
           statusSet(white);
           return true;
         },
@@ -60,23 +60,19 @@ class _AuthState extends State<Auth> {
                   height: doubleHeight(8),
                   padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10)
-                    ),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     child: RaisedButton(
-                      onPressed: (){
+                      onPressed: () {
                         Go.push(context, Register());
                       },
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                       color: mainBlue,
                       child: Text(
                         'Register',
-                        style: TextStyle(
-                            fontSize: doubleWidth(5),
-                            color: white
-                        ),
+                        style:
+                            TextStyle(fontSize: doubleWidth(5), color: white),
                       ),
                     ),
                   ),
@@ -87,23 +83,19 @@ class _AuthState extends State<Auth> {
                   height: doubleHeight(8),
                   padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10)
-                    ),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     child: RaisedButton(
-                      onPressed: (){
+                      onPressed: () {
                         Go.push(context, Login());
                       },
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                       color: white,
                       child: Text(
                         'Login',
                         style: TextStyle(
-                            fontSize: doubleWidth(5),
-                            color: mainBlue
-                        ),
+                            fontSize: doubleWidth(5), color: mainBlue),
                       ),
                     ),
                   ),

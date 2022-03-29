@@ -11,7 +11,12 @@ class Cards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MatchState state = Provider.of(context, listen: false);
-
+    if(state.selectedMatch.isLive==0)
+      return SizedBox.expand(
+        child: Center(
+          child: Text('Match is not started'),
+        ),
+      );
 
     List<DataEvent> first = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.home.id).toList();
     List<DataEvent> second = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.away.id).toList();

@@ -83,7 +83,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
 
   bool show = false;
   init() async {
-    _controller = VideoPlayerController.file(File(_paths.first.path));
+    _controller = VideoPlayerController.network('https://res.cloudinary.com/football-buzz/video/upload/v1648398347/footballbuzz/stories/qa8jqt4tr2jakwedzdec.mp4');
     await _controller.initialize();
     setState(() {
       show = true;

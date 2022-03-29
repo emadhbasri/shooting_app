@@ -1,13 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../dataTypes.dart';
+import '../../classes/dataTypes.dart';
+import '../../main.dart';
 import 'login.dart';
 import 'team.dart';
+
 class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
@@ -42,7 +43,6 @@ class _RegisterState extends State<Register> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-
                     ClipRRect(
                       child: Container(
                         width: max,
@@ -54,8 +54,7 @@ class _RegisterState extends State<Register> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'FullName'
-                            ),
+                                hintText: 'FullName'),
                           ),
                         ),
                       ),
@@ -73,8 +72,7 @@ class _RegisterState extends State<Register> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'Username'
-                            ),
+                                hintText: 'Username'),
                           ),
                         ),
                       ),
@@ -93,8 +91,7 @@ class _RegisterState extends State<Register> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'Email'
-                            ),
+                                hintText: 'Email'),
                           ),
                         ),
                       ),
@@ -113,8 +110,7 @@ class _RegisterState extends State<Register> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'PhoneNumber'
-                            ),
+                                hintText: 'PhoneNumber'),
                           ),
                         ),
                       ),
@@ -141,10 +137,9 @@ class _RegisterState extends State<Register> {
                           child: TextField(
                             controller: password,
                             decoration: InputDecoration(
-                              prefixText: '        ',
-                              border: InputBorder.none,
-                              hintText: 'Password'
-                            ),
+                                prefixText: '        ',
+                                border: InputBorder.none,
+                                hintText: 'Password'),
                           ),
                         ),
                       ),
@@ -158,8 +153,8 @@ class _RegisterState extends State<Register> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
-                          onPressed: ()async {
-                            MyService service= MyService();
+                          onPressed: () async {
+                            MyService service = getIt<MyService>();
                             bool back = await AuthenticationService.register(
                                 service,
                                 fullName: name.value.text,
@@ -168,11 +163,11 @@ class _RegisterState extends State<Register> {
                                 email: email.value.text,
                                 password: password.value.text,
                                 confirmPassword: password.value.text);
-                            if(back){
+                            if (back) {
                               service.getToken().then((bool value) {
-                                Go.pushSlideAnim(context, Team());
+                                Go.pushSlideAnim(context, Team());//todo
                               });
-                            }else{
+                            } else {
                               print('nononono');
                             }
                           },
@@ -181,36 +176,32 @@ class _RegisterState extends State<Register> {
                           color: mainBlue,
                           child: Text(
                             'Register',
-                            style: TextStyle(fontSize: doubleWidth(5), color: white),
+                            style: TextStyle(
+                                fontSize: doubleWidth(5), color: white),
                           ),
                         ),
                       ),
                     ),
                     sizeh(doubleHeight(3)),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Go.replace(context, Login());
                       },
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                            children:[
-                              TextSpan(
-                                  text: 'Already have an account?  '
-                              ),
+                            children: [
+                              TextSpan(text: 'Already have an account?  '),
                               TextSpan(
                                   text: 'Log In',
                                   style: TextStyle(
                                       color: mainGreen,
-                                      fontStyle: FontStyle.italic
-                                  )
-                              ),
+                                      fontStyle: FontStyle.italic)),
                             ],
                             style: TextStyle(
                               color: white,
                               fontSize: doubleWidth(4.5),
-                            )
-                        ),
+                            )),
                       ),
                     ),
                     Divider(
@@ -223,33 +214,24 @@ class _RegisterState extends State<Register> {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        children:[
-                          TextSpan(
-                            text: 'By signing up you agree to our '
-                          ),
-                          TextSpan(
-                            text: 'Terms of Use',
-                            style: TextStyle(
-                              color: mainGreen,
-                              fontStyle: FontStyle.italic
-                            )
-                          ),
-                          TextSpan(
-                            text: ' and'
-                          ),
-                          TextSpan(
-                              text: '\nPrivacy Policy',
-                              style: TextStyle(
-                                  color: mainGreen,
-                                  fontStyle: FontStyle.italic
-                              )
-                          ),
-                        ],
-                        style: TextStyle(
-                          color: white,
-                          fontSize: doubleWidth(3),
-                        )
-                      ),
+                          children: [
+                            TextSpan(text: 'By signing up you agree to our '),
+                            TextSpan(
+                                text: 'Terms of Use',
+                                style: TextStyle(
+                                    color: mainGreen,
+                                    fontStyle: FontStyle.italic)),
+                            TextSpan(text: ' and'),
+                            TextSpan(
+                                text: '\nPrivacy Policy',
+                                style: TextStyle(
+                                    color: mainGreen,
+                                    fontStyle: FontStyle.italic)),
+                          ],
+                          style: TextStyle(
+                            color: white,
+                            fontSize: doubleWidth(3),
+                          )),
                     ),
                     sizeh(doubleHeight(7)),
                   ],
@@ -261,7 +243,7 @@ class _RegisterState extends State<Register> {
               child: Text(
                 'WELCOME',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(5),
                     color: white),
               ),

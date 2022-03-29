@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/dataTypes.dart';
+import 'package:shooting_app/classes/dataTypes.dart';
 // import '../pages/home/mach/match_list.dart';
 
 import '../classes/functions.dart';
@@ -64,43 +64,68 @@ class _MyDrawerState extends State<MyDrawer>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(getIt<MainState>().personalInformation!=null)
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Container(
-                        width: doubleWidth(15),
-                        height: doubleWidth(15),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: getIt<MainState>().personalInformation!.profilePhoto
-                                    !=null?
-                                imageNetwork(getIt<MainState>().personalInformation!.profilePhoto??'',fit: BoxFit.fill):null),
-                            Align(
-                              alignment: Alignment(1, -0.9),
-                              child: SizedBox(
-                                width: doubleHeight(3),
-                                height: doubleHeight(3),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      border:
-                                          Border.all(color: white, width: 3),
-                                      borderRadius: BorderRadius.circular(100),
-                                      image: getIt<MainState>().personalInformation!.team!=null
-                                          && getIt<MainState>().personalInformation!.team!.team_badge!=null?DecorationImage(
-                                        image: networkImage(getIt<MainState>().personalInformation!.team!.team_badge!),
-                                      ):null),
+                  if (getIt<MainState>().personalInformation != null)
+                    ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                      leading: Container(
+                          width: doubleWidth(15),
+                          height: doubleWidth(15),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: getIt<MainState>()
+                                              .personalInformation!
+                                              .profilePhoto !=
+                                          null
+                                      ? imageNetwork(
+                                          getIt<MainState>()
+                                                  .personalInformation!
+                                                  .profilePhoto ??
+                                              '',
+                                          fit: BoxFit.fill)
+                                      : null),
+                              Align(
+                                alignment: Alignment(1, -0.9),
+                                child: SizedBox(
+                                  width: doubleHeight(3),
+                                  height: doubleHeight(3),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: white,
+                                        border:
+                                            Border.all(color: white, width: 3),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        image: getIt<MainState>()
+                                                        .personalInformation!
+                                                        .team !=
+                                                    null &&
+                                                getIt<MainState>()
+                                                        .personalInformation!
+                                                        .team!
+                                                        .team_badge !=
+                                                    null
+                                            ? DecorationImage(
+                                                image: networkImage(
+                                                    getIt<MainState>()
+                                                        .personalInformation!
+                                                        .team!
+                                                        .team_badge!),
+                                              )
+                                            : null),
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
-                        )),
-                    title: Text(getIt<MainState>().personalInformation!.fullName??''),
-                    subtitle: Text('@${getIt<MainState>().personalInformation!.userName??''}'),
-                  ),
+                              )
+                            ],
+                          )),
+                      title: Text(
+                          getIt<MainState>().personalInformation!.fullName ??
+                              ''),
+                      subtitle: Text(
+                          '@${getIt<MainState>().personalInformation!.userName ?? ''}'),
+                    ),
                   ListTile(
                     onTap: () {
                       if (widget.page == 'home') {
