@@ -325,7 +325,7 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
     int index = -1;
     if (story.mimeType == '.mp4') {
       index = videoList.indexWhere((element) => element.id == story.id);
-      if (videoList[index].video.value.isPlaying == false)
+      if (index!=-1 && videoList[index].video.value.isPlaying == false)
         videoList[index].video.play();
     }
     return Stack(
@@ -368,12 +368,14 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
                           ),
                         );
                       }
+                      if(index!=-1)
                       return Center(
                         child: AspectRatio(
                           aspectRatio: videoList[index].video.value.aspectRatio,
                           child: VideoPlayer(videoList[index].video),
                         ),
                       );
+                      else return const SizedBox();
                     } else {
                       return imageNetwork(
                         story.mediaURL,

@@ -155,7 +155,7 @@ class _EditProfileState extends State<EditProfile> {
                         print('backTeam $backTeam');
                         if (backTeam != null) {
                           bool backUser = await UsersService.changeTeam(
-                              service, backTeam.id.toString());
+                              service, backTeam);
                           print('backUser $backUser');
                         }
                       },

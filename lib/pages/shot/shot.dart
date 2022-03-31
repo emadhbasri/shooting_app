@@ -26,8 +26,12 @@ class _ShotState extends State<Shot> {
     post = await ShotsService.getShotById(service, widget.postId!);
     setState(() {});
   }
-
+  bool loading=false;
   addComment() async {
+    if(loading)return;
+    setState(() {
+      loading=true;
+    });
     if(controller.value.text.trim()==''){
       toast('please fill the comment field');
       return;
@@ -35,7 +39,9 @@ class _ShotState extends State<Shot> {
     print('controller.value.text ${controller.value.text}');
     DataPostComment? back = await ShotsService.shotsComment(service,
         postId: post!.id, comment: controller.value.text);
+
     setState(() {
+      loading=false;
       post!.postComments.add(back!);
     });
     controller.clear();
@@ -67,9 +73,14 @@ class _ShotState extends State<Shot> {
                     child: ListView.builder(
                       itemCount: post!.postComments.length,
                       itemBuilder: (context, index) =>
-                          CommentFromShot(comment: post!.postComments[index],delete: (){
+                          CommentFromShot(
+                              key: UniqueKey(),
+                              comment: post!.postComments[index],delete: (){
+                            print('delete comment $index');
+                            List<DataPostComment> temp  =post!.postComments.toList();
+                            temp.removeAt(index);
                             setState(() {
-                              post!.postComments.removeAt(index);
+                              post!.postComments=temp.toList();
                             });
                           }),
                     ),
@@ -121,7 +132,10 @@ class _ShotState extends State<Shot> {
                               borderRadius: BorderRadius.circular(10),
                               color: greenCall,
                             ),
-                            child: Icon(
+                            child: loading?SizedBox(
+                              height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator()):Icon(
                               Icons.arrow_upward,
                               color: Colors.black,
                             ),

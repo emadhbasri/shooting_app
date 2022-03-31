@@ -23,12 +23,14 @@ class PostFromShot extends StatefulWidget {
 class _PostFromShotState extends State<PostFromShot> {
   Widget _convertHashtag(context, String text) {
     List<String> split = text.split(' ');
+    print('split $split');
     return Wrap(
       alignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
+        if(e.length==0)return Text('');
         if (e[0] == '#') {
           return GestureDetector(
               onTap: () {
@@ -326,6 +328,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
+        if(e.length==0)return Text('');
         if (e[0] == '#') {
           return GestureDetector(
               onTap: () {
@@ -661,6 +664,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
+        if(e.length==0)return Text('');
         if (e[0] == '#') {
           return GestureDetector(
               onTap: () {
@@ -928,10 +932,14 @@ class _PostFromMatchState extends State<PostFromMatch> {
             ...post.postComments
                 .map((e) => Padding(
               padding: EdgeInsets.only(left: doubleWidth(4)),
-              child: CommentFromMatch(comment: e,delete: (){
+              child: CommentFromMatch(
+                  key: UniqueKey(),
+                  comment: e,delete: (){
                 int index = post.postComments.indexOf(e);
+                List<DataPostComment> temp  =post.postComments.toList();
+                temp.removeAt(index);
                 setState(() {
-                  post.postComments.removeAt(index);
+                  post.postComments=temp.toList();
                 });
               }),
             ))

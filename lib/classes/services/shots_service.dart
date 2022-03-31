@@ -76,7 +76,7 @@ class ShotsService {
       {int pageNumber = 1}) async {
     debugPrint('fanFeed()');
     Map<String, dynamic> back = await service.httpGet(
-        '/api/v1/Shots/fanFeeds${getIt<MainState>().userId}?pageNumber=$pageNumber');
+        '/api/v1/Shots/fanFeeds?pageNumber=$pageNumber');
     debugPrint('back ${back}');
     if(back['status']==false){
       toast(back['error']);
@@ -265,7 +265,7 @@ class ShotsService {
   }) async {
     print('deleteReplyLike($replyId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/comment$replyId');
+        await service.httpDelete('/api/v1/Shots/delete/likeReply$replyId');
     debugPrint('deleteReplyLike back $back');
     return back;
   }
@@ -276,7 +276,7 @@ class ShotsService {
   }) async {
     print('deleteShot($shotId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/likeReply$shotId');
+        await service.httpDelete('/api/v1/Shots/delete$shotId');
     debugPrint('deleteShot back $back');
     return back;
   }
@@ -286,7 +286,7 @@ class ShotsService {
     required String shotId,
   }) async {
     print('deleteShotLike($shotId)');
-    bool back = await service.httpDelete('/api/v1/Shots/delete/like{{id}}');
+    bool back = await service.httpDelete('/api/v1/Shots/delete/like$shotId');
     debugPrint('deleteShotLike back $back');
     return back;
   }

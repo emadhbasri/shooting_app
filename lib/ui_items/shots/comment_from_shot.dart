@@ -20,7 +20,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
     super.initState();
     comment = widget.comment;
   }
-
+  bool loading=false;
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 ],
               ),
             ),
-            sizeh(doubleHeight(1)),
+                      sizeh(doubleHeight(1)),
             convertHashtag(comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
@@ -192,11 +192,16 @@ class _CommentFromShotState extends State<CommentFromShot> {
             ...comment.commentReplies
                 .map((e) => Padding(
                       padding: EdgeInsets.only(left: doubleWidth(4)),
-                      child: CommentReply(reply: e,delete: (){
+                      child: CommentReply(
+                          key: UniqueKey(),
+                          reply: e,delete: (){
                         int index = comment.commentReplies.indexOf(e);
+                        List<DataCommentReply> temp  =comment.commentReplies.toList();
+                        temp.removeAt(index);
                         setState(() {
-                          comment.commentReplies.removeAt(index);
+                          comment.commentReplies=temp.toList();
                         });
+
                       }),
                     ))
                 .toList()
@@ -209,6 +214,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
+                            if(loading)return;
+                            setState(() {
+                              loading=true;
+                            });
                             print(
                                 'controller.value.text ${controller.value.text}');
                             DataCommentReply? back =
@@ -217,11 +226,15 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                     commentId: comment.id,
                                     reply: controller.value.text);
                             setState(() {
+                              loading=false;
                               comment.commentReplies.add(back!);
                             });
                             controller.clear();
                           },
-                          child: Icon(
+                          child:
+                          loading?Transform.scale(
+                              scale: 0.5,
+                              child: CircularProgressIndicator()):Icon(
                             Icons.send,
                             color: mainBlue,
                           )),

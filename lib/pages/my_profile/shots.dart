@@ -4,6 +4,7 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../classes/functions.dart';
+import '../../classes/models.dart';
 
 class Shots extends StatefulWidget {
   const Shots({Key? key}) : super(key: key);
@@ -19,11 +20,15 @@ class _ShotsState extends State<Shots> {
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
-            PostFromShotProfile(post: e,onTapTag: gogo,
-
+            PostFromShotProfile(
+              key: UniqueKey(),
+            post: e,onTapTag: gogo,
               canDelete: true,
               delete: () {
-                state.personalInformation!.posts.remove(e);
+                int index = state.personalInformation!.posts.indexOf(e);
+                List<DataPost> temp = state.personalInformation!.posts.toList();
+                temp.removeAt(index);
+                  state.personalInformation!.posts=temp.toList();
                 state.notify();
               },
           person: state.personalInformation!,

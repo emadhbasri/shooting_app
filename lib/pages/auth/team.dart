@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/live_match_service.dart';
@@ -305,12 +306,14 @@ class _TeamState extends State<Team> {
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () async {
-                          if (searchTeam == null || team == null) {
+                          print('searchTeam $searchTeam');
+                          if (searchTeam == null) {
                             toast('Please pick a team.');
                           } else {
                             bool back = await UsersService.changeTeam(
-                                getIt<MyService>(), searchTeam!.id.toString());
+                                getIt<MyService>(), searchTeam!);
                             if (back) {
+                              await getIt<MainState>().getProfile();
                               Go.pushSlideAnim(context, AppPageBuilder());
                             }
                           }

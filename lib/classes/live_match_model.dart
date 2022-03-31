@@ -140,11 +140,13 @@ class DataMatchTeam {
   late int id;
   late String name;
   String? logo;
+  String? country;
   bool? winner;
   DataMatchTeam.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.int);
     name = convertData(data, 'name', DataType.string);
     logo = convertData(data, 'logo', DataType.string);
+    country = convertData(data, 'country', DataType.string);
     winner = convertData(data, 'winner', DataType.bool);
   }
 

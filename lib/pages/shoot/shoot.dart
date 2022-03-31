@@ -52,6 +52,7 @@ class _ShootState extends State<Shoot> {
     if (back != null) {
       MainState state = Provider.of(context,listen: false);
       state.allPosts.insert(0, back);
+      state.personalInformation!.posts.insert(0, back);
       state.notify();
       Go.pop(context);
     }

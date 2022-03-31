@@ -100,11 +100,9 @@ class DataPostLike {
   DataPostLike.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
     userId = convertData(data, 'userId', DataType.string);
-    postId = convertData(data, 'postId', DataType.string);
   }
 
   late String id; //($uuid)
-  late String postId; //($uuid)
   late String userId; //($uuid)
 }
 
@@ -306,6 +304,11 @@ class DataPost {
   late int reach;
   String? selectedFriendIds;
   late int shares;
+
+  @override
+  String toString() {
+    return 'DataPost{blockedByMe: $blockedByMe, blockedMe: $blockedMe, createdAt: $createdAt, details: $details, editedAt: $editedAt, engagement: $engagement, friendsIds: $friendsIds, id: $id, isEdited: $isEdited, isFriend: $isFriend, isPublic: $isPublic, mediaTypes: $mediaTypes, person: $person, personalInformationId: $personalInformationId, postCommentCount: $postCommentCount, postComments: $postComments, postLikeCount: $postLikeCount, postLikedBythisUser: $postLikedBythisUser, postLikes: $postLikes, profileClicks: $profileClicks, reach: $reach, selectedFriendIds: $selectedFriendIds, shares: $shares}';
+  }
 }
 
 class DataUserFollower {
