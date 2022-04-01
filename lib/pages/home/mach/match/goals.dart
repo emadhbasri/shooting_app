@@ -1,6 +1,7 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/live_match_model.dart';
 
 import '../../../../classes/functions.dart';
 import '../../../../classes/states/match_state.dart';
@@ -17,8 +18,16 @@ class Goals extends StatelessWidget {
           child: Text('Match is not started'),
         ),
       );
-    List first = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.home.id).toList();
-    List second = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.away.id).toList();
+    List<DataEvent> first = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.home.id).toList();
+    List<DataEvent> second = state.selectedMatch.events.where((element) => element.type=='Goal' && element.teamId==state.selectedMatch.away.id).toList();
+
+    if(first.isEmpty && second.isEmpty){
+      return SizedBox.expand(
+        child: Center(
+          child: Text('no Goals'),
+        ),
+      );
+    }
     return ListView(
       children: [
         Row(
@@ -50,7 +59,7 @@ class Goals extends StatelessWidget {
                                   SizedBox(width: doubleWidth(1)),
                                   Text('${(e.timeElapsed!=null?e.timeElapsed!:0)+(e.timeExtra!=null?e.timeExtra!:0)}\''),
                                   SizedBox(width: doubleWidth(1)),
-                                  Expanded(child: Text(e.playerName))
+                                  Expanded(child: Text(e.playerName??''))
                                 ],
                               ),
                               if (e != first.last)
@@ -88,7 +97,7 @@ class Goals extends StatelessWidget {
                           SizedBox(width: doubleWidth(1)),
                           Text('${(e.timeElapsed!=null?e.timeElapsed!:0)+(e.timeExtra!=null?e.timeExtra!:0)}\''),
                           SizedBox(width: doubleWidth(1)),
-                          Expanded(child: Text(e.playerName))
+                          Expanded(child: Text(e.playerName??''))
                         ],
                       ),
                       if (e != second.last)

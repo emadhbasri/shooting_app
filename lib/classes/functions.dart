@@ -46,6 +46,7 @@ Widget circle() {
     ),
   );
 }
+Widget simpleCircle() => Center(child: CircularProgressIndicator());
 
 String makeDurationToString(DateTime date) {
   DateTimeRange range = DateTimeRange(start: date, end: DateTime.now());
@@ -217,11 +218,11 @@ abstract class Go {
     // })).catchError((e) => print('Error 1 $e'));
   }
 
-  static void pushSlideAnimSheet(BuildContext context, Widget page,
-      {bool full: false, var first, var second}) {
+  static Future<void> pushSlideAnimSheet(BuildContext context, Widget page,
+      {bool full: false, var first, var second}) async{
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
-    Navigator.push(
+    await Navigator.push(
         context,
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),

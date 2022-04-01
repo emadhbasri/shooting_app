@@ -17,6 +17,8 @@ class _ShotsState extends State<Shots> {
   Widget build(BuildContext context) {
     final ProfileState state =
         Provider.of<ProfileState>(context, listen: false);
+    if(state.personalInformation!.posts.isEmpty)
+      return Center(child: Text('no shot. 🙂'),);
     return ListView(
       physics: BouncingScrollPhysics(),
       children: state.personalInformation!.posts

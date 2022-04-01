@@ -16,62 +16,19 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-##profile
-*my profile
-*profile
-*followers
-*my profile shots
-*profile shots
-*my media
-*media
-*follow
-*unfollow
-
-search
-*user
-*post
 
 
-come to app
 
-edit profile
-*image
-email
-*team
-phone
-*name
-
-setting
 
 match
 *matchup comment
 match timer
 
-post
-*make post
-*comment
-*reply
-*share
-*like
 
-
-story
-*create
-*story list
-*story show photo
-story show video
-*story read not read
 *make story read
 
-message
-*get all
-*get message
-#create message
-*timer
-
 auth
-*login
-*sign up
+
 otp
 log out
 
@@ -79,8 +36,15 @@ get error
 
 *notif
 
+change photo
+change photo get profile
+change team get profile
+change name get get profile
+pagination of notif getMyPrivateChats
 
-pagination
+change email
+change phone
+2fa
+login with otp
 
-
-
+refresh token

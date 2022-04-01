@@ -108,17 +108,25 @@ return response;
     }
     return out;
   }
-  Future<List<DataMatch1>> matchs({
+  Future<List<DataMatch1>> matchsV2({
     required String date,
-    required int league,
-    required int season,
-}) async {
-    debugPrint('matchs(${'fixtures?date=$date&league=$league&season=$season'})');
+  }) async {
+    debugPrint('matchs($date)');
     // return [];
-    Map<String, dynamic> back = await httpGet('fixtures?date=$date&league=$league&season=$season');
+    Map<String, dynamic> back = await httpGet('fixtures?date=$date');
     // debugPrint('back ${back}');
     return convertDataList<DataMatch1>(
         back['data'], 'response', 'DataMatch1');
+  }
+
+  Future<DataMatch1> match({
+    required int id,
+}) async {
+    debugPrint('matchs($id)');
+    // return [];
+    Map<String, dynamic> back = await httpGet('fixtures?id=$id');
+    debugPrint('back ${back['data']['response'].length}');
+    return DataMatch1.fromAllJson(back['data']['response'][0] as Map<String,dynamic>);
   }
 
   Future<Map<String,List<DataStatistics>>> matchStatics({required int fixture}) async {

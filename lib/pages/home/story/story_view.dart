@@ -4,8 +4,9 @@ import '../../../package/story/story_page_view.dart';
 
 
 class StoryPage extends StatefulWidget {
-  const StoryPage({Key? key, required this.storyUsers}) : super(key: key);
+  const StoryPage({Key? key, required this.storyUsers,this.index=0}) : super(key: key);
   final List<DataStoryUser> storyUsers;
+  final int index;
   @override
   _StoryPageState createState() => _StoryPageState();
 }
@@ -34,7 +35,7 @@ class _StoryPageState extends State<StoryPage> {
       body: StoryPageView(
         indicatorDuration: Duration(seconds: 10),
         storyUsers: widget.storyUsers,
-        initialPage: 0,
+        initialPage: widget.index,
         gestureItemBuilder: (context, pageIndex, storyIndex) {
           return Stack(children: [
             // SizedBox.expand(
@@ -78,6 +79,7 @@ class _StoryPageState extends State<StoryPage> {
         onPageLimitReached: () {
           Go.pop(context);
         },
+
       ),
     );
   }

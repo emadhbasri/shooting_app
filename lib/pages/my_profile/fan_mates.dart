@@ -21,10 +21,11 @@ class _FanMatesState extends State<FanMates> {
   @override
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
+    if(state.personalInformation!.posts.isEmpty)
+      return Center(child: Text('no fan mate. 🙂'),);
     return Container(
-      color: Color.fromRGBO(244, 244, 244, 1),
       child: ListView.separated(
-        physics: BouncingScrollPhysics(),
+        // physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
         itemCount: state.personalInformation!.userFollowers.length,
         itemBuilder: (BuildContext context, int index) =>

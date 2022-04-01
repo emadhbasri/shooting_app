@@ -63,7 +63,7 @@ class _SettingsState extends State<Settings> {
                     ListTile(
                       onTap: () {
                         if(getIt<MainState>().personalInformation!=null)
-                          Go.pushSlideAnim(context, ChangeEmail());
+                          Go.pushSlideAnim(context, ChangeEmail(email: getIt<MainState>().personalInformation!.email??'',));
                       },
                       title: Text(
                         'Change Email',

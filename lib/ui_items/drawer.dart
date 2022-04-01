@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
-// import '../pages/home/mach/match_list.dart';
 
 import '../classes/functions.dart';
 import '../main.dart';

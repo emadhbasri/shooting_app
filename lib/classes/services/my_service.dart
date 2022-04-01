@@ -342,6 +342,18 @@ class MyService {
     }
   }
 
+  Future<List<DataNotification>> getNotif({int pageNumber=1}) async {
+    debugPrint('getNotif()');
+    Map<String, dynamic> back = await httpGet('/api/v1/Notification/notifications/get?pageNumber=$pageNumber');
+    debugPrint('back getNotif ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return [];
+    }
+    return convertDataList<DataNotification>(
+        back['data'], 'results', 'DataNotification');
+  }
+
   Future<DataShortVideoStory?> createStory({//todo
     required XFile mediaURI,
     required String mimeType,
@@ -372,17 +384,17 @@ class MyService {
         classType: 'DataShortVideoStory');
   }
 
-  Future<List<DataStoryMain>> getStories() async {//todo
-    debugPrint('getStories()');
-    Map<String, dynamic> back = await httpGet('/api/v1/VideoStory/all/friends');
-    debugPrint('backgetStories ${back}');
-    if(back['status']==false){
-      toast(back['error']);
-      return [];
-    }
-    return convertDataList<DataStoryMain>(
-        back['data'], 'data', 'DataStoryMain');
-  }
+  // Future<List<DataStoryMain>> getStories() async {//todo
+  //   debugPrint('getStories()');
+  //   Map<String, dynamic> back = await httpGet('/api/v1/VideoStory/all/friends');
+  //   debugPrint('backgetStories ${back}');
+  //   if(back['status']==false){
+  //     toast(back['error']);
+  //     return [];
+  //   }
+  //   return convertDataList<DataStoryMain>(
+  //       back['data'], 'data', 'DataStoryMain');
+  // }
 
   Future<List<DataStoryMain>> myStories() async {
     debugPrint('myStories()');
@@ -394,6 +406,15 @@ class MyService {
     }
     return convertDataList<DataStoryMain>(
         back['data'], 'data', 'DataStoryMain');
+  }
+  Future<bool> reachStory(String storyId) async {
+    debugPrint('reachStory($storyId)');
+    Map<String, dynamic> back = await httpPatch('/api/v1/VideoStory/count/reach?shortVideoStoryId=$storyId',{});
+    debugPrint('back reachStory ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+    }
+    return back['status'];
   }
 }
 

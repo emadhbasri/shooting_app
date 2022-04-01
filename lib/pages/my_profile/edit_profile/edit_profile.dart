@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/pages/team_search.dart';
@@ -80,21 +82,34 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(height: doubleHeight(2)),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: greenCall, width: 2),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: CircleAvatar(
-                          radius: doubleWidth(7),
-                          backgroundImage: widget.person.profilePhoto != null
-                              ? NetworkImage(widget.person.profilePhoto!)
-                              : null,
+                      child: GestureDetector(
+                        onTap: ()async{
+                          XFile? file = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          if (file != null) {
+                            bool back = await UsersService.changePhoto(service, file);
+                            if(back){
+                              getIt<MainState>().getProfile(force: true);
+                              Go.pop(context);
+                            }
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: greenCall, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
                           child: CircleAvatar(
-                            radius: doubleWidth(4.5),
-                            backgroundColor: greenCall.withOpacity(0.4),
-                            child: Icon(Icons.camera_alt,
-                                color: greenCall, size: 20),
+                            radius: doubleWidth(7),
+                            backgroundImage: widget.person.profilePhoto != null
+                                ? networkImage(widget.person.profilePhoto!)
+                                : null,
+                            child: CircleAvatar(
+                              radius: doubleWidth(4.5),
+                              backgroundColor: greenCall.withOpacity(0.4),
+                              child: Icon(Icons.camera_alt,
+                                  color: greenCall, size: 20),
+                            ),
                           ),
                         ),
                       ),
@@ -223,6 +238,8 @@ class _EditProfileState extends State<EditProfile> {
                           onPressed: () async {
                             bool back = await UsersService.changeName(
                                 service, nameController.value.text);
+                            if(back)
+                              getIt<MainState>().getProfile(force: true);
                           },
                         )),
                     SizedBox(height: doubleHeight(4)),

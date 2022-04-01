@@ -78,8 +78,8 @@ class _StoryListState extends State<StoryList> {
     MainState state = Provider.of(context, listen: false);
     if(state.newStories==null || state.storyViewed==null)
       state.getStories();
-    if(state.myStories==null)
-      state.getMyStories();
+    // if(state.myStories==null)
+    //   state.getMyStories();
 
   }
 
@@ -91,7 +91,7 @@ class _StoryListState extends State<StoryList> {
         return RefreshIndicator(
           onRefresh: () async {
             await state.getStories();
-            await state.getMyStories();
+            // await state.getMyStories();
             // await state.getFanFeed();
           },
           child: Scaffold(
@@ -219,7 +219,9 @@ class StoryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         onTap: () async{
-          await Go.pushSlideAnim(context, StoryPage(storyUsers: listStoryUser,));
+          int index = listStoryUser.indexOf(storyUser);
+          print('index $index');
+          await Go.pushSlideAnim(context, StoryPage(storyUsers: listStoryUser,index:index));
           MainState state = Provider.of(context, listen: false);
           state.getStories();
         },
@@ -230,7 +232,7 @@ class StoryListItem extends StatelessWidget {
               dashes: storyUser.notSeen.length + storyUser.seen.length,
               emptyColor: Colors.grey,
               filledColor: mainBlue,
-              fillCount: 3, //storyUser.seen.length
+              fillCount: storyUser.notSeen.length,
               gapSize: 5,
               strokeWidth: 4,
               child: Padding(

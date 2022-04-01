@@ -50,10 +50,11 @@ class _ShootState extends State<Shoot> {
     });
     print('back $back');
     if (back != null) {
-      MainState state = Provider.of(context,listen: false);
+      MainState state = Provider.of(context, listen: false);
       state.allPosts.insert(0, back);
       state.personalInformation!.posts.insert(0, back);
       state.notify();
+      getIt<MainState>().play();
       Go.pop(context);
     }
   }

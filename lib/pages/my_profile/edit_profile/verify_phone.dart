@@ -137,7 +137,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                                 otp: code
                               );
                               if(back){
-                                getIt<MainState>().getProfile(noNotify: false);
+                                getIt<MainState>().getProfile();
                                 Go.pop(context);
                               }
 

@@ -20,8 +20,7 @@ class _MatchListState extends State<MatchList> {
   void initState() {
     super.initState();
     MatchState mainState = Provider.of(context, listen: false);
-    print('mainState.loadMainMatchList ${mainState.loadMainMatchList}');
-    if(mainState.loadMainMatchList)
+    if(mainState.loadCountry)
       mainState.init();
 
   }
@@ -30,152 +29,157 @@ class _MatchListState extends State<MatchList> {
   Widget build(BuildContext context) {
     return Consumer<MatchState>(
         builder: (context, state, child){
-          if(state.loadMainMatchList)
-            return circle();
+          // if(state.loadCountry && state.loadMatchs)
+          //   return circle();
 
           if (state.matchPage) {
             return Match();
           } else {
             return Scaffold(
-              // appBar: AppBar(
-              //   title: Text('Live Scores'),
-              //   leading: IconButton(
-              //     icon: Icon(Icons.menu),
-              //     onPressed: (){
-              //       Go.pushSlideAnimDrawer(context, MyDrawer(page: 'live scores'));
-              //     },
-              //   ),
-              // ),
-              body: ListView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                    horizontal: doubleWidth(4), vertical: doubleHeight(2)),
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
-                    child: DropdownButton<DataCountry>(
-                      items: state.countries
-                          .map((e) => DropdownMenuItem<DataCountry>(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('${e.name} ' +
-                                '${e.code != null ? '(${e.code})' : ''}'),
-                            if (e.flag != null)
-                              SizedBox(width: doubleWidth(2)),
-                            if (e.flag != null)
-                              SizedBox(
-                                width: doubleWidth(7),
-                                height: doubleWidth(5),
-                                child: SvgPicture.network(e.flag!,placeholderBuilder: (_)
-                                =>CircularProgressIndicator(),
-                                fit: BoxFit.fill,
-                                ),
-                              )
-                          ],
-                        ),
-                        value: e,
-                      ))
-                          .toList(),
-                      elevation: 3,
-                      dropdownColor: grayCallLight,
-                      menuMaxHeight: doubleHeight(70),
-                      onChanged: (e) {
-                        if (e != null) {
-                          state.country = e;
-                          state.notify();
-                          state.getLeagues();
-                        }
-                      },
-                      value: state.country,
-                      borderRadius: BorderRadius.circular(10),
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      icon: Icon(Icons.keyboard_arrow_down_outlined),
-                      iconSize: 30,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: doubleWidth(4), vertical: doubleHeight(1)),
-                  ),
-
-                  SizedBox(
-                    height: doubleHeight(1),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: state.dates
-                        .map((e) => TextButton(
-                        onPressed: () {
-                          int index = state.dates.indexOf(e);
-                          state.selectedDateTime = state.dateTimes[index];
-                          state.selectedDate = e;
-                          state.notify();
-                          state.getMatchs();
+              body: RefreshIndicator(
+                onRefresh: ()async{
+                  await state.getMatchsV2();
+                },
+                child: ListView(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: doubleWidth(4), vertical: doubleHeight(2)),
+                  children: [
+                    if(!state.loadCountry)
+                      Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: DropdownButton<DataCountry>(
+                        items: state.countries
+                            .map((e) => DropdownMenuItem<DataCountry>(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('${e.name} ' +
+                                  '${e.code != null ? '(${e.code})' : ''}'),
+                              if (e.flag != null)
+                                SizedBox(width: doubleWidth(2)),
+                              if (e.flag != null)
+                                SizedBox(
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(5),
+                                  child: SvgPicture.network(e.flag!,placeholderBuilder: (_)
+                                  =>CircularProgressIndicator(),
+                                  fit: BoxFit.fill,
+                                  ),
+                                )
+                            ],
+                          ),
+                          value: e,
+                        ))
+                            .toList(),
+                        elevation: 3,
+                        dropdownColor: grayCallLight,
+                        menuMaxHeight: doubleHeight(70),
+                        onChanged: (e) {
+                          if (e != null) {
+                            state.country = e;
+                            state.cont = e.name;
+                            state.notify();
+                            // state.getLeagues();
+                            state.getMatchsV2();
+                          }
                         },
-                        child: Text(
-                          e,
-                          style: TextStyle(
-                              color: state.selectedDate == e
-                                  ? Colors.black
-                                  : Colors.grey,
-                              fontSize: state.selectedDate == e ? 15 : 12),
-                        )))
-                        .toList(),
-                  ),
-                  SizedBox(
-                    height: doubleHeight(2),
-                  ),
-
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text('Premier League'),
-                  //     Icon(Icons.arrow_forward_ios)
-                  //   ],
-                  // ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: state.leagues
-                        .map(
-                          (e) => MatchListItem(
-                        league: e,
-                        state: state,
+                        value: state.country,
+                        borderRadius: BorderRadius.circular(10),
+                        underline: const SizedBox(),
+                        isExpanded: true,
+                        icon: Icon(Icons.keyboard_arrow_down_outlined),
+                        iconSize: 30,
                       ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: doubleWidth(4), vertical: doubleHeight(1)),
                     )
-                        .toList(),
-                  ),
+                    else simpleCircle(),
 
-                  // SizedBox(height: doubleHeight(2)),
-                  // ...state.premierLeagueListMatch.map((e) =>
-                  //   Column(
-                  //     children: [
-                  //       MatchItem(match: e),
-                  //       if(e!=state.premierLeagueListMatch.last)
-                  //         SizedBox(height: doubleHeight(1)),
-                  //     ],
-                  //   )
-                  // ).toList(),
-                  // SizedBox(height: doubleHeight(2)),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text('FA Cup'),
-                  //     Icon(Icons.arrow_forward_ios)
-                  //   ],
-                  // ),
-                  // SizedBox(height: doubleHeight(2)),
-                  // ...state.FACupListMatch.map((e) =>
-                  //     Column(
-                  //       children: [
-                  //         MatchItem(match: e),
-                  //         if(e!=state.FACupListMatch.last)
-                  //           SizedBox(height: doubleHeight(1)),
-                  //       ],
-                  //     )
-                  // ).toList(),
-                ],
+                    SizedBox(
+                      height: doubleHeight(1),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: state.dates
+                          .map((e) => TextButton(
+                          onPressed: () {
+                            int index = state.dates.indexOf(e);
+                            state.selectedDateTime = state.dateTimes[index];
+                            state.selectedDate = e;
+                            state.notify();
+                            // state.getMatchs();
+                            state.getMatchsV2();
+                          },
+                          child: Text(
+                            e,
+                            style: TextStyle(
+                                color: state.selectedDate == e
+                                    ? Colors.black
+                                    : Colors.grey,
+                                fontSize: state.selectedDate == e ? 15 : 12),
+                          )))
+                          .toList(),
+                    ),
+                    SizedBox(
+                      height: doubleHeight(2),
+                    ),
+
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Premier League'),
+                    //     Icon(Icons.arrow_forward_ios)
+                    //   ],
+                    // ),
+                    if(!state.loadMatchs)
+                      if(state.leagues.isNotEmpty)
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: state.leagues
+                              .map(
+                                (e) => MatchListItem(
+                              league: e,
+                              state: state,
+                            ),
+                          )
+                              .toList(),
+                        )else
+                          Center(child: Text('No matches for this day'),)
+                    else simpleCircle(),
+
+                    // SizedBox(height: doubleHeight(2)),
+                    // ...state.premierLeagueListMatch.map((e) =>
+                    //   Column(
+                    //     children: [
+                    //       MatchItem(match: e),
+                    //       if(e!=state.premierLeagueListMatch.last)
+                    //         SizedBox(height: doubleHeight(1)),
+                    //     ],
+                    //   )
+                    // ).toList(),
+                    // SizedBox(height: doubleHeight(2)),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('FA Cup'),
+                    //     Icon(Icons.arrow_forward_ios)
+                    //   ],
+                    // ),
+                    // SizedBox(height: doubleHeight(2)),
+                    // ...state.FACupListMatch.map((e) =>
+                    //     Column(
+                    //       children: [
+                    //         MatchItem(match: e),
+                    //         if(e!=state.FACupListMatch.last)
+                    //           SizedBox(height: doubleHeight(1)),
+                    //       ],
+                    //     )
+                    // ).toList(),
+                  ],
+                ),
               ),
             );
           }
@@ -195,7 +199,7 @@ class MatchListItem extends StatefulWidget {
 
 class _MatchListItemState extends State<MatchListItem>
     with AutomaticKeepAliveClientMixin {
-  bool isOpen = false;
+  bool isOpen = true;
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -205,12 +209,12 @@ class _MatchListItemState extends State<MatchListItem>
           : Icon(CupertinoIcons.chevron_forward),
       initiallyExpanded: isOpen,
       onExpansionChanged: (e) {
-        if (e && widget.league.matchs.isEmpty) {
-          widget.state.selectedLeagueIndex =
-              widget.state.leagues.indexOf(widget.league);
-          widget.state.notify();
-          widget.state.getMatchs();
-        }
+        // if (e && widget.league.matchs.isEmpty) {
+        //   widget.state.selectedLeagueIndex =
+        //       widget.state.leagues.indexOf(widget.league);
+        //   widget.state.notify();
+        //   widget.state.getMatchs();
+        // }
         setState(() {
           isOpen = e;
         });
@@ -257,17 +261,23 @@ class MatchItem1 extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: () {
+        state.selectedLeagueIndex =state.leagues.indexWhere(
+                (e) => e.matchs.contains(match));
         state.selectedMatchIndex =
             state.leagues[state.selectedLeagueIndex].matchs.indexOf(match);
+
+        print('state.selectedLeagueIndex ${state.selectedLeagueIndex}');
+
         state.selectedMatch = match;
         state.matchPage = true;
         MainState mainS = getIt<MainState>();
         mainS.match = match;
         mainS.isOnMatchPage = true;
         state.notify();
-        state.getMatchStatics();
-        state.getMatchEvents();
-        state.getMatchLineUps();
+        state.getMatch();
+        // state.getMatchStatics();
+        // state.getMatchEvents();
+        // state.getMatchLineUps();
         state.getMatchUps();
       },
       child: Container(
@@ -347,7 +357,10 @@ class MatchItem1 extends StatelessWidget {
                 SizedBox(height: doubleHeight(0.7)),
                 Text('Kick Off time', style: TextStyle(fontSize: 13)),
                 Spacer(),
-                Text(match.fixture.status, style: TextStyle(fontSize: 13)),
+                Text(match.fixture.isLive==0?
+                // match.fixture.date.toString()
+                    'start at ${match.fixture.date!.hour.toString().padLeft(2,'0')}:${match.fixture.date!.minute.toString().padLeft(2,'0')}'
+                    :match.fixture.status, style: TextStyle(fontSize: 13)),
                 Spacer(),
                 if (match.fixture.elapsed != null)
                   Text('${match.fixture.elapsed} \' ',

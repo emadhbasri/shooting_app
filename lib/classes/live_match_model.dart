@@ -15,20 +15,22 @@ class DataCountry {
 class DataLeague {
   late int id;
   late String name;
-  String? type;
+  String? country;
   String? logo;
-
+  late int season;
   DataLeague.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.int);
+    season = convertData(data, 'season', DataType.int);
     name = convertData(data, 'name', DataType.string);
-    type = convertData(data, 'type', DataType.string);
+    country = convertData(data, 'country', DataType.string);
     logo = convertData(data, 'logo', DataType.string);
   }
 }
 
 class DataLeagueMain {
   late DataLeague league;
-  late DataCountry country;
+  // late DataCountry country;
+  late String country;
   late int latestSeason;
   List<DataMatch1> matchs=[];
   DataLeagueMain.fromJson(Map<String, dynamic> data) {
@@ -40,6 +42,11 @@ class DataLeagueMain {
     Map<String, dynamic> map =
         seasons.lastWhere((element) => element['current'] == true);
     latestSeason = map['year'];
+  }
+  DataLeagueMain.fromDataLeague(DataLeague data){
+    league=data;
+    country=data.country??'';
+    latestSeason=data.season;
   }
 }
 class DataPlayer{
@@ -70,7 +77,7 @@ class DataEvent{
   int? timeElapsed;
   int? timeExtra;
   late int teamId;
-  late String playerName;
+  String? playerName;
   late String type;
   late String detail;
   DataEvent.fromJson(Map<String, dynamic> data) {
@@ -93,6 +100,7 @@ DataStatistics.fromJson(Map<String, dynamic> data) {
 class DataMatch1 {
   late int isLive;// 0 not started 1 live 2 finished
   late DataFixture fixture;
+  late DataLeague league;
   late DataMatchTeam home;
   late DataMatchTeam away;
   int? homeGoals;
@@ -103,15 +111,70 @@ class DataMatch1 {
   List<DataPost> matchUps=[];
   DataLineUps? homeLineUps;
   DataLineUps? awayLineUps;
+  setData(DataMatch1 data){
+    isLive=data.isLive;
+    fixture=data.fixture;
+    league=data.league;
+    home=data.home;
+    away=data.away;
+    homeGoals=data.homeGoals;
+    awayGoals=data.awayGoals;
+    homeStatistics=data.homeStatistics;
+    awayStatistics=data.awayStatistics;
+    events=data.events;
+    homeLineUps=data.homeLineUps;
+    awayLineUps=data.awayLineUps;
+  }
   DataMatch1.fromJson(Map<String, dynamic> data) {
     print('DataMatch1 $data');
     fixture =
         convertData(data, 'fixture', DataType.clas, classType: 'DataFixture');
+    league =
+        convertData(data, 'league', DataType.clas, classType: 'DataLeague');
     isLive=fixture.isLive;
     home = convertData(data['teams'], 'home', DataType.clas, classType: 'DataMatchTeam');
     away = convertData(data['teams'], 'away', DataType.clas, classType: 'DataMatchTeam');
     homeGoals = convertData(data['goals'], 'home', DataType.int);
     awayGoals = convertData(data['goals'], 'away', DataType.int);
+  }
+  DataMatch1.fromAllJson(Map<String, dynamic> all){
+    fixture =
+        convertData(all, 'fixture', DataType.clas, classType: 'DataFixture');
+    league =
+        convertData(all, 'league', DataType.clas, classType: 'DataLeague');
+    isLive=fixture.isLive;
+    home = convertData(all['teams'], 'home', DataType.clas, classType: 'DataMatchTeam');
+    away = convertData(all['teams'], 'away', DataType.clas, classType: 'DataMatchTeam');
+    homeGoals = convertData(all['goals'], 'home', DataType.int);
+    awayGoals = convertData(all['goals'], 'away', DataType.int);
+
+    ///STATICS
+    List statics=all['statistics'];
+    if(statics.isEmpty){
+      homeStatistics=[];
+      awayStatistics=[];
+    }else{
+      homeStatistics=convertDataList<DataStatistics>(
+          statics[0], 'statistics', 'DataStatistics');
+      awayStatistics=convertDataList<DataStatistics>(
+          statics[1], 'statistics', 'DataStatistics');
+    }
+    ///STATICS
+    events = convertDataList<DataEvent>(
+        all, 'events', 'DataEvent');
+    ///Lineups
+    List<DataLineUps> lineups=convertDataList<DataLineUps>(
+        all, 'lineups', 'DataLineUps');
+    if(lineups.isEmpty) {
+      homeLineUps=null;
+      awayLineUps=null;
+    }else{
+      homeLineUps=lineups[0];
+      awayLineUps=lineups[1];
+    }
+    ///Lineups
+    //leagues[selectedLeagueIndex].matchs[selectedMatchIndex]
+    //selectedMatch
   }
 }
 
@@ -120,15 +183,17 @@ class DataFixture {
   late int id;
   late String status;
   DateTime? date;
+
   int? elapsed;
   DataFixture.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.int);
     status = convertData(data['status'], 'long', DataType.string);
     elapsed = convertData(data['status'], 'elapsed', DataType.int);
-    date=convertData(data, 'date', DataType.datetime);
+    date=DateTime.fromMillisecondsSinceEpoch(data['timestamp'] * 1000);
+        // convertData(data, 'date', DataType.datetime);
     if(status=='Match Finished'){
       isLive=2;
-    }else if(elapsed ==null){
+    }else if(status =='Not Started'){
       isLive=0;
     }else{
       isLive=1;

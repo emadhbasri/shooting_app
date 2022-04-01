@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
+import '../../../classes/services/authentication_service.dart';
+import '../../../classes/services/my_service.dart';
+import '../../../main.dart';
 import 'change_email_done.dart';
 
 import '../../../classes/functions.dart';
 
-class ChangeEmail extends StatelessWidget {
+class ChangeEmail extends StatefulWidget {
+  final String email;
+
+  const ChangeEmail({Key? key,required this.email}) : super(key: key);
+
+  @override
+  State<ChangeEmail> createState() => _ChangeEmailState();
+}
+
+class _ChangeEmailState extends State<ChangeEmail> {
+  TextEditingController controller=TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: Text('Change Email')),
@@ -20,7 +33,7 @@ class ChangeEmail extends StatelessWidget {
           ),
           SizedBox(height: doubleHeight(2)),
           Text(
-            'example@abc.com',
+            widget.email,
             style: TextStyle(color: grayCall),
           ),
           SizedBox(height: doubleHeight(8)),
@@ -31,6 +44,7 @@ class ChangeEmail extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
+              controller: controller,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
@@ -47,8 +61,16 @@ class ChangeEmail extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(mainBlue),
                     padding: MaterialStateProperty.all(
                         EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
-                onPressed: () {
-                  Go.replaceSlideAnim(context, ChangeEmailDone());
+                onPressed: () async{
+                  if(controller.value.text.trim() !=''){
+                    MyService service = getIt<MyService>();
+                    bool back = await AuthenticationService.changeEmail(service,
+                        controller.value.text);
+                    if(back){
+                      Go.replaceSlideAnim(context, ChangeEmailDone(email: controller.value.text,));
+                    }
+                  } else
+                    toast('please fill the field.');
                 },
                 child: Text('Verify')),
           )

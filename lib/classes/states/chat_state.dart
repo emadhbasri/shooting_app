@@ -12,14 +12,12 @@ class ChatState extends ChangeNotifier {
   late DataChatRoom selectedChat;
   MyService service = getIt<MyService>();
   init() async {
-    if (listChats != null) return;
+    // if (listChats != null) return;
     print('init()');
     getChatsList();
   }
 
   getChatsList() async {
-    listChats = null;
-    notifyListeners();
     Map<String, dynamic> back =
         await ChatService.getMyPrivateChats(service, pageNumber: 1);
     listChats = back['chats'];

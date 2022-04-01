@@ -12,6 +12,11 @@ class AuthenticationService {
     removeShare('refresh');
     removeShare('access');
     MainState state = getIt<MainState>();
+    state.personalInformation=null;
+    state.match=null;
+    state.newStories=null;
+    state.storyViewed=null;
+    state.isOnMatchPage=false;
     state.userId = '';
     state.userName = '';
     removeShare('userid');
@@ -29,35 +34,34 @@ class AuthenticationService {
     required String confirmPassword,
   }) async {
     debugPrint('register()');
-    if (fullName == '') {
+    if (fullName.trim() == '') {
       toast('The fullName field is required.');
       return false;
-    } else if (userName == '') {
+    } else if (userName.trim() == '') {
       toast('The userName field is required.');
       return false;
-    } else if (phoneNumber == '') {
+    } else if (phoneNumber.trim() == '') {
       toast('The phoneNumber field is required.');
       return false;
-    } else if (email == '') {
+    } else if (email.trim() == '') {
       toast('The email field is required.');
       return false;
-    } else if (password == '') {
+    } else if (password.trim() == '') {
       toast('The password field is required.');
       return false;
     }
     Map<String, dynamic> out = {
-      "fullName": fullName,
-      "userName": userName,
-      "phoneNumber": phoneNumber,
-      "notificationToken": "string",
+      "fullName": fullName.trim(),
+      "userName": userName.trim(),
+      "phoneNumber": phoneNumber.trim(),
       "is2FA": false,
       "isOnline": true,
-      "email": email,
-      "password": password,
-      "confirmPassword": confirmPassword
+      "email": email.trim(),
+      "password": password.trim(),
+      "confirmPassword": confirmPassword.trim()
     };
-    out['notificationToken'] = 'test';
-    // out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = 'test';
+    out['notificationToken'] = await messaging.getToken();
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/register', out, jsonType: true);
     if (back['status'] == false) {
@@ -94,12 +98,12 @@ class AuthenticationService {
   }) async {
     debugPrint('login()');
     Map<String, dynamic> out = {
-      "user": username,
-      "password": password,
+      "user": username.trim(),
+      "password": password.trim(),
       "rememberMe": true
     };
-    out['notificationToken'] = 'test';
-    // out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = 'test';
+    out['notificationToken'] = await messaging.getToken();
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/login', out, jsonType: true);
     debugPrint('back ${back}');
@@ -130,13 +134,13 @@ class AuthenticationService {
   }) async {
     debugPrint('validateOtp()');
     Map<String, dynamic> out = {
-      "user": user,
-      "password": password,
-      "oTP": oTP,
+      "user": user.trim(),
+      "password": password.trim(),
+      "oTP": oTP.trim(),
       "rememberMe": true
     };
-    out['notificationToken'] = 'test';
-    // out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = 'test';
+    out['notificationToken'] = await messaging.getToken();
     Map<String, dynamic> back =
         await service.httpPost('/api/v1/Authentication/validateOtp', out);
     if(back['status']==false){
@@ -156,7 +160,18 @@ class AuthenticationService {
     }
     return back['status'];
   }
-
+  static Future<bool> changeEmail(MyService service, String email) async {
+    debugPrint('changeEmail($email)');
+    Map<String, dynamic> back = await service.httpPost(
+        '/api/v1/Administration/users/email/update',
+        {'email': email},
+        jsonType: true);
+    debugPrint('changeEmail back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+    }
+    return back['status'];
+  }
   static Future<bool> changePhone(MyService service, String phoneNumber) async {
     debugPrint('changePhone($phoneNumber)');
     Map<String, dynamic> back = await service.httpPost(

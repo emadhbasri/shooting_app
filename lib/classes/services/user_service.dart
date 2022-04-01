@@ -74,7 +74,7 @@ class UsersService {
     map['profilePhoto'] =
         await MultipartFile.fromFile(file.path, filename: file.name);
     Map<String, dynamic> back =
-        await service.httpPostMulti('/api/v1/Shots/add', FormData.fromMap(map));
+        await service.httpPostMulti('/api/v1/Administration/users/photoUpdate', FormData.fromMap(map));
     if (back['status'] == false) {
       toast(back['error']);
     }

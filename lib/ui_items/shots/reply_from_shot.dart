@@ -2,11 +2,13 @@ import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
 import '../../main.dart';
+import '../dialogs/dialog1.dart';
 import 'index.dart';
 
 class CommentReply extends StatefulWidget {
   final VoidCallback delete;
-  const CommentReply({Key? key, required this.reply,required this.delete}) : super(key: key);
+  const CommentReply({Key? key, required this.reply, required this.delete})
+      : super(key: key);
   final DataCommentReply reply;
   @override
   _CommentReplyState createState() => _CommentReplyState();
@@ -115,7 +117,9 @@ class _CommentReplyState extends State<CommentReply> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: doubleWidth(5),),
+                  SizedBox(
+                    width: doubleWidth(5),
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -124,26 +128,35 @@ class _CommentReplyState extends State<CommentReply> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
                           if (!reply.replyLikedBythisUser) {
-                            bool back = await ShotsService.replyLike(service,
+                            String? back = await ShotsService.replyLike(service,
                                 commentReplyId: reply.id);
-                            if (back)
+                            if (back!=null)
                               setState(() {
+                                reply.replyLikes.add(DataReplyLike(back, ''));
                                 reply.replyLikedBythisUser = true;
+                                reply.replyLikeCount++;
                               });
                           } else {
-                            bool back = await ShotsService.deleteReplyLike(service,
-                                replyId: reply.id);
-                            if (back)
-                              setState(() {
-                                reply.replyLikedBythisUser = false;
-                              });
+                            if(reply.replyLikes.isNotEmpty){
+                              bool back = await ShotsService.deleteReplyLike(
+                                  service,
+                                  replyId: reply.replyLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  reply.replyLikes.clear();
+                                  reply.replyLikedBythisUser = false;
+                                  reply.replyLikeCount--;
+                                });
+                            }
                           }
                         },
                         child: Icon(
                             reply.replyLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: reply.replyLikedBythisUser ? Colors.pink : null),
+                            color: reply.replyLikedBythisUser
+                                ? Colors.pink
+                                : null),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(reply.replyLikeCount)),
@@ -155,17 +168,26 @@ class _CommentReplyState extends State<CommentReply> {
                       width: doubleWidth(5),
                       height: doubleWidth(5),
                       child: GestureDetector(
-                        onTap: ()async{
-                          if(reply.personalInformationId!=getIt<MainState>().userId){
+                        onTap: () async {
+                          if (reply.personalInformationId !=
+                              getIt<MainState>().userId) {
                             toast('you can not delete this comment');
                             return;
                           }
-                          MyService service = await getIt<MyService>();
-                          bool back = await ShotsService.deleteReply(service,
-                              replyId: reply.id);
-                          if (back)
-                            widget.delete();
-
+                          bool? alert = await showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext dialogContext) {
+                              return MyAlertDialog(
+                                  content: 'Do you want to delete the shot?');
+                            },
+                          );
+                          if (alert != null && alert) {
+                            MyService service = await getIt<MyService>();
+                            bool back = await ShotsService.deleteReply(service,
+                                replyId: reply.id);
+                            if (back) widget.delete();
+                          }
                         },
                         child: Icon(Icons.remove_circle_outline),
                       ),

@@ -20,6 +20,14 @@ class Cards extends StatelessWidget {
 
     List<DataEvent> first = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.home.id).toList();
     List<DataEvent> second = state.selectedMatch.events.where((element) => element.type=='Card' && element.teamId==state.selectedMatch.away.id).toList();
+    if(first.isEmpty && second.isEmpty){
+      return SizedBox.expand(
+        child: Center(
+          child: Text('no Cards'),
+        ),
+      );
+    }
+
     return ListView(
       children: [
         Row(
@@ -46,7 +54,7 @@ class Cards extends StatelessWidget {
                           SizedBox(width: doubleWidth(1.5)),
                           Text('${(e.timeElapsed!=null?e.timeElapsed!:0)+(e.timeExtra!=null?e.timeExtra!:0)}\''),
                           SizedBox(width: doubleWidth(1.5)),
-                          Expanded(child: Text(e.playerName))
+                          Expanded(child: Text(e.playerName??''))
                         ],
                       ),
                       if (e != first.last)
@@ -79,7 +87,7 @@ class Cards extends StatelessWidget {
                           SizedBox(width: doubleWidth(1.5)),
                           Text('${(e.timeElapsed!=null?e.timeElapsed!:0)+(e.timeExtra!=null?e.timeExtra!:0)}\''),
                           SizedBox(width: doubleWidth(1.5)),
-                          Expanded(child: Text(e.playerName))
+                          Expanded(child: Text(e.playerName??''))
                         ],
                       ),
                       if (e != second.last)

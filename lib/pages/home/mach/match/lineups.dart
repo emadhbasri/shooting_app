@@ -10,8 +10,6 @@ class LineUps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MatchState state = Provider.of(context, listen: false);
-    if(state.loadingLineUps)
-      return circle();
 
     if(state.selectedMatch.isLive==0)
     return SizedBox.expand(
@@ -19,7 +17,13 @@ class LineUps extends StatelessWidget {
         child: Text('Match is not started'),
       ),
     );
-
+    if(state.selectedMatch.homeLineUps==null){
+      return SizedBox.expand(
+        child: Center(
+          child: Text('no Lineups'),
+        ),
+      );
+    }
     return ListView(
       children: [
         Row(

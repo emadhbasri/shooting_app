@@ -182,7 +182,7 @@ class ShotsService {
     }
   }
 
-  static Future<bool> shotLike(
+  static Future<String?> shotLike(
     MyService service, {
     required String postId,
   }) async {
@@ -192,11 +192,12 @@ class ShotsService {
     debugPrint('shotLike back $back');
     if(back['status']==false){
       toast(back['error']);
+      return null;
     }
-    return back['status'];
+    return back['data']['data'];
   }
 
-  static Future<bool> commentLike(
+  static Future<String?> commentLike(
     MyService service, {
     required String postCommentId,
   }) async {
@@ -208,11 +209,12 @@ class ShotsService {
     debugPrint('commentLike back $back');
     if(back['status']==false){
       toast(back['error']);
+      return null;
     }
-    return back['status'];
+    return back['data']['data'];
   }
 
-  static Future<bool> replyLike(
+  static Future<String?> replyLike(
     MyService service, {
     required String commentReplyId,
   }) async {
@@ -222,8 +224,9 @@ class ShotsService {
     debugPrint('replyLike back $back');
     if(back['status']==false){
       toast(back['error']);
+      return null;
     }
-    return back['status'];
+    return back['data']['data'];
   }
 
   static Future<bool> deleteComment(
@@ -243,7 +246,7 @@ class ShotsService {
   }) async {
     print('deleteCommentLike($commentId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/commentLike$commentId');
+        await service.httpDelete('/api/v1/Shots/delete/comment/Like$commentId');
     debugPrint('deleteCommentLike back $back');
     return back;
   }
@@ -265,7 +268,7 @@ class ShotsService {
   }) async {
     print('deleteReplyLike($replyId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/likeReply$replyId');
+        await service.httpDelete('/api/v1/Shots/delete/Reply/Like$replyId');
     debugPrint('deleteReplyLike back $back');
     return back;
   }

@@ -21,8 +21,9 @@ class _FanMatesState extends State<FanMates> {
   Widget build(BuildContext context) {
     final ProfileState state =
         Provider.of<ProfileState>(context, listen: false);
+    if(state.personalInformation!.posts.isEmpty)
+      return Center(child: Text('no fan mate. 🙂'),);
     return Container(
-      color: Color.fromRGBO(244, 244, 244, 1),
       child: ListView.separated(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),

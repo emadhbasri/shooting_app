@@ -5,6 +5,7 @@ import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/main.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/states/chat_state.dart';
 import 'chat_list.dart';
@@ -203,7 +204,11 @@ class _ChatState extends State<Chat> {
                             //     text=e;
                             //   });
                             // },
+                            minLines: 1,
+                            maxLines: 3,
+                            keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
+
                                 hintStyle: TextStyle(
                                     color: Color.fromRGBO(214, 216, 217, 1)),
                                 hintText: 'Write your message...',
@@ -225,7 +230,9 @@ class _ChatState extends State<Chat> {
                           //   "id": ""
                           // })
                           // );
-                          state.sendMessage(controller.value.text);
+                          print('controller.value.text ${controller.value.text}');
+                          if(controller.value.text.trim()=='')return;
+                          state.sendMessage(controller.value.text.trim());
                           state.notify();
                           controller.clear();
                         },

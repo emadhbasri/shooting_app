@@ -8,62 +8,106 @@ import '../../main.dart';
 import '../functions.dart';
 import '../models.dart';
 import '../services/shots_service.dart';
+import 'main_state.dart';
 
 class MatchState extends ChangeNotifier {
   bool matchPage = false;
 
   LiveMatchService liveMatch = LiveMatchService();
   MyService service = getIt<MyService>();
-
+  MainState mainState = getIt<MainState>();
   List<DataCountry> countries = [];
   DataCountry? country;
-  bool loadMainMatchList=true;
+  String cont='';
+  bool loadCountry=true;
+  bool loadMatchs=true;
   init()async{
-    await getCountries(noLeague: true);
-    print('finish cont');
-    await getLeagues();
+    List<Future> futures = [];
+    futures.add(getCountries());
+    // futures.add(getLeagues());
+    futures.add(getMatchsV2());
+    await Future.wait(futures);
     print('finish leag');
-    loadMainMatchList=false;
     notifyListeners();
   }
-  getCountries({bool noLeague=false}) async {
+  getCountries() async {
     if (countries.isNotEmpty) return;
     countries = await liveMatch.countries();
     print('countries ${countries.length}');
     country =
-        countries.singleWhere((element) => element.name == 'England'); //England
+        countries.singleWhere((element){
+          if(mainState.personalInformation!=null && mainState.personalInformation!.team!=null){
+            return element.name == mainState.personalInformation!.team!.team_country!;
+          }else{
+            return element.name=='England';
+          }
+        });
+    loadCountry=false;
     notifyListeners();
-    if(!noLeague)
-      getLeagues();
+    // if(!noLeague)
+    //   getLeagues();
   }
 
   List<DataLeagueMain> leagues = [];
   getLeagues() async {
     leagues = await liveMatch.leagues(
-      country: country!.name,
+      country: 'England',//country!.name
     );
     print('leagues ${leagues.length}');
     notifyListeners();
   }
 
-  late int selectedLeagueIndex;
-  getMatchs() async {
-    leagues[selectedLeagueIndex].matchs = await liveMatch.matchs(
-        date:
-            '${selectedDateTime.year}-${selectedDateTime.month.toString().padLeft(2, '0')}-${selectedDateTime.day.toString().padLeft(2, '0')}',
-        league: leagues[selectedLeagueIndex].league.id,
-        season: leagues[selectedLeagueIndex].latestSeason);
-    print('matchs ${leagues[selectedLeagueIndex].matchs.length}');
+
+  getMatchsV2()async{//1min todo
+    if(loadMatchs==false){
+      loadMatchs=true;
+      notifyListeners();
+    }
+    leagues.clear();
+
+    if(cont==''){
+      if (mainState.personalInformation != null &&
+          mainState.personalInformation!.team != null)
+        cont = mainState.personalInformation!.team!.team_country!;
+      else
+        cont = 'England';
+    }
+    List<DataMatch1> back = await liveMatch.matchsV2(date:
+        '${selectedDateTime.year}-${selectedDateTime.month.toString().padLeft(2, '0')}-${selectedDateTime.day.toString().padLeft(2, '0')}',
+    );
+    back = back.where((element) => element.league.country==cont).toList();
+    print('adad ${back.length}');
+    for (int j = 0; j < back.length; j++) {
+      int index = hasLeague(back[j].league.id);
+      if (index == -1) {
+        leagues.add(DataLeagueMain.fromDataLeague(back[j].league));
+        index = leagues.length-1;
+        leagues[index].matchs.add(back[j]);
+      } else {
+        leagues[index].matchs.add(back[j]);
+      }
+    }
+    loadMatchs=false;
     notifyListeners();
   }
+  int hasLeague(
+      int id) =>
+      leagues.indexWhere((element) =>
+      element.league.id == id);
+  late int selectedLeagueIndex;
   getMatch() async {//1min todo todo
-    leagues[selectedLeagueIndex].matchs = await liveMatch.matchs(
-        date:
-            '${selectedDateTime.year}-${selectedDateTime.month.toString().padLeft(2, '0')}-${selectedDateTime.day.toString().padLeft(2, '0')}',
-        league: leagues[selectedLeagueIndex].league.id,
-        season: leagues[selectedLeagueIndex].latestSeason);
-    print('matchs ${leagues[selectedLeagueIndex].matchs.length}');
+    print('getMatch()');
+    DataMatch1 match1 = await liveMatch.match(
+        id: selectedMatch.fixture.id
+    );
+    leagues[selectedLeagueIndex].matchs[selectedMatchIndex].setData(match1);
+    selectedMatch.setData(match1);
+    print('matchs ${match1.fixture.id}');
     notifyListeners();
+    if(matchPage && selectedMatch.isLive!=0){
+      await Future.delayed(Duration(minutes: 1));
+      getMatch();
+    }
   }
 
   late int selectedMatchIndex;
@@ -120,6 +164,9 @@ class MatchState extends ChangeNotifier {
 
   getMatchUps() async {
     if(selectedMatch.isLive==0)return;
+    if(mainState.personalInformation!.team==null)return;
+    if(selectedMatch.home.id.toString()!=mainState.personalInformation!.team!.id
+        && selectedMatch.away.id.toString()!=mainState.personalInformation!.team!.id)return;
     print('getMatchUps()');
     if (selectedMatch.matchUps.isNotEmpty) return;
     List<DataPost> back = await ShotsService.getMatchUps(service,
@@ -132,7 +179,10 @@ class MatchState extends ChangeNotifier {
     leagues[selectedLeagueIndex].matchs[selectedMatchIndex].matchUps = back;
     notifyListeners();
     print('matchUps.length ${selectedMatch.matchUps.length}');
-    notifyListeners();
+    if(matchPage && selectedMatch.isLive!=0){
+      await Future.delayed(Duration(seconds: 10));
+      getMatchUps();
+    }
   }
 
   // List<String> leagues = ['England','Spanish'];

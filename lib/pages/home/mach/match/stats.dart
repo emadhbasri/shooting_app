@@ -17,6 +17,13 @@ class Stats extends StatelessWidget {
           child: Text('Match is not started'),
         ),
       );
+    if(state.selectedMatch.homeStatistics.isEmpty){
+      return SizedBox.expand(
+        child: Center(
+          child: Text('no Stats'),
+        ),
+      );
+    }
     return ListView(
       padding: EdgeInsets.only(bottom: doubleHeight(1)),
       children: [

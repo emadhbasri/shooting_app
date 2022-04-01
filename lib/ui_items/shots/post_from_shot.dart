@@ -1,4 +1,5 @@
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
@@ -23,7 +24,6 @@ class PostFromShot extends StatefulWidget {
 class _PostFromShotState extends State<PostFromShot> {
   Widget _convertHashtag(context, String text) {
     List<String> split = text.split(' ');
-    print('split $split');
     return Wrap(
       alignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
@@ -249,20 +249,26 @@ class _PostFromShotState extends State<PostFromShot> {
                           MyService service = await getIt<MyService>();
 
                           if (!widget.post.postLikedBythisUser) {
-                            bool back = await ShotsService.shotLike(service,
+                            String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back)
+                            if (back!=null)
                               setState(() {
+                                widget.post.postLikes.add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
+                                widget.post.postLikeCount++;
                               });
                           } else {
-                            bool back = await ShotsService.deleteShotLike(
-                                service,
-                                shotId: widget.post.id);
-                            if (back)
-                              setState(() {
-                                widget.post.postLikedBythisUser = false;
-                              });
+                            if(widget.post.postLikes.isNotEmpty){
+                              bool back = await ShotsService.deleteShotLike(
+                                  service,
+                                  shotId: widget.post.postLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  widget.post.postLikes.clear();
+                                  widget.post.postLikedBythisUser = false;
+                                  widget.post.postLikeCount--;
+                                });
+                            }
                           }
                         },
                         child: Icon(
@@ -278,17 +284,18 @@ class _PostFromShotState extends State<PostFromShot> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) => ShareDialog(
-                                post: widget.post,
-                              ));
-                    },
+                    // onTap: () {
+                    //   showDialog(
+                    //       context: context,
+                    //       builder: (_) => ShareDialog(
+                    //             post: widget.post,
+                    //           ));
+                    // },
                     child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Image.asset('images/share.png')),
+                        // child: Image.asset('images/share.png')
+                    ),
                   )
                 ],
               ),
@@ -579,21 +586,28 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
 
+
                           if (!widget.post.postLikedBythisUser) {
-                            bool back = await ShotsService.shotLike(service,
+                            String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back)
+                            if (back!=null)
                               setState(() {
+                                widget.post.postLikes.add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
+                                widget.post.postLikeCount++;
                               });
                           } else {
-                            bool back = await ShotsService.deleteShotLike(
-                                service,
-                                shotId: widget.post.id);
-                            if (back)
-                              setState(() {
-                                widget.post.postLikedBythisUser = false;
-                              });
+                            if(widget.post.postLikes.isNotEmpty){
+                              bool back = await ShotsService.deleteShotLike(
+                                  service,
+                                  shotId: widget.post.postLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  widget.post.postLikes.clear();
+                                  widget.post.postLikedBythisUser = false;
+                                  widget.post.postLikeCount--;
+                                });
+                            }
                           }
                         },
                         child: Icon(
@@ -611,24 +625,36 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   GestureDetector(
                     onTap: () async{
                       print('canDelete ${widget.canDelete}');
-                      DataPost? backDialog = await showDialog(
-                          context: context,
-                          builder: (_) => ShareDialog(
-                            canDelete: widget.canDelete,
-                            post: widget.post,
-                          ));
-                      if(backDialog!=null){
+                      // DataPost? backDialog = await showDialog(
+                      //     context: context,
+                      //     builder: (_) => ShareDialog(
+                      //       canDelete: widget.canDelete,
+                      //       post: widget.post,
+                      //     ));
+                      // if(backDialog!=null){
+                      bool? alert = await showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          return MyAlertDialog(content: 'Do you want to delete the shot?');
+                        },
+                      );
+                      if(alert!=null && alert){
                         MyService service = getIt<MyService>();
-                        bool back = await ShotsService.deleteShot(service, shotId: widget.post.id);
-                        if(back){
+                        bool back = await ShotsService.deleteShot(service,
+                            shotId: widget.post.id);
+                        if (back) {
                           widget.delete();
                         }
                       }
+                      // }
                     },
                     child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Image.asset('images/share.png')),
+                        child:Icon(Icons.remove_circle_outline),
+                        // child: Image.asset('images/share.png')
+                    ),
                   )
                 ],
               ),
@@ -881,22 +907,27 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       GestureDetector(
                         onTap: () async {
                           MyService service = await getIt<MyService>();
-
                           if (!widget.post.postLikedBythisUser) {
-                            bool back = await ShotsService.shotLike(service,
+                            String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back)
+                            if (back!=null)
                               setState(() {
+                                widget.post.postLikes.add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
+                                widget.post.postLikeCount++;
                               });
                           } else {
-                            bool back = await ShotsService.deleteShotLike(
-                                service,
-                                shotId: widget.post.id);
-                            if (back)
-                              setState(() {
-                                widget.post.postLikedBythisUser = false;
-                              });
+                            if(widget.post.postLikes.isNotEmpty){
+                              bool back = await ShotsService.deleteShotLike(
+                                  service,
+                                  shotId: widget.post.postLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  widget.post.postLikes.clear();
+                                  widget.post.postLikedBythisUser = false;
+                                  widget.post.postLikeCount--;
+                                });
+                            }
                           }
                         },
                         child: Icon(
@@ -912,18 +943,19 @@ class _PostFromMatchState extends State<PostFromMatch> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) => ShareDialog(
-                            post: widget.post,
-                          ));
-
-                    },
+                    // onTap: () {
+                    //   showDialog(
+                    //       context: context,
+                    //       builder: (_) => ShareDialog(
+                    //         post: widget.post,
+                    //       ));
+                    //
+                    // },
                     child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Image.asset('images/share.png')),
+                        // child: Image.asset('images/share.png')
+                    ),
                   )
                 ],
               ),

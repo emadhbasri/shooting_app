@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
@@ -10,13 +13,27 @@ import '../models.dart';
 import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';
-
+// import 'package:soundpool/soundpool.dart';
 class MainState extends ChangeNotifier {
   MyService service = getIt<MyService>();
+
+
+  // late Soundpool pool;
+  // late int soundId;
   MyTab tab = MyTab.fanFeed;
   late String userId;
   late String userName;
+  play()async{
+    // int streamId = await pool.play(soundId);
+  }
   init() async {
+    // pool = Soundpool.fromOptions(
+    //   options: SoundpoolOptions(streamType: StreamType.notification
+    //   )
+    // );
+    // ByteData soundData = await rootBundle.load("images/shooting.mp3");
+    // soundId = await pool.load(soundData);
+
     String? ss = await getString('userid');
     print('ss $ss');
     userId = ss!;
@@ -26,17 +43,18 @@ class MainState extends ChangeNotifier {
   }
 
   DataPersonalInformation? personalInformation;
-  Future<void> getProfile({bool noNotify=true}) async {
-    if (personalInformation != null) return;
+  Future<void> getProfile({bool force=false}) async {
+    if (force==false && personalInformation != null) return;
     personalInformation = await UsersService.myProfile(getIt<MyService>());
-    if(noNotify)
-    notifyListeners();
+    // if(noNotify)
+      notifyListeners();
   }
   int postsPageNumber = 1;
   bool postsHasNext=false;
   List<DataPost> allPosts = [];
   getFanFeed({bool add=false}) async {
     // allPosts = await ShotsService.shotsAll(service);
+    print('add $add');
     Map<String,dynamic> bback = await ShotsService.fanFeed(service,pageNumber: postsPageNumber);
     if(add)
       allPosts.addAll(bback['list']);
@@ -55,20 +73,27 @@ class MainState extends ChangeNotifier {
 
   List<DataStoryUser>? storyViewed;
   List<DataStoryUser>? newStories;
+  List<DataStoryMain> myStoriesAll=[];
   DataStoryUser? myStories;
-  getMyStories() async {
-    List<DataStoryMain> all = await service.myStories();
-    print('all ${all.length}');
-    myStories = DataStoryUser.fromList(all);
-
-    notifyListeners();
-  }
+  // getMyStories() async {
+  //   List<DataStoryMain> all = await service.myStories();
+  //   print('all ${all.length}');
+  //   myStories = DataStoryUser.fromList(all);
+  //
+  //   notifyListeners();
+  // }
   getStories() async {
-    List<DataStoryMain> all = await service.getStories();
+    // List<DataStoryMain> all = await service.getStories();
+    List<DataStoryMain> all = await service.myStories();
     print('all ${all.length}');
     List<DataPersonalInformationViewModel> persons = [];
     List<List<DataStoryMain>> out = [];
+    myStoriesAll.clear();
     for (int j = 0; j < all.length; j++) {
+      if(all[j].person.personalInformationId==personalInformation!.id){
+        myStoriesAll.add(all[j]);
+        continue;
+      }
       int index = hasPerson(persons, all[j].person);
       if (index == -1) {
         persons.add(all[j].person);
@@ -79,13 +104,18 @@ class MainState extends ChangeNotifier {
     }
     List<DataStoryUser> allstoryUsers = [];
     for (int j = 0; j < out.length; j++) {
-      allstoryUsers.add(DataStoryUser.fromList(out[j]));
+      if(out[j].isNotEmpty)
+        allstoryUsers.add(DataStoryUser.fromList(out[j]));
     }
     storyViewed =
         allstoryUsers.where((element) => element.isAllSeen == true).toList();
     newStories =
         allstoryUsers.where((element) => element.isAllSeen == false).toList();
 
+    if(myStoriesAll.isNotEmpty) {
+      myStories=null;
+      myStories = DataStoryUser.fromList(myStoriesAll);
+    }
     notifyListeners();
   }
 

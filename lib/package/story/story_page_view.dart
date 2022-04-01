@@ -3,10 +3,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/pages/profile/profile.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
+import '../../main.dart';
 import 'components/indicators.dart';
 import 'story_limit_controller.dart';
 import 'story_stack_controller.dart';
@@ -310,7 +314,7 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
   initVideo(VideoPlayerController videoPlayerController) async {
     await videoPlayerController.play();
   }
-
+MyService service = getIt<MyService>();
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -322,6 +326,7 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
     if (videoList.isEmpty) initializing(allStories);
 
     DataStory story = allStories[context.watch<StoryStackController>().value];
+    service.reachStory(story.id);
     int index = -1;
     if (story.mimeType == '.mp4') {
       index = videoList.indexWhere((element) => element.id == story.id);
@@ -344,7 +349,6 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
                 child: Container(color: Colors.black),
               ),
               Positioned.fill(
-                //todo
                 child: Builder(
                   builder: (context) {
                     if (story.mimeType == '.mp4') {
@@ -387,33 +391,38 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 44, left: 8),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 32,
-                      width: 32,
-                      decoration: BoxDecoration(
-                        image: user.person.profilePhoto == null
-                            ? null
-                            : DecorationImage(
-                                image: networkImage(user.person.profilePhoto!),
-                                fit: BoxFit.contain,
-                              ),
-                        shape: BoxShape.circle,
+                child: GestureDetector(
+                  onTap: (){
+                    Go.pushSlideAnim(context, ProfileBuilder(username: user.person.userName!));
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 32,
+                        width: 32,
+                        decoration: BoxDecoration(
+                          image: user.person.profilePhoto == null
+                              ? null
+                              : DecorationImage(
+                                  image: networkImage(user.person.profilePhoto!),
+                                  fit: BoxFit.contain,
+                                ),
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      user.person.fullName ?? '',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(
+                        width: 8,
                       ),
-                    ),
-                  ],
+                      Text(
+                        user.person.fullName ?? '',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -442,85 +451,87 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
           );
         }),
         Builder(builder: (context) {
-            return Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    color: Colors.transparent,
-                    child: GestureDetector(
-                      onTap: () {
-                        animationController.forward(from: 0);
+            return Padding(
+              padding: EdgeInsets.only(top: doubleHeight(12)),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: GestureDetector(
+                        onTap: () {
+                          animationController.forward(from: 0);
+                          if(story.mimeType == '.mp4'){
+                            videoList[index].video.pause();
+                            videoList[index].video.seekTo(Duration(seconds: 0));
+                            // int indN = index-1;
+                            // int indV = context.watch<StoryStackController>().value-1;
+                            // if(indV>=0 && allStories[indV].mimeType=='.mp4' && indN>=0){
+                            //
+                            // }
+                          }
 
-                        if(story.mimeType == '.mp4'){
-                          videoList[index].video.pause();
-                          videoList[index].video.seekTo(Duration(seconds: 0));
-                          // int indN = index-1;
-                          // int indV = context.watch<StoryStackController>().value-1;
-                          // if(indV>=0 && allStories[indV].mimeType=='.mp4' && indN>=0){
-                          //
-                          // }
-                        }
-
-                        context.read<StoryStackController>().decrement();
-                      },
-                      onLongPress: () {
-                        if (story.mimeType == '.mp4') {
-                          videoList[index].video.pause();
-                        }
-                        animationController.stop();
-                      },
-                      onLongPressUp: () {
-                        if (story.mimeType == '.mp4') {
-                          videoList[index].video.play();
-                        }
-                        animationController.forward();
-                      },
+                          context.read<StoryStackController>().decrement();
+                        },
+                        onLongPress: () {
+                          if (story.mimeType == '.mp4') {
+                            videoList[index].video.pause();
+                          }
+                          animationController.stop();
+                        },
+                        onLongPressUp: () {
+                          if (story.mimeType == '.mp4') {
+                            videoList[index].video.play();
+                          }
+                          animationController.forward();
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.transparent,
-                    child: GestureDetector(
-                      onTap: () {
-                        context.read<StoryStackController>().increment(
-                          restartAnimation: (){
-                            animationController
-                                    .forward(from: 0);
-                            if (story.mimeType == '.mp4'){
-                              videoList[index].video.pause();
-                              videoList[index].video.seekTo(Duration(seconds: 0));
-                            }
+                  Expanded(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.read<StoryStackController>().increment(
+                            restartAnimation: (){
+                              animationController
+                                      .forward(from: 0);
+                              if (story.mimeType == '.mp4'){
+                                videoList[index].video.pause();
+                                videoList[index].video.seekTo(Duration(seconds: 0));
+                              }
 
-                              },
-                          completeAnimation: ()
-                          {
-                            animationController.value = 1;
-                            if (story.mimeType == '.mp4'){
-                              videoList[index].video.pause();
-                              videoList[index].video.seekTo(Duration(seconds: videoList[index].video.value.duration.inSeconds));
-                            }
+                                },
+                            completeAnimation: ()
+                            {
+                              animationController.value = 1;
+                              if (story.mimeType == '.mp4'){
+                                videoList[index].video.pause();
+                                videoList[index].video.seekTo(Duration(seconds: videoList[index].video.value.duration.inSeconds));
+                              }
 
-                          },
+                            },
 
-                        );
-                      },
-                      onLongPress: () {
-                        if (story.mimeType == '.mp4') {
-                          videoList[index].video.pause();
-                        }
-                        animationController.stop();
-                      },
-                      onLongPressUp: () {
-                        if (story.mimeType == '.mp4') {
-                          videoList[index].video.play();
-                        }
-                        animationController.forward();
-                      },
+                          );
+                        },
+                        onLongPress: () {
+                          if (story.mimeType == '.mp4') {
+                            videoList[index].video.pause();
+                          }
+                          animationController.stop();
+                        },
+                        onLongPressUp: () {
+                          if (story.mimeType == '.mp4') {
+                            videoList[index].video.play();
+                          }
+                          animationController.forward();
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
         }),
         Positioned.fill(

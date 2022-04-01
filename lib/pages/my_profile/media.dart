@@ -15,6 +15,8 @@ class _MediaState extends State<Media> {
   @override
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
+    if(state.personalInformation!.posts.isEmpty)
+      return Center(child: Text('no media. Try shooting a few soon 🙂'),);
     List<String> first=[];
     List<String> second=[];
     for(int j=0;j<state.personalInformation!.posts.length;j++){
@@ -25,7 +27,6 @@ class _MediaState extends State<Media> {
     }
 
     return Container(
-      color: Color.fromRGBO(245, 244, 248, 1),
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(

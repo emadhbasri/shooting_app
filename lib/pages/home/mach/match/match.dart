@@ -173,7 +173,9 @@ class _MatchState extends State<Match> {
                                 out = 'Full Time';
                               } else if (state.selectedMatch.isLive==0) {
                                 out = 'Not Started';
-                              } else
+                              } else if(state.selectedMatch.fixture.elapsed==null){
+                                out='';
+                              }else
                                 out = state.selectedMatch.fixture.elapsed
                                     .toString();
                               return Text(out,

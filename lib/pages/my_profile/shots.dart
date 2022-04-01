@@ -17,6 +17,8 @@ class _ShotsState extends State<Shots> {
   @override
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
+    if(state.personalInformation!.posts.isEmpty)
+      return Center(child: Text('no shot. Try shooting a few soon 🙂'),);
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>

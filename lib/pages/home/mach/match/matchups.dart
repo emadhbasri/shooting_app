@@ -35,6 +35,13 @@ class MatchUps extends StatelessWidget {
           child: Text('Match is not started'),
         ),
       );
+    if(state.selectedMatch.matchUps.isEmpty){
+      return SizedBox.expand(
+        child: Center(
+          child: Text('no Shots'),
+        ),
+      );
+    }
     return ListView(
       children: state.selectedMatch.matchUps.map((e) =>
           PostFromMatch(post: e, onTapTag: gogo)

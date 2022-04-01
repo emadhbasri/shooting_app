@@ -40,7 +40,6 @@ class _FanFeedsState extends State<FanFeeds> {
   Widget build(BuildContext context) {
     return Consumer<MainState>(
       builder: (context, state, child) {
-        print('state.allPosts ${state.allPosts.first.toString()}');
 
         return RefreshIndicator(
             onRefresh: () async {

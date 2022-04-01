@@ -3,11 +3,13 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
+import '../dialogs/dialog1.dart';
 import 'index.dart';
 
 class CommentFromShot extends StatefulWidget {
   final VoidCallback delete;
-  const CommentFromShot({Key? key, required this.comment,required this.delete}) : super(key: key);
+  const CommentFromShot({Key? key, required this.comment, required this.delete})
+      : super(key: key);
   final DataPostComment comment;
   @override
   _CommentFromShotState createState() => _CommentFromShotState();
@@ -20,7 +22,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
     super.initState();
     comment = widget.comment;
   }
-  bool loading=false;
+
+  bool loading = false;
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -107,7 +110,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 ],
               ),
             ),
-                      sizeh(doubleHeight(1)),
+            sizeh(doubleHeight(1)),
             convertHashtag(comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
@@ -133,20 +136,27 @@ class _CommentFromShotState extends State<CommentFromShot> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
                           if (!comment.commentLikedBythisUser) {
-                            bool back = await ShotsService.commentLike(service,
+                            String? back = await ShotsService.commentLike(service,
                                 postCommentId: comment.id);
-                            if (back)
+                            if (back!=null) {
                               setState(() {
+                                comment.commentLikes.add(DataCommentLike(back, ''));
                                 comment.commentLikedBythisUser = true;
+                                comment.commentLikeCount++;
                               });
+                            }
                           } else {
-                            bool back = await ShotsService.deleteCommentLike(
-                                service,
-                                commentId: comment.id);
-                            if (back)
-                              setState(() {
-                                comment.commentLikedBythisUser = false;
-                              });
+                            if(comment.commentLikes.isNotEmpty){
+                              bool back = await ShotsService.deleteCommentLike(
+                                  service,
+                                  commentId: comment.commentLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  comment.commentLikes.clear();
+                                  comment.commentLikedBythisUser = false;
+                                  comment.commentLikeCount--;
+                                });
+                            }
                           }
                         },
                         child: Icon(
@@ -159,7 +169,6 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount)),
-
                     ],
                   ),
                   Tooltip(
@@ -168,18 +177,28 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       width: doubleWidth(5),
                       height: doubleWidth(5),
                       child: GestureDetector(
-                        onTap: ()async{
-                          if(comment.personalInformationId!=getIt<MainState>().userId){
+                        onTap: () async {
+                          if (comment.personalInformationId !=
+                              getIt<MainState>().userId) {
                             toast('you can not delete this comment');
                             return;
                           }
 
-                          MyService service = await getIt<MyService>();
-                          bool back = await ShotsService.deleteComment(service,
-                              commentId: comment.id);
-                          if (back)
-                            widget.delete();
-
+                          bool? alert = await showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext dialogContext) {
+                              return MyAlertDialog(
+                                  content: 'Do you want to delete the shot?');
+                            },
+                          );
+                          if (alert != null && alert) {
+                            MyService service = await getIt<MyService>();
+                            bool back = await ShotsService.deleteComment(
+                                service,
+                                commentId: comment.id);
+                            if (back) widget.delete();
+                          }
                         },
                         child: Icon(Icons.remove_circle_outline),
                       ),
@@ -194,15 +213,16 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       padding: EdgeInsets.only(left: doubleWidth(4)),
                       child: CommentReply(
                           key: UniqueKey(),
-                          reply: e,delete: (){
-                        int index = comment.commentReplies.indexOf(e);
-                        List<DataCommentReply> temp  =comment.commentReplies.toList();
-                        temp.removeAt(index);
-                        setState(() {
-                          comment.commentReplies=temp.toList();
-                        });
-
-                      }),
+                          reply: e,
+                          delete: () {
+                            int index = comment.commentReplies.indexOf(e);
+                            List<DataCommentReply> temp =
+                                comment.commentReplies.toList();
+                            temp.removeAt(index);
+                            setState(() {
+                              comment.commentReplies = temp.toList();
+                            });
+                          }),
                     ))
                 .toList()
               ..add(Padding(
@@ -214,9 +234,9 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            if(loading)return;
+                            if (loading) return;
                             setState(() {
-                              loading=true;
+                              loading = true;
                             });
                             print(
                                 'controller.value.text ${controller.value.text}');
@@ -226,18 +246,19 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                     commentId: comment.id,
                                     reply: controller.value.text);
                             setState(() {
-                              loading=false;
+                              loading = false;
                               comment.commentReplies.add(back!);
                             });
                             controller.clear();
                           },
-                          child:
-                          loading?Transform.scale(
-                              scale: 0.5,
-                              child: CircularProgressIndicator()):Icon(
-                            Icons.send,
-                            color: mainBlue,
-                          )),
+                          child: loading
+                              ? Transform.scale(
+                                  scale: 0.5,
+                                  child: CircularProgressIndicator())
+                              : Icon(
+                                  Icons.send,
+                                  color: mainBlue,
+                                )),
                       hintText: 'Write your reply...',
                       border: InputBorder.none),
                 ),
@@ -254,7 +275,9 @@ class _CommentFromShotState extends State<CommentFromShot> {
 
 class CommentFromMatch extends StatefulWidget {
   final VoidCallback delete;
-  const CommentFromMatch({Key? key, required this.comment,required this.delete}) : super(key: key);
+  const CommentFromMatch(
+      {Key? key, required this.comment, required this.delete})
+      : super(key: key);
   final DataPostComment comment;
   @override
   _CommentFromMatchState createState() => _CommentFromMatchState();
@@ -295,8 +318,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               image: DecorationImage(
                                 fit: BoxFit.fill,
                                 image: networkImage(comment
-                                    .personalInformationViewModel
-                                    .profilePhoto ??
+                                        .personalInformationViewModel
+                                        .profilePhoto ??
                                     ''),
                               )),
                         ),
@@ -313,16 +336,16 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
                               image:
-                              comment.personalInformationViewModel.team !=
-                                  null
-                                  ? DecorationImage(
-                                image: networkImage(comment
-                                    .personalInformationViewModel
-                                    .team!
-                                    .team_badge ??
-                                    ''),
-                              )
-                                  : null),
+                                  comment.personalInformationViewModel.team !=
+                                          null
+                                      ? DecorationImage(
+                                          image: networkImage(comment
+                                                  .personalInformationViewModel
+                                                  .team!
+                                                  .team_badge ??
+                                              ''),
+                                        )
+                                      : null),
                         ),
                       ),
                     )
@@ -379,19 +402,24 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
                           if (!comment.commentLikedBythisUser) {
-                            bool back = await ShotsService.commentLike(service,
+                            String? back = await ShotsService.commentLike(service,
                                 postCommentId: comment.id);
-                            if (back)
+                            if (back!=null)
                               setState(() {
+                                comment.commentLikes.add(DataCommentLike(back, ''));
                                 comment.commentLikedBythisUser = true;
+                                comment.commentLikeCount++;
                               });
                           } else {
+
                             bool back = await ShotsService.deleteCommentLike(
                                 service,
                                 commentId: comment.id);
                             if (back)
                               setState(() {
+                                comment.commentLikes.clear();
                                 comment.commentLikedBythisUser = false;
+                                comment.commentLikeCount--;
                               });
                           }
                         },
@@ -417,16 +445,27 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       width: doubleWidth(5),
                       height: doubleWidth(5),
                       child: GestureDetector(
-                        onTap: ()async{
-                          if(comment.personalInformationId!=getIt<MainState>().userId){
+                        onTap: () async {
+                          if (comment.personalInformationId !=
+                              getIt<MainState>().userId) {
                             toast('you can not delete this comment');
                             return;
                           }
-                          MyService service = await getIt<MyService>();
-                          bool back = await ShotsService.deleteComment(service,
-                              commentId: comment.id);
-                          if (back)
-                            widget.delete();
+                          bool? alert = await showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext dialogContext) {
+                              return MyAlertDialog(
+                                  content: 'Do you want to delete the shot?');
+                            },
+                          );
+                          if (alert != null && alert) {
+                            MyService service = await getIt<MyService>();
+                            bool back = await ShotsService.deleteComment(
+                                service,
+                                commentId: comment.id);
+                            if (back) widget.delete();
+                          }
                         },
                         child: Icon(Icons.remove_circle_outline),
                       ),
@@ -436,7 +475,6 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
               ),
             ),
             sizeh(doubleHeight(1)),
-
             Divider(
               color: grayCall,
             ),
