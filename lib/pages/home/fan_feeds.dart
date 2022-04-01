@@ -47,7 +47,15 @@ class _FanFeedsState extends State<FanFeeds> {
               state.postsHasNext = false;
               await state.getFanFeed();
             },
-            child: ListView(
+            child: state.allPosts.isEmpty?ListView(
+              padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+              children: [
+                SizedBox(
+                    height: doubleHeight(70),
+                    width: double.maxFinite,
+                    child: Center(child: Text('no shot. 🙂'))),
+              ],
+            ):ListView(
               controller: _listController,
               physics: AlwaysScrollableScrollPhysics(),
               children: [

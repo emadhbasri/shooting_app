@@ -31,7 +31,6 @@ class ChatService{
     }
     return {
       'total_pages':back['data']['total_pages'],
-      'currentPage':back['data']['page'],
       'chats':convertDataList<DataChatRoom>(back['data'], 'results','DataChatRoom')
     };
   }

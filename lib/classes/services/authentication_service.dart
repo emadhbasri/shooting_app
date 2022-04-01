@@ -80,9 +80,9 @@ class AuthenticationService {
     DataPersonalInformation pif =
         DataPersonalInformation.fromJson(back['data']['data']);
     state.userId = pif.id;
-    state.userName = pif.userName!;
+    state.userName = pif.userName;
     await setString('userid', pif.id);
-    await setString('username', pif.userName!);
+    await setString('username', pif.userName);
     //The email field is required.
     //
     //The password field is required.
@@ -91,7 +91,7 @@ class AuthenticationService {
     return back['status'];
   }
 
-  static Future<bool> login(
+  static Future<bool?> login(
     MyService service, {
     required String username,
     required String password,
@@ -109,8 +109,13 @@ class AuthenticationService {
     debugPrint('back ${back}');
     if(back['status']==false){
       toast(back['error']);
+      return null;
+    }
+    if(back['status'] && back['data']['data'].containsKey('accessToken')==false){
+      toast(back['data']['message']);
       return false;
     }
+
     await service.setToken(
         refresh: back['data']['data']['refreshToken'],
         access: back['data']['data']['accessToken']);
@@ -119,9 +124,9 @@ class AuthenticationService {
     DataPersonalInformation pif =
         DataPersonalInformation.fromJson(back['data']['data']);
     state.userId = pif.id;
-    state.userName = pif.userName!;
+    state.userName = pif.userName;
     await setString('userid', pif.id);
-    await setString('username', pif.userName!);
+    await setString('username', pif.userName);
 
     return back['status'];
   }
@@ -132,7 +137,7 @@ class AuthenticationService {
     required String oTP,
     required String password,
   }) async {
-    debugPrint('validateOtp()');
+    debugPrint('validateOtp($user,$oTP,$password)');
     Map<String, dynamic> out = {
       "user": user.trim(),
       "password": password.trim(),
@@ -141,11 +146,25 @@ class AuthenticationService {
     };
     // out['notificationToken'] = 'test';
     out['notificationToken'] = await messaging.getToken();
+    print('outemd $out');
     Map<String, dynamic> back =
-        await service.httpPost('/api/v1/Authentication/validateOtp', out);
+        await service.httpPost('/api/v1/Authentication/validateOtp', out,jsonType: true);
+    print('validateOtp back $back');
     if(back['status']==false){
       toast(back['error']);
+      return back['status'];
     }
+    await service.setToken(
+        refresh: back['data']['data']['refreshToken'],
+        access: back['data']['data']['accessToken']);
+
+    MainState state = getIt<MainState>();
+    DataPersonalInformation pif =
+    DataPersonalInformation.fromJson(back['data']['data']);
+    state.userId = pif.id;
+    state.userName = pif.userName;
+    await setString('userid', pif.id);
+    await setString('username', pif.userName);
     return back['status'];
   }
 
@@ -172,11 +191,11 @@ class AuthenticationService {
     }
     return back['status'];
   }
-  static Future<bool> changePhone(MyService service, String phoneNumber) async {
-    debugPrint('changePhone($phoneNumber)');
+  static Future<bool> changePhone(MyService service) async {
+    debugPrint('changePhone(${getIt<MainState>().personalInformation!.email})');
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Administration/users/UpdatePhoneRequest',
-        {'phoneNumber': phoneNumber},
+        {'email': getIt<MainState>().personalInformation!.email},
         jsonType: true);
     debugPrint('changePhone back ${back}');
     if(back['status']==false){

@@ -2,6 +2,7 @@ import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
 import '../../main.dart';
+import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
 import 'index.dart';
 
@@ -41,20 +42,26 @@ class _CommentReplyState extends State<CommentReply> {
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: doubleHeight(5),
-                        height: doubleHeight(5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: networkImage(reply
-                                        .personalInformationViewModel
-                                        .profilePhoto ??
-                                    ''),
-                              )),
+                      child: GestureDetector(
+                        onTap: (){
+                          Go.pushSlideAnim(
+                              context, ProfileBuilder(username: reply.personalInformationViewModel.userName));
+                        },
+                        child: SizedBox(
+                          width: doubleHeight(5),
+                          height: doubleHeight(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: networkImage(reply
+                                          .personalInformationViewModel
+                                          .profilePhoto ??
+                                      ''),
+                                )),
+                          ),
                         ),
                       ),
                     ),
@@ -92,7 +99,7 @@ class _CommentReplyState extends State<CommentReply> {
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${reply.personalInformationViewModel.userName ?? ''}',
+                  '@${reply.personalInformationViewModel.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,

@@ -13,26 +13,26 @@ import '../models.dart';
 import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';
-// import 'package:soundpool/soundpool.dart';
+import 'package:soundpool/soundpool.dart';
 class MainState extends ChangeNotifier {
   MyService service = getIt<MyService>();
 
 
-  // late Soundpool pool;
-  // late int soundId;
+  late Soundpool pool;
+  late int soundId;
   MyTab tab = MyTab.fanFeed;
   late String userId;
   late String userName;
   play()async{
-    // int streamId = await pool.play(soundId);
+    int streamId = await pool.play(soundId);
   }
   init() async {
-    // pool = Soundpool.fromOptions(
-    //   options: SoundpoolOptions(streamType: StreamType.notification
-    //   )
-    // );
-    // ByteData soundData = await rootBundle.load("images/shooting.mp3");
-    // soundId = await pool.load(soundData);
+    pool = Soundpool.fromOptions(
+      options: SoundpoolOptions(streamType: StreamType.notification
+      )
+    );
+    ByteData soundData = await rootBundle.load("images/shooting.mp3");
+    soundId = await pool.load(soundData);
 
     String? ss = await getString('userid');
     print('ss $ss');

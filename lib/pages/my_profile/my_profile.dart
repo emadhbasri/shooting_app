@@ -98,7 +98,7 @@ class _MyProfileState extends State<MyProfile>
                                   SizedBox(height: doubleHeight(1)),
                                   Text(state.personalInformation!.fullName ?? ''),
                                   Text(
-                                    '@${state.personalInformation!.userName ?? ''}',
+                                    '@${state.personalInformation!.userName}',
                                     style: TextStyle(color: grayCall, fontSize: 12),
                                   ),
                                 ],

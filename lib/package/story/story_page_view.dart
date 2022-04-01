@@ -393,7 +393,7 @@ MyService service = getIt<MyService>();
                 padding: const EdgeInsets.only(top: 44, left: 8),
                 child: GestureDetector(
                   onTap: (){
-                    Go.pushSlideAnim(context, ProfileBuilder(username: user.person.userName!));
+                    Go.pushSlideAnim(context, ProfileBuilder(username: user.person.userName));
                   },
                   child: Row(
                     children: [

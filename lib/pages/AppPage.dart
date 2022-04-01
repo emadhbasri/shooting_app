@@ -234,7 +234,7 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Live Scores',
+          'Norification',
           style: TextStyle(color: white),
         ),
       );
@@ -377,16 +377,16 @@ class _AppPageState extends State<AppPage> {
                                       ? Image.asset('images/chat.png')
                                       : Image.asset('images/chat(1).png'),
                                 ),
-                                Align(
-                                    alignment: Alignment(1.4, -1.1),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: mainGreen,
-                                          borderRadius:
-                                              BorderRadius.circular(100)),
-                                      width: doubleWidth(3.5),
-                                      height: doubleWidth(3.5),
-                                    )),
+                                // Align(
+                                //     alignment: Alignment(1.4, -1.1),
+                                //     child: Container(
+                                //       decoration: BoxDecoration(
+                                //           color: mainGreen,
+                                //           borderRadius:
+                                //               BorderRadius.circular(100)),
+                                //       width: doubleWidth(3.5),
+                                //       height: doubleWidth(3.5),
+                                //     )),
                               ],
                             )),
                       ),
@@ -424,8 +424,25 @@ class _AppPageState extends State<AppPage> {
                     child: FloatingActionButton(
                       // padding: EdgeInsets.zero,
                       onPressed: () {
-                        //todo
-                        // Go.pushSlideAnimSheet(context, ShootBuilder());
+                        MainState state = Provider.of(context, listen: false);
+
+                        if (state.isOnMatchPage) {
+                          if (state.match!.home.id.toString() ==
+                                  state.personalInformation!.team!.team_key ||
+                              state.match!.away.id.toString() ==
+                                  state.personalInformation!.team!.team_key) {
+                            if (state.match!.isLive == 1 || true) {
+                              Go.pushSlideAnimSheet(context, ShootBuilder());
+                            } else {
+                              toast('the match in finished.');
+                            }
+                          } else {
+                            toast(
+                                'You are not allowed to shoot for this team.');
+                          }
+                        } else {
+                          toast('please select a match.');
+                        }
                         // setState(() {
                         //   buttonClick = !buttonClick;
                         // });

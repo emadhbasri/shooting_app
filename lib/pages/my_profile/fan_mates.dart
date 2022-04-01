@@ -21,23 +21,33 @@ class _FanMatesState extends State<FanMates> {
   @override
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
-    if(state.personalInformation!.posts.isEmpty)
-      return Center(child: Text('no fan mate. 🙂'),);
+
     return Container(
-      child: ListView.separated(
-        // physics: BouncingScrollPhysics(),
+      child: ListView(
         padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-        itemCount: state.personalInformation!.userFollowers.length,
-        itemBuilder: (BuildContext context, int index) =>
-            FanMateItem(fan: state.personalInformation!.userFollowers[index]),
-        separatorBuilder: (BuildContext context, int index) => Divider(
-          endIndent: doubleWidth(4),
-          indent: doubleWidth(4),
-          color: grayCall,
-        ),
-        // children: state.fans.map((e) =>
-        //     FanMateItem(fan: e)
-        // ).toList(),
+        children: [
+          ...state.personalInformation!.userFollowers
+              .map((e) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FanMateItem(fan: e),
+                      if (e != state.personalInformation!.userFollowers.last)
+                        Divider(
+                          endIndent: doubleWidth(4),
+                          indent: doubleWidth(4),
+                          color: grayCall,
+                        )
+                    ],
+                  ))
+              .toList(),
+          if (state.personalInformation!.posts.isEmpty)
+            SizedBox(
+                height: doubleHeight(40),
+                width: double.maxFinite,
+                child: Center(
+                  child: Text('no fan mate. 🙂'),
+                ))
+        ],
       ),
     );
   }
@@ -66,7 +76,7 @@ class _FanMateItemState extends State<FanMateItem> {
         Go.pushSlideAnim(
             context,
             ProfileBuilder(
-                username: fan.personalInformationViewModel.userName!));
+                username: fan.personalInformationViewModel.userName));
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
@@ -83,7 +93,7 @@ class _FanMateItemState extends State<FanMateItem> {
                 Text(fan.personalInformationViewModel.fullName ?? ''),
                 SizedBox(height: doubleHeight(0.5)),
                 Text(
-                  '@${fan.personalInformationViewModel.userName ?? ''}',
+                  '@${fan.personalInformationViewModel.userName}',
                   style: TextStyle(color: grayCall, fontSize: 12),
                 ),
                 SizedBox(height: doubleHeight(0.5)),

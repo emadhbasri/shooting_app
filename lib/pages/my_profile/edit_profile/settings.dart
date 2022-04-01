@@ -20,7 +20,16 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   MyService service = getIt<MyService>();
-  bool _2fa = false;
+  MainState state = getIt<MainState>();
+  late bool _2fa;
+
+  @override
+  void initState() {
+    super.initState();
+    if(state.personalInformation!=null)
+      _2fa=state.personalInformation!.is2FA;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +56,7 @@ class _SettingsState extends State<Settings> {
                     SizedBox(height: doubleHeight(1)),
                     ListTile(
                       onTap: () {
-                        if(getIt<MainState>().personalInformation!=null)
+                        if(state.personalInformation!=null)
                           Go.pushSlideAnim(context, ChangePassword());
                       },
                       title: Text(
@@ -62,8 +71,8 @@ class _SettingsState extends State<Settings> {
                     ),
                     ListTile(
                       onTap: () {
-                        if(getIt<MainState>().personalInformation!=null)
-                          Go.pushSlideAnim(context, ChangeEmail(email: getIt<MainState>().personalInformation!.email??'',));
+                        if(state.personalInformation!=null)
+                          Go.pushSlideAnim(context, ChangeEmail(email: state.personalInformation!.email??'',));
                       },
                       title: Text(
                         'Change Email',
@@ -76,11 +85,14 @@ class _SettingsState extends State<Settings> {
                       ),
                     ),
                     ListTile(
-                      onTap: () {
-                        if(getIt<MainState>().personalInformation!=null)
-                          Go.pushSlideAnim(context, ChangePhone(
-                            number: getIt<MainState>().personalInformation!.phoneNumber,
+                      onTap: () async{
+                        if(state.personalInformation!=null){
+                          await Go.pushSlideAnim(context, ChangePhone(
+                            number: state.personalInformation!.phoneNumber,
                           ));
+                          state.getProfile();
+                        }
+
                       },
                       title: Text(
                         'Change Phone',
@@ -130,6 +142,7 @@ class _SettingsState extends State<Settings> {
                         MyService service = getIt<MyService>();
                         bool back = await AuthenticationService.change2FA(service,is2FA: !_2fa);
                         if(back){
+                          state.personalInformation!.is2FA=!_2fa;
                           setState(() {
                             _2fa = !_2fa;
                           });
@@ -151,6 +164,7 @@ class _SettingsState extends State<Settings> {
                                 bool back = await AuthenticationService.change2FA(service,is2FA: e);
                                 if(back){
                                   setState(() {
+                                    state.personalInformation!.is2FA=e;
                                     _2fa = e;
                                   });
                                 }

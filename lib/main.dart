@@ -22,18 +22,22 @@ final getIt = GetIt.instance;
 late FirebaseMessaging messaging;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print('A bg message just showed up1 : ${message.messageId}');
-  await Firebase.initializeApp();
+  _showNotificationCustomSound(message.hashCode,
+      message.notification!.title!, message.notification!.body!);
+  // await Firebase.initializeApp();
   print('A bg message just showed up : ${message.messageId}');
 }
 
 void main() async{
-
-  print(DateTime.fromMillisecondsSinceEpoch(1648814400 * 1000));
-  WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerLazySingleton(() => MyService());
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
   GetIt.I.registerLazySingleton(() => ChatState());
+  WidgetsFlutterBinding.ensureInitialized();
+
+
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('app_icon');
@@ -49,14 +53,7 @@ void main() async{
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-  );
 
-
-
-  await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   messaging =FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -67,6 +64,7 @@ void main() async{
     provisional: false,
     sound: true,
   );
+
   String? tokk = await messaging.getToken();
   //dBfVfFtNTYS-zgXx1v_Yvy:APA91bFr9tIwAdu0BqF_JCNVHTbjaYtM43dl8VtmyC4Qi6yRZ91BSzk0et2G8WALVlbG7yD4n9F1l-iGmzKYneOfebRhUrfXgycwMY26mQ61fBQsD9ZVmf4mP66lABusVNXLbZNBA_L8
   print('tokk $tokk');
@@ -75,6 +73,11 @@ void main() async{
     badge: true,
     sound: true,
   );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
+
 
   runApp(MyApp());
 }
@@ -123,10 +126,6 @@ class _AppFirstState extends State<AppFirst> {
   @override
   void initState() {
     super.initState();
-
-  }
-  init()async{
-
     _requestPermissions();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -139,6 +138,7 @@ class _AppFirstState extends State<AppFirst> {
         print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
         _showNotificationCustomSound(notification.hashCode,
             notification.title!, notification.body!);
+
         // flutterLocalNotificationsPlugin.show(
         //     notification.hashCode,
         //     notification.title,
@@ -164,6 +164,8 @@ class _AppFirstState extends State<AppFirst> {
         print('message.notification!.title:${message.notification!.title}');
         print('message.notification!.body:${message.notification!.body}');
         print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
+        // _showNotificationCustomSound(notification.hashCode,
+        //     notification.title!, notification.body!);
         // showDialog(context: context, builder: (_){
         //   return AlertDialog(
         //     title: Text('${notification.title}'),
@@ -178,6 +180,7 @@ class _AppFirstState extends State<AppFirst> {
       }
     });
   }
+
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -208,7 +211,7 @@ class _AppFirstState extends State<AppFirst> {
     // return Scaffold(
     //   body: Center(child: TextButton(
     //       onPressed: (){
-    //         _showNotificationCustomSound(1,
+    //         _showNotificationCustomSound(1346542,
     //             'titile', 'bododby');
     //         // _showNotificationCustomSound();
     //         // flutterLocalNotificationsPlugin.show(
@@ -237,26 +240,27 @@ class _AppFirstState extends State<AppFirst> {
     // return StoryList();
   }
 
-  Future<void> _showNotificationCustomSound(int id,String title,String body) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'your other channel id',
-      'your other channel name',
-      channelDescription: 'your other channel description',
-      sound: RawResourceAndroidNotificationSound('notif'),
-    );
-    const IOSNotificationDetails iOSPlatformChannelSpecifics =
-    IOSNotificationDetails(sound: 'notif.aiff');
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-      platformChannelSpecifics,
-    );
-  }
 }
+Future<void> _showNotificationCustomSound(int id,String title,String body) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+    'your other channel id',
+    'your other channel name',
+    channelDescription: 'your other channel description',
+    sound: RawResourceAndroidNotificationSound('notif'),
+  );
+  const IOSNotificationDetails iOSPlatformChannelSpecifics =
+  IOSNotificationDetails(sound: 'notif.aiff');
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+    android: androidPlatformChannelSpecifics,
+    iOS: iOSPlatformChannelSpecifics,
+  );
+  await flutterLocalNotificationsPlugin.show(
+    id,
+    title,
+    body,
+    platformChannelSpecifics,
+  );
+}
+
 

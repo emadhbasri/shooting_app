@@ -132,7 +132,7 @@ class _ChatState extends State<Chat> {
                               ),
                               SizedBox(height: doubleHeight(1)),
                               Text(
-                                  '@${state.selectedChat.personalInformations[1].personalInformation!.userName ?? ''}')
+                                  '@${state.selectedChat.personalInformations[1].personalInformation!.userName}')
                             ],
                           ),
                         ),

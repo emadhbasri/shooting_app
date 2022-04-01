@@ -17,7 +17,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  List<String> hashtags = ['YNWA', 'Salah', 'Watfold', 'Anfield', 'EPL'];
+  // List<String> hashtags = ['YNWA', 'Salah', 'Watfold', 'Anfield', 'EPL'];
   late final TextEditingController controller;
   List<DataPost>? posts;
   getData() async {
@@ -93,50 +93,52 @@ class _SearchState extends State<Search> {
       ),
       body: SizedBox.expand(
         child: Builder(builder: (context) {
+          // if (controller.value.text == '')
+          //   return ListView(
+          //       physics: BouncingScrollPhysics(),
+          //       padding: EdgeInsets.symmetric(
+          //           horizontal: doubleWidth(5), vertical: doubleHeight(2)),
+          //       children: [
+          //         Text(
+          //           'Trending Tags',
+          //           style: TextStyle(
+          //               color: black,
+          //               fontWeight: FontWeight.bold,
+          //               fontSize: doubleWidth(6)),
+          //         ),
+          //         ...hashtags
+          //             .map((e) => Container(
+          //                   decoration: BoxDecoration(
+          //                       border: Border(
+          //                           bottom: BorderSide(color: grayCall))),
+          //                   child: ListTile(
+          //                     onTap: () {
+          //                       // controller.text=e;
+          //                       controller.value = TextEditingValue(text: e);
+          //                       getData();
+          //                     },
+          //                     dense: true,
+          //                     contentPadding: EdgeInsets.zero,
+          //                     leading: Text(
+          //                       ' # $e',
+          //                       style: TextStyle(
+          //                           color: black, fontSize: doubleWidth(4)),
+          //                     ),
+          //                     trailing: Icon(
+          //                       Icons.arrow_forward_ios,
+          //                       color: grayCall,
+          //                     ),
+          //                   ),
+          //                 ))
+          //             .toList()
+          //       ]);
+          // else {
           if (controller.value.text == '')
-            return ListView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                    horizontal: doubleWidth(5), vertical: doubleHeight(2)),
-                children: [
-                  Text(
-                    'Trending Tags',
-                    style: TextStyle(
-                        color: black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: doubleWidth(6)),
-                  ),
-                  ...hashtags
-                      .map((e) => Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(color: grayCall))),
-                            child: ListTile(
-                              onTap: () {
-                                // controller.text=e;
-                                controller.value = TextEditingValue(text: e);
-                                getData();
-                              },
-                              dense: true,
-                              contentPadding: EdgeInsets.zero,
-                              leading: Text(
-                                ' # $e',
-                                style: TextStyle(
-                                    color: black, fontSize: doubleWidth(4)),
-                              ),
-                              trailing: Icon(
-                                Icons.arrow_forward_ios,
-                                color: grayCall,
-                              ),
-                            ),
-                          ))
-                      .toList()
-                ]);
-          else {
-            if (posts == null) {
+            return Center(child: Text('please search.'));
+          if (posts == null) {
               return circle();
             } else if (posts!.isEmpty) {
-              return Center(child: Text('no posts'));
+              return Center(child: Text('no shot'));
             } else {
               return ListView(
                   physics: BouncingScrollPhysics(),
@@ -156,7 +158,7 @@ class _SearchState extends State<Search> {
                           }))
                       .toList());
             }
-          }
+          // }
         }),
       ),
     );

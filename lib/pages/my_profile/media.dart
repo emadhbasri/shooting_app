@@ -16,7 +16,15 @@ class _MediaState extends State<Media> {
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
     if(state.personalInformation!.posts.isEmpty)
-      return Center(child: Text('no media. Try shooting a few soon 🙂'),);
+      return ListView(
+        padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+        children: [
+          SizedBox(
+              height: doubleHeight(40),
+              width: double.maxFinite,
+              child: Center(child: Text('no media. Try shooting a few soon 🙂'))),
+        ],
+      );
     List<String> first=[];
     List<String> second=[];
     for(int j=0;j<state.personalInformation!.posts.length;j++){

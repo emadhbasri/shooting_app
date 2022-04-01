@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/AppPage.dart';
+import 'package:shooting_app/pages/auth/verify_otp.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
@@ -77,6 +78,7 @@ class _LoginState extends State<Login> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  SizedBox(height: doubleHeight(1)),
                   Container(
                     width: max,
                     child: Text(
@@ -95,14 +97,16 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () async {
-                          bool back = await AuthenticationService.login(service,
+                          bool? back = await AuthenticationService.login(service,
                               username: username, password: password);
-                          if (back) {
-                            bool bbo = await service.getToken();
-                            if(bbo)
-                              Go.pushSlideAnim(context, AppPageBuilder());
-                          } else {
-                            print('nononono');
+                          if (back!=null) {
+                            if(back){
+                              bool bbo = await service.getToken();
+                              if(bbo)
+                                Go.pushSlideAnim(context, AppPageBuilder());
+                            }else{
+                              Go.pushSlideAnim(context, VerifyOtp(username: username, password: password));
+                            }
                           }
                         },
                         shape: RoundedRectangleBorder(

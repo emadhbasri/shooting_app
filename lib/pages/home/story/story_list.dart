@@ -247,7 +247,7 @@ class StoryListItem extends StatelessWidget {
               ),
             )),
         title: Text(storyUser.person.fullName ?? ''),
-        subtitle: Text(storyUser.person.userName ?? '')
+        subtitle: Text(storyUser.person.userName)
         // Text('${getMonString(DateTime.now())} ${DateTime.now().day}, ${DateTime.now().year}'),
         );
   }

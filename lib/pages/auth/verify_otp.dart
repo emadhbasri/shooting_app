@@ -6,15 +6,17 @@ import '../../../classes/dataTypes.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
 import '../../../main.dart';
+import '../AppPage.dart';
 
-class VerifyPhone extends StatefulWidget {
-  const VerifyPhone({Key? key,required this.number}) : super(key: key);
-  final String number;
+class VerifyOtp extends StatefulWidget {
+  const VerifyOtp({Key? key,required this.username,required this.password}) : super(key: key);
+  final String username;
+  final String password;
   @override
-  State<VerifyPhone> createState() => _VerifyPhoneState();
+  State<VerifyOtp> createState() => _VerifyOtpState();
 }
 
-class _VerifyPhoneState extends State<VerifyPhone> {
+class _VerifyOtpState extends State<VerifyOtp> {
   String code='';
   List<FocusNode?> _listFocusNodes = [
     FocusNode(),
@@ -68,7 +70,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     color: Colors.black, fontWeight: FontWeight.bold)),
             SizedBox(height: doubleHeight(2)),
             Text(
-              'Enter code to verify phone',
+              'Enter code to verify',
               style: TextStyle(color: grayCall),
             ),
             SizedBox(height: doubleHeight(6)),
@@ -158,14 +160,17 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       return;
                     }else{
                       MyService service = getIt<MyService>();
-                      bool back = await AuthenticationService.phoneVerify(
+                      bool back = await AuthenticationService.validateOtp(
                           service,
-                          phoneNumber: widget.number,
-                          otp: code
+                          user:widget.username,
+                          password:widget.password,
+                          oTP: code
                       );
                       if(back){
-                        getIt<MainState>().getProfile();
-                        Go.pop(context);
+                        bool bbo = await service.getToken();
+                        if(bbo) {
+                          Go.pushSlideAnim(context, AppPageBuilder());
+                        }
                       }
                     }
                   },

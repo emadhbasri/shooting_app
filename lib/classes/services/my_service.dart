@@ -342,16 +342,15 @@ class MyService {
     }
   }
 
-  Future<List<DataNotification>> getNotif({int pageNumber=1}) async {
+  Future<Map<String,dynamic>?> getNotif({int pageNumber=1}) async {
     debugPrint('getNotif()');
     Map<String, dynamic> back = await httpGet('/api/v1/Notification/notifications/get?pageNumber=$pageNumber');
     debugPrint('back getNotif ${back}');
     if(back['status']==false){
       toast(back['error']);
-      return [];
+      return null;
     }
-    return convertDataList<DataNotification>(
-        back['data'], 'results', 'DataNotification');
+    return back['data'];
   }
 
   Future<DataShortVideoStory?> createStory({//todo
@@ -409,7 +408,8 @@ class MyService {
   }
   Future<bool> reachStory(String storyId) async {
     debugPrint('reachStory($storyId)');
-    Map<String, dynamic> back = await httpPatch('/api/v1/VideoStory/count/reach?shortVideoStoryId=$storyId',{});
+    Map<String, dynamic> back =
+    await httpPatch('/api/v1/VideoStory/updateSeenStatus?shortVideoStoryId=$storyId',{});
     debugPrint('back reachStory ${back}');
     if(back['status']==false){
       toast(back['error']);

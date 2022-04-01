@@ -48,7 +48,7 @@ class _ShootState extends State<Shoot> {
     setState(() {
       sending = false;
     });
-    print('back $back');
+    print('back sendData $back');
     if (back != null) {
       MainState state = Provider.of(context, listen: false);
       state.allPosts.insert(0, back);

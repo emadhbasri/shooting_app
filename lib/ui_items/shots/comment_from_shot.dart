@@ -3,6 +3,7 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
+import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
 import 'index.dart';
 
@@ -42,20 +43,26 @@ class _CommentFromShotState extends State<CommentFromShot> {
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: doubleHeight(5),
-                        height: doubleHeight(5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: networkImage(comment
-                                        .personalInformationViewModel
-                                        .profilePhoto ??
-                                    ''),
-                              )),
+                      child: GestureDetector(
+                        onTap: (){
+                          Go.pushSlideAnim(
+                              context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
+                        },
+                        child: SizedBox(
+                          width: doubleHeight(5),
+                          height: doubleHeight(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: networkImage(comment
+                                          .personalInformationViewModel
+                                          .profilePhoto ??
+                                      ''),
+                                )),
+                          ),
                         ),
                       ),
                     ),
@@ -94,7 +101,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${comment.personalInformationViewModel.userName ?? ''}',
+                  '@${comment.personalInformationViewModel.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,
@@ -308,20 +315,26 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: doubleHeight(5),
-                        height: doubleHeight(5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                fit: BoxFit.fill,
-                                image: networkImage(comment
-                                        .personalInformationViewModel
-                                        .profilePhoto ??
-                                    ''),
-                              )),
+                      child: GestureDetector(
+                        onTap: (){
+                          Go.pushSlideAnim(
+                              context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
+                        },
+                        child: SizedBox(
+                          width: doubleHeight(5),
+                          height: doubleHeight(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: networkImage(comment
+                                          .personalInformationViewModel
+                                          .profilePhoto ??
+                                      ''),
+                                )),
+                          ),
                         ),
                       ),
                     ),
@@ -360,7 +373,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${comment.personalInformationViewModel.userName ?? ''}',
+                  '@${comment.personalInformationViewModel.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,

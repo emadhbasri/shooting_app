@@ -132,7 +132,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               SizedBox(height: doubleHeight(1)),
                               Text(state.personalInformation!.fullName ?? ''),
                               Text(
-                                '@${state.personalInformation!.userName ?? ''}',
+                                '@${state.personalInformation!.userName}',
                                 style: TextStyle(color: grayCall, fontSize: 12),
                               ),
                             ],

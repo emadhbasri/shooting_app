@@ -24,41 +24,78 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   late ChatState state;
-
+  late ScrollController _listController;
   @override
   void initState() {
     super.initState();
     state = Provider.of<ChatState>(context, listen: false);
     state.init();
+    _listController = ScrollController()
+      ..addListener(() {
+          if (state.listChats!=null &&
+          state.listChats!.isNotEmpty
+              && _listController.position.atEdge &&
+              _listController.offset != 0.0) {
+            debugPrint("notifHasNext ${state.chatHasNext}");
+            if (state.chatHasNext) {
+              state.pageNumber++;
+              state.getChatsList();
+            }
+          }
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(
       builder: (context, state, child) {
-        if (state.listChats == null)
-          return circle();
-        else if (state.listChats!.isEmpty)
-          return Center(
-            child: Text('no message'),
-          );
+        if (state.listChats == null) return circle();
+
         return Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () async {
-              await state.getChatsList();
-            },
-            child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                    vertical: doubleHeight(2), horizontal: doubleWidth(4)),
-                itemBuilder: (context, index) => ChatListItem(
-                      chat: state.listChats![index],
-                      state: state,
-                    ),
-                separatorBuilder: (context, index) =>
-                    Divider(color: grayCallDark),
-                itemCount: state.listChats!.length),
-          ),
-        );
+            body: RefreshIndicator(
+          onRefresh: () async {
+            await state.getChatsList(clean: true);
+          },
+          child: state.listChats!.isEmpty
+              ? ListView(
+                  padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+                  children: [
+                    SizedBox(
+                        height: doubleHeight(70),
+                        width: double.maxFinite,
+                        child: Center(child: Text('no message. 🙂'))),
+                  ],
+                )
+              : ListView(
+                  controller: _listController,
+                  padding: EdgeInsets.symmetric(
+                      vertical: doubleHeight(2), horizontal: doubleWidth(4)),
+                  children: [
+                    ...state.listChats!
+                        .map((e) => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ChatListItem(
+                                  chat: e,
+                                  state: state,
+                                ),
+                                if (e != state.listChats!.last)
+                                  Divider(color: grayCallDark)
+                              ],
+                            ))
+                        .toList(),
+                    if (state.chatHasNext)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: doubleHeight(1)),
+                          CircularProgressIndicator(),
+                          SizedBox(height: doubleHeight(1)),
+                        ],
+                      )
+                  ],
+                ),
+        ));
       },
     );
   }
@@ -72,7 +109,7 @@ class ChatListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () async{
+      onTap: () async {
         state.selectedChat = chat;
         state.chats.clear();
         state.notify();
@@ -81,7 +118,7 @@ class ChatListItem extends StatelessWidget {
             ChatBuilder(
               state: state,
             ));
-        if(message!=null){
+        if (message != null) {
           state.selectedChat.chatMessages.add(message);
           state.notify();
         }

@@ -123,7 +123,7 @@ class _MyDrawerState extends State<MyDrawer>
                           getIt<MainState>().personalInformation!.fullName ??
                               ''),
                       subtitle: Text(
-                          '@${getIt<MainState>().personalInformation!.userName ?? ''}'),
+                          '@${getIt<MainState>().personalInformation!.userName}'),
                     ),
                   ListTile(
                     onTap: () {

@@ -14,13 +14,20 @@ class ChatState extends ChangeNotifier {
   init() async {
     // if (listChats != null) return;
     print('init()');
-    getChatsList();
+    getChatsList(clean: true);
   }
-
-  getChatsList() async {
+bool chatHasNext=false;
+  int pageNumber=1;
+  getChatsList({bool clean=false}) async {
+    if(listChats==null)listChats=[];
+    if(clean) {
+      pageNumber=1;
+      listChats!.clear();
+    };
     Map<String, dynamic> back =
-        await ChatService.getMyPrivateChats(service, pageNumber: 1);
-    listChats = back['chats'];
+        await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);
+    listChats!.addAll(back['chats']);
+    chatHasNext=pageNumber<back['total_pages'];
     print('listChats $listChats');
     notifyListeners();
   }

@@ -171,6 +171,10 @@ class _EditProfileState extends State<EditProfile> {
                         if (backTeam != null) {
                           bool backUser = await UsersService.changeTeam(
                               service, backTeam);
+                          if(backUser) {
+                            getIt<MainState>().getProfile();
+                            widget.person.team!.team_name=backTeam.name;
+                          }
                           print('backUser $backUser');
                         }
                       },

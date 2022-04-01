@@ -3,6 +3,7 @@ import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
+import '../../pages/profile/profile.dart';
 import '../../pages/shot/shot.dart';
 import 'comment_from_shot.dart';
 import 'index.dart';
@@ -386,20 +387,26 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       alignment: Alignment.centerLeft,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Builder(
-                            builder: (context) {
-                              if (widget.person.profilePhoto != null &&
-                                  widget.person.profilePhoto != null) {
-                                return imageNetwork(
-                                  widget.person.profilePhoto!,
-                                  fit: BoxFit.fill,
-                                );
-                              }
-                              return const SizedBox();
-                            },
+                        child: GestureDetector(
+                          onTap: (){
+                            Go.pushSlideAnim(
+                                context, ProfileBuilder(username: widget.person.userName));
+                          },
+                          child: SizedBox(
+                            width: doubleHeight(5),
+                            height: doubleHeight(5),
+                            child: Builder(
+                              builder: (context) {
+                                if (widget.person.profilePhoto != null &&
+                                    widget.person.profilePhoto != null) {
+                                  return imageNetwork(
+                                    widget.person.profilePhoto!,
+                                    fit: BoxFit.fill,
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -1003,13 +1010,11 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             Icons.send,
                             color: mainBlue,
                           )),
-                      hintText: 'Write your reply...',
+                      hintText: 'Write your comment...',
                       border: InputBorder.none),
                 ),
               )),
-            Divider(
-              color: grayCall,
-            ),
+
           ],
         ),
       ),

@@ -18,7 +18,16 @@ class _ShotsState extends State<Shots> {
   Widget build(BuildContext context) {
     final MainState state = Provider.of<MainState>(context, listen: false);
     if(state.personalInformation!.posts.isEmpty)
-      return Center(child: Text('no shot. Try shooting a few soon 🙂'),);
+      if(state.personalInformation!.posts.isEmpty)
+        return ListView(
+          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+          children: [
+            SizedBox(
+                height: doubleHeight(40),
+                width: double.maxFinite,
+                child: Center(child: Text('no shot. Try shooting a few soon 🙂'))),
+          ],
+        );
     return ListView(
       physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>

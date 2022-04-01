@@ -102,6 +102,7 @@ class MatchState extends ChangeNotifier {
     );
     leagues[selectedLeagueIndex].matchs[selectedMatchIndex].setData(match1);
     selectedMatch.setData(match1);
+    mainState.match!.setData(match1);
     print('matchs ${match1.fixture.id}');
     notifyListeners();
     if(matchPage && selectedMatch.isLive!=0){
@@ -165,10 +166,9 @@ class MatchState extends ChangeNotifier {
   getMatchUps() async {
     if(selectedMatch.isLive==0)return;
     if(mainState.personalInformation!.team==null)return;
-    if(selectedMatch.home.id.toString()!=mainState.personalInformation!.team!.id
-        && selectedMatch.away.id.toString()!=mainState.personalInformation!.team!.id)return;
+    if(selectedMatch.home.id.toString()!=mainState.personalInformation!.team!.team_key
+        && selectedMatch.away.id.toString()!=mainState.personalInformation!.team!.team_key)return;
     print('getMatchUps()');
-    if (selectedMatch.matchUps.isNotEmpty) return;
     List<DataPost> back = await ShotsService.getMatchUps(service,
         teamHomeId: selectedMatch.home.id,
         teamAwayId: selectedMatch.away.id,
@@ -180,7 +180,7 @@ class MatchState extends ChangeNotifier {
     notifyListeners();
     print('matchUps.length ${selectedMatch.matchUps.length}');
     if(matchPage && selectedMatch.isLive!=0){
-      await Future.delayed(Duration(seconds: 10));
+      await Future.delayed(Duration(seconds: 5));
       getMatchUps();
     }
   }

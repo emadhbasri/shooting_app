@@ -120,8 +120,7 @@ class _ChangePhoneState extends State<ChangePhone> {
                   // print(pref.value.text+number.value.text.trim());
                   if(pref.value.text.trim() !='' && number.value.text.trim()!=''){
                     MyService service = getIt<MyService>();
-                    bool back = await AuthenticationService.changePhone(service,
-                        '+'+pref.value.text.trim()+number.value.text.trim());
+                    bool back = await AuthenticationService.changePhone(service);
                     if(back){
                       Go.replaceSlideAnim(context,
                           VerifyPhone(number: '+'+pref.value.text.trim()+number.value.text.trim(),));

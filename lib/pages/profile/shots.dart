@@ -18,7 +18,16 @@ class _ShotsState extends State<Shots> {
     final ProfileState state =
         Provider.of<ProfileState>(context, listen: false);
     if(state.personalInformation!.posts.isEmpty)
-      return Center(child: Text('no shot. 🙂'),);
+      if(state.personalInformation!.posts.isEmpty)
+        return ListView(
+          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+          children: [
+            SizedBox(
+                height: doubleHeight(40),
+                width: double.maxFinite,
+                child: Center(child: Text('no shot. 🙂'))),
+          ],
+        );
     return ListView(
       physics: BouncingScrollPhysics(),
       children: state.personalInformation!.posts

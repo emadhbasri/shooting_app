@@ -17,34 +17,29 @@ samples, guidance on mobile development, and a full API reference.
 
 
 
-
-
-
-match
 *matchup comment
-match timer
 
-
-*make story read
-
-auth
-
-otp
 log out
 
 get error
 
-*notif
+*notif ios
 
-change photo
-change photo get profile
-change team get profile
-change name get get profile
-pagination of notif getMyPrivateChats
 
-change email
-change phone
-2fa
-login with otp
+
+click on profile photo and go to profile
+
 
 refresh token
+
+
+
+
+
+
+
+
+
+*make story read
+
+pagin notif and chats test

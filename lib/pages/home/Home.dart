@@ -19,22 +19,33 @@ enum MyTab { games, fanFeed, stories }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   MyTab tab = MyTab.fanFeed;
-
+  late TabController controller;
   // List<DataPost> allPosts = [];
   MyService service = getIt<MyService>();
   late MainState state;
-  getData() async {
-    // allPosts = await ShotsService.shotsAll(service);
-    // setState(() {});
-    // print('allPosts ${allPosts.length}');
-  }
 
   @override
   void initState() {
     super.initState();
     state = Provider.of(context,listen: false);
+    controller=TabController(length: 3, vsync: this,initialIndex: state.tab.index)..addListener(() {
+      switch(controller.index){
+        case 0:setState(() {
+          tab=MyTab.games;
+          state.tab=tab;
+        });break;
+        case 1:setState(() {
+          tab=MyTab.fanFeed;
+          state.tab=tab;
+        });break;
+        case 2:setState(() {
+          tab=MyTab.stories;
+          state.tab=tab;
+        });break;
+        default:break;
+      }
+    });
     tab=state.tab;
-    // getData();
   }
 
   @override
@@ -53,6 +64,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     .map((e) => GestureDetector(
                           onTap: () {
                             setState(() {
+                              controller.animateTo(e.index);
                               tab = e;
                               state.tab=e;
                             });
@@ -121,20 +133,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         ))
                     .toList()),
           ),
-          Expanded(child: Builder(
-            builder: (context) {
-              switch (tab) {
-                case MyTab.games:
-                  return MatchList();
-                case MyTab.fanFeed:
-                  return FanFeeds();
-                case MyTab.stories:
-                  return const StoryList();
-                default:
-                  return const SizedBox();
-              }
-            },
-          ))
+          Expanded(
+            child: TabBarView(
+              controller: controller,
+              children: [
+                MatchList(),
+                FanFeeds(),
+                const StoryList()
+              ],
+            ),
+          ),
+          // Expanded(child: Builder(
+          //   builder: (context) {
+          //     switch (tab) {
+          //       case MyTab.games:
+          //         return MatchList();
+          //       case MyTab.fanFeed:
+          //         return FanFeeds();
+          //       case MyTab.stories:
+          //         return const StoryList();
+          //       default:
+          //         return const SizedBox();
+          //     }
+          //   },
+          // ))
         ],
       ),
     );

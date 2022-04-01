@@ -20,9 +20,8 @@ class MatchUps extends StatelessWidget {
           ),
         );
     }
-
-    if(state.selectedMatch.home.id.toString()!=getIt<MainState>().personalInformation!.team!.id
-    && state.selectedMatch.away.id.toString()!=getIt<MainState>().personalInformation!.team!.id) {
+    if(state.selectedMatch.home.id.toString()!=getIt<MainState>().personalInformation!.team!.team_key
+    && state.selectedMatch.away.id.toString()!=getIt<MainState>().personalInformation!.team!.team_key) {
       return SizedBox.expand(
         child: Center(
           child: Text('You are not allowed to see this section'),

@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-
-import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../classes/dataTypes.dart';
 import '../../main.dart';
 import 'login.dart';
 import 'team.dart';
@@ -154,6 +150,11 @@ class _RegisterState extends State<Register> {
                             borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () async {
+                            if(!phone.value.text.trim().contains('+') ||
+                            phone.value.text.trim().length<12){
+                              toast('The phoneNumber is not a valid.');
+                              return;
+                            }
                             MyService service = getIt<MyService>();
                             bool back = await AuthenticationService.register(
                                 service,

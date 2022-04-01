@@ -89,7 +89,7 @@ class DataPersonalInformationViewModel {
   String? notificationToken;
   late String personalInformationId;
   DataTeam? team;
-  String? userName;
+  late String userName;
 }
 
 class DataCommentReply {
@@ -325,7 +325,7 @@ class DataPersonalInformation {
   DataTeam? team;
   List<DataUserFollower> userFollowers = [];
   List<DataUserFollowing?> userFollowings = [];
-  String? userName;
+  late String userName;
 }
 
 class DataChatMessage {
