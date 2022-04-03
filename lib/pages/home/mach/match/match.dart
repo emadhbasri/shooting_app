@@ -9,7 +9,6 @@ import 'stats.dart';
 import '../../../../classes/states/match_state.dart';
 import 'cards.dart';
 import 'matchups.dart';
-import 'package:http/http.dart' as http;
 
 class MatchBuilder extends StatelessWidget {
   const MatchBuilder({Key? key}) : super(key: key);
@@ -29,34 +28,18 @@ class Match extends StatefulWidget {
   _MatchState createState() => _MatchState();
 }
 
-class _MatchState extends State<Match> {
-  gett() async {
-    var headers = {
-      'x-rapidapi-key': 'XxXxXxXxXxXxXxXxXxXxXxXx',
-      'x-rapidapi-host': 'v3.football.api-sports.io'
-    };
-    var request = http.Request(
-        'GET', Uri.parse('https://v3.football.api-sports.io/{endpoint}'));
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
+class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
+  late TabController _controller;
 
   @override
   void initState() {
-    // MatchState state = Provider.of(context,listen: false);
-    // state.getMatchStatics();
-    // state.getMatchEvents();
-    // state.getMatchLineUps();
-    // state.getMatchUps();
     super.initState();
+    MatchState state = Provider.of(context,listen: false);
+    _controller = TabController(length: 5, vsync: this,
+        initialIndex: state.tabs.indexOf(state.selectedTab))..addListener(() {
+      state.selectedTab = state.tabs[_controller.index];
+      state.notify();
+    });
   }
 
   @override
@@ -215,6 +198,8 @@ class _MatchState extends State<Match> {
                   children: state.tabs
                       .map((e) => TextButton(
                           onPressed: () {
+                            int index=state.tabs.indexOf(e);
+                            _controller.animateTo(index);
                             state.selectedTab = e;
                             state.notify();
                           },
@@ -231,23 +216,13 @@ class _MatchState extends State<Match> {
                 SizedBox(
                   height: doubleHeight(2),
                 ),
-                Expanded(child: Builder(
-                  builder: (context) {
-                    switch (state.selectedTab) {
-                      case 'Matchups':
-                        return MatchUps();
-                      case 'Lineups':
-                        return LineUps();
-                      case 'Goals':
-                        return Goals();
-                      case 'Cards':
-                        return Cards();
-                      case 'Stats':
-                        return Stats();
-                      default:
-                        return SizedBox();
-                    }
-                  },
+                Expanded(child: TabBarView(
+                  controller: _controller,
+                  children: [MatchUps(),LineUps(),
+                    Goals(),
+                    Cards(),
+                    Stats(),
+                  ],
                 ))
               ],
             ),

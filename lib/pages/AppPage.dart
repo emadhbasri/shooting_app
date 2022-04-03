@@ -211,7 +211,7 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Messages',
+          'Messages'.toUpperCase(),
           style: TextStyle(color: white),
         ),
       );
@@ -234,7 +234,7 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Norification',
+          'Norification'.toUpperCase(),
           style: TextStyle(color: white),
         ),
       );
@@ -257,7 +257,7 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Profile',
+          'Profile'.toUpperCase(),
           style: TextStyle(color: white),
         ),
         actions: [
@@ -424,28 +424,36 @@ class _AppPageState extends State<AppPage> {
                     child: FloatingActionButton(
                       // padding: EdgeInsets.zero,
                       onPressed: () {
-                        MainState state = Provider.of(context, listen: false);
-
-                        if (state.isOnMatchPage) {
-                          if (state.match!.home.id.toString() ==
+                        if(currentIndex==0){
+                          MainState state = Provider.of(context, listen: false);
+                          if(state.tab==MyTab.fanFeed){
+                            Go.pushSlideAnimSheet(context, ShootBuilder());
+                          }else if(state.tab==MyTab.games){
+                            if (state.isOnMatchPage) {
+                              if (state.match!.home.id.toString() ==
                                   state.personalInformation!.team!.team_key ||
-                              state.match!.away.id.toString() ==
-                                  state.personalInformation!.team!.team_key) {
-                            if (state.match!.isLive == 1 || true) {
-                              Go.pushSlideAnimSheet(context, ShootBuilder());
+                                  state.match!.away.id.toString() ==
+                                      state.personalInformation!.team!.team_key) {
+                                if (state.match!.isLive == 0) {
+                                  toast('Match Is Not Started');
+                                }else if(state.match!.isLive == 2){
+                                  toast('The Match In Finished.');
+                                } else {
+                                  Go.pushSlideAnimSheet(context, ShootBuilder(matchId: state.match!.fixture.id,));
+                                }
+                              } else {
+                                toast(
+                                    'You Are Not Allowed To Shoot For This Match.');
+                              }
                             } else {
-                              toast('the match in finished.');
+                              toast('Please Select A Match.');
                             }
-                          } else {
-                            toast(
-                                'You are not allowed to shoot for this team.');
                           }
-                        } else {
-                          toast('please select a match.');
+                        }else{
+                          setState(() {
+                            currentIndex = 0;
+                          });
                         }
-                        // setState(() {
-                        //   buttonClick = !buttonClick;
-                        // });
                       },
                       elevation: 0,
                       backgroundColor: mainGreen,

@@ -19,15 +19,7 @@ samples, guidance on mobile development, and a full API reference.
 
 *matchup comment
 
-log out
-
-get error
-
 *notif ios
-
-
-
-click on profile photo and go to profile
 
 
 refresh token
@@ -35,11 +27,6 @@ refresh token
 
 
 
-
-
-
-
-
-*make story read
+<!-- *make story read -->
 
 pagin notif and chats test

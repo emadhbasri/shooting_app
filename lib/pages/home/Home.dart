@@ -84,7 +84,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         switch (e) {
                                           case MyTab.games:
                                             return Text(
-                                              'Games',
+                                              'Games'.toUpperCase(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: mainBlue,
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             );
                                           case MyTab.fanFeed:
                                             return Text(
-                                              'Fan Feeds',
+                                              'Fan Feeds'.toUpperCase(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: mainBlue,
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             );
                                           case MyTab.stories:
                                             return Text(
-                                              'Stories',
+                                              'Stories'.toUpperCase(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: mainBlue,

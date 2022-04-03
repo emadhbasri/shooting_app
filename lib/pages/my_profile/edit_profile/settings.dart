@@ -35,7 +35,7 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('Settings'),
+        title: Text('Settings'.toUpperCase()),
       ),
       body: SizedBox.expand(
         child: Padding(
@@ -187,7 +187,7 @@ class _SettingsState extends State<Settings> {
                     style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),
                         backgroundColor: MaterialStateProperty.all(
-                            Color.fromRGBO(160, 0, 0, 1)),
+                            mainBlue),
                         padding: MaterialStateProperty.all(EdgeInsets.symmetric(
                             vertical: doubleHeight(2.5),
                             horizontal: doubleWidth(4)))),

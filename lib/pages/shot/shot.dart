@@ -5,6 +5,7 @@ import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
+import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 import '../../ui_items/shots/comment_from_shot.dart';
 import '../chat/chat_list.dart';

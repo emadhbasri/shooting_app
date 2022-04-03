@@ -10,7 +10,7 @@ class ProfileState extends ChangeNotifier {
   MyService service = getIt<MyService>();
 
   String selectedTab = 'Shots';
-  List<String> tabs = ['Shots', 'Media', 'Fan Mates'];
+  List<String> tabs = ['Shots', 'Fan Mates'];//'Media'
 
   DataPersonalInformation? personalInformation;
   notify() => notifyListeners();

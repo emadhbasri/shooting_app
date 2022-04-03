@@ -13,6 +13,8 @@ import 'classes/functions.dart';
 import 'pages/intro.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'pages/intro1.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 final getIt = GetIt.instance;
@@ -236,6 +238,7 @@ class _AppFirstState extends State<AppFirst> {
     // );
     // return FilePickerDemo();
     // return Team();
+    return Intro1();
     return Intro();
     // return StoryList();
   }

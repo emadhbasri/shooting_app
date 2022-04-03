@@ -58,8 +58,10 @@ flutter:
   assets:
     - images/khanegreen/
     - images/
-    - assets/images/instagram_logo.png
+    - assets/images/
     - assets/icons/
+    - assets/shoot/images/
+    - assets/shoot/video/
 
   fonts:
 

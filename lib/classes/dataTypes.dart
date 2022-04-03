@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+const Color greenCall = Color.fromRGBO(78, 255, 187, 1);
 
 const warnColor = Color(0xFFFF0266);
 const successColor = Color(0xFF0336FF);

@@ -40,7 +40,7 @@ class _FanMatesState extends State<FanMates> {
                     ],
                   ))
               .toList(),
-          if (state.personalInformation!.posts.isEmpty)
+          if (state.personalInformation!.userFollowers.isEmpty)
             SizedBox(
                 height: doubleHeight(40),
                 width: double.maxFinite,

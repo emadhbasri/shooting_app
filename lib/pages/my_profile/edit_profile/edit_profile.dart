@@ -24,9 +24,12 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
+    if(widget.person.team!=null){
+      teamName= widget.person.team!.team_name??'';
+    }
     nameController = TextEditingController(text: widget.person.fullName);
   }
-
+  String teamName='';
   MyService service = getIt<MyService>();
   @override
   Widget build(BuildContext context) {
@@ -174,6 +177,9 @@ class _EditProfileState extends State<EditProfile> {
                           if(backUser) {
                             getIt<MainState>().getProfile();
                             widget.person.team!.team_name=backTeam.name;
+                            setState(() {
+                              teamName=backTeam.name;
+                            });
                           }
                           print('backUser $backUser');
                         }
@@ -194,9 +200,9 @@ class _EditProfileState extends State<EditProfile> {
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black),
                             ),
-                            Text(widget.person.team == null
+                            Text(teamName == ''
                                 ? 'no team selected'
-                                : widget.person.team!.team_name!),
+                                : teamName),
                             // TextFormField(
                             //   style: TextStyle(
                             //       color: grayCallDark

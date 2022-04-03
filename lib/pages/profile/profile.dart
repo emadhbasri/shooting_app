@@ -8,8 +8,6 @@ import '../../classes/states/profile_state.dart';
 import '../../main.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-
-import 'media.dart';
 import 'shots.dart';
 
 class ProfileBuilder extends StatelessWidget {
@@ -32,13 +30,17 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
-  late TabController controller;
+  late TabController _controller;
 
   @override
   void initState() {
     super.initState();
-    // print('personalInformation ${state.personalInformation}');
-    controller = TabController(length: 3, vsync: this, initialIndex: 0);
+    ProfileState state = Provider.of(context,listen: false);
+    _controller = TabController(length: 2, vsync: this, initialIndex: 0)..addListener(() {
+      state.selectedTab = state.tabs[_controller.index];
+      state.notify();
+    });
+
   }
 
   @override
@@ -85,17 +87,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     alignment: Alignment.center,
                                     children: [
                                       ClipRRect(
-                                          //todo add photo
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: state.personalInformation!
                                                       .profilePhoto !=
                                                   null
-                                              ? imageNetwork(
-                                                  state.personalInformation!
-                                                          .profilePhoto ??
-                                                      '',
-                                                  fit: BoxFit.fill)
+                                              ? CircleAvatar(
+                                            radius: doubleWidth(30),
+                                            backgroundImage: networkImage(state.personalInformation!
+                                                .profilePhoto!),
+                                          )
                                               : null),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
@@ -231,9 +232,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           children: state.tabs
                               .map((e) => GestureDetector(
                                     onTap: () {
-                                      setState(() {
-                                        state.selectedTab = e;
-                                      });
+                                      int index=state.tabs.indexOf(e);
+                                      _controller.animateTo(index);
+                                      state.selectedTab = e;
+                                      state.notify();
                                     },
                                     child: Container(
                                       color: Colors.white,
@@ -286,19 +288,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               .toList(),
                         ),
                       ),
-                      Expanded(child: Builder(
-                        builder: (context) {
-                          switch (state.selectedTab) {
-                            case 'Shots':
-                              return Shots();
-                            case 'Media':
-                              return Media();
-                            case 'Fan Mates':
-                              return FanMates();
-                            default:
-                              return SizedBox();
-                          }
-                        },
+                      Expanded(child: TabBarView(
+                        controller: _controller,
+                        children: [Shots(),FanMates()],
                       ))
                     ],
                   ))

@@ -162,7 +162,7 @@ class _CommentReplyState extends State<CommentReply> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: reply.replyLikedBythisUser
-                                ? Colors.pink
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),

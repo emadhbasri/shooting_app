@@ -18,9 +18,22 @@ class MyProfile extends StatefulWidget {
 class _MyProfileState extends State<MyProfile>
     with SingleTickerProviderStateMixin {
   MyService service = getIt<MyService>();
-
+  late TabController _controller;
   String selectedTab = 'Shots';
-  List<String> tabs = ['Shots', 'Media', 'Fan Mates'];
+  List<String> tabs = ['Shots', 'Fan Mates'];//'Media',
+
+  @override
+  void initState() {
+    super.initState();
+    MainState state = Provider.of(context,listen: false);
+    state.getProfile(force: true);
+    _controller = TabController(length: 2, vsync: this, initialIndex: 0)..addListener(() {
+      print('_controller.index ${_controller.index}');
+      setState(() {
+        selectedTab = tabs[_controller.index];
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +72,11 @@ class _MyProfileState extends State<MyProfile>
                                               child: state.personalInformation!
                                                   .profilePhoto !=
                                                   null
-                                                  ? imageNetwork(
-                                                  state.personalInformation!
-                                                      .profilePhoto ??
-                                                      '',
-                                                  fit: BoxFit.fill)
+                                                  ? CircleAvatar(
+                                                radius: doubleWidth(30),
+                                                backgroundImage: networkImage(state.personalInformation!
+                                                    .profilePhoto!),
+                                              )
                                                   : null),
                                           Align(
                                             alignment: Alignment(0.9, -0.9),
@@ -200,6 +213,8 @@ class _MyProfileState extends State<MyProfile>
                                   children: tabs
                                       .map((e) => GestureDetector(
                                     onTap: () {
+                                      int index=tabs.indexOf(e);
+                                      _controller.animateTo(index);
                                       setState(() {
                                         selectedTab = e;
                                       });
@@ -254,19 +269,9 @@ class _MyProfileState extends State<MyProfile>
                                       .toList(),
                                 ),
                               ),
-                              Expanded(child: Builder(
-                                builder: (context) {
-                                  switch (selectedTab) {
-                                    case 'Shots':
-                                      return Shots();
-                                    case 'Media':
-                                      return Media();
-                                    case 'Fan Mates':
-                                      return FanMates();
-                                    default:
-                                      return SizedBox();
-                                  }
-                                },
+                              Expanded(child: TabBarView(
+                                controller: _controller,
+                                children: [Shots(),FanMates()],
                               ))
                             ],
                           ))

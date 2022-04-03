@@ -237,7 +237,7 @@ class DataUserFollowing {
     followedByMe = convertData(data, 'followedByMe', DataType.bool);
   }
 
-  late bool followedByMe;
+  late bool? followedByMe;
   late String id;
   late DataPersonalInformationViewModel personalInformationViewModel;
 }
@@ -305,8 +305,8 @@ class DataPersonalInformation {
     posts = convertDataList<DataPost>(data, 'posts', 'DataPost');
     userFollowers = convertDataList<DataUserFollower>(
         data, 'userFollowers', 'DataUserFollower');
-    userFollowings = convertDataList<DataUserFollowing>(
-        data, 'userFollowings', 'DataUserFollowing');
+    // userFollowings = convertDataList<DataUserFollowing>(
+    //     data, 'userFollowings', 'DataUserFollowing');
   }
 
   String? email;
@@ -324,7 +324,7 @@ class DataPersonalInformation {
   String? profilePhoto;
   DataTeam? team;
   List<DataUserFollower> userFollowers = [];
-  List<DataUserFollowing?> userFollowings = [];
+  // List<DataUserFollowing?> userFollowings = [];
   late String userName;
 }
 

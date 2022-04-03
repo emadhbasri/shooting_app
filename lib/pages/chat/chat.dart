@@ -5,6 +5,7 @@ import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/main.dart';
+import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/states/chat_state.dart';
@@ -102,14 +103,19 @@ class _ChatState extends State<Chat> {
                                   state.selectedChat.personalInformations[1]
                                           .personalInformation!.profilePhoto !=
                                       null)
-                                CircleAvatar(
-                                  radius: doubleWidth(8),
-                                  backgroundColor: Colors.white,
-                                  backgroundImage: networkImage(state
-                                      .selectedChat
-                                      .personalInformations[1]
-                                      .personalInformation!
-                                      .profilePhoto!),
+                                GestureDetector(
+                                  onTap: (){
+                                    Go.pushSlideAnim(context, ProfileBuilder(username: state.selectedChat.personalInformations[1].personalInformation!.userName));
+                                  },
+                                  child: CircleAvatar(
+                                    radius: doubleWidth(8),
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: networkImage(state
+                                        .selectedChat
+                                        .personalInformations[1]
+                                        .personalInformation!
+                                        .profilePhoto!),
+                                  ),
                                 ),
                               SizedBox(height: doubleHeight(1)),
                               Row(

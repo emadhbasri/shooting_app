@@ -78,16 +78,16 @@ class _LoginState extends State<Login> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  SizedBox(height: doubleHeight(1)),
-                  Container(
-                    width: max,
-                    child: Text(
-                      'Forgot Password?',
-                      textAlign: TextAlign.right,
-                      style:
-                          TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
-                    ),
-                  ),
+                  // SizedBox(height: doubleHeight(1)),
+                  // Container(
+                  //   width: max,
+                  //   child: Text(
+                  //     'Forgot Password?',
+                  //     textAlign: TextAlign.right,
+                  //     style:
+                  //         TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
+                  //   ),
+                  // ),
                   sizeh(doubleHeight(7)),
                   Container(
                     width: max,

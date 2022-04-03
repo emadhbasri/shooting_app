@@ -22,13 +22,29 @@ class MyService {
   bool hasAccess = false;
   Future<bool> getToken() async {
     debugPrint('getToken()');
+    // print('DateTime.now() ${DateTime.parse('2022-04-02 19:08:31.439854').toString()}');
+    // setString('date', '2022-03-20 19:08:31.439854');
     // await deviceData();
+
     _refresh = await getString('refresh');
     _access = await getString('access');
     debugPrint('_refresh $_refresh');
     debugPrint('_access $_access');
     if (_access == null) return false;
-    MainState state = getIt<MainState>();
+    // String? dateStr = await getString('date');
+    // DateTime time;
+    // print('dateStr ${dateStr}');
+    // if(dateStr!=null){
+    //   time=DateTime.parse(dateStr);
+    //   Duration duration = DateTimeRange(start: time, end: DateTime.now()).duration;
+    //   if(duration.inDays>10){
+    //     // httpPost('/api/v1/Administration/refreshToken', {
+    //     //   'accessToken':_access,
+    //     //   'refreshToken':_refresh,
+    //     // });
+    //   }
+    // }
+      MainState state = getIt<MainState>();
     await state.init();
     return true;
     // if (_refresh != null) await getAccess();
@@ -38,6 +54,7 @@ class MyService {
       {required String refresh, required String access}) async {
     await setString('refresh', refresh);
     await setString('access', access);
+    await setString('date', DateTime.now().toString());
     _refresh = refresh;
     _access = access;
     print('setToken ${_access} ${access}');
@@ -98,7 +115,8 @@ class MyService {
         utf.statusCode == 200 ||
         utf.statusCode == 204) {
       return {'status': true, 'data': jsonn};
-    } else {
+    } else if(jsonn is Map){
+
       if (jsonn.containsKey('errors')) {
         return {'status': false, 'error': jsonn['errors']};
       }else if(jsonn.containsKey('data') && jsonn['data'] is List){
@@ -107,6 +125,8 @@ class MyService {
       } else {
         return {'status': false, 'error': jsonn['message']};
       }
+    }else{
+      return {'status': false, "data": false,'error':utf.body};
     }
   }
 

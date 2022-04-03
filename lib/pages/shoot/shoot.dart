@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
-import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
@@ -13,8 +12,8 @@ import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
 
 class ShootBuilder extends StatelessWidget {
-  const ShootBuilder({Key? key}) : super(key: key);
-
+  const ShootBuilder({Key? key,this.matchId}) : super(key: key);
+  final int? matchId;
   @override
   Widget build(BuildContext context) {
     return MainStateProvider(
@@ -39,23 +38,32 @@ class _ShootState extends State<Shoot> {
   TextEditingController controller = TextEditingController();
   bool sending = false;
   sendData(context) async {
+    if(sending)return;
     print('sendData()');
     setState(() {
       sending = true;
     });
-    DataPost? back = await ShotsService.createShot(service,
-        images: images, details: controller.value.text);
-    setState(() {
-      sending = false;
-    });
-    print('back sendData $back');
-    if (back != null) {
-      MainState state = Provider.of(context, listen: false);
-      state.allPosts.insert(0, back);
-      state.personalInformation!.posts.insert(0, back);
-      state.notify();
-      getIt<MainState>().play();
-      Go.pop(context);
+    if(controller.value.text.trim()=='' && images.isEmpty){
+      toast('Please Enter Text Or Image');
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        sending = false;
+      });
+    }else{
+      DataPost? back = await ShotsService.createShot(service,
+          images: images, details: controller.value.text);
+      setState(() {
+        sending = false;
+      });
+      print('back sendData $back');
+      if (back != null) {
+        MainState state = Provider.of(context, listen: false);
+        state.allPosts.insert(0, back);
+        state.personalInformation!.posts.insert(0, back);
+        state.notify();
+        getIt<MainState>().play();
+        Go.pop(context);
+      }
     }
   }
 
@@ -285,22 +293,47 @@ class _ShootState extends State<Shoot> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      FloatingActionButton(
-                        onPressed: () async {
-                          XFile? file = await ImagePicker()
-                              .pickImage(source: ImageSource.camera);
-                          if (file != null) {
-                            setState(() {
-                              images.add(file);
-                            });
-                          }
-                        },
-                        elevation: 3,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Color.fromRGBO(107, 79, 187, 1),
-                        ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FloatingActionButton(
+                            heroTag: UniqueKey(),
+                            onPressed: () async {
+                              XFile? file = await ImagePicker()
+                                  .pickImage(source: ImageSource.camera);
+                              if (file != null) {
+                                setState(() {
+                                  images.add(file);
+                                });
+                              }
+                            },
+                            elevation: 3,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Color.fromRGBO(107, 79, 187, 1),
+                            ),
+                          ),
+                          SizedBox(width: doubleWidth(2)),
+                          FloatingActionButton(
+                            heroTag: UniqueKey(),
+                            onPressed: () async {
+                              XFile? file = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              if (file != null) {
+                                setState(() {
+                                  images.add(file);
+                                });
+                              }
+                            },
+                            elevation: 3,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.image,
+                              color: Color.fromRGBO(107, 79, 187, 1),
+                            ),
+                          ),
+                        ],
                       ),
                       Text(
                         'Swipe up to take the shot',

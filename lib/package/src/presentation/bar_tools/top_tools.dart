@@ -171,12 +171,14 @@ class _TopToolsState extends State<TopTools> {
                     child: Icon(Icons.video_library_outlined,color: Colors.white,size: 20,),
                     backGroundColor: Colors.black12,
                     onTap: () async{
+                      if(loading)return;
                       final XFile? video = await ImagePicker()
                           .pickVideo(source: ImageSource.gallery);
-                      setState(() {
-                        loading=true;
-                      });
+
                       if (video != null) {
+                        setState(() {
+                          loading=true;
+                        });
                         print('video.mimeType ${video.name}');
 
                         if(!video.name.endsWith('.mp4')){

@@ -91,20 +91,27 @@ class _PostFromShotState extends State<PostFromShot> {
                       alignment: Alignment.centerLeft,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Builder(
-                            builder: (context) {
-                              if (person != null &&
-                                  person!.profilePhoto != null) {
-                                return imageNetwork(
-                                  person!.profilePhoto!,
-                                  fit: BoxFit.fill,
-                                );
-                              }
-                              return const SizedBox();
-                            },
+                        child: GestureDetector(
+                          onTap: (){
+                            if(person!=null)
+                            Go.pushSlideAnim(
+                                context, ProfileBuilder(username: person!.userName));
+                          },
+                          child: SizedBox(
+                            width: doubleHeight(5),
+                            height: doubleHeight(5),
+                            child: Builder(
+                              builder: (context) {
+                                if (person != null &&
+                                    person!.profilePhoto != null) {
+                                  return imageNetwork(
+                                    person!.profilePhoto!,
+                                    fit: BoxFit.fill,
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -203,7 +210,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox(
                   width: max,
-                  height: doubleHeight(15),
+                  height: doubleWidth(70),
                   child: PageView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: widget.post.mediaTypes.length,
@@ -226,7 +233,7 @@ class _PostFromShotState extends State<PostFromShot> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png')),
+                          child: Image.asset('images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],
@@ -277,7 +284,7 @@ class _PostFromShotState extends State<PostFromShot> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: widget.post.postLikedBythisUser
-                                ? Colors.pink
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
@@ -502,7 +509,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
             if (widget.post.mediaTypes.isNotEmpty)
               SizedBox(
                 width: max,
-                height: doubleHeight(20),
+                height: doubleWidth(70),
                 child: PageView.builder(
                   controller:
                       PageController(initialPage: 0, viewportFraction: 0.85),
@@ -570,7 +577,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png')),
+                          child: Image.asset('images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],
@@ -622,7 +629,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: widget.post.postLikedBythisUser
-                                ? Colors.pink
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
@@ -757,20 +764,27 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       alignment: Alignment.centerLeft,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Builder(
-                            builder: (context) {
-                              if (person != null &&
-                                  person!.profilePhoto != null) {
-                                return imageNetwork(
-                                  person!.profilePhoto!,
-                                  fit: BoxFit.fill,
-                                );
-                              }
-                              return const SizedBox();
-                            },
+                        child: GestureDetector(
+                          onTap: (){
+                            if(person!=null)
+                            Go.pushSlideAnim(
+                                context, ProfileBuilder(username: person!.userName));
+                          },
+                          child: SizedBox(
+                            width: doubleHeight(5),
+                            height: doubleHeight(5),
+                            child: Builder(
+                              builder: (context) {
+                                if (person != null &&
+                                    person!.profilePhoto != null) {
+                                  return imageNetwork(
+                                    person!.profilePhoto!,
+                                    fit: BoxFit.fill,
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -869,7 +883,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox(
                   width: max,
-                  height: doubleHeight(15),
+                  height: doubleWidth(70),
                   child: PageView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: widget.post.mediaTypes.length,
@@ -892,7 +906,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png')),
+                          child: Image.asset('images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],
@@ -942,7 +956,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: widget.post.postLikedBythisUser
-                                ? Colors.pink
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),

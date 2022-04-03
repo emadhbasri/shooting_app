@@ -9,6 +9,7 @@ import 'my_service.dart';
 
 class AuthenticationService {
   static logOut(context) {
+    getIt<MyService>().httpPost('/api/v1/Authentication/logout', {});
     removeShare('refresh');
     removeShare('access');
     MainState state = getIt<MainState>();

@@ -69,7 +69,11 @@ class _StoryPageState extends State<StoryPage> {
         indicatorAnimationController: indicatorAnimationController,
         initialStoryIndex: (pageIndex) {
           DataStoryUser user = widget.storyUsers[pageIndex];
-          return user.seen.length;
+          if(user.notSeen.length==0){
+            return 0;
+          }else{
+            return user.seen.length;
+          }
         },
         pageLength: widget.storyUsers.length,
         storyLength: (int pageIndex) {

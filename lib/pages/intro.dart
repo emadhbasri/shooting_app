@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
+import 'package:video_player/video_player.dart';
 
 import '../classes/functions.dart';
 import '../classes/dataTypes.dart';
@@ -13,11 +14,24 @@ class Intro extends StatefulWidget {
 }
 
 class _IntroState extends State<Intro> {
+
+  late VideoPlayerController _controller;
+  bool show = false;
+  init()async{
+    _controller = VideoPlayerController.asset('assets/shoot/video/intro.mp4');
+    await _controller.initialize();
+    _controller.play();
+
+    setState(() {
+      show = true;
+    });
+  }
   @override
   void initState() {
     super.initState();
+    init();
+
     MyService service = getIt<MyService>();
-    // service.logOut();
     service.getToken().then((bool value) {
       if (value) {
         Future.delayed(Duration(seconds: 2),

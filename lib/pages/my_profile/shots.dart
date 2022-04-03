@@ -25,11 +25,11 @@ class _ShotsState extends State<Shots> {
             SizedBox(
                 height: doubleHeight(40),
                 width: double.maxFinite,
-                child: Center(child: Text('no shot. Try shooting a few soon 🙂'))),
+                child: Center(child: Text('no shot. Try shoot a few soon 🙂'))),
           ],
         );
     return ListView(
-      physics: BouncingScrollPhysics(),
+      // physics: BouncingScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
             PostFromShotProfile(
               key: UniqueKey(),

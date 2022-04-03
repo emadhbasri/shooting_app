@@ -293,7 +293,7 @@ class _StoryPageFrameState extends State<_StoryPageFrame>
     for (int j = 0; j < videoList.length; j++) {
       if (videoList[j].video.value.isInitialized) videoList[j].video.dispose();
     }
-
+    animationController.dispose();
     super.dispose();
   }
 
@@ -324,7 +324,7 @@ MyService service = getIt<MyService>();
       ...user.notSeen,
     ];
     if (videoList.isEmpty) initializing(allStories);
-
+    print('allStories ${allStories.length} ${context.watch<StoryStackController>().value}');
     DataStory story = allStories[context.watch<StoryStackController>().value];
     service.reachStory(story.id);
     int index = -1;

@@ -69,6 +69,7 @@ class _MyNotificationState extends State<MyNotification> {
                 ],
               )
             : ListView(
+          physics: AlwaysScrollableScrollPhysics(),
                 controller: _listController,
                 children: [
                   ...notifs

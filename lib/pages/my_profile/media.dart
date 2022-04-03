@@ -22,7 +22,7 @@ class _MediaState extends State<Media> {
           SizedBox(
               height: doubleHeight(40),
               width: double.maxFinite,
-              child: Center(child: Text('no media. Try shooting a few soon 🙂'))),
+              child: Center(child: Text('no media. Try shoot a few soon 🙂'))),
         ],
       );
     List<String> first=[];

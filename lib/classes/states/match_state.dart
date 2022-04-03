@@ -164,7 +164,7 @@ class MatchState extends ChangeNotifier {
   }
 
   getMatchUps() async {
-    if(selectedMatch.isLive==0)return;
+    if(selectedMatch.isLive==0 || selectedMatch.isLive==2)return;
     if(mainState.personalInformation!.team==null)return;
     if(selectedMatch.home.id.toString()!=mainState.personalInformation!.team!.team_key
         && selectedMatch.away.id.toString()!=mainState.personalInformation!.team!.team_key)return;

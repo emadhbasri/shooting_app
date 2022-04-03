@@ -131,7 +131,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png')),
+                          child: Image.asset('images/chat(2).png',color: greenCall,)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentReplyCount))
                     ],
@@ -171,7 +171,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
-                                ? Colors.pink
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
@@ -403,7 +403,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png')),
+                          child: Image.asset('images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentReplyCount))
                     ],
@@ -441,7 +441,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
-                                ? Colors.pink
+                                ?  greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),

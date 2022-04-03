@@ -24,20 +24,26 @@ class MatchUps extends StatelessWidget {
     && state.selectedMatch.away.id.toString()!=getIt<MainState>().personalInformation!.team!.team_key) {
       return SizedBox.expand(
         child: Center(
-          child: Text('You are not allowed to see this section'),
+          child: Text('You Are Not Allowed To see This Section'),
         ),
       );
     }
     if(state.selectedMatch.isLive==0)
       return SizedBox.expand(
         child: Center(
-          child: Text('Match is not started'),
+          child: Text('Match Is Not started'),
+        ),
+      );
+    if(state.selectedMatch.isLive==2)
+      return SizedBox.expand(
+        child: Center(
+          child: Text('Match Is Finished'),
         ),
       );
     if(state.selectedMatch.matchUps.isEmpty){
       return SizedBox.expand(
         child: Center(
-          child: Text('no Shots'),
+          child: Text('No Shots'),
         ),
       );
     }

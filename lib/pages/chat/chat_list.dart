@@ -181,4 +181,3 @@ class ChatListItem extends StatelessWidget {
   }
 }
 
-const Color greenCall = Color.fromRGBO(78, 255, 187, 1);
