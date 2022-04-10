@@ -19,7 +19,7 @@ class _ShotsState extends State<Shots> {
         Provider.of<ProfileState>(context, listen: false);
     if(state.personalInformation!.posts.isEmpty)
       if(state.personalInformation!.posts.isEmpty)
-        return ListView(
+        return ListView(physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
           children: [
             SizedBox(

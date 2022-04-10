@@ -17,14 +17,14 @@ class ShootBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainStateProvider(
-      child: Shoot(),
+      child: Shoot(matchId: matchId),
     );
   }
 }
 
 class Shoot extends StatefulWidget {
-  const Shoot({Key? key}) : super(key: key);
-
+  const Shoot({Key? key,this.matchId}) : super(key: key);
+  final int? matchId;
   @override
   _ShootState createState() => _ShootState();
 }
@@ -51,6 +51,7 @@ class _ShootState extends State<Shoot> {
       });
     }else{
       DataPost? back = await ShotsService.createShot(service,
+          matchId: widget.matchId,
           images: images, details: controller.value.text);
       setState(() {
         sending = false;
@@ -58,9 +59,11 @@ class _ShootState extends State<Shoot> {
       print('back sendData $back');
       if (back != null) {
         MainState state = Provider.of(context, listen: false);
-        state.allPosts.insert(0, back);
-        state.personalInformation!.posts.insert(0, back);
-        state.notify();
+        if(widget.matchId==null) {
+          state.allPosts.insert(0, back);
+          state.personalInformation!.posts.insert(0, back);
+          state.notify();
+        }
         getIt<MainState>().play();
         Go.pop(context);
       }
@@ -177,10 +180,6 @@ class _ShootState extends State<Shoot> {
                                                                 fit:
                                                                     BoxFit.fill,
                                                               ),
-                                                              // Image.asset(
-                                                              //   'images/1668011.jpg',
-                                                              //   fit: BoxFit.fill,
-                                                              // ),
                                                             ),
                                                           ),
                                                         ),
@@ -274,7 +273,7 @@ class _ShootState extends State<Shoot> {
                                       width: doubleWidth(18),
                                       height: doubleWidth(18),
                                       padding: EdgeInsets.all(doubleWidth(3)),
-                                      child: Image.asset('images/soccer.png'),
+                                      child: Image.asset('assets/images/soccer.png'),
                                     ),
                                   ),
                                   left: doubleWidth(1),

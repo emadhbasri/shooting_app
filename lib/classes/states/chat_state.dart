@@ -7,7 +7,8 @@ import '../../main.dart';
 import '../services/chat_service.dart';
 
 class ChatState extends ChangeNotifier {
-  List<DataChatRoom>? listChats;
+  bool loadingListCaht=false;
+  List<DataChatRoom> listChats=[];
   List<DataChatMessage> chats = [];
   late DataChatRoom selectedChat;
   MyService service = getIt<MyService>();
@@ -19,14 +20,15 @@ class ChatState extends ChangeNotifier {
 bool chatHasNext=false;
   int pageNumber=1;
   getChatsList({bool clean=false}) async {
-    if(listChats==null)listChats=[];
+    loadingListCaht=true;notifyListeners();
     if(clean) {
       pageNumber=1;
-      listChats!.clear();
+      listChats.clear();
     };
     Map<String, dynamic> back =
         await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);
-    listChats!.addAll(back['chats']);
+    loadingListCaht=false;notifyListeners();
+    listChats.addAll(back['chats']);
     chatHasNext=pageNumber<back['total_pages'];
     print('listChats $listChats');
     notifyListeners();

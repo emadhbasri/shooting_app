@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/classes/functions.dart';
-import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/states/chat_state.dart';
-import 'chat_list.dart';
 
 class ChatBuilder extends StatelessWidget {
   const ChatBuilder({Key? key, this.state}) : super(key: key);
@@ -32,6 +27,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   TextEditingController controller = TextEditingController();
+
   late ChatState state;
   @override
   void initState() {
@@ -52,12 +48,16 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
-      print('state.selectedChat.personalInformations[1]'
-          ' ${state.selectedChat.personalInformations[1].personalInformation}');
+      int index =
+      state.selectedChat.personalInformations.indexWhere((element) =>
+        element.personalInformation!.id!=getIt<MainState>().userId);
+      DataChatRoomUser roomUser = state.selectedChat.personalInformations[index];
       return WillPopScope(
         onWillPop: ()async{
           stopTimer=true;
-          Go.pop(context,state.chats.last);
+          Go.pop(context,
+              state.chats.isNotEmpty?
+              state.chats.last:null);
           return false;
         },
         child: Scaffold(
@@ -78,7 +78,9 @@ class _ChatState extends State<Chat> {
                         child: GestureDetector(
                           onTap: () {
                             stopTimer=true;
-                            Go.pop(context,state.chats.last);
+                            Go.pop(context,
+                                state.chats.isNotEmpty?
+                                state.chats.last:null);
                           },
                           child: Icon(
                             Icons.arrow_back,
@@ -87,7 +89,7 @@ class _ChatState extends State<Chat> {
                           ),
                         ),
                       ),
-                      if (state.selectedChat.personalInformations[1]
+                      if (roomUser
                               .personalInformation !=
                           null)
                         Positioned(
@@ -97,22 +99,23 @@ class _ChatState extends State<Chat> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (state.selectedChat.personalInformations[1]
+                              if (roomUser
                                           .personalInformation!.profilePhoto !=
                                       null &&
-                                  state.selectedChat.personalInformations[1]
+                                  roomUser
                                           .personalInformation!.profilePhoto !=
                                       null)
                                 GestureDetector(
-                                  onTap: (){
-                                    Go.pushSlideAnim(context, ProfileBuilder(username: state.selectedChat.personalInformations[1].personalInformation!.userName));
-                                  },
+                                  onTap: ()async{
+                                    stopTimer=true;
+                                    await Go.pushSlideAnim(context, ProfileBuilder(username: roomUser.personalInformation!.userName));
+                                    stopTimer=false;
+                                    startTimer();
+                                    },
                                   child: CircleAvatar(
                                     radius: doubleWidth(8),
                                     backgroundColor: Colors.white,
-                                    backgroundImage: networkImage(state
-                                        .selectedChat
-                                        .personalInformations[1]
+                                    backgroundImage: networkImage(roomUser
                                         .personalInformation!
                                         .profilePhoto!),
                                   ),
@@ -127,7 +130,7 @@ class _ChatState extends State<Chat> {
                                   ),
                                   SizedBox(width: doubleWidth(3)),
                                   Text(
-                                    state.selectedChat.personalInformations[1]
+                                    roomUser
                                             .personalInformation!.fullName ??
                                         '',
                                     style: TextStyle(
@@ -138,7 +141,7 @@ class _ChatState extends State<Chat> {
                               ),
                               SizedBox(height: doubleHeight(1)),
                               Text(
-                                  '@${state.selectedChat.personalInformations[1].personalInformation!.userName}')
+                                  '@${roomUser.personalInformation!.userName}')
                             ],
                           ),
                         ),
@@ -152,9 +155,6 @@ class _ChatState extends State<Chat> {
                       padding: EdgeInsets.symmetric(
                           horizontal: doubleWidth(4), vertical: doubleHeight(2)),
                       itemBuilder: (_, index) {
-                        //state.chats[index].name==state.selectedChat.personalInformations[0].personalInformation.userName
-                        // print('index $index ${state.selectedChat.messages.length}');
-
                         if (index + 1 != state.chats.length) {
                           bool first = state.chats[index].name ==
                               state.selectedChat.personalInformations[0]
@@ -318,7 +318,7 @@ class _ChatItemState extends State<ChatItem> {
                           width: 15,
                           height: 15,
                           child: Image.asset(
-                            'images/seen.png',
+                            'assets/images/seen.png',
                             color: mainBlue,
                           )),
                     if (isMine) SizedBox(width: doubleWidth(1)),

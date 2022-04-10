@@ -14,8 +14,7 @@ class DataProfileMediaType {
   DataProfileMediaType.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
     media = convertData(data, 'media', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
   }
 
   late String id;
@@ -52,8 +51,7 @@ class DataPostLike {
 class DataCommentLike {
   DataCommentLike.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
   }
 
   DataCommentLike(this.id, this.personalInformationId);
@@ -61,12 +59,12 @@ class DataCommentLike {
   late String id;
   late String personalInformationId;
 }
+
 //0 9938284270
 class DataReplyLike {
   DataReplyLike.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
   }
   DataReplyLike(this.id, this.personalInformationId);
   late String id;
@@ -75,8 +73,7 @@ class DataReplyLike {
 
 class DataPersonalInformationViewModel {
   DataPersonalInformationViewModel.fromJson(Map<String, dynamic> data) {
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
     userName = convertData(data, 'userName', DataType.string);
     fullName = convertData(data, 'fullName', DataType.string);
     team = convertData(data, 'team', DataType.clas, classType: 'DataTeam');
@@ -97,18 +94,14 @@ class DataCommentReply {
     createdAt = convertData(data, 'createdAt', DataType.datetime);
     editeddAt = convertData(data, 'editeddAt', DataType.datetime);
     id = convertData(data, 'id', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postCommentId = convertData(data, 'postCommentId', DataType.string);
     replyDetail = convertData(data, 'replyDetail', DataType.string);
     replyLikeCount = convertData(data, 'replyLikeCount', DataType.int);
-    replyLikedBythisUser =
-        convertData(data, 'replyLikedBythisUser', DataType.bool);
-    replyLikes =
-        convertDataList<DataReplyLike>(data, 'replyLikes', 'DataReplyLike');
+    replyLikedBythisUser = convertData(data, 'replyLikedBythisUser', DataType.bool);
+    replyLikes = convertDataList<DataReplyLike>(data, 'replyLikes', 'DataReplyLike');
   }
 
   late DateTime createdAt;
@@ -127,21 +120,16 @@ class DataPostComment {
   DataPostComment.fromJson(Map<String, dynamic> data) {
     comment = convertData(data, 'comment', DataType.string);
     commentLikeCount = convertData(data, 'commentLikeCount', DataType.int);
-    commentLikedBythisUser =
-        convertData(data, 'commentLikedBythisUser', DataType.bool);
-    commentLikes = convertDataList<DataCommentLike>(
-        data, 'commentLikes', 'DataCommentLike');
-    commentReplies = convertDataList<DataCommentReply>(
-        data, 'commentReplies', 'DataCommentReply');
+    commentLikedBythisUser = convertData(data, 'commentLikedBythisUser', DataType.bool);
+    commentLikes = convertDataList<DataCommentLike>(data, 'commentLikes', 'DataCommentLike');
+    commentReplies = convertDataList<DataCommentReply>(data, 'commentReplies', 'DataCommentReply');
     commentReplyCount = convertData(data, 'commentReplyCount', DataType.int);
     createdAt = convertData(data, 'createdAt', DataType.datetime);
     editedAt = convertData(data, 'editedAt', DataType.datetime);
     id = convertData(data, 'id', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postId = convertData(data, 'postId', DataType.string);
   }
 
@@ -180,19 +168,15 @@ class DataPost {
     shares = convertData(data, 'shares', DataType.int);
     profileClicks = convertData(data, 'profileClicks', DataType.int);
     createdAt = convertData(data, 'createdAt', DataType.datetime);
-    postLikes =
-        convertDataList<DataPostLike>(data, 'postLikes', 'DataPostLike');
-    postComments = convertDataList<DataPostComment>(
-        data, 'postComments', 'DataPostComment');
-    mediaTypes =
-        convertDataList<DataMediaType>(data, 'mediaTypes', 'DataMediaType');
+    postLikes = convertDataList<DataPostLike>(data, 'postLikes', 'DataPostLike');
+    postComments = convertDataList<DataPostComment>(data, 'postComments', 'DataPostComment');
+    mediaTypes = convertDataList<DataMediaType>(data, 'mediaTypes', 'DataMediaType');
     isEdited = convertData(data, 'isEdited', DataType.bool);
     postLikeCount = convertData(data, 'postLikeCount', DataType.int);
     postCommentCount = convertData(data, 'postCommentCount', DataType.int);
-    person = convertData(data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
-    postLikedBythisUser =
-        convertData(data, 'postLikedBythisUser', DataType.bool);
+    person =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
+    postLikedBythisUser = convertData(data, 'postLikedBythisUser', DataType.bool);
   }
 
   late DateTime createdAt;
@@ -215,14 +199,13 @@ class DataPost {
 class DataUserFollower {
   DataUserFollower.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
-    followerId = convertData(data, 'followerId', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    followingId = convertData(data, 'followingId', DataType.string);
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     followByMe = convertData(data, 'followByMe', DataType.bool);
   }
 
-  late String followerId;
+  late String followingId;
   late bool followByMe;
   late String id;
   late DataPersonalInformationViewModel personalInformationViewModel;
@@ -231,9 +214,8 @@ class DataUserFollower {
 class DataUserFollowing {
   DataUserFollowing.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     followedByMe = convertData(data, 'followedByMe', DataType.bool);
   }
 
@@ -245,17 +227,14 @@ class DataUserFollowing {
 class DataNotification {
   DataNotification.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
-    personalInformationId =
-        convertData(data, 'personalInformationId', DataType.string);
-    notificationMessage =
-        convertData(data, 'notificationMessage', DataType.string);
+    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+    notificationMessage = convertData(data, 'notificationMessage', DataType.string);
     notificationMedia = convertData(data, 'notificationMedia', DataType.string);
     notificationTitle = convertData(data, 'notificationTitle', DataType.string);
     timeStamp = convertData(data, 'timeStamp', DataType.string);
     event = convertData(data, 'event', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
   }
 
   String? event;
@@ -266,6 +245,9 @@ class DataNotification {
   late String personalInformationId;
   late DataPersonalInformationViewModel personalInformationViewModel;
   late String timeStamp;
+
+  String? kind; //'privateChat',  'shot',  'user',  null
+  String? data; //'privateChatId','shotId','userId',null
 }
 
 class DataShortVideoStory {
@@ -273,9 +255,8 @@ class DataShortVideoStory {
     id = convertData(data, 'id', DataType.string);
     mediaURL = convertData(data, 'mediaURL', DataType.string);
     mimeType = convertData(data, 'mimeType', DataType.string);
-    personalInformationViewModel = convertData(
-        data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    personalInformationViewModel =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     seenStatus = convertData(data, 'seenStatus', DataType.bool);
   }
 
@@ -303,8 +284,7 @@ class DataPersonalInformation {
     followingMe = convertData(data, 'followingMe', DataType.bool);
     followedByMe = convertData(data, 'followedByMe', DataType.bool);
     posts = convertDataList<DataPost>(data, 'posts', 'DataPost');
-    userFollowers = convertDataList<DataUserFollower>(
-        data, 'userFollowers', 'DataUserFollower');
+    userFollowers = convertDataList<DataUserFollower>(data, 'userFollowers', 'DataUserFollower');
     // userFollowings = convertDataList<DataUserFollowing>(
     //     data, 'userFollowings', 'DataUserFollowing');
   }
@@ -330,8 +310,7 @@ class DataPersonalInformation {
 
 class DataChatMessage {
   DataChatMessage.fromJson(Map<String, dynamic> data) {
-    chatRoom =
-        convertData(data, 'chatRoom', DataType.clas, classType: 'DataChatRoom');
+    chatRoom = convertData(data, 'chatRoom', DataType.clas, classType: 'DataChatRoom');
     // chatRoomId=convertData(data, 'chatRoomId', DataType.string);
     id = convertData(data, 'id', DataType.string);
     name = convertData(data, 'name', DataType.string);
@@ -348,11 +327,9 @@ class DataChatMessage {
 
 class DataChatRoom {
   DataChatRoom.fromJson(Map<String, dynamic> data) {
-    chatMessages = convertDataList<DataChatMessage>(
-        data, 'chatMessages', 'DataChatMessage');
+    chatMessages = convertDataList<DataChatMessage>(data, 'chatMessages', 'DataChatMessage');
     id = convertData(data, 'id', DataType.string);
-    personalInformations = convertDataList<DataChatRoomUser>(
-        data, 'personalInformations', 'DataChatRoomUser');
+    personalInformations = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
   }
 
   List<DataChatMessage> chatMessages = [];
@@ -362,9 +339,7 @@ class DataChatRoom {
 
 class DataChatRoomUser {
   DataChatRoomUser.fromJson(Map<String, dynamic> data) {
-    personalInformation = convertData(
-        data, 'personalInformation', DataType.clas,
-        classType: 'DataPersonalInformation');
+    personalInformation = convertData(data, 'personalInformation', DataType.clas, classType: 'DataPersonalInformation');
   }
 
   DataPersonalInformation? personalInformation;
@@ -381,7 +356,7 @@ class DataStoryUser {
   DataStoryUser.fromList(List<DataStoryMain> data) {
     person = data.first.person;
     for (int j = 0; j < data.length; j++) {
-      if(data[j].person.userName=='emadhbasri'){
+      if (data[j].person.userName == 'emadhbasri') {
         print('id ${data[j].id} ${data[j].seenStatus}');
       }
       if (data[j].seenStatus) {
@@ -401,8 +376,8 @@ class DataStoryMain {
   late String mimeType;
   late bool seenStatus;
   DataStoryMain.fromJson(Map<String, dynamic> data) {
-    person = convertData(data, 'personalInformationViewModel', DataType.clas,
-        classType: 'DataPersonalInformationViewModel');
+    person =
+        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     id = convertData(data, 'id', DataType.string);
     mediaURL = convertData(data, 'mediaURL', DataType.string);
     mimeType = convertData(data, 'mimeType', DataType.string);
@@ -494,11 +469,8 @@ dynamic makeClass(Map<String, dynamic> data, String type) {
   }
 }
 
-List<Type> convertDataList<Type>(
-    Map<String, dynamic> data, String key, String classType) {
-  if (data.containsKey(key) == false ||
-      data[key] == null ||
-      data[key].isEmpty) {
+List<Type> convertDataList<Type>(Map<String, dynamic> data, String key, String classType) {
+  if (data.containsKey(key) == false || data[key] == null || data[key].isEmpty) {
     return [];
   } else {
     List<Type> temp = [];

@@ -24,6 +24,7 @@ class _FanMatesState extends State<FanMates> {
 
     return Container(
       child: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
         children: [
           ...state.personalInformation!.userFollowers
@@ -110,11 +111,11 @@ class _FanMateItemState extends State<FanMateItem> {
                           if (fan.followByMe) {
                             //unfollow
                             bool backUser = await UsersService.unFollowUser(
-                                service, fan.followerId);
+                                service, fan.followingId);
                             print('unfollow $backUser');
                           } else {
                             bool backUser = await UsersService.followUser(
-                                service, fan.followerId);
+                                service, fan.followingId);
                             print('follow $backUser');
                           }
                           fan.followByMe = !fan.followByMe;
@@ -155,10 +156,14 @@ class _FanMateItemState extends State<FanMateItem> {
                         borderRadius: BorderRadius.circular(100),
                         child: fan.personalInformationViewModel.profilePhoto !=
                                 null
-                            ? imageNetwork(
-                                fan.personalInformationViewModel.profilePhoto ??
-                                    '',
-                                fit: BoxFit.fill)
+                            ? SizedBox(
+                          width: doubleWidth(20),
+                          height: doubleWidth(20),
+                              child: imageNetwork(
+                                  fan.personalInformationViewModel.profilePhoto ??
+                                      '',
+                                  fit: BoxFit.fill),
+                            )
                             : null),
                     Align(
                       alignment: Alignment(0.9, -0.9),

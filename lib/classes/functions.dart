@@ -41,7 +41,6 @@ statusSet(Color color) async {
 Widget circle() {
   return Scaffold(
     body: Container(
-      color: Color.fromRGBO(228, 241, 246, 1),
       child: Center(child: CircularProgressIndicator()),
     ),
   );
@@ -98,8 +97,6 @@ String getMonString(DateTime date) {
   }
 }
 
-const String profileImageDefault = 'images/158023.png';
-const String profileTeamDefault = 'images/unnamed.png';
 
 copyText(String text, {String payam = 'text copied to clipboard'}) =>
     FlutterClipboard.copy(text).then((value) => toast(payam));

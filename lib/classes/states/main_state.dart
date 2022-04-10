@@ -31,7 +31,7 @@ class MainState extends ChangeNotifier {
       options: SoundpoolOptions(streamType: StreamType.notification
       )
     );
-    ByteData soundData = await rootBundle.load("images/shooting.mp3");
+    ByteData soundData = await rootBundle.load("assets/images/shooting.mp3");
     soundId = await pool.load(soundData);
 
     String? ss = await getString('userid');
@@ -52,10 +52,13 @@ class MainState extends ChangeNotifier {
   int postsPageNumber = 1;
   bool postsHasNext=false;
   List<DataPost> allPosts = [];
+  bool loadingPost=false;
   getFanFeed({bool add=false}) async {
+    loadingPost=true;notifyListeners();
     // allPosts = await ShotsService.shotsAll(service);
     print('add $add');
     Map<String,dynamic> bback = await ShotsService.fanFeed(service,pageNumber: postsPageNumber);
+    loadingPost=false;notifyListeners();
     if(add)
       allPosts.addAll(bback['list']);
     else

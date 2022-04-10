@@ -41,7 +41,7 @@ class _MatchListState extends State<MatchList> {
                   await state.getMatchsV2();
                 },
                 child: ListView(
-                  physics: BouncingScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(4), vertical: doubleHeight(2)),
                   children: [

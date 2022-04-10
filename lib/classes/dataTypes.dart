@@ -24,7 +24,7 @@ const Color mainBlue = Color.fromRGBO(63, 49, 119, 1);
 const gold = Color.fromRGBO(255, 203, 5, 1);
 final con = Container(color: red);
 
-BoxDecoration decorImage({img='images/fskldf.jpg'}){
+BoxDecoration decorImage({required String img}){
   return BoxDecoration(
       image: DecorationImage(
         fit: BoxFit.fill,
@@ -34,44 +34,6 @@ BoxDecoration decorImage({img='images/fskldf.jpg'}){
   );
 }
 
-//final BoxDecoration decorImage =BoxDecoration(
-//    image: DecorationImage(
-//      fit: BoxFit.fill,
-//      image: AssetImage('images/fskldf.jpg'),
-//    ),
-//    color: white
-//);
-//GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
-const globalkey = 5;
-class Sahm {
-  final int id;
-  final String name;
-  final String namad;
-  final int tedad;
-  final int price;
-  final int priceNow;
-  final BigInt priceAll;
-  final int persent;
-  final BigInt sood;
-  Sahm(this.id, this.name, this.namad, this.tedad, this.price, this.priceNow,
-      this.priceAll, this.persent, this.sood);
-}
-final List<BoxShadow> boxShadow = [
-  BoxShadow(
-      color: Colors.black38,
-      blurRadius: 5,
-      spreadRadius: -2,
-      offset: Offset(0, 5))
-];
-
-
-
-final conw = Container(
-  color: red,
-  width: 50,
-  height: 50,
-);
-const inf = double.infinity;
 const max = double.maxFinite;
 const non = SizedBox();
 Widget sizeh(double h) {
@@ -84,62 +46,6 @@ Widget sizew(double w) {
 
 
 
-
-
-
-final String yekan = 'IRANYekanMobileRegular';
-final String aviny = 'aviny';
-
-
-
-
-
-
-
-
-
-
-
-
-BigInt big(source) {
-  return BigInt.parse(source.toString());
-}
-
-double dob(source) {
-  return double.parse(source.toString());
-}
-
-int Int(data) {
-  return int.parse(data.toString());
-}
-
-final inv = '"Invalid Phone"';
-final inc = 'Invalid Phone';
-
-//---------------------------------------------server
-class Palette {
-  static Color primaryColor = Colors.white;
-  static Color accentColor = Color(0xff4fc3f7);
-  static Color secondaryColor = Colors.black;
-
-  static Color gradientStartColor = accentColor;
-  static Color gradientEndColor = Color(0xff6aa8fd);
-  static Color errorGradientStartColor = Color(0xffd50000);
-  static Color errorGradientEndColor = Color(0xff9b0000);
-
-  static Color primaryTextColorLight = Colors.white;
-  static Color secondaryTextColorLight = Colors.white70;
-  static Color hintTextColorLight = Colors.white70;
-
-  static Color selfMessageBackgroundColor = blue;
-//  Color(0xff4fc3f7);
-  static Color otherMessageBackgroundColor = Colors.white;
-
-  static Color selfMessageColor = Colors.white;
-  static Color otherMessageColor = Color(0xff3f3f3f);
-
-  static Color greyColor = Colors.grey;
-}
 
 
 

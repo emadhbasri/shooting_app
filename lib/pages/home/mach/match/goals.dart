@@ -53,7 +53,7 @@ class Goals extends StatelessWidget {
                                   SizedBox(
                                       width:24,
                                       height: 24,
-                                      child: Image.asset('images/football (1).png')
+                                      child: Image.asset('assets/images/football (1).png')
                                       // Icon(Icons.sports_basketball)
                                   ),
                                   SizedBox(width: doubleWidth(1)),
@@ -91,7 +91,7 @@ class Goals extends StatelessWidget {
                           SizedBox(
                               width:24,
                               height: 24,
-                              child: Image.asset('images/football (1).png')
+                              child: Image.asset('assets/images/football (1).png')
                             // Icon(Icons.sports_basketball)
                           ),
                           SizedBox(width: doubleWidth(1)),

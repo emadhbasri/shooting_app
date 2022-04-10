@@ -192,6 +192,41 @@ class AuthenticationService {
     }
     return back['status'];
   }
+
+  static Future<bool> forgotPassword(MyService service,String userName) async {
+    debugPrint('forgotPassword($userName)');
+    Map<String, dynamic> back = await service.httpPost(
+        '/api/v1/Administration/forgotPassword',
+        {'user': userName},
+        jsonType: true);
+    debugPrint('forgotPassword back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+    }
+    toast(back['data']['message'],duration: Toast.LENGTH_LONG);
+    return back['status'];
+  }
+  static Future<bool> resetPassword(MyService service,String userName,
+      String password,String confirmPassword,String otp
+      ) async {
+    debugPrint('resetPassword($userName)');
+    Map<String, dynamic> back = await service.httpPost(
+        '/api/v1/Administration/resetPassword',
+        {
+          "password": password,
+          "user": userName,
+          "confirmPassword": confirmPassword,
+          "oTP": otp},
+        jsonType: true);
+    debugPrint('resetPassword back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return false;
+    }
+    toast(back['data']['message'],duration: Toast.LENGTH_LONG);
+    return back['status'];
+  }
+
   static Future<bool> changePhone(MyService service) async {
     debugPrint('changePhone(${getIt<MainState>().personalInformation!.email})');
     Map<String, dynamic> back = await service.httpPost(

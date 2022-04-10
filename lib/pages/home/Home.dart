@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/home/mach/match_list.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/dataTypes.dart';
@@ -55,84 +56,117 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: Column(
         children: <Widget>[
           Container(
-            color: white,
-            width: max,
-            height: doubleHeight(6),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: MyTab.values
-                    .map((e) => GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              controller.animateTo(e.index);
-                              tab = e;
-                              state.tab=e;
-                            });
-                          },
-                          child: Container(
-                            color: white,
-                            width: doubleWidth(30),
-                            child: Center(
-                              child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    width: doubleWidth(30),
-                                    height: max,
-                                    padding: EdgeInsets.all(doubleWidth(3)),
-                                    child: Center(
-                                      child: Builder(builder: (context) {
-                                        switch (e) {
-                                          case MyTab.games:
-                                            return Text(
-                                              'Games'.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: mainBlue,
-                                                  fontSize: doubleWidth(4)),
-                                            );
-                                          case MyTab.fanFeed:
-                                            return Text(
-                                              'Fan Feeds'.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: mainBlue,
-                                                  fontSize: doubleWidth(4)),
-                                            );
-                                          case MyTab.stories:
-                                            return Text(
-                                              'Stories'.toUpperCase(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: mainBlue,
-                                                  fontSize: doubleWidth(4)),
-                                            );
-                                          default:
-                                            return const SizedBox();
-                                        }
-                                      }),
-                                    ),
-                                  ),
-                                  if (tab == e)
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                        width: doubleWidth(10),
-                                        height: doubleHeight(0.4),
-                                        decoration: BoxDecoration(
-                                            color: mainBlue,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(100),
-                                              topLeft: Radius.circular(100),
-                                            )),
-                                      ),
-                                    )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ))
-                    .toList()),
+            color: Colors.white,
+            child: TabBar(
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: doubleWidth(4)
+              ),
+              indicatorColor: mainBlue,
+              indicatorPadding: EdgeInsets.symmetric(
+                  horizontal: doubleWidth(10)),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: doubleHeight(0.4),
+              labelColor: mainBlue,
+              unselectedLabelColor: mainBlue,
+              tabs: [Tab(
+                // text: e,
+                child: Text(
+                  'Games'.toUpperCase(),
+                )),
+                  Tab(
+                    child: Text(
+                      'Fan Feeds'.toUpperCase(),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'Stories'.toUpperCase(),
+                    ),
+                  )
+              ],
+              controller: controller,
+            ),
           ),
+          // Container(
+          //   color: white,
+          //   width: max,
+          //   height: doubleHeight(6),
+          //   child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //       children: MyTab.values
+          //           .map((e) => GestureDetector(
+          //                 onTap: () {
+          //                   setState(() {
+          //                     controller.animateTo(e.index);
+          //                     tab = e;
+          //                     state.tab=e;
+          //                   });
+          //                 },
+          //                 child: Container(
+          //                   color: white,
+          //                   width: doubleWidth(30),
+          //                   child: Center(
+          //                     child: Stack(
+          //                       children: <Widget>[
+          //                         Container(
+          //                           width: doubleWidth(30),
+          //                           height: max,
+          //                           padding: EdgeInsets.all(doubleWidth(3)),
+          //                           child: Center(
+          //                             child: Builder(builder: (context) {
+          //                               switch (e) {
+          //                                 case MyTab.games:
+          //                                   return Text(
+          //                                     'Games'.toUpperCase(),
+          //                                     style: TextStyle(
+          //                                         fontWeight: FontWeight.bold,
+          //                                         color: mainBlue,
+          //                                         fontSize: doubleWidth(4)),
+          //                                   );
+          //                                 case MyTab.fanFeed:
+          //                                   return Text(
+          //                                     'Fan Feeds'.toUpperCase(),
+          //                                     style: TextStyle(
+          //                                         fontWeight: FontWeight.bold,
+          //                                         color: mainBlue,
+          //                                         fontSize: doubleWidth(4)),
+          //                                   );
+          //                                 case MyTab.stories:
+          //                                   return Text(
+          //                                     'Stories'.toUpperCase(),
+          //                                     style: TextStyle(
+          //                                         fontWeight: FontWeight.bold,
+          //                                         color: mainBlue,
+          //                                         fontSize: doubleWidth(4)),
+          //                                   );
+          //                                 default:
+          //                                   return const SizedBox();
+          //                               }
+          //                             }),
+          //                           ),
+          //                         ),
+          //                         if (tab == e)
+          //                           Align(
+          //                             alignment: Alignment.bottomCenter,
+          //                             child: Container(
+          //                               width: doubleWidth(10),
+          //                               height: doubleHeight(0.4),
+          //                               decoration: BoxDecoration(
+          //                                   color: mainBlue,
+          //                                   borderRadius: BorderRadius.only(
+          //                                     topRight: Radius.circular(100),
+          //                                     topLeft: Radius.circular(100),
+          //                                   )),
+          //                             ),
+          //                           )
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ))
+          //           .toList()),
+          // ),
           Expanded(
             child: TabBarView(
               controller: controller,

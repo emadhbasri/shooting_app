@@ -44,7 +44,7 @@ class UsersService {
     debugPrint('followUser($id)');
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Administration/users/follower/add',
-        {'userId': id, 'followerId': getIt<MainState>().userId},
+        {'followerId': id},
         jsonType: true);
     debugPrint('followUserback ${back}');
     if (back['status'] == false) {
@@ -57,7 +57,7 @@ class UsersService {
     debugPrint('unFollowUser($id)');
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Administration/users/unfollow?'
-        'userID=${getIt<MainState>().userId}&FollowingID=$id',
+        'friendId=$id',
         {});
     debugPrint('unFollowUserback ${back}');
     if (back['status'] == false) {

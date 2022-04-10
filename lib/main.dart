@@ -24,9 +24,9 @@ final getIt = GetIt.instance;
 late FirebaseMessaging messaging;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print('A bg message just showed up1 : ${message.messageId}');
-  _showNotificationCustomSound(message.hashCode,
-      message.notification!.title!, message.notification!.body!);
-  // await Firebase.initializeApp();
+  // _showNotificationCustomSound(message.hashCode,
+  //     message.notification!.title!, message.notification!.body!);
+  await Firebase.initializeApp();
   print('A bg message just showed up : ${message.messageId}');
 }
 
@@ -140,24 +140,13 @@ class _AppFirstState extends State<AppFirst> {
         print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
         _showNotificationCustomSound(notification.hashCode,
             notification.title!, notification.body!);
-
-        // flutterLocalNotificationsPlugin.show(
-        //     notification.hashCode,
-        //     notification.title,
-        //     notification.body,
-        //     NotificationDetails(
-        //       android: AndroidNotificationDetails(
-        //         channel.id,
-        //         channel.name,
-        //         playSound: true,
-        //         color: mainBlue,
-        //         channelShowBadge: true,
-        //         // icon: '@mipmap/ic_launcher',
-        //         channelDescription: channel.description
-        //       )
-        //     ));
       }
     });
+    // FirebaseMessaging.onBackgroundMessage((BackgroundMessageHandler message) => message);
+
+
+
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('message come in');
       RemoteNotification? notification = message.notification;
@@ -166,19 +155,6 @@ class _AppFirstState extends State<AppFirst> {
         print('message.notification!.title:${message.notification!.title}');
         print('message.notification!.body:${message.notification!.body}');
         print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
-        // _showNotificationCustomSound(notification.hashCode,
-        //     notification.title!, notification.body!);
-        // showDialog(context: context, builder: (_){
-        //   return AlertDialog(
-        //     title: Text('${notification.title}'),
-        //     content: Column(
-        //       mainAxisSize: MainAxisSize.min,
-        //       children: [
-        //         Text('${notification.body}')
-        //       ],
-        //     ),
-        //   );
-        // });
       }
     });
   }
@@ -236,18 +212,14 @@ class _AppFirstState extends State<AppFirst> {
     //       },
     //       child: Text('notif test')),),
     // );
-    // return FilePickerDemo();
-    // return Team();
     return Intro1();
-    return Intro();
-    // return StoryList();
   }
 
 }
 Future<void> _showNotificationCustomSound(int id,String title,String body) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
-    'your other channel id',
+    'channel 1',
     'your other channel name',
     channelDescription: 'your other channel description',
     sound: RawResourceAndroidNotificationSound('notif'),

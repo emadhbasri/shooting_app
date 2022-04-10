@@ -1,7 +1,9 @@
+import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
 import '../../main.dart';
+import '../../ui_items/dialogs/team.dart';
 import 'login.dart';
 import 'team.dart';
 
@@ -25,7 +27,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: decorImage(img: 'images/stadium.jpg'),
+      decoration: decorImage(img: 'assets/images/stadium.jpg'),
       child: Scaffold(
         backgroundColor: trans,
         body: Stack(
@@ -150,8 +152,8 @@ class _RegisterState extends State<Register> {
                             borderRadius: BorderRadius.circular(10)),
                         child: RaisedButton(
                           onPressed: () async {
-                            if(!phone.value.text.trim().contains('+') ||
-                            phone.value.text.trim().length<12){
+                            if (!phone.value.text.trim().contains('+') ||
+                                phone.value.text.trim().length < 12) {
                               toast('The phoneNumber is not a valid.');
                               return;
                             }
@@ -166,7 +168,7 @@ class _RegisterState extends State<Register> {
                                 confirmPassword: password.value.text);
                             if (back) {
                               service.getToken().then((bool value) {
-                                Go.pushSlideAnim(context, Team());//todo
+                                Go.pushSlideAnim(context, Team());
                               });
                             } else {
                               print('nononono');
@@ -176,7 +178,7 @@ class _RegisterState extends State<Register> {
                               borderRadius: BorderRadius.circular(10)),
                           color: mainBlue,
                           child: Text(
-                            'Register',
+                            'Sign Up',
                             style: TextStyle(
                                 fontSize: doubleWidth(5), color: white),
                           ),
@@ -211,29 +213,72 @@ class _RegisterState extends State<Register> {
                       indent: doubleWidth(6),
                       endIndent: doubleWidth(6),
                       thickness: doubleHeight(0.2),
-                    ),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                          children: [
-                            TextSpan(text: 'By signing up you agree to our '),
-                            TextSpan(
-                                text: 'Terms of Use',
-                                style: TextStyle(
-                                    color: mainGreen,
-                                    fontStyle: FontStyle.italic)),
-                            TextSpan(text: ' and'),
-                            TextSpan(
-                                text: '\nPrivacy Policy',
-                                style: TextStyle(
-                                    color: mainGreen,
-                                    fontStyle: FontStyle.italic)),
-                          ],
+                    ), //Privacy
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'By signing up you agree to our ',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: white,
                             fontSize: doubleWidth(3),
-                          )),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            showDialog(context: context, builder: (_)=>TeamDialog());
+                          },
+                          child: Text('Terms of Use',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: mainGreen,
+                                  fontSize: doubleWidth(3),
+                                  fontStyle: FontStyle.italic)),
+                        ),
+                        Text(
+                          ' and',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: white,
+                            fontSize: doubleWidth(3),
+                          ),
+                        ),
+                      ],
                     ),
+                    GestureDetector(
+                      onTap: (){
+                        showDialog(context: context, builder: (_)=>Privacy());
+                      },
+                      child: Text('Privacy Policy',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: mainGreen,
+                              fontSize: doubleWidth(3),
+                              fontStyle: FontStyle.italic)),
+                    ),
+                    // RichText(
+                    //   textAlign: TextAlign.center,
+                    //   text: TextSpan(
+                    //       children: [
+                    //         TextSpan(text: 'By signing up you agree to our '),
+                    //         TextSpan(
+                    //             text: 'Terms of Use',
+                    //             style: TextStyle(
+                    //                 color: mainGreen,
+                    //                 fontStyle: FontStyle.italic)),
+                    //         TextSpan(text: ' and'),
+                    //         TextSpan(
+                    //             text: '\nPrivacy Policy',
+                    //             style: TextStyle(
+                    //                 color: mainGreen,
+                    //                 fontStyle: FontStyle.italic)),
+                    //       ],
+                    //       style: TextStyle(
+                    //         color: white,
+                    //         fontSize: doubleWidth(3),
+                    //       )),
+                    // ),
                     sizeh(doubleHeight(7)),
                   ],
                 ),

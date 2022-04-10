@@ -17,8 +17,10 @@ class ProfileState extends ChangeNotifier {
   ProfileState(String username) {
     init(username);
   }
+  late String userName;
   init(String username) async {
     personalInformation = await UsersService.getUser(service, username);
+    userName=username;
     notifyListeners();
   }
 }

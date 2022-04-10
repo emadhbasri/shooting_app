@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/AppPage.dart';
+import 'package:shooting_app/pages/auth/forgot_password.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 
 import '../../classes/functions.dart';
@@ -26,7 +27,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: decorImage(img: 'images/stadium.jpg'),
+      decoration: decorImage(img: 'assets/images/stadium.jpg'),
       child: Scaffold(
         backgroundColor: trans,
         body: Stack(
@@ -79,16 +80,31 @@ class _LoginState extends State<Login> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   // SizedBox(height: doubleHeight(1)),
-                  // Container(
-                  //   width: max,
-                  //   child: Text(
-                  //     'Forgot Password?',
-                  //     textAlign: TextAlign.right,
-                  //     style:
-                  //         TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
-                  //   ),
-                  // ),
-                  sizeh(doubleHeight(7)),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: ()async{
+                        if(username.trim()==''){
+                          toast('The Username field is required.');
+                          return;
+                        }
+                        MyService service = getIt<MyService>();
+                        bool back = await AuthenticationService.forgotPassword(
+                            service,username.trim()
+                        );
+                        if(back){
+                          Go.pushSlideAnim(context, ForgotPassword(username: username.trim()));
+                        }
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        textAlign: TextAlign.right,
+                        style:
+                            TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
+                      ),
+                    ),
+                  ),
+                  sizeh(doubleHeight(6)),
                   Container(
                     width: max,
                     height: doubleHeight(8),
@@ -97,6 +113,14 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () async {
+                          if(username.trim()==''){
+                            toast('The Username field is required.');
+                            return;
+                          }
+                          if(password.trim()==''){
+                            toast('The Password field is required.');
+                            return;
+                          }
                           bool? back = await AuthenticationService.login(service,
                               username: username, password: password);
                           if (back!=null) {

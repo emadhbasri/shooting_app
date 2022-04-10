@@ -15,6 +15,7 @@ class ShotsService {
     required String details,
     bool isFriend = false,
     bool isPublic = true,
+        int? matchId
   }) async {
     debugPrint('createShot()');
     Map<String, dynamic> map = {
@@ -23,6 +24,7 @@ class ShotsService {
       'IsPublic': isPublic,
       'createdAt': DateTime.now().toString()
     };
+    if(matchId!=null) map['MatchId']=matchId.toString();
     if (images.isNotEmpty) {
       List<MultipartFile> temp = [];
       for (int j = 0; j < images.length; j++) {
@@ -102,26 +104,28 @@ class ShotsService {
 
   static Future<List<DataPost>> getMatchUps(//todo
     MyService service, {
-    required int teamHomeId,
-    required int teamAwayId,
-    required String date,
+      required int matchId,
+        // int pageNumber=1
+    // required int teamHomeId,
+    // required int teamAwayId,
+    // required String date,
   }) async {
     debugPrint('getMatchUps(${{
-      'team1_key': '$teamHomeId',
-      'team2_key': '$teamAwayId',
-      'date': date,
-      'userId': getIt<MainState>().userId,
+      // 'team1_key': '$teamHomeId',
+      // 'team2_key': '$teamAwayId',
+      // 'date': date,
+      // 'pageNumber': pageNumber,
+      'matchId': matchId,
     }})');
     // return [];
-
+    //
     Map<String, dynamic> back =
-        await service.httpGet('/api/v1/Shots/getmatchups?team1_key=$teamHomeId'
-            '&team2_key=$teamAwayId&date=$date'
-            // '&userId=${getIt<MainState>().userId}'
+        await service.httpGet('/api/v1/Shots/matchup?matchId=$matchId'
+            // d&pageNumber=$pageNumber'
             );
     debugPrint('back111 ${back}');
     if(back['status']==false){
-      toast(back['error']);
+      // toast(back['error']);
       return [];
     }
     return convertDataList<DataPost>(back['data'], 'data', 'DataPost');

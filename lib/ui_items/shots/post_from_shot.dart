@@ -197,7 +197,7 @@ class _PostFromShotState extends State<PostFromShot> {
                           borderRadius: BorderRadius.circular(5)),
                       padding:
                           EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
-                      child: Image.asset('images/menu.png'),
+                      child: Image.asset('assets/images/menu.png'),
                     ),
                   )
                 ],
@@ -233,7 +233,7 @@ class _PostFromShotState extends State<PostFromShot> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],
@@ -244,7 +244,7 @@ class _PostFromShotState extends State<PostFromShot> {
                   //     SizedBox(
                   //         width: doubleWidth(5),
                   //         height: doubleWidth(5),
-                  //         child: Image.asset('images/heart.png')),
+                  //         child: Image.asset('assets/images/heart.png')),
                   //     sizew(doubleWidth(1)),
                   //     Text('${widget.post.likeCount}k')
                   //   ],
@@ -302,7 +302,7 @@ class _PostFromShotState extends State<PostFromShot> {
                     child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        // child: Image.asset('images/share.png')
+                        // child: Image.asset('assets/images/share.png')
                     ),
                   )
                 ],
@@ -498,7 +498,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           borderRadius: BorderRadius.circular(5)),
                       padding:
                           EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
-                      child: Image.asset('images/menu.png'),
+                      child: Image.asset('assets/images/menu.png'),
                     ),
                   )
                 ],
@@ -577,9 +577,9 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(widget.post.postCommentCount))
+                      // Text(makeCount(widget.post.postCommentCount))
                     ],
                   ),
                   // Row(
@@ -588,7 +588,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   //     SizedBox(
                   //         width: doubleWidth(5),
                   //         height: doubleWidth(5),
-                  //         child: Image.asset('images/heart.png')),
+                  //         child: Image.asset('assets/images/heart.png')),
                   //     sizew(doubleWidth(1)),
                   //     Text('${widget.post.likeCount}k')
                   //   ],
@@ -599,8 +599,6 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       GestureDetector(
                         onTap: () async {
                           MyService service = await getIt<MyService>();
-
-
                           if (!widget.post.postLikedBythisUser) {
                             String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
@@ -633,11 +631,13 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(widget.post.postLikeCount))
+                      // Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  GestureDetector(
+                  if(widget.canDelete)
+                    GestureDetector(
                     onTap: () async{
+
                       print('canDelete ${widget.canDelete}');
                       // DataPost? backDialog = await showDialog(
                       //     context: context,
@@ -667,8 +667,11 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         width: doubleWidth(5),
                         height: doubleWidth(5),
                         child:Icon(Icons.remove_circle_outline),
-                        // child: Image.asset('images/share.png')
+                        // child: Image.asset('assets/images/share.png')
                     ),
+                  )else SizedBox(
+                    width: doubleWidth(5),
+                    height: doubleWidth(5),
                   )
                 ],
               ),
@@ -870,7 +873,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           borderRadius: BorderRadius.circular(5)),
                       padding:
                       EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
-                      child: Image.asset('images/menu.png'),
+                      child: Image.asset('assets/images/menu.png'),
                     ),
                   )
                 ],
@@ -906,7 +909,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],
@@ -917,7 +920,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                   //     SizedBox(
                   //         width: doubleWidth(5),
                   //         height: doubleWidth(5),
-                  //         child: Image.asset('images/heart.png')),
+                  //         child: Image.asset('assets/images/heart.png')),
                   //     sizew(doubleWidth(1)),
                   //     Text('${widget.post.likeCount}k')
                   //   ],
@@ -975,7 +978,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                     child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        // child: Image.asset('images/share.png')
+                        // child: Image.asset('assets/images/share.png')
                     ),
                   )
                 ],

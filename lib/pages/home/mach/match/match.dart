@@ -193,26 +193,45 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                 SizedBox(
                   height: doubleHeight(1),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: state.tabs
-                      .map((e) => TextButton(
-                          onPressed: () {
-                            int index=state.tabs.indexOf(e);
-                            _controller.animateTo(index);
-                            state.selectedTab = e;
-                            state.notify();
-                          },
-                          child: Text(
-                            e,
-                            style: TextStyle(
-                                color: state.selectedTab == e
-                                    ? Colors.black
-                                    : Colors.grey,
-                                fontSize: state.selectedTab == e ? 15 : 12),
-                          )))
-                      .toList(),
+                TabBar(
+                  isScrollable: true,
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: doubleWidth(3)
+                  ),
+                  indicatorColor: mainBlue,
+                  indicatorPadding: EdgeInsets.symmetric(
+                      horizontal: doubleWidth(5)),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: doubleHeight(0.4),
+                  labelColor: mainBlue,
+                  unselectedLabelColor: mainBlue,
+                  tabs: state.tabs.map((e) => Tab(
+                    // text: e,
+                    child: Text(e),
+                  )).toList(),
+                  controller: _controller,
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: state.tabs
+                //       .map((e) => TextButton(
+                //           onPressed: () {
+                //             int index=state.tabs.indexOf(e);
+                //             _controller.animateTo(index);
+                //             state.selectedTab = e;
+                //             state.notify();
+                //           },
+                //           child: Text(
+                //             e,
+                //             style: TextStyle(
+                //                 color: state.selectedTab == e
+                //                     ? Colors.black
+                //                     : Colors.grey,
+                //                 fontSize: state.selectedTab == e ? 15 : 12),
+                //           )))
+                //       .toList(),
+                // ),
                 SizedBox(
                   height: doubleHeight(2),
                 ),

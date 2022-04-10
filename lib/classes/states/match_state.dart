@@ -105,7 +105,7 @@ class MatchState extends ChangeNotifier {
     mainState.match!.setData(match1);
     print('matchs ${match1.fixture.id}');
     notifyListeners();
-    if(matchPage && selectedMatch.isLive!=0){
+    if(matchPage && selectedMatch.isLive==1){
       await Future.delayed(Duration(minutes: 1));
       getMatch();
     }
@@ -162,30 +162,26 @@ class MatchState extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  getMatchUps() async {
+  int matchUpPage=1;
+  getMatchUps({int? pageNumber}) async {
     if(selectedMatch.isLive==0 || selectedMatch.isLive==2)return;
     if(mainState.personalInformation!.team==null)return;
     if(selectedMatch.home.id.toString()!=mainState.personalInformation!.team!.team_key
         && selectedMatch.away.id.toString()!=mainState.personalInformation!.team!.team_key)return;
     print('getMatchUps()');
     List<DataPost> back = await ShotsService.getMatchUps(service,
-        teamHomeId: selectedMatch.home.id,
-        teamAwayId: selectedMatch.away.id,
-        date: '${selectedMatch.fixture.date!.year}-'
-            '${selectedMatch.fixture.date!.month.toString().padLeft(2, '0')}-'
-            '${selectedMatch.fixture.date!.day.toString().padLeft(2, '0')}');
+        // pageNumber: pageNumber??matchUpPage,
+      matchId: selectedMatch.fixture.id,
+    );
     selectedMatch.matchUps = back;
     leagues[selectedLeagueIndex].matchs[selectedMatchIndex].matchUps = back;
     notifyListeners();
     print('matchUps.length ${selectedMatch.matchUps.length}');
     if(matchPage && selectedMatch.isLive!=0){
       await Future.delayed(Duration(seconds: 5));
-      getMatchUps();
+      getMatchUps(pageNumber: 1);
     }
   }
-
-  // List<String> leagues = ['England','Spanish'];
 
   static DateTime date = DateTime.now();
   List<String> dates = [

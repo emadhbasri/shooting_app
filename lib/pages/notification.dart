@@ -19,6 +19,7 @@ class _MyNotificationState extends State<MyNotification> {
   late ScrollController _listController;
   bool notifHasNext = false;
   int pageNumber = 1;
+  bool loading=false;
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,13 @@ class _MyNotificationState extends State<MyNotification> {
       pageNumber=1;
       notifs.clear();
     };
+    setState(() {
+      loading=true;
+    });
     Map<String, dynamic>? back = await service.getNotif();
+    setState(() {
+      loading=false;
+    });
     if (back != null) {
       notifs.addAll(convertDataList<DataNotification>(
           back, 'results', 'DataNotification'));
@@ -54,12 +61,13 @@ class _MyNotificationState extends State<MyNotification> {
 
   @override
   Widget build(BuildContext context) {
+    if(loading)return circle();
     return RefreshIndicator(
         onRefresh: () async {
           await getData(clean: true);
         },
         child: notifs.isEmpty
-            ? ListView(
+            ? ListView(physics: AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
                 children: [
                   SizedBox(

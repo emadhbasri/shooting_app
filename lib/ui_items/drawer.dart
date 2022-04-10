@@ -78,12 +78,16 @@ class _MyDrawerState extends State<MyDrawer>
                                               .personalInformation!
                                               .profilePhoto !=
                                           null
-                                      ? imageNetwork(
-                                          getIt<MainState>()
-                                                  .personalInformation!
-                                                  .profilePhoto ??
-                                              '',
-                                          fit: BoxFit.fill)
+                                      ? SizedBox(
+                                    width: doubleWidth(15),
+                                    height: doubleWidth(15),
+                                        child: imageNetwork(
+                                            getIt<MainState>()
+                                                    .personalInformation!
+                                                    .profilePhoto ??
+                                                '',
+                                            fit: BoxFit.fill),
+                                      )
                                       : null),
                               Align(
                                 alignment: Alignment(1, -0.9),

@@ -77,7 +77,7 @@ class _IntroState extends State<Intro> {
                           width: doubleWidth(32),
                           height: doubleWidth(32),
                           child: Image.asset(
-                            'images/soccerBall.png',
+                            'assets/images/soccerBall.png',
                             fit: BoxFit.fill,
                           ),
                         ),

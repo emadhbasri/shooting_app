@@ -131,7 +131,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png',color: greenCall,)),
+                          child: Image.asset('assets/images/chat(2).png',color: greenCall,)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentReplyCount))
                     ],
@@ -403,9 +403,9 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(comment.commentReplyCount))
+                      // Text(makeCount(comment.commentReplyCount))
                     ],
                   ),
                   Row(
@@ -427,7 +427,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
 
                             bool back = await ShotsService.deleteCommentLike(
                                 service,
-                                commentId: comment.id);
+                                commentId: comment.commentLikes.first.id);
                             if (back)
                               setState(() {
                                 comment.commentLikes.clear();
@@ -446,10 +446,6 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount))
-                      // SizedBox(
-                      //     width: doubleWidth(5),
-                      //     height: doubleWidth(5),
-                      //     child: Image.asset('images/heart.png'))
                     ],
                   ),
                   Tooltip(

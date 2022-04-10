@@ -63,7 +63,7 @@ class _TeamState extends State<Team> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: decorImage(img: 'images/stadium.jpg'),
+      decoration: decorImage(img: 'assets/images/stadium.jpg'),
       child: Scaffold(
         backgroundColor: trans,
         body: Stack(

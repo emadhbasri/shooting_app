@@ -1,62 +1,5 @@
-// SizedBox(
-//   width: max,
-//   height: doubleHeight(9),
-//   child: SingleChildScrollView(
-//     scrollDirection: Axis.horizontal,
-//     child: Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: <Widget>[
-//         Container(
-//           width: doubleHeight(9),
-//           height: doubleHeight(9),
-//           padding: EdgeInsets.all(doubleWidth(2)),
-//           child: Container(
-//             decoration: BoxDecoration(
-//                 color: white,
-//                 borderRadius: BorderRadius.circular(100),
-//                 image: DecorationImage(
-//                   image: AssetImage('images/158023.png'),
-//                 )),
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(100),
-//                 color: mainBlue.withOpacity(0.6),
-//               ),
-//               child: Center(
-//                 child: Icon(
-//                   Icons.add,
-//                   color: white,
-//                   size: doubleWidth(9),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//         ...List.generate(15, (index) {
-//           return index;
-//         })
-//             .map(
-//               (e) => Container(
-//                 width: doubleHeight(9),
-//                 height: doubleHeight(9),
-//                 padding: EdgeInsets.all(doubleWidth(2)),
-//                 child: Container(
-//                   decoration: BoxDecoration(
-//                       color: white,
-//                       border: Border.all(color: mainGreen),
-//                       borderRadius: BorderRadius.circular(100),
-//                       image: DecorationImage(
-//                           image: AssetImage('images/158023.png'))),
-//                 ),
-//               ),
-//             )
-//             .toList()
-//       ],
-//     ),
-//   ),
-// ),
+
 import 'package:provider/provider.dart';
-import 'package:dashed_circle/dashed_circle.dart';
 import 'package:shooting_app/pages/home/story/story_view.dart';
 
 import '../../../classes/states/main_state.dart';
@@ -91,11 +34,9 @@ class _StoryListState extends State<StoryList> {
         return RefreshIndicator(
           onRefresh: () async {
             await state.getStories();
-            // await state.getMyStories();
-            // await state.getFanFeed();
           },
           child: Scaffold(
-            body: ListView(
+            body: ListView(physics: AlwaysScrollableScrollPhysics(),
               children: [
                 ListTile(
                   onTap: () {

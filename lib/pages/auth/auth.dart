@@ -20,7 +20,7 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: decorImage(img: 'images/stadium.jpg'),
+      decoration: decorImage(img: 'assets/images/stadium.jpg'),
 //    color: black,
       child: WillPopScope(
         onWillPop: () async {
@@ -70,7 +70,7 @@ class _AuthState extends State<Auth> {
                           borderRadius: BorderRadius.circular(10)),
                       color: mainBlue,
                       child: Text(
-                        'Register',
+                        'Sign Up',
                         style:
                             TextStyle(fontSize: doubleWidth(5), color: white),
                       ),

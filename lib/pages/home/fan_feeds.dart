@@ -40,14 +40,14 @@ class _FanFeedsState extends State<FanFeeds> {
   Widget build(BuildContext context) {
     return Consumer<MainState>(
       builder: (context, state, child) {
-
+        if(state.loadingPost)return circle();
         return RefreshIndicator(
             onRefresh: () async {
               state.postsPageNumber = 1;
               state.postsHasNext = false;
               await state.getFanFeed();
             },
-            child: state.allPosts.isEmpty?ListView(
+            child: state.allPosts.isEmpty?ListView(physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
               children: [
                 SizedBox(

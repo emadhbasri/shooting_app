@@ -34,12 +34,12 @@ class MatchUps extends StatelessWidget {
           child: Text('Match Is Not started'),
         ),
       );
-    if(state.selectedMatch.isLive==2)
-      return SizedBox.expand(
-        child: Center(
-          child: Text('Match Is Finished'),
-        ),
-      );
+    // if(state.selectedMatch.isLive==2)
+    //   return SizedBox.expand(
+    //     child: Center(
+    //       child: Text('Match Is Finished'),
+    //     ),
+    //   );
     if(state.selectedMatch.matchUps.isEmpty){
       return SizedBox.expand(
         child: Center(

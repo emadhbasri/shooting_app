@@ -29,7 +29,7 @@ class _ShotsState extends State<Shots> {
           ],
         );
     return ListView(
-      // physics: BouncingScrollPhysics(),
+      physics: AlwaysScrollableScrollPhysics(),
         children: state.personalInformation!.posts.map((e) =>
             PostFromShotProfile(
               key: UniqueKey(),

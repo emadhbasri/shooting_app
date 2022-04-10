@@ -6,14 +6,8 @@ import 'package:shooting_app/pages/chat/chat.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
-// class ChatListBuilder extends StatelessWidget {
-//   const ChatListBuilder({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ChatStateProvider(child: ChatList());
-//   }
-// }
+import '../../classes/states/main_state.dart';
+import '../../main.dart';
 
 class ChatList extends StatefulWidget {
   const ChatList({Key? key}) : super(key: key);
@@ -32,8 +26,8 @@ class _ChatListState extends State<ChatList> {
     state.init();
     _listController = ScrollController()
       ..addListener(() {
-          if (state.listChats!=null &&
-          state.listChats!.isNotEmpty
+          if (
+          state.listChats.isNotEmpty
               && _listController.position.atEdge &&
               _listController.offset != 0.0) {
             debugPrint("notifHasNext ${state.chatHasNext}");
@@ -49,15 +43,16 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return Consumer<ChatState>(
       builder: (context, state, child) {
-        if (state.listChats == null) return circle();
+        if (state.loadingListCaht) return circle();
 
         return Scaffold(
             body: RefreshIndicator(
           onRefresh: () async {
             await state.getChatsList(clean: true);
           },
-          child: state.listChats!.isEmpty
+          child: state.listChats.isEmpty
               ? ListView(
+            physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
                   children: [
                     SizedBox(
@@ -67,11 +62,12 @@ class _ChatListState extends State<ChatList> {
                   ],
                 )
               : ListView(
+            physics: AlwaysScrollableScrollPhysics(),
                   controller: _listController,
                   padding: EdgeInsets.symmetric(
                       vertical: doubleHeight(2), horizontal: doubleWidth(4)),
                   children: [
-                    ...state.listChats!
+                    ...state.listChats
                         .map((e) => Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -79,7 +75,7 @@ class _ChatListState extends State<ChatList> {
                                   chat: e,
                                   state: state,
                                 ),
-                                if (e != state.listChats!.last)
+                                if (e != state.listChats.last)
                                   Divider(color: grayCallDark)
                               ],
                             ))
@@ -108,6 +104,10 @@ class ChatListItem extends StatelessWidget {
   final ChatState state;
   @override
   Widget build(BuildContext context) {
+    int index =
+    chat.personalInformations.indexWhere((element) =>
+    element.personalInformation!.id!=getIt<MainState>().userId);
+    DataChatRoomUser roomUser = chat.personalInformations[index];
     return ListTile(
       onTap: () async {
         state.selectedChat = chat;
@@ -127,19 +127,19 @@ class ChatListItem extends StatelessWidget {
         width: doubleWidth(15),
         child: Stack(
           children: [
-            if (chat.personalInformations[1].personalInformation != null)
+            if (roomUser.personalInformation != null)
               ClipRRect(
                   borderRadius: BorderRadius.circular(100),
-                  child: chat.personalInformations[1].personalInformation!
+                  child: roomUser.personalInformation!
                               .profilePhoto ==
                           null
                       ? null
                       : imageNetwork(
-                          chat.personalInformations[1].personalInformation!
+                          roomUser.personalInformation!
                                   .profilePhoto ??
                               '',
                           fit: BoxFit.fill)),
-            if (chat.personalInformations[1].personalInformation!.isOnline)
+            if (roomUser.personalInformation!.isOnline)
               Align(
                 alignment: Alignment(0.9, 0.9),
                 child: CircleAvatar(
@@ -151,7 +151,7 @@ class ChatListItem extends StatelessWidget {
         ),
       ),
       title: Text(
-          chat.personalInformations[1].personalInformation?.fullName ?? ''),
+          roomUser.personalInformation?.fullName ?? ''),
       subtitle: chat.chatMessages.isEmpty
           ? null
           : Text(

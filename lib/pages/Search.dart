@@ -141,7 +141,7 @@ class _SearchState extends State<Search> {
               return Center(child: Text('no shot'));
             } else {
               return ListView(
-                  physics: BouncingScrollPhysics(),
+
                   padding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(5), vertical: doubleHeight(2)),
                   children: posts!

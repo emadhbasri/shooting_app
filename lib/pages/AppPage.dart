@@ -95,7 +95,7 @@ class _AppPageState extends State<AppPage> {
   //                       width: doubleWidth(12),
   //                       height: doubleWidth(12),
   //                       padding: EdgeInsets.all(doubleWidth(2.5)),
-  //                       child: Image.asset('images/live-stream.png'),
+  //                       child: Image.asset('assets/images/live-stream.png'),
   //                     ),
   //                     SizedBox(height: doubleHeight(1)),
   //                     Text(
@@ -133,7 +133,7 @@ class _AppPageState extends State<AppPage> {
   //                         width: doubleWidth(12),
   //                         height: doubleWidth(12),
   //                         padding: EdgeInsets.all(doubleWidth(2)),
-  //                         child: Image.asset('images/football.png'),
+  //                         child: Image.asset('assets/images/football.png'),
   //                       ),
   //                     ),
   //                     SizedBox(height: doubleHeight(1)),
@@ -331,8 +331,8 @@ class _AppPageState extends State<AppPage> {
                           height: max,
                           padding: EdgeInsets.all(doubleWidth(3)),
                           child: currentIndex == 0
-                              ? Image.asset('images/homebuttom2.png')
-                              : Image.asset('images/homebuttom.png'),
+                              ? Image.asset('assets/images/homebuttom2.png')
+                              : Image.asset('assets/images/homebuttom.png'),
                         ),
                       ),
                       currentIndex == 0
@@ -374,8 +374,8 @@ class _AppPageState extends State<AppPage> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: currentIndex == 1
-                                      ? Image.asset('images/chat.png')
-                                      : Image.asset('images/chat(1).png'),
+                                      ? Image.asset('assets/images/chat.png')
+                                      : Image.asset('assets/images/chat(1).png'),
                                 ),
                                 // Align(
                                 //     alignment: Alignment(1.4, -1.1),
@@ -462,7 +462,7 @@ class _AppPageState extends State<AppPage> {
                           return Container(
                               width: doubleWidth(9),
                               height: doubleWidth(9),
-                              child: Image.asset('images/soccer.png'));
+                              child: Image.asset('assets/images/soccer.png'));
                           // if (centerButton == 1) {
                           //   return Icon(
                           //     Icons.add,
@@ -479,12 +479,12 @@ class _AppPageState extends State<AppPage> {
                           //   return Container(
                           //       width: doubleWidth(9),
                           //       height: doubleWidth(9),
-                          //       child: Image.asset('images/soccer.png'));
+                          //       child: Image.asset('assets/images/soccer.png'));
                           // } else {
                           //   return Container(
                           //       width: doubleWidth(9),
                           //       height: doubleWidth(9),
-                          //       child: Image.asset('images/soccerBall.png'));
+                          //       child: Image.asset('assets/images/soccerBall.png'));
                           // }
                         },
                       ),
@@ -508,8 +508,8 @@ class _AppPageState extends State<AppPage> {
                           height: max,
                           padding: EdgeInsets.all(doubleWidth(3)),
                           child: currentIndex == 3
-                              ? Image.asset('images/flashlight.png')
-                              : Image.asset('images/flashlight(1).png'),
+                              ? Image.asset('assets/images/flashlight.png')
+                              : Image.asset('assets/images/flashlight(1).png'),
                         ),
                       ),
                       currentIndex == 3

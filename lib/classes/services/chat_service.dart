@@ -16,7 +16,7 @@ class ChatService{
       return [];
     }
 
-    return convertDataList<DataChatMessage>(back['data'], 'results', 'DataChatMessage');
+    return convertDataList<DataChatMessage>(back['data'], 'data', 'DataChatMessage');
   }
 
   static Future<Map<String,dynamic>> getMyPrivateChats(MyService service,{//todo
@@ -52,10 +52,14 @@ class ChatService{
     required String chatRoomId,
     required String message,
   }) async {
-    debugPrint('sendMessage()');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    debugPrint('sendMessage($chatRoomId,$message)');//3530f18b-a1ed-406e-0914-08da04b81c0f
     Map<String, dynamic> back = await service.httpPost('/api/v1/Message/sendMessage?'
-        'chatRoomId=$chatRoomId&timeStamp=${DateTime.now()}&message=$message',{});
-    debugPrint('back ${back}');
+        'chatRoomId=$chatRoomId&timeStamp=${DateTime.now().toString()}&message=$message',{
+      // 'chatRoomId':chatRoomId,
+      // 'timeStamp':DateTime.now().toString(),
+      // 'message':message,
+    });
+    debugPrint('back sendMessage ${back}');
     if(back['status']==false){
       toast(back['error']);
     }

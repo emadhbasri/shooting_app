@@ -24,27 +24,39 @@ class MyService {
     debugPrint('getToken()');
     // print('DateTime.now() ${DateTime.parse('2022-04-02 19:08:31.439854').toString()}');
     // setString('date', '2022-03-20 19:08:31.439854');
-    // await deviceData();
 
     _refresh = await getString('refresh');
     _access = await getString('access');
     debugPrint('_refresh $_refresh');
     debugPrint('_access $_access');
     if (_access == null) return false;
-    // String? dateStr = await getString('date');
-    // DateTime time;
-    // print('dateStr ${dateStr}');
-    // if(dateStr!=null){
-    //   time=DateTime.parse(dateStr);
-    //   Duration duration = DateTimeRange(start: time, end: DateTime.now()).duration;
-    //   if(duration.inDays>10){
-    //     // httpPost('/api/v1/Administration/refreshToken', {
-    //     //   'accessToken':_access,
-    //     //   'refreshToken':_refresh,
-    //     // });
-    //   }
-    // }
-      MainState state = getIt<MainState>();
+    String? dateStr = await getString('date');
+    DateTime time;
+    print('dateStr ${dateStr}');
+    MainState state = getIt<MainState>();
+    if(dateStr!=null){
+      time=DateTime.parse(dateStr);
+      Duration duration = DateTimeRange(start: time, end: DateTime.now()).duration;
+      print('duration.inDays ${duration.inDays}');
+      if(duration.inDays>25){
+        print('asda');
+        // return false;
+        Map back = await httpPost('/api/v1/Administration/refreshToken', {
+          'accessToken':_access,
+          'refreshToken':_refresh,
+        },jsonType: true);
+        print('refresh back $back');
+        if(back['status']){
+          _access=back['data']['accessToken'];
+          await setToken(refresh: _refresh!, access: _access!);
+          await state.init();
+          return true;
+        }else{
+          return false;
+        }
+      }
+    }
+
     await state.init();
     return true;
     // if (_refresh != null) await getAccess();
@@ -310,15 +322,6 @@ class MyService {
   Future<Map<String, dynamic>> httpPostMulti(String url, FormData formData,
       {bool jsonType = false}) async {
     Dio dio = Dio();
-    // var formData = FormData.fromMap({
-    // 'name': 'wendux',
-    // 'age': 25,
-    // 'file': await MultipartFile.fromFile('./text.txt', filename: 'upload.txt'),
-    // 'files': [
-    //   await MultipartFile.fromFile('./text1.txt', filename: 'text1.txt'),
-    //   await MultipartFile.fromFile('./text2.txt', filename: 'text2.txt'),
-    // ]
-    // });
     Response utf = await dio
         .post(_server + url,
             options: Options(headers: {
@@ -357,8 +360,18 @@ class MyService {
         utf.statusCode == 200 ||
         utf.statusCode == 204) {
       return {'status': true, 'data': utf.data};
-    } else {
-      return {'status': false, 'error': utf.data['message']};
+    } else if(utf.data is Map){
+
+      if (utf.data.containsKey('errors')) {
+        return {'status': false, 'error': utf.data['errors']};
+      }else if(utf.data.containsKey('data') && utf.data['data'] is List){
+        List ll = utf.data['data'];
+        return {'status': false, 'error': ll.length>1?ll.join('\n'):ll.first};
+      } else {
+        return {'status': false, 'error': utf.data['message']};
+      }
+    }else{
+      return {'status': false, "data": false,'error':utf.data};
     }
   }
 
