@@ -45,8 +45,8 @@ android {
         applicationId "com.footballbuzz.android"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 5
-        versionName '0.2.0'
+        versionCode 6
+        versionName '1.0.0'
         multiDexEnabled true
     }
 

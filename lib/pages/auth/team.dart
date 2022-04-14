@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/live_match_service.dart';
@@ -37,7 +38,7 @@ class _TeamState extends State<Team> {
   DataLeagueMain? league;
   getLeagues() async {
     leagues = await liveMatch.leagues(
-      country: country!.name,
+      country: country==null?'England':country!.name,
     );
     setState(() {});
     print('leagues ${leagues.length}');
@@ -57,6 +58,17 @@ class _TeamState extends State<Team> {
   void initState() {
     super.initState();
     statusSet(trans);
+    init();
+  }
+  bool loading=true;
+  init()async{
+    List<Future> futures = [];
+    futures.add(getCountries());
+    futures.add(getLeagues());
+    await Future.wait(futures);
+    setState(() {
+      loading=false;
+    });
     getCountries();
   }
 
@@ -161,143 +173,161 @@ class _TeamState extends State<Team> {
                     style: TextStyle(fontSize: doubleWidth(4), color: white),
                   ),
                   sizeh(doubleHeight(3)),
-                  ClipRRect(
-                    child: Container(
-                      width: max,
-                      height: doubleHeight(7),
-                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
-                      color: Color.fromRGBO(216, 216, 216, 1),
-                      child: Center(
-                        child: DropdownButton<DataCountry>(
-                          items: countries
-                              .map((e) => DropdownMenuItem<DataCountry>(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (e.flag != null)
-                                          SizedBox(
-                                            width: doubleWidth(5),
-                                            height: doubleWidth(5),
-                                            child: SvgPicture.network(e.flag!),
-                                          ),
-                                        SizedBox(width: doubleWidth(2)),
-                                        Text('${e.name} ' +
-                                            '${e.code != null ? '(${e.code})' : ''}'),
-                                      ],
-                                    ),
-                                    value: e,
-                                  ))
-                              .toList(),
-                          onChanged: (e) {
-                            if (e != null) {
-                              setState(() {
-                                country = e;
-                              });
-                              getLeagues();
-                            }
-                          },
-                          underline: non,
-                          isDense: true,
-                          iconSize: 30,
-                          borderRadius: BorderRadius.circular(10),
-                          value: country,
-                          isExpanded: true,
-                          hint: Text('Countries'),
-                          icon: Icon(Icons.keyboard_arrow_down),
+                  Stack(
+                    children: [
+                      Opacity(
+                        opacity: !loading?1:0,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipRRect(
+                              child: Container(
+                                width: max,
+                                height: doubleHeight(7),
+                                padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
+                                color: Color.fromRGBO(216, 216, 216, 1),
+                                child: Center(
+                                  child: DropdownButton<DataCountry>(
+                                    items: countries
+                                        .map((e) => DropdownMenuItem<DataCountry>(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (e.flag != null)
+                                            SizedBox(
+                                              width: doubleWidth(5),
+                                              height: doubleWidth(5),
+                                              child: SvgPicture.network(e.flag!),
+                                            ),
+                                          SizedBox(width: doubleWidth(2)),
+                                          Text('${e.name} ' +
+                                              '${e.code != null ? '(${e.code})' : ''}'),
+                                        ],
+                                      ),
+                                      value: e,
+                                    ))
+                                        .toList(),
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() {
+                                          country = e;
+                                        });
+                                        getLeagues();
+                                      }
+                                    },
+                                    underline: non,
+                                    isDense: true,
+                                    iconSize: 30,
+                                    borderRadius: BorderRadius.circular(10),
+                                    value: country,
+                                    isExpanded: true,
+                                    hint: Text('Countries'),
+                                    icon: Icon(Icons.keyboard_arrow_down),
+                                  ),
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            sizeh(doubleHeight(1.3)),
+                            ClipRRect(
+                              child: Container(
+                                width: max,
+                                height: doubleHeight(7),
+                                padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
+                                color: Color.fromRGBO(216, 216, 216, 1),
+                                child: Center(
+                                  child: DropdownButton<DataLeagueMain>(
+                                    items: leagues
+                                        .map((e) => DropdownMenuItem<DataLeagueMain>(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (e.league.logo != null)
+                                            SizedBox(
+                                                width: doubleWidth(10),
+                                                height: doubleWidth(10),
+                                                child: imageNetwork(e.league.logo!)),
+                                          SizedBox(width: doubleWidth(2)),
+                                          Expanded(
+                                              child: Text(e.league.name,overflow: TextOverflow.ellipsis,))
+                                        ],
+                                      ),
+                                      value: e,
+                                    ))
+                                        .toList(),
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() {
+                                          league = e;
+                                        });
+                                        getTeams();
+                                      }
+                                    },
+                                    underline: non,
+                                    isDense: true,
+                                    iconSize: 30,
+                                    borderRadius: BorderRadius.circular(10),
+                                    value: league,
+                                    isExpanded: true,
+                                    hint: Text('Leagues'),
+                                    icon: Icon(Icons.keyboard_arrow_down),
+                                  ),
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            sizeh(doubleHeight(1.3)),
+                            ClipRRect(
+                              child: Container(
+                                width: max,
+                                height: doubleHeight(7),
+                                padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
+                                color: Color.fromRGBO(216, 216, 216, 1),
+                                child: Center(
+                                  child: DropdownButton<DataMatchTeam>(
+                                    items: teams
+                                        .map((e) => DropdownMenuItem<DataMatchTeam>(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (e.logo != null)
+                                            imageNetwork(e.logo!),
+                                          SizedBox(width: doubleWidth(2)),
+                                          Text(e.name)
+                                        ],
+                                      ),
+                                      value: e,
+                                    ))
+                                        .toList(),
+                                    onChanged: (e) {
+                                      if (e != null) {
+                                        setState(() {
+                                          team = e;
+                                          searchTeam = e;
+                                        });
+                                      }
+                                    },
+                                    underline: non,
+                                    isDense: true,
+                                    iconSize: 30,
+                                    borderRadius: BorderRadius.circular(10),
+                                    value: team,
+                                    isExpanded: true,
+                                    hint: Text('Teams'),
+                                    icon: Icon(Icons.keyboard_arrow_down),
+                                  ),
+                                ),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            sizeh(doubleHeight(1.3)),
+                          ],
                         ),
                       ),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
+                      if(loading)
+                      simpleCircle()
+                    ],
                   ),
-                  sizeh(doubleHeight(1.3)),
-                  ClipRRect(
-                    child: Container(
-                      width: max,
-                      height: doubleHeight(7),
-                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
-                      color: Color.fromRGBO(216, 216, 216, 1),
-                      child: Center(
-                        child: DropdownButton<DataLeagueMain>(
-                          items: leagues
-                              .map((e) => DropdownMenuItem<DataLeagueMain>(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (e.league.logo != null)
-                                          imageNetwork(e.league.logo!),
-                                        SizedBox(width: doubleWidth(2)),
-                                        Text(e.league.name)
-                                      ],
-                                    ),
-                                    value: e,
-                                  ))
-                              .toList(),
-                          onChanged: (e) {
-                            if (e != null) {
-                              setState(() {
-                                league = e;
-                              });
-                              getTeams();
-                            }
-                          },
-                          underline: non,
-                          isDense: true,
-                          iconSize: 30,
-                          borderRadius: BorderRadius.circular(10),
-                          value: league,
-                          isExpanded: true,
-                          hint: Text('Leagues'),
-                          icon: Icon(Icons.keyboard_arrow_down),
-                        ),
-                      ),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  sizeh(doubleHeight(1.3)),
-                  ClipRRect(
-                    child: Container(
-                      width: max,
-                      height: doubleHeight(7),
-                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(5)),
-                      color: Color.fromRGBO(216, 216, 216, 1),
-                      child: Center(
-                        child: DropdownButton<DataMatchTeam>(
-                          items: teams
-                              .map((e) => DropdownMenuItem<DataMatchTeam>(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (e.logo != null)
-                                          imageNetwork(e.logo!),
-                                        SizedBox(width: doubleWidth(2)),
-                                        Text(e.name)
-                                      ],
-                                    ),
-                                    value: e,
-                                  ))
-                              .toList(),
-                          onChanged: (e) {
-                            if (e != null) {
-                              setState(() {
-                                team = e;
-                                searchTeam = e;
-                              });
-                            }
-                          },
-                          underline: non,
-                          isDense: true,
-                          iconSize: 30,
-                          borderRadius: BorderRadius.circular(10),
-                          value: team,
-                          isExpanded: true,
-                          hint: Text('Teams'),
-                          icon: Icon(Icons.keyboard_arrow_down),
-                        ),
-                      ),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  sizeh(doubleHeight(1.3)),
                   Container(
                     width: max,
                     height: doubleHeight(8),

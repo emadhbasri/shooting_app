@@ -37,6 +37,7 @@ class _AppPageState extends State<AppPage> {
   }
 
   int currentIndex = 0;
+  int subIndex = 1;
   // loopChange() async {
   //   if (centerButton == 1) {
   //     setState(() {
@@ -234,7 +235,7 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Norification'.toUpperCase(),
+          'notification'.toUpperCase(),
           style: TextStyle(color: white),
         ),
       );
@@ -274,10 +275,25 @@ class _AppPageState extends State<AppPage> {
       builder: (context, state, child) {
         return WillPopScope(
             onWillPop: () async {
-              // statusSet(trans);
-              if (state.isOnMatchPage && currentIndex == 0) {
-                return true;
+              if (currentIndex == 0) {
+                if (state.isOnMatchPage) {
+                  return true;
+                }else{
+                  print('testaaa');
+                  setState(() {
+                    subIndex=0;
+                  });
+                  Future.delayed(Duration(milliseconds: 50),(){
+                    setState(() {
+                      subIndex=1;
+                    });
+                  });
+                  return false;
+                }
               } else {
+                setState(() {
+                  currentIndex=0;
+                });
                 return false;
               }
             },
@@ -297,7 +313,7 @@ class _AppPageState extends State<AppPage> {
             //   return outButtonClick(MyProfileBuilder());
             // }
             if (currentIndex == 0) {
-              return Home();
+              return subIndex==1?Home():const SizedBox();
             } else if (currentIndex == 1) {
               return ChatList();
             } else if (currentIndex == 3) {

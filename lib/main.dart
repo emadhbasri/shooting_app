@@ -10,6 +10,7 @@ import 'classes/states/main_state.dart';
 import 'classes/states/match_state.dart';
 import 'classes/dataTypes.dart';
 import 'classes/functions.dart';
+import 'pages/auth/team.dart';
 import 'pages/intro.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -168,14 +169,7 @@ class _AppFirstState extends State<AppFirst> {
       badge: true,
       sound: true,
     );
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        MacOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+
   }
 
   @override
@@ -212,6 +206,7 @@ class _AppFirstState extends State<AppFirst> {
     //       },
     //       child: Text('notif test')),),
     // );
+    // return Team();
     return Intro1();
   }
 

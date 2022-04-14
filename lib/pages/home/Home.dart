@@ -12,6 +12,8 @@ import 'fan_feeds.dart';
 import 'story/story_list.dart';
 
 class Home extends StatefulWidget {
+  final int? index;
+  const Home({Key? key, this.index}) : super(key: key);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -29,7 +31,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     state = Provider.of(context,listen: false);
-    controller=TabController(length: 3, vsync: this,initialIndex: state.tab.index)..addListener(() {
+    controller=TabController(length: 3, vsync: this,initialIndex: 1)..addListener(() {
       switch(controller.index){
         case 0:setState(() {
           tab=MyTab.games;

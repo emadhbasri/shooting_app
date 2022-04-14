@@ -208,7 +208,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                   unselectedLabelColor: mainBlue,
                   tabs: state.tabs.map((e) => Tab(
                     // text: e,
-                    child: Text(e),
+                    child: Text(e.toUpperCase()),
                   )).toList(),
                   controller: _controller,
                 ),

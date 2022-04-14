@@ -18,6 +18,7 @@ class _RegisterState extends State<Register> {
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool obscureText = true;
   @override
   void initState() {
     statusSet(trans);
@@ -133,8 +134,20 @@ class _RegisterState extends State<Register> {
                         color: Color.fromRGBO(216, 216, 216, 1),
                         child: Center(
                           child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
                             controller: password,
+                            obscureText: obscureText,
                             decoration: InputDecoration(
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      obscureText = !obscureText;
+                                    });
+                                  },
+                                  child: Icon(!obscureText
+                                      ? Icons.remove_red_eye
+                                      : Icons.visibility_off),
+                                ),
                                 prefixText: '        ',
                                 border: InputBorder.none,
                                 hintText: 'Password'),
@@ -160,12 +173,12 @@ class _RegisterState extends State<Register> {
                             MyService service = getIt<MyService>();
                             bool back = await AuthenticationService.register(
                                 service,
-                                fullName: name.value.text,
-                                userName: username.value.text,
-                                phoneNumber: phone.value.text,
-                                email: email.value.text,
-                                password: password.value.text,
-                                confirmPassword: password.value.text);
+                                fullName: name.value.text.trim(),
+                                userName: username.value.text.trim(),
+                                phoneNumber: phone.value.text.trim(),
+                                email: email.value.text.trim(),
+                                password: password.value.text.trim(),
+                                confirmPassword: password.value.text.trim());
                             if (back) {
                               service.getToken().then((bool value) {
                                 Go.pushSlideAnim(context, Team());

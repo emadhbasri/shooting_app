@@ -225,16 +225,23 @@ class DataUserFollowing {
 }
 
 class DataNotification {
-  DataNotification.fromJson(Map<String, dynamic> data) {
-    id = convertData(data, 'id', DataType.string);
-    personalInformationId = convertData(data, 'personalInformationId', DataType.string);
-    notificationMessage = convertData(data, 'notificationMessage', DataType.string);
-    notificationMedia = convertData(data, 'notificationMedia', DataType.string);
-    notificationTitle = convertData(data, 'notificationTitle', DataType.string);
-    timeStamp = convertData(data, 'timeStamp', DataType.string);
-    event = convertData(data, 'event', DataType.string);
-    personalInformationViewModel =
-        convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
+  DataNotification.fromJson(Map<String, dynamic> out) {
+    id = convertData(out, 'id', DataType.string);
+    personalInformationId =
+        convertData(out, 'personalInformationId', DataType.string);
+    notificationMessage =
+        convertData(out, 'notificationMessage', DataType.string);
+    notificationMedia = convertData(out, 'notificationMedia', DataType.string);
+    notificationTitle = convertData(out, 'notificationTitle', DataType.string);
+    timeStamp = convertData(out, 'timeStamp', DataType.string);
+    event = convertData(out, 'event', DataType.string);
+    kind = convertData(out, 'kind', DataType.string);
+
+    data = convertData(out, 'data', DataType.string);
+    print('aaa $data $kind');
+    personalInformationViewModel = convertData(
+        out, 'personalInformationViewModel', DataType.clas,
+        classType: 'DataPersonalInformationViewModel');
   }
 
   String? event;
@@ -244,7 +251,7 @@ class DataNotification {
   String? notificationTitle;
   late String personalInformationId;
   late DataPersonalInformationViewModel personalInformationViewModel;
-  late String timeStamp;
+  String? timeStamp;
 
   String? kind; //'privateChat',  'shot',  'user',  null
   String? data; //'privateChatId','shotId','userId',null
@@ -330,7 +337,7 @@ class DataChatRoom {
     chatMessages = convertDataList<DataChatMessage>(data, 'chatMessages', 'DataChatMessage');
     id = convertData(data, 'id', DataType.string);
     personalInformations = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
-  }
+  }//352408868
 
   List<DataChatMessage> chatMessages = [];
   late String id;

@@ -36,28 +36,29 @@ class _ChatState extends State<Chat> {
     startTimer();
     state.getChats();
   }
-  bool stopTimer=false;
-  int i=0;
-  startTimer()async{
-    if(stopTimer)return;
+
+  bool stopTimer = false;
+  int i = 0;
+  startTimer() async {
+    if (stopTimer) return;
     print('i ${i++}');
     await state.getChats();
     await Future.delayed(Duration(seconds: 2));
     return startTimer();
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
-      int index =
-      state.selectedChat.personalInformations.indexWhere((element) =>
-        element.personalInformation!.id!=getIt<MainState>().userId);
-      DataChatRoomUser roomUser = state.selectedChat.personalInformations[index];
+      int index = state.selectedChat.personalInformations.indexWhere(
+          (element) =>
+              element.personalInformation!.id != getIt<MainState>().userId);
+      DataChatRoomUser roomUser =
+          state.selectedChat.personalInformations[index];
       return WillPopScope(
-        onWillPop: ()async{
-          stopTimer=true;
-          Go.pop(context,
-              state.chats.isNotEmpty?
-              state.chats.last:null);
+        onWillPop: () async {
+          stopTimer = true;
+          Go.pop(context, state.chats.isNotEmpty ? state.chats.first : null);
           return false;
         },
         child: Scaffold(
@@ -73,14 +74,17 @@ class _ChatState extends State<Chat> {
                         width: double.maxFinite,
                         color: mainBlue,
                         height: doubleHeight(6),
-                        padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: doubleHeight(1)),
                         alignment: Alignment(-0.9, 0),
                         child: GestureDetector(
                           onTap: () {
-                            stopTimer=true;
-                            Go.pop(context,
-                                state.chats.isNotEmpty?
-                                state.chats.last:null);
+                            stopTimer = true;
+                            Go.pop(
+                                context,
+                                state.chats.isNotEmpty
+                                    ? state.chats.last
+                                    : null);
                           },
                           child: Icon(
                             Icons.arrow_back,
@@ -89,9 +93,7 @@ class _ChatState extends State<Chat> {
                           ),
                         ),
                       ),
-                      if (roomUser
-                              .personalInformation !=
-                          null)
+                      if (roomUser.personalInformation != null)
                         Positioned(
                           left: 0,
                           right: 0,
@@ -99,25 +101,27 @@ class _ChatState extends State<Chat> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (roomUser
-                                          .personalInformation!.profilePhoto !=
+                              if (roomUser.personalInformation!.profilePhoto !=
                                       null &&
-                                  roomUser
-                                          .personalInformation!.profilePhoto !=
+                                  roomUser.personalInformation!.profilePhoto !=
                                       null)
                                 GestureDetector(
-                                  onTap: ()async{
-                                    stopTimer=true;
-                                    await Go.pushSlideAnim(context, ProfileBuilder(username: roomUser.personalInformation!.userName));
-                                    stopTimer=false;
+                                  onTap: () async {
+                                    stopTimer = true;
+                                    await Go.pushSlideAnim(
+                                        context,
+                                        ProfileBuilder(
+                                            username: roomUser
+                                                .personalInformation!
+                                                .userName));
+                                    stopTimer = false;
                                     startTimer();
-                                    },
+                                  },
                                   child: CircleAvatar(
                                     radius: doubleWidth(8),
                                     backgroundColor: Colors.white,
                                     backgroundImage: networkImage(roomUser
-                                        .personalInformation!
-                                        .profilePhoto!),
+                                        .personalInformation!.profilePhoto!),
                                   ),
                                 ),
                               SizedBox(height: doubleHeight(1)),
@@ -130,8 +134,7 @@ class _ChatState extends State<Chat> {
                                   ),
                                   SizedBox(width: doubleWidth(3)),
                                   Text(
-                                    roomUser
-                                            .personalInformation!.fullName ??
+                                    roomUser.personalInformation!.fullName ??
                                         '',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -140,8 +143,7 @@ class _ChatState extends State<Chat> {
                                 ],
                               ),
                               SizedBox(height: doubleHeight(1)),
-                              Text(
-                                  '@${roomUser.personalInformation!.userName}')
+                              Text('@${roomUser.personalInformation!.userName}')
                             ],
                           ),
                         ),
@@ -152,8 +154,10 @@ class _ChatState extends State<Chat> {
                     child: Container(
                   color: Colors.white,
                   child: ListView.separated(
+                      reverse: true,
                       padding: EdgeInsets.symmetric(
-                          horizontal: doubleWidth(4), vertical: doubleHeight(2)),
+                          horizontal: doubleWidth(4),
+                          vertical: doubleHeight(2)),
                       itemBuilder: (_, index) {
                         if (index + 1 != state.chats.length) {
                           bool first = state.chats[index].name ==
@@ -214,7 +218,6 @@ class _ChatState extends State<Chat> {
                             maxLines: 3,
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
-
                                 hintStyle: TextStyle(
                                     color: Color.fromRGBO(214, 216, 217, 1)),
                                 hintText: 'Write your message...',
@@ -225,19 +228,7 @@ class _ChatState extends State<Chat> {
                       SizedBox(width: doubleWidth(4)),
                       GestureDetector(
                         onTap: () {
-                          // state.chats.add(
-                          //     DataChatMessage.fromJson(
-                          //         {
-                          //   "name": "emadbasri",
-                          //   "text": "message 1",
-                          //   "timeStamp": "123456",
-                          //   "chatRoomId":
-                          //       "",
-                          //   "id": ""
-                          // })
-                          // );
-                          print('controller.value.text ${controller.value.text}');
-                          if(controller.value.text.trim()=='')return;
+                          if (controller.value.text.trim() == '') return;
                           state.sendMessage(controller.value.text.trim());
                           state.notify();
                           controller.clear();

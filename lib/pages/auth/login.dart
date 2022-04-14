@@ -23,6 +23,7 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
+  bool obscureText = true;
   String username = '', password = '';
   @override
   Widget build(BuildContext context) {
@@ -67,10 +68,22 @@ class _LoginState extends State<Login> {
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
                         child: TextField(
+                          keyboardType: TextInputType.visiblePassword,
                           onChanged: (e) {
                             password = e;
                           },
+                          obscureText: obscureText,
                           decoration: InputDecoration(
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    obscureText = !obscureText;
+                                  });
+                                },
+                                child: Icon(!obscureText
+                                    ? Icons.remove_red_eye
+                                    : Icons.visibility_off),
+                              ),
                               prefixText: '        ',
                               border: InputBorder.none,
                               hintText: 'Password'),
@@ -83,24 +96,24 @@ class _LoginState extends State<Login> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: ()async{
-                        if(username.trim()==''){
+                      onPressed: () async {
+                        if (username.trim() == '') {
                           toast('The Username field is required.');
                           return;
                         }
                         MyService service = getIt<MyService>();
                         bool back = await AuthenticationService.forgotPassword(
-                            service,username.trim()
-                        );
-                        if(back){
-                          Go.pushSlideAnim(context, ForgotPassword(username: username.trim()));
+                            service, username.trim());
+                        if (back) {
+                          Go.pushSlideAnim(context,
+                              ForgotPassword(username: username.trim()));
                         }
                       },
                       child: Text(
                         'Forgot Password?',
                         textAlign: TextAlign.right,
-                        style:
-                            TextStyle(color: mainGreen, fontSize: doubleWidth(3)),
+                        style: TextStyle(
+                            color: mainGreen, fontSize: doubleWidth(3)),
                       ),
                     ),
                   ),
@@ -113,23 +126,28 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10)),
                       child: RaisedButton(
                         onPressed: () async {
-                          if(username.trim()==''){
+                          if (username.trim() == '') {
                             toast('The Username field is required.');
                             return;
                           }
-                          if(password.trim()==''){
+                          if (password.trim() == '') {
                             toast('The Password field is required.');
                             return;
                           }
-                          bool? back = await AuthenticationService.login(service,
-                              username: username, password: password);
-                          if (back!=null) {
-                            if(back){
+                          bool? back = await AuthenticationService.login(
+                              service,
+                              username: username,
+                              password: password);
+                          if (back != null) {
+                            if (back) {
                               bool bbo = await service.getToken();
-                              if(bbo)
+                              if (bbo)
                                 Go.pushSlideAnim(context, AppPageBuilder());
-                            }else{
-                              Go.pushSlideAnim(context, VerifyOtp(username: username, password: password));
+                            } else {
+                              Go.pushSlideAnim(
+                                  context,
+                                  VerifyOtp(
+                                      username: username, password: password));
                             }
                           }
                         },

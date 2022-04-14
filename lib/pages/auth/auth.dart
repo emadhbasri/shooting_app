@@ -50,7 +50,7 @@ class _AuthState extends State<Auth> {
                 Container(
                   width: max,
                   margin: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
-                  child: Text('A place made just for fans',
+                  child: Text('Feel the buzz of the beautiful game',
                       textAlign: TextAlign.left,
                       style: TextStyle(color: white, fontSize: doubleWidth(5))),
                 ),

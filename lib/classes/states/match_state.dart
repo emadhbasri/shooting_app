@@ -201,8 +201,8 @@ class MatchState extends ChangeNotifier {
   String selectedDate = 'Today';
   DateTime selectedDateTime = date;
 
-  List<String> tabs = ['Matchups', 'Lineups', 'Goals', 'Cards', 'Stats'];
-  String selectedTab = 'Matchups';
+  List<String> tabs = ['in-play', 'Lineups', 'Goals', 'Cards', 'Stats'];
+  String selectedTab = 'in-play';
 
   notify() => notifyListeners();
 }

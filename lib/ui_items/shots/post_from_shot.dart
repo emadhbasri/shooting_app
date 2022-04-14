@@ -72,15 +72,11 @@ class _PostFromShotState extends State<PostFromShot> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              onTap: widget.canTouch
-                  ? () {
+                  onTap: (){
+                    if(person!=null)
                       Go.pushSlideAnim(
-                          context,
-                          Shot(
-                            post: widget.post,
-                          ));
-                    }
-                  : null,
+                          context, ProfileBuilder(username: person!.userName));
+                  },
               contentPadding: EdgeInsets.zero,
               dense: true,
               leading: SizedBox(
@@ -91,27 +87,20 @@ class _PostFromShotState extends State<PostFromShot> {
                       alignment: Alignment.centerLeft,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
-                        child: GestureDetector(
-                          onTap: (){
-                            if(person!=null)
-                            Go.pushSlideAnim(
-                                context, ProfileBuilder(username: person!.userName));
-                          },
-                          child: SizedBox(
-                            width: doubleHeight(5),
-                            height: doubleHeight(5),
-                            child: Builder(
-                              builder: (context) {
-                                if (person != null &&
-                                    person!.profilePhoto != null) {
-                                  return imageNetwork(
-                                    person!.profilePhoto!,
-                                    fit: BoxFit.fill,
-                                  );
-                                }
-                                return const SizedBox();
-                              },
-                            ),
+                        child: SizedBox(
+                          width: doubleHeight(5),
+                          height: doubleHeight(5),
+                          child: Builder(
+                            builder: (context) {
+                              if (person != null &&
+                                  person!.profilePhoto != null) {
+                                return imageNetwork(
+                                  person!.profilePhoto!,
+                                  fit: BoxFit.fill,
+                                );
+                              }
+                              return const SizedBox();
+                            },
                           ),
                         ),
                       ),
@@ -230,10 +219,21 @@ class _PostFromShotState extends State<PostFromShot> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      SizedBox(
-                          width: doubleWidth(5),
-                          height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                      GestureDetector(
+                        onTap: widget.canTouch
+                            ? () {
+                          Go.pushSlideAnim(
+                              context,
+                              Shot(
+                                post: widget.post,
+                              ));
+                        }
+                            : null,
+                        child: SizedBox(
+                            width: doubleWidth(5),
+                            height: doubleWidth(5),
+                            child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                      ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
                     ],

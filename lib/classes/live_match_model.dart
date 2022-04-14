@@ -17,7 +17,7 @@ class DataLeague {
   late String name;
   String? country;
   String? logo;
-  late int season;
+  int? season;
   DataLeague.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.int);
     season = convertData(data, 'season', DataType.int);
@@ -37,7 +37,7 @@ class DataLeagueMain {
     league =
         convertData(data, 'league', DataType.clas, classType: 'DataLeague');
     country =
-        convertData(data, 'country', DataType.clas, classType: 'DataCountry');
+        convertData(data['country'], 'name', DataType.string);
     List seasons = data['seasons'];
     Map<String, dynamic> map =
         seasons.lastWhere((element) => element['current'] == true);
@@ -46,7 +46,9 @@ class DataLeagueMain {
   DataLeagueMain.fromDataLeague(DataLeague data){
     league=data;
     country=data.country??'';
-    latestSeason=data.season;
+    if(data.season!=null) {
+      latestSeason = data.season!;
+    }
   }
 }
 class DataPlayer{

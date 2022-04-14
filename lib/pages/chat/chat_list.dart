@@ -119,7 +119,7 @@ class ChatListItem extends StatelessWidget {
               state: state,
             ));
         if (message != null) {
-          state.selectedChat.chatMessages.add(message);
+          state.selectedChat.chatMessages.insert(0,message);
           state.notify();
         }
       },
@@ -128,17 +128,21 @@ class ChatListItem extends StatelessWidget {
         child: Stack(
           children: [
             if (roomUser.personalInformation != null)
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: roomUser.personalInformation!
-                              .profilePhoto ==
-                          null
-                      ? null
-                      : imageNetwork(
-                          roomUser.personalInformation!
-                                  .profilePhoto ??
-                              '',
-                          fit: BoxFit.fill)),
+              SizedBox(
+                width: doubleHeight(5),
+                height: doubleHeight(5),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: roomUser.personalInformation!
+                                .profilePhoto ==
+                            null
+                        ? null
+                        : imageNetwork(
+                            roomUser.personalInformation!
+                                    .profilePhoto ??
+                                '',
+                            fit: BoxFit.fill)),
+              ),
             if (roomUser.personalInformation!.isOnline)
               Align(
                 alignment: Alignment(0.9, 0.9),
@@ -155,7 +159,7 @@ class ChatListItem extends StatelessWidget {
       subtitle: chat.chatMessages.isEmpty
           ? null
           : Text(
-              chat.chatMessages.last.text ?? '',
+              chat.chatMessages.first.text ?? '',
               style: TextStyle(height: 2),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
