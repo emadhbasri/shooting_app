@@ -36,7 +36,7 @@ class _ChangePhoneState extends State<ChangePhone> {
           SizedBox(height: doubleHeight(2)),
           Builder(
             builder: (context) {
-              if(widget.number!=null){
+              if(widget.number!=null && widget.number!.length>=12){
                 String pre=widget.number!.substring(0,widget.number!.length-10);
                 String post=widget.number!.substring(widget.number!.length-10,widget.number!.length);
                 return Text(

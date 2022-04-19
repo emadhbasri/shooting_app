@@ -53,12 +53,13 @@ class ChatService{
     required String message,
   }) async {
     debugPrint('sendMessage($chatRoomId,$message)');//3530f18b-a1ed-406e-0914-08da04b81c0f
-    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/sendMessage?'
-        'chatRoomId=$chatRoomId&timeStamp=${DateTime.now().toString()}&message=$message',{
-      // 'chatRoomId':chatRoomId,
-      // 'timeStamp':DateTime.now().toString(),
-      // 'message':message,
-    });
+    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/sendMessage'
+        // '?chatRoomId=$chatRoomId&timeStamp=${DateTime.now().toString()}&message=$message'
+        ,{
+      'chatRoomId':chatRoomId,
+      'timeStamp':DateTime.now().toString(),
+      'message':message,
+    },jsonType: true);
     debugPrint('back sendMessage ${back}');
     if(back['status']==false){
       toast(back['error']);

@@ -54,7 +54,7 @@ class MainState extends ChangeNotifier {
   List<DataPost> allPosts = [];
   bool loadingPost=false;
   getFanFeed({bool add=false}) async {
-    loadingPost=true;notifyListeners();
+    if(!add){loadingPost=true;notifyListeners();}
     // allPosts = await ShotsService.shotsAll(service);
     print('add $add');
     Map<String,dynamic> bback = await ShotsService.fanFeed(service,pageNumber: postsPageNumber);

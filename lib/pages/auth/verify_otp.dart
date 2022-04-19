@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/pages/auth/team.dart';
 
 import '../../../classes/functions.dart';
 import '../../../classes/dataTypes.dart';
@@ -9,9 +10,10 @@ import '../../../main.dart';
 import '../AppPage.dart';
 
 class VerifyOtp extends StatefulWidget {
-  const VerifyOtp({Key? key,required this.username,required this.password}) : super(key: key);
+  const VerifyOtp({Key? key,this.isRegister=false,required this.username,required this.password}) : super(key: key);
   final String username;
   final String password;
+  final bool isRegister;
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
 }
@@ -169,8 +171,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
                       if(back){
                         bool bbo = await service.getToken();
                         if(bbo) {
-                          Go.pushSlideAnim(context, AppPageBuilder());
+                          if(widget.isRegister==false){
+                            Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
+                          }else{
+                            Go.pushSlideAnim(context, Team());
+                          }
                         }
+
                       }
                     }
                   },

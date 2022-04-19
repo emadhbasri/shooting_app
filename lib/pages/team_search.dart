@@ -6,8 +6,7 @@ import '../classes/services/live_match_service.dart';
 import '../classes/dataTypes.dart';
 
 class TeamSearch extends StatefulWidget {
-  final String? search;
-  const TeamSearch({Key? key, this.search}) : super(key: key);
+  const TeamSearch({Key? key}) : super(key: key);
   @override
   _TeamSearchState createState() => _TeamSearchState();
 }
@@ -16,10 +15,11 @@ class _TeamSearchState extends State<TeamSearch> {
   LiveMatchService service = LiveMatchService();
   late final TextEditingController controller;
   List<DataMatchTeam>? teams;
+  bool loading=false;
   @override
   void initState() {
     statusSet(mainBlue);
-    controller = TextEditingController(text: widget.search ?? '')
+    controller = TextEditingController()
       ..addListener(() {
         setState(() {});
       });
@@ -30,7 +30,6 @@ class _TeamSearchState extends State<TeamSearch> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // statusSet(trans);
         return true;
       },
       child: Scaffold(
@@ -61,16 +60,21 @@ class _TeamSearchState extends State<TeamSearch> {
                       child: Center(
                         child: TextField(
                           controller: controller,
-                          onSubmitted: (e) async {
+                          onChanged: (e)async{
                             if (controller.value.text.length < 3) return;
+                            setState(() {
+                              loading=true;
+                            });
                             teams = [];
                             teams = await service.teams(
                                 search: controller.value.text);
-                            setState(() {});
+                            setState(() {loading=false;});
                           },
                           autofocus: true,
+                          enableSuggestions: true,
                           cursorColor: mainBlue,
                           decoration: InputDecoration(
+
                               prefixIcon: Icon(Icons.search),
                               border: InputBorder.none,
                               hintText: 'Search'),
@@ -86,10 +90,14 @@ class _TeamSearchState extends State<TeamSearch> {
         ),
         body: SizedBox.expand(
           child: Builder(builder: (context) {
-            if (controller.value.text == '' || teams == null)
+            if(loading)
+              return circle();
+            else if (controller.value.text == '' && teams == null)
               return Center(child: Text('waiting for user search'));
+            else if(teams == null && controller.value.text.length<3)
+              return Center(child: Text('3 characters required.'));
             else
-              return teams!.isEmpty
+              return teams==null || teams!.isEmpty
                   ? Center(child: Text('no results'))
                   : ListView.builder(
                       itemCount: teams!.length,

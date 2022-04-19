@@ -15,6 +15,7 @@ const white = Colors.white;
 const black = Colors.black;
 const green = Colors.green;
 const mainGreen = Color.fromRGBO(78, 255, 187, 1);
+const mainGreen1 = Color.fromRGBO(0, 218, 136, 1);
 const red = Colors.red;
 const pink = Colors.pink;
 const gray = Colors.grey;

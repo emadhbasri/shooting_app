@@ -35,7 +35,7 @@ class _IntroState extends State<Intro> {
     service.getToken().then((bool value) {
       if (value) {
         Future.delayed(Duration(seconds: 2),
-            () => Go.pushSlideAnim(context, AppPageBuilder()));
+            () => Go.pushAndRemoveSlideAnim(context, AppPageBuilder()));
       } else {
         Future.delayed(
             Duration(seconds: 2), () => Go.pushSlideAnim(context, Auth()));

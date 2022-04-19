@@ -20,12 +20,13 @@ class _SearchState extends State<Search> {
   // List<String> hashtags = ['YNWA', 'Salah', 'Watfold', 'Anfield', 'EPL'];
   late final TextEditingController controller;
   List<DataPost>? posts;
+  String search='';
   getData() async {
     setState(() {
       posts = null;
     });
     MyService service = getIt<MyService>();
-    posts = await ShotsService.search(service, search: controller.value.text);
+    posts = await ShotsService.search(service, search: controller.value.text.replaceAll('#', ''));
     setState(() {});
   }
 
@@ -71,9 +72,15 @@ class _SearchState extends State<Search> {
                     color: white,
                     child: Center(
                       child: TextField(
+                        enableSuggestions: true,
                         controller: controller,
-                        onSubmitted: (e) {
-                          getData();
+                        onChanged: (e) {
+                          print('$search!= $e');
+                          if(search!=e) {
+                            print('searchhhhhhhhhh');
+                            search = e;
+                            getData();
+                          }
                         },
                         autofocus: true,
                         cursorColor: mainBlue,
@@ -134,11 +141,11 @@ class _SearchState extends State<Search> {
           //       ]);
           // else {
           if (controller.value.text == '')
-            return Center(child: Text('please search.'));
+            return Center(child: Text('Please Search In Shots.'));
           if (posts == null) {
               return circle();
             } else if (posts!.isEmpty) {
-              return Center(child: Text('no shot'));
+              return Center(child: Text('No Shot Found'));
             } else {
               return ListView(
 
@@ -146,6 +153,12 @@ class _SearchState extends State<Search> {
                       horizontal: doubleWidth(5), vertical: doubleHeight(2)),
                   children: posts!
                       .map((e) => PostFromShot(
+                    key: UniqueKey(),
+                    delete: (){
+                      setState(() {
+                        posts!.remove(e);
+                      });
+                    },
                           post: e,
                           onTapTag:
                               (BuildContext context, String str, bool isUser) {

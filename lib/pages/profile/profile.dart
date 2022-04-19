@@ -4,8 +4,10 @@ import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
 import '../../classes/services/my_service.dart';
 import '../../classes/services/user_service.dart';
+import '../../classes/states/main_state.dart';
 import '../../classes/states/profile_state.dart';
 import '../../main.dart';
+import '../../ui_items/gal.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'shots.dart';
@@ -54,15 +56,38 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               title: Text('Profile'),
               elevation: 0,
               actions: [
-                IconButton(onPressed: ()async{
-                  DataChatRoom? back = await ChatService.createPrivateChat(state.service,
-                      friendId: state.personalInformation!.id);
-                  if (back!=null) {
-                    Go.replaceSlideAnim(context, ChatBuilder(
-                      state: ChatState()..selectedChat=back,
-                    ));
-                  }
-                }, icon: Icon(Icons.message))
+                if(state.personalInformation!.id!=getIt<MainState>().userId)
+                  PopupMenuButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                      itemBuilder: (context) =>
+                    [
+                      PopupMenuItem(
+                          onTap: ()async{
+                            DataChatRoom? back = await ChatService.createPrivateChat(state.service,
+                                friendId: state.personalInformation!.id);
+                            if (back!=null) {
+                              Go.replaceSlideAnim(context, ChatBuilder(
+                                state: ChatState()..selectedChat=back,
+                              ));
+                            }
+                          },
+                          child: Text('Message')),
+                      PopupMenuItem(
+                          onTap: ()async{
+                            bool? back = await UsersService.blockUser(state.service, state.personalInformation!.id);
+                            print('block $back');
+                            if(back){
+                              toast('User Blocked Successfully');
+                            }
+                          },
+                          child: Text('Block')),
+                    ],
+                  ),
+                  // IconButton(onPressed: ()async{
+                  //
+                  // }, icon: Icon(Icons.message))
               ],
             ),
             backgroundColor: Colors.white,
@@ -91,12 +116,22 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           child: state.personalInformation!
                                                       .profilePhoto !=
                                                   null
-                                              ? CircleAvatar(
+                                              ? GestureDetector(
+                                            onTap:(){
+                                              Go.push(context, Gal(images: [state.personalInformation!
+                                                  .profilePhoto!]));
+                                            },
+                                                child: CircleAvatar(
                                             radius: doubleWidth(30),
                                             backgroundImage: networkImage(state.personalInformation!
-                                                .profilePhoto!),
-                                          )
-                                              : null),
+                                                  .profilePhoto!),
+                                          ),
+                                              )
+                                              : CircleAvatar(
+                                            backgroundColor: Colors.white,
+                        radius: doubleWidth(30),
+                    backgroundImage: AssetImage('assets/images/playerbig.png'),
+                  )),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
                                         child: SizedBox(
@@ -178,6 +213,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   //   ],
                   // ),
                   SizedBox(height: doubleHeight(2)),
+                  if(state.personalInformation!.id!=getIt<MainState>().userId)
                   Consumer<ProfileState>(
                     builder: (context, value, child) => ElevatedButton(
                       onPressed: () async {
@@ -204,8 +240,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       },
                       child: Text(
                         !value.personalInformation!.followedByMe
-                            ? 'add as fan mates'
-                            : 'remove as fan mates',
+                            ? 'Add As Fan Mates'
+                            : 'Remove As Fan Mates',
                         style: TextStyle(color: Colors.black),
                       ),
                       style: ButtonStyle(

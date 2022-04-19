@@ -9,6 +9,7 @@ export '../../classes/models.dart';
 import 'package:flutter/material.dart';
 export 'package:flutter/material.dart';
 import '../../classes/dataTypes.dart';
+import '../../classes/functions.dart';
 export '../../classes/dataTypes.dart';
 
 Widget convertHashtag(String text, Function(String) onTapTag) {
@@ -32,22 +33,30 @@ Widget convertHashtag(String text, Function(String) onTapTag) {
       children: split.map((e) {
         if (e.length > 0) {
           if (e[0] == '#') {
-            return GestureDetector(
+            return GestureDetector(onLongPress: (){
+              copyText(text);
+            },
                 onTap: () {
                   onTapTag(e);
                 },
                 child: Text(e, style: TextStyle(color: mainBlue)));
           } else if (e[0] == '@') {
-            return GestureDetector(
+            return GestureDetector(onLongPress: (){
+              copyText(text);
+            },
                 onTap: () {
                   onTapTag(e);
                 },
                 child: Text(e, style: TextStyle(color: mainBlue)));
           } else {
-            return Text(e, style: TextStyle(color: black));
+            return GestureDetector(
+                onLongPress: (){
+                  copyText(text);
+                },
+                child: Text(e, style: TextStyle(color: black)));
           }
         } else {
-          return Text(e, style: TextStyle(color: black));
+          return Text('', style: TextStyle(color: black));
         }
       }).toList(),
     ),

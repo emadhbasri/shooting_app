@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
+import 'package:shooting_app/pages/chat/search_user.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
@@ -91,7 +92,15 @@ class _ChatListState extends State<ChatList> {
                       )
                   ],
                 ),
-        ));
+        ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+Go.pushSlideAnim(context, SearchUser());
+            },
+            heroTag: 'Create New Chat',
+            child: Icon(Icons.message),
+          ),
+        );
       },
     );
   }
@@ -136,7 +145,7 @@ class ChatListItem extends StatelessWidget {
                     child: roomUser.personalInformation!
                                 .profilePhoto ==
                             null
-                        ? null
+                        ? profilePlaceHolder()
                         : imageNetwork(
                             roomUser.personalInformation!
                                     .profilePhoto ??

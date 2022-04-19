@@ -20,14 +20,14 @@ class ChatState extends ChangeNotifier {
 bool chatHasNext=false;
   int pageNumber=1;
   getChatsList({bool clean=false}) async {
-    loadingListCaht=true;notifyListeners();
     if(clean) {
       pageNumber=1;
       listChats.clear();
+      loadingListCaht=true;notifyListeners();
     };
     Map<String, dynamic> back =
         await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);
-    loadingListCaht=false;notifyListeners();
+    if(loadingListCaht){loadingListCaht=false;notifyListeners();}
     listChats.addAll(back['chats']);
     chatHasNext=pageNumber<back['total_pages'];
     print('listChats $listChats');

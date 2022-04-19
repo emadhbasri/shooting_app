@@ -140,7 +140,7 @@ class ShotsService {
     required String postId,
     required String comment,
   }) async {
-    debugPrint('shotsComment()');
+    debugPrint('shotsComment($postId,$comment)');
     MainState mainS = getIt<MainState>();
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Shots/comment',
@@ -152,7 +152,14 @@ class ShotsService {
           // "MediaType": ""
         },
         jsonType: false);
-    debugPrint('back ${back}');
+    print('out ${{
+      "UserId": mainS.userId,
+      "PostId": postId,
+      "Comment": comment,
+      'createdAt': DateTime.now().toString()
+      // "MediaType": ""
+    }}');
+    debugPrint('back shotsComment ${back}');
     if (back['status'])
       return DataPostComment.fromJson(back['data']['data']);
     else {
@@ -166,20 +173,21 @@ class ShotsService {
     required String commentId,
     required String reply,
   }) async {
-    debugPrint('shotsComment()');
+    debugPrint('commentReply($commentId,$reply)');
+    Map<String,dynamic> go =  {
+      "UserId": getIt<MainState>().userId,
+      "PostCommentId": commentId,
+      "ReplyDetail": reply,
+      'createdAt': DateTime.now().toString()
+      // "MediaType": ""
+    };
+    print('gogo $go');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/comment/reply',
-        {
-          "UserId": getIt<MainState>().userId,
-          "PostCommentId": commentId,
-          "ReplyDetail": reply,
-          'createdAt': DateTime.now().toString()
-          // "MediaType": ""
-        },
+        '/api/v1/Shots/comment/reply', go,
         jsonType: false);
-    debugPrint('back ${back}');
+    debugPrint('back commentReply ${back}');
     if (back['status'])
-      return DataCommentReply.fromJson(back['data']['data']);
+        return DataCommentReply.fromJson(back['data']['data']);
     else {
       toast(back['error']);
       return null;
@@ -192,13 +200,36 @@ class ShotsService {
   }) async {
     debugPrint('shotLike()');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/like$postId?userId=${getIt<MainState>().userId}', {});
+        '/api/v1/Shots/like$postId'
+            // '?userId=${getIt<MainState>().userId}'
+        , {});
     debugPrint('shotLike back $back');
     if(back['status']==false){
       toast(back['error']);
       return null;
     }
+    // return back['status'];
     return back['data']['data'];
+  }
+
+  static Future<bool> shotReport(
+      MyService service, {
+        required DataPost post,
+        required String message
+      }) async {
+    debugPrint('shotReport()');
+    Map<String, dynamic> back = await service.httpPost(
+        '/api/v1/Shots/addPostReport', {
+      "message": message,
+      "postId": post.id,
+      "postOwnerId": post.person==null?'':post.person!.personalInformationId,
+      "dateReported": DateTime.now().toString()
+    },jsonType: true);
+    debugPrint('shotReport back $back');
+    if(back['status']==false){
+      toast(back['error']);
+    }
+    return back['status'];
   }
 
   static Future<String?> commentLike(
@@ -232,14 +263,13 @@ class ShotsService {
     }
     return back['data']['data'];
   }
-
   static Future<bool> deleteComment(
     MyService service, {
     required String commentId,
   }) async {
     print('replyLike($commentId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/comment$commentId');
+        await service.httpDelete('/api/v1/Shots/delete/commentById$commentId');
     debugPrint('deleteComment back $back');
     return back;
   }
@@ -261,7 +291,7 @@ class ShotsService {
   }) async {
     print('deleteReply($replyId)');
     bool back =
-        await service.httpDelete('/api/v1/Shots/delete/commentReply$replyId');
+        await service.httpDelete('/api/v1/Shots/delete/comment/Reply$replyId');
     debugPrint('deleteReply back $back');
     return back;
   }

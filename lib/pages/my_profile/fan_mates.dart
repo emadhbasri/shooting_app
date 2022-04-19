@@ -23,32 +23,37 @@ class _FanMatesState extends State<FanMates> {
     final MainState state = Provider.of<MainState>(context, listen: false);
 
     return Container(
-      child: ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-        children: [
-          ...state.personalInformation!.userFollowers
-              .map((e) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FanMateItem(fan: e),
-                      if (e != state.personalInformation!.userFollowers.last)
-                        Divider(
-                          endIndent: doubleWidth(4),
-                          indent: doubleWidth(4),
-                          color: grayCall,
-                        )
-                    ],
+      child: RefreshIndicator(
+        onRefresh: ()async{
+          await state.getProfile(force: true);
+        },
+        child: ListView(
+          physics: AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+          children: [
+            ...state.personalInformation!.userFollowers
+                .map((e) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FanMateItem(fan: e),
+                        if (e != state.personalInformation!.userFollowers.last)
+                          Divider(
+                            endIndent: doubleWidth(4),
+                            indent: doubleWidth(4),
+                            color: grayCall,
+                          )
+                      ],
+                    ))
+                .toList(),
+            if (state.personalInformation!.userFollowers.isEmpty)
+              SizedBox(
+                  height: doubleHeight(40),
+                  width: double.maxFinite,
+                  child: Center(
+                    child: Text('no fan mate. 🙂'),
                   ))
-              .toList(),
-          if (state.personalInformation!.userFollowers.isEmpty)
-            SizedBox(
-                height: doubleHeight(40),
-                width: double.maxFinite,
-                child: Center(
-                  child: Text('no fan mate. 🙂'),
-                ))
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -108,23 +113,26 @@ class _FanMateItemState extends State<FanMateItem> {
                           print('click');
                           print(fan.followByMe);
                           MyService service = getIt<MyService>();
+                          bool backUser;
                           if (fan.followByMe) {
                             //unfollow
-                            bool backUser = await UsersService.unFollowUser(
+                            backUser = await UsersService.unFollowUser(
                                 service, fan.followingId);
                             print('unfollow $backUser');
                           } else {
-                            bool backUser = await UsersService.followUser(
+                            backUser = await UsersService.followUser(
                                 service, fan.followingId);
                             print('follow $backUser');
                           }
-                          fan.followByMe = !fan.followByMe;
-                          value.notify();
+                          if (backUser) {
+                            fan.followByMe = !fan.followByMe;
+                            value.notify();
+                          }
                         },
                         child: Text(
                           !fan.followByMe
-                              ? 'add as fan mates'
-                              : 'remove as fan mates',
+                              ? 'Add As Fan Mates'
+                              : 'Remove As Fan Mates',
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(
@@ -164,7 +172,10 @@ class _FanMateItemState extends State<FanMateItem> {
                                       '',
                                   fit: BoxFit.fill),
                             )
-                            : null),
+                            : SizedBox(
+                            width: doubleWidth(20),
+                            height: doubleWidth(20),
+                            child: profilePlaceHolder())),
                     Align(
                       alignment: Alignment(0.9, -0.9),
                       child: SizedBox(

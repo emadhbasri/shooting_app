@@ -402,7 +402,10 @@ MyService service = getIt<MyService>();
                         width: 32,
                         decoration: BoxDecoration(
                           image: user.person.profilePhoto == null
-                              ? null
+                              ? DecorationImage(
+                            image: AssetImage('assets/images/player.png'),
+                            fit: BoxFit.fill,
+                          )
                               : DecorationImage(
                                   image: networkImage(user.person.profilePhoto!),
                                   fit: BoxFit.contain,

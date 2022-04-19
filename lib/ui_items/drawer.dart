@@ -88,7 +88,11 @@ class _MyDrawerState extends State<MyDrawer>
                                                 '',
                                             fit: BoxFit.fill),
                                       )
-                                      : null),
+                                      : SizedBox(
+                          width: doubleWidth(15),
+      height: doubleWidth(15),
+      child: profilePlaceHolder(),
+    )),
                               Align(
                                 alignment: Alignment(1, -0.9),
                                 child: SizedBox(

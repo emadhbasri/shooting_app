@@ -19,7 +19,8 @@ class _ShotsState extends State<Shots> {
         Provider.of<ProfileState>(context, listen: false);
     if(state.personalInformation!.posts.isEmpty)
       if(state.personalInformation!.posts.isEmpty)
-        return ListView(physics: AlwaysScrollableScrollPhysics(),
+        return ListView(
+          physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
           children: [
             SizedBox(
@@ -28,17 +29,22 @@ class _ShotsState extends State<Shots> {
                 child: Center(child: Text('no shot. 🙂'))),
           ],
         );
-    return ListView(
-      physics: BouncingScrollPhysics(),
-      children: state.personalInformation!.posts
-          .map((e) => PostFromShotProfile(
-                post: e,
-                onTapTag: gogo,
-        canDelete: false,
-        delete: (){},
-                person: state.personalInformation!,
-              ))
-          .toList(),
+    return RefreshIndicator(
+      onRefresh: ()async{
+        await state.init(state.userName);
+      },
+      child: ListView(
+        physics: BouncingScrollPhysics(),
+        children: state.personalInformation!.posts.reversed.toList()
+            .map((e) => PostFromShotProfile(
+                  post: e,
+                  onTapTag: gogo,
+          canDelete: false,
+          delete: (){},
+                  person: state.personalInformation!,
+                ))
+            .toList(),
+      ),
     );
   }
 }

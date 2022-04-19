@@ -1,4 +1,5 @@
 import 'package:provider/provider.dart';
+import 'package:shooting_app/ui_items/gal.dart';
 import '../../classes/services/my_service.dart';
 import '../../classes/states/main_state.dart';
 import '../../main.dart';
@@ -74,13 +75,20 @@ class _MyProfileState extends State<MyProfile>
                                           child: state.personalInformation!
                                                       .profilePhoto !=
                                                   null
-                                              ? CircleAvatar(
-                                                  radius: doubleWidth(30),
-                                                  backgroundImage: networkImage(
-                                                      state.personalInformation!
-                                                          .profilePhoto!),
-                                                )
-                                              : null),
+                                              ? GestureDetector(
+                                            onTap:(){
+                                              Go.push(context, Gal(images: [state.personalInformation!
+                                                  .profilePhoto!]));
+                                            },
+                                                child: CircleAvatar(
+                                                    radius: doubleWidth(30),
+                                                    backgroundImage: networkImage(
+                                                        state.personalInformation!
+                                                            .profilePhoto!),
+                                                  ),
+                                              )
+                                              : CircleAvatar(backgroundColor: Colors.white,
+                                              radius: doubleWidth(30),backgroundImage:AssetImage('assets/images/playerbig.png'))),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
                                         child: SizedBox(

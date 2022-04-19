@@ -238,7 +238,7 @@ class DataNotification {
     kind = convertData(out, 'kind', DataType.string);
 
     data = convertData(out, 'data', DataType.string);
-    print('aaa $data $kind');
+    // print('aaa $data $kind');
     personalInformationViewModel = convertData(
         out, 'personalInformationViewModel', DataType.clas,
         classType: 'DataPersonalInformationViewModel');

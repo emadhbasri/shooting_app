@@ -12,6 +12,7 @@ class AuthenticationService {
     getIt<MyService>().httpPost('/api/v1/Authentication/logout', {});
     removeShare('refresh');
     removeShare('access');
+    removeShare('date');
     MainState state = getIt<MainState>();
     state.personalInformation=null;
     state.match=null;
@@ -41,10 +42,12 @@ class AuthenticationService {
     } else if (userName.trim() == '') {
       toast('The userName field is required.');
       return false;
-    } else if (phoneNumber.trim() == '') {
-      toast('The phoneNumber field is required.');
-      return false;
-    } else if (email.trim() == '') {
+    }
+    // else if (phoneNumber.trim() == '') {
+    //   toast('The phoneNumber field is required.');
+    //   return false;
+    // }
+    else if (email.trim() == '') {
       toast('The email field is required.');
       return false;
     } else if (password.trim() == '') {
@@ -74,22 +77,23 @@ class AuthenticationService {
       }
       return false;
     }
-    await service.setToken(
-        refresh: back['data']['data']['refreshToken'],
-        access: back['data']['data']['accessToken']);
-    MainState state = getIt<MainState>();
-    DataPersonalInformation pif =
-        DataPersonalInformation.fromJson(back['data']['data']);
-    state.userId = pif.id;
-    state.userName = pif.userName;
-    await setString('userid', pif.id);
-    await setString('username', pif.userName);
-    //The email field is required.
-    //
-    //The password field is required.
-    //The userName field is required.
-
     return back['status'];
+    // await service.setToken(
+    //     refresh: back['data']['data']['refreshToken'],
+    //     access: back['data']['data']['accessToken']);
+    // MainState state = getIt<MainState>();
+    // DataPersonalInformation pif =
+    //     DataPersonalInformation.fromJson(back['data']['data']);
+    // state.userId = pif.id;
+    // state.userName = pif.userName;
+    // await setString('userid', pif.id);
+    // await setString('username', pif.userName);
+    // //The email field is required.
+    // //
+    // //The password field is required.
+    // //The userName field is required.
+    //
+    // return back['status'];
   }
 
   static Future<bool?> login(

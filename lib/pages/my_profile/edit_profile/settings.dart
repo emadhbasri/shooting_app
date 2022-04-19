@@ -28,6 +28,7 @@ class _SettingsState extends State<Settings> {
     super.initState();
     if(state.personalInformation!=null)
       _2fa=state.personalInformation!.is2FA;
+    else _2fa=false;
   }
 
   @override

@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
     statusSet(trans);
     super.initState();
   }
-
+  bool loading=false;
   bool obscureText = true;
   String username = '', password = '';
   @override
@@ -31,15 +31,22 @@ class _LoginState extends State<Login> {
       decoration: decorImage(img: 'assets/images/stadium.jpg'),
       child: Scaffold(
         backgroundColor: trans,
-        body: Stack(
-          children: <Widget>[
-            Container(
-              width: max,
-              height: max,
-              padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+        body: SafeArea(
+          child: Container(
+            width: max,
+            height: max,
+            padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+            child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(height: doubleHeight(20)),
+                  Text(
+                    'WELCOME',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: doubleWidth(5),
+                        color: white),
+                  ),
                   sizeh(doubleHeight(5)),
                   ClipRRect(
                     child: Container(
@@ -112,8 +119,8 @@ class _LoginState extends State<Login> {
                       child: Text(
                         'Forgot Password?',
                         textAlign: TextAlign.right,
-                        style: TextStyle(
-                            color: mainGreen, fontSize: doubleWidth(3)),
+                        style: TextStyle(fontWeight: FontWeight.bold,
+                            color: mainGreen1, fontSize: doubleWidth(3)),
                       ),
                     ),
                   ),
@@ -134,15 +141,21 @@ class _LoginState extends State<Login> {
                             toast('The Password field is required.');
                             return;
                           }
+                          setState(() {
+                            loading=true;
+                          });
                           bool? back = await AuthenticationService.login(
                               service,
                               username: username,
                               password: password);
+                          setState(() {
+                            loading=false;
+                          });
                           if (back != null) {
                             if (back) {
                               bool bbo = await service.getToken();
                               if (bbo)
-                                Go.pushSlideAnim(context, AppPageBuilder());
+                                Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
                             } else {
                               Go.pushSlideAnim(
                                   context,
@@ -154,7 +167,7 @@ class _LoginState extends State<Login> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         color: mainBlue,
-                        child: Text(
+                        child: loading?simpleCircle(color: mainGreen):Text(
                           'Login',
                           style:
                               TextStyle(fontSize: doubleWidth(5), color: white),
@@ -175,7 +188,7 @@ class _LoginState extends State<Login> {
                             TextSpan(
                                 text: 'Sign Up',
                                 style: TextStyle(
-                                    color: mainGreen,
+                                    color: mainGreen1,fontWeight: FontWeight.bold,
                                     fontStyle: FontStyle.italic)),
                           ],
                           style: TextStyle(
@@ -187,17 +200,7 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment(0, -0.7),
-              child: Text(
-                'WELCOME',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: doubleWidth(5),
-                    color: white),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );

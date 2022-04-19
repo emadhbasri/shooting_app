@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../classes/states/main_state.dart';
-import '../main.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
 import 'home/Home.dart';
 import 'Search.dart';
@@ -279,6 +278,11 @@ class _AppPageState extends State<AppPage> {
                 if (state.isOnMatchPage) {
                   return true;
                 }else{
+                  if(state.tab==MyTab.fanFeed){
+                    return true;
+                  }
+                  state.tab=MyTab.fanFeed;
+                  state.notify();
                   print('testaaa');
                   setState(() {
                     subIndex=0;
@@ -464,6 +468,9 @@ class _AppPageState extends State<AppPage> {
                             } else {
                               toast('Please Select A Match.');
                             }
+                          }else{
+                            state.tab=MyTab.fanFeed;
+                            state.notify();
                           }
                         }else{
                           setState(() {
@@ -572,7 +579,11 @@ class _AppPageState extends State<AppPage> {
                                     return Container(
                                       width: doubleWidth(12),
                                       decoration: BoxDecoration(
-                                          color: grayCall,
+                                        image: DecorationImage(
+                                          image: AssetImage('assets/images/player.png'),
+                                          fit: BoxFit.fill,
+                                        ),
+                                          // color: grayCall,
                                           borderRadius:
                                               BorderRadius.circular(100)),
                                     );

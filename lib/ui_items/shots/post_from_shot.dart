@@ -1,7 +1,10 @@
+import 'package:photo_view/photo_view.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
+import 'package:shooting_app/ui_items/gal.dart';
 
 import '../../classes/services/shots_service.dart';
+import '../../classes/states/main_state.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shot/shot.dart';
@@ -13,9 +16,11 @@ class PostFromShot extends StatefulWidget {
       {Key? key,
       this.canTouch = true,
       required this.post,
+        required this.delete,
       required this.onTapTag})
       : super(key: key);
   final DataPost post;
+  final VoidCallback delete;
   final Function(BuildContext, String, bool) onTapTag;
   final bool canTouch;
   @override
@@ -34,18 +39,28 @@ class _PostFromShotState extends State<PostFromShot> {
         if(e.length==0)return Text('');
         if (e[0] == '#') {
           return GestureDetector(
+            onLongPress: (){
+              copyText(text);
+            },
               onTap: () {
                 widget.onTapTag(context, e, false);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e[0] == '@') {
           return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
               onTap: () {
                 widget.onTapTag(context, e, true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
-          return Text(e, style: TextStyle(color: black));
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              child: Text(e, style: TextStyle(color: black)));
         }
       }).toList(),
     );
@@ -99,7 +114,7 @@ class _PostFromShotState extends State<PostFromShot> {
                                   fit: BoxFit.fill,
                                 );
                               }
-                              return const SizedBox();
+                              return profilePlaceHolder();
                             },
                           ),
                         ),
@@ -201,11 +216,40 @@ class _PostFromShotState extends State<PostFromShot> {
                   width: max,
                   height: doubleWidth(70),
                   child: PageView.builder(
+                    controller:
+                    PageController(initialPage: 0, viewportFraction: 0.85),
                     physics: BouncingScrollPhysics(),
                     itemCount: widget.post.mediaTypes.length,
-                    itemBuilder: (_, index) => imageNetwork(
-                      widget.post.mediaTypes[index].media,
-                      fit: BoxFit.fill,
+                    itemBuilder: (_, index) => Padding(
+                      padding: EdgeInsets.only(
+                          right: widget.post.mediaTypes.length - 1 != index
+                              ? doubleHeight(2)
+                              : 0),
+                      child: GestureDetector(
+                        onTap: (){
+                          Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child:
+                          // PhotoView(
+                          //
+                          //   enableRotation: false,
+                          //   minScale: 0.0,
+                          //   maxScale: 0.3,
+                          //
+                          //   controller:
+                          //     PhotoViewController(initialPosition: Offset.zero),
+                          //   imageProvider: networkImage(widget.post.mediaTypes[index].media),
+                          // )
+
+                          imageNetwork(
+                            widget.post.mediaTypes[index].media,
+                            fit: BoxFit.fill,
+                          )
+                        ,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -235,7 +279,7 @@ class _PostFromShotState extends State<PostFromShot> {
                             child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(widget.post.postCommentCount))
+                      Text(makeCount(widget.post.postComments.length))
                     ],
                   ),
                   // Row(
@@ -279,11 +323,18 @@ class _PostFromShotState extends State<PostFromShot> {
                             }
                           }
                         },
+                        // child: Icon(
+                        //     widget.post.postLikedBythisUser
+                        //         ? Icons.favorite
+                        //         : Icons.favorite_border,
+                        //     color: widget.post.postLikedBythisUser
+                        //         ? greenCall
+                        //         : null),
                         child: Icon(
-                            widget.post.postLikedBythisUser
+                            widget.post.postLikes.isNotEmpty
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: widget.post.postLikedBythisUser
+                            color: widget.post.postLikes.isNotEmpty
                                 ? greenCall
                                 : null),
                       ),
@@ -291,19 +342,35 @@ class _PostFromShotState extends State<PostFromShot> {
                       Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  GestureDetector(
-                    // onTap: () {
-                    //   showDialog(
-                    //       context: context,
-                    //       builder: (_) => ShareDialog(
-                    //             post: widget.post,
-                    //           ));
-                    // },
-                    child: SizedBox(
+                  if(widget.canTouch && widget.post.person!.personalInformationId ==
+                      getIt<MainState>().userId)
+                    GestureDetector(
+                      onTap: () async{
+                        bool? alert = await showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext dialogContext) {
+                            return MyAlertDialog(content: 'Do you want to delete the shot?');
+                          },
+                        );
+                        if(alert!=null && alert){
+                          MyService service = getIt<MyService>();
+                          bool back = await ShotsService.deleteShot(service,
+                              shotId: widget.post.id);
+                          if (back) {
+                            widget.delete();
+                          }
+                        }
+                      },
+                      child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
+                        child:Icon(Icons.remove_circle_outline),
                         // child: Image.asset('assets/images/share.png')
-                    ),
+                      ),
+                    )else SizedBox(
+                    width: doubleWidth(5),
+                    height: doubleWidth(5),
                   )
                 ],
               ),
@@ -345,19 +412,27 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       children: split.map((e) {
         if(e.length==0)return Text('');
         if (e[0] == '#') {
-          return GestureDetector(
+          return GestureDetector(onLongPress: (){
+            copyText(text);
+          },
               onTap: () {
                 widget.onTapTag(context, e, false);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e[0] == '@') {
-          return GestureDetector(
+          return GestureDetector(onLongPress: (){
+            copyText(text);
+          },
               onTap: () {
                 widget.onTapTag(context, e, true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
-          return Text(e, style: TextStyle(color: black));
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              child: Text(e, style: TextStyle(color: black)));
         }
       }).toList(),
     );
@@ -411,7 +486,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                     fit: BoxFit.fill,
                                   );
                                 }
-                                return const SizedBox();
+                                return profilePlaceHolder();
                               },
                             ),
                           ),
@@ -464,17 +539,11 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 );
               }),
               subtitle: Builder(builder: (context) {
-                if (widget.person.fullName != null)
-                  return Text('@${widget.person.fullName!}',
+                  return Text('@${widget.person.userName}',
                       style: TextStyle(
                           color: grayCall,
                           fontWeight: FontWeight.bold,
                           fontSize: doubleWidth(2.5)));
-                return Text('',
-                    style: TextStyle(
-                        color: grayCall,
-                        fontWeight: FontWeight.bold,
-                        fontSize: doubleWidth(2.5)));
               }),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -520,12 +589,17 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         right: widget.post.mediaTypes.length - 1 != index
                             ? doubleHeight(2)
                             : 0),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: imageNetwork(
-                          widget.post.mediaTypes[index].media,
-                          fit: BoxFit.fill,
-                        )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: imageNetwork(
+                            widget.post.mediaTypes[index].media,
+                            fit: BoxFit.fill,
+                          )),
+                    ),
                   ),
                 ),
               ),
@@ -574,12 +648,21 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      SizedBox(
-                          width: doubleWidth(5),
-                          height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                      GestureDetector(
+                        onTap: (){
+                          Go.pushSlideAnim(
+                              context,
+                              Shot(
+                                postId: widget.post.id,
+                              ));
+                        },
+                        child: SizedBox(
+                            width: doubleWidth(5),
+                            height: doubleWidth(5),
+                            child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                      ),
                       sizew(doubleWidth(1)),
-                      // Text(makeCount(widget.post.postCommentCount))
+                      Text(makeCount(widget.post.postCommentCount))
                     ],
                   ),
                   // Row(
@@ -631,7 +714,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 : null),
                       ),
                       sizew(doubleWidth(1)),
-                      // Text(makeCount(widget.post.postLikeCount))
+                      Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
                   if(widget.canDelete)
@@ -688,10 +771,12 @@ class PostFromMatch extends StatefulWidget {
   const PostFromMatch(
       {Key? key,
         this.canTouch = true,
+        required this.delete,
         required this.post,
         required this.onTapTag})
       : super(key: key);
   final DataPost post;
+  final VoidCallback delete;
   final Function(BuildContext, String, bool) onTapTag;
   final bool canTouch;
   @override
@@ -709,19 +794,27 @@ class _PostFromMatchState extends State<PostFromMatch> {
       children: split.map((e) {
         if(e.length==0)return Text('');
         if (e[0] == '#') {
-          return GestureDetector(
+          return GestureDetector(onLongPress: (){
+            copyText(text);
+          },
               onTap: () {
                 widget.onTapTag(context, e, false);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e[0] == '@') {
-          return GestureDetector(
+          return GestureDetector(onLongPress: (){
+            copyText(text);
+          },
               onTap: () {
                 widget.onTapTag(context, e, true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
-          return Text(e, style: TextStyle(color: black));
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              child: Text(e, style: TextStyle(color: black)));
         }
       }).toList(),
     );
@@ -785,7 +878,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                                     fit: BoxFit.fill,
                                   );
                                 }
-                                return const SizedBox();
+                                return profilePlaceHolder();
                               },
                             ),
                           ),
@@ -890,9 +983,14 @@ class _PostFromMatchState extends State<PostFromMatch> {
                   child: PageView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: widget.post.mediaTypes.length,
-                    itemBuilder: (_, index) => imageNetwork(
-                      widget.post.mediaTypes[index].media,
-                      fit: BoxFit.fill,
+                    itemBuilder: (_, index) => GestureDetector(
+                      onTap: (){
+                        Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                      },
+                      child: imageNetwork(
+                        widget.post.mediaTypes[index].media,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
@@ -911,7 +1009,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           height: doubleWidth(5),
                           child: Image.asset('assets/images/chat(2).png',color: greenCall)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(widget.post.postCommentCount))
+                      Text(makeCount(widget.post.postComments.length))
                     ],
                   ),
                   // Row(
@@ -966,20 +1064,44 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  GestureDetector(
-                    // onTap: () {
-                    //   showDialog(
-                    //       context: context,
-                    //       builder: (_) => ShareDialog(
-                    //         post: widget.post,
-                    //       ));
-                    //
-                    // },
-                    child: SizedBox(
+                  if(widget.post.person!.personalInformationId ==
+    getIt<MainState>().userId)
+                    GestureDetector(
+                      onTap: () async{
+
+                        // DataPost? backDialog = await showDialog(
+                        //     context: context,
+                        //     builder: (_) => ShareDialog(
+                        //       canDelete: widget.canDelete,
+                        //       post: widget.post,
+                        //     ));
+                        // if(backDialog!=null){
+                        bool? alert = await showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext dialogContext) {
+                            return MyAlertDialog(content: 'Do you want to delete the shot?');
+                          },
+                        );
+                        if(alert!=null && alert){
+                          MyService service = getIt<MyService>();
+                          bool back = await ShotsService.deleteShot(service,
+                              shotId: widget.post.id);
+                          if (back) {
+                            widget.delete();
+                          }
+                        }
+                        // }
+                      },
+                      child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
+                        child:Icon(Icons.remove_circle_outline),
                         // child: Image.asset('assets/images/share.png')
-                    ),
+                      ),
+                    )else SizedBox(
+                    width: doubleWidth(5),
+                    height: doubleWidth(5),
                   )
                 ],
               ),

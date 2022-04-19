@@ -151,9 +151,11 @@ class _ChatState extends State<Chat> {
                   ),
                 ),
                 Flexible(
+
                     child: Container(
                   color: Colors.white,
                   child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
                       reverse: true,
                       padding: EdgeInsets.symmetric(
                           horizontal: doubleWidth(4),
@@ -293,9 +295,9 @@ class _ChatItemState extends State<ChatItem> {
             ),
             padding: EdgeInsets.symmetric(
                 vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-            child: Text(widget.message.text ?? ''),
+            child: SelectableText(widget.message.text ?? ''),
           ),
-          if (widget.hasDate)
+          // if (widget.hasDate)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -304,15 +306,16 @@ class _ChatItemState extends State<ChatItem> {
                   mainAxisSize: MainAxisSize.min,
                   textDirection: isMine ? TextDirection.rtl : TextDirection.ltr,
                   children: [
-                    if (isMine)
-                      SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: Image.asset(
-                            'assets/images/seen.png',
-                            color: mainBlue,
-                          )),
-                    if (isMine) SizedBox(width: doubleWidth(1)),
+                    // if (isMine)
+                    //   SizedBox(
+                    //       width: 15, 
+                    //       height: 15,
+                    //       child: Image.asset(
+                    //         'assets/images/seen.png',
+                    //         color: mainBlue,
+                    //       )),
+                    // if (isMine) SizedBox(width: doubleWidth(1)),
+
                     Text(
                       '${widget.message.timeStamp.hour}'
                       ' : ${widget.message.timeStamp.minute} ${widget.message.timeStamp.hour < 12 ? 'AM' : 'PM'}',

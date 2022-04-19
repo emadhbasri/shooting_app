@@ -49,7 +49,12 @@ class MatchUps extends StatelessWidget {
     }
     return ListView(
       children: state.selectedMatch.matchUps.map((e) =>
-          PostFromMatch(post: e, onTapTag: gogo)
+          PostFromMatch(
+            key: UniqueKey(),
+            post: e, onTapTag: gogo,delete: (){
+            state.selectedMatch.matchUps.remove(e);
+            state.notify();
+          })
       ).toList(),
     );
   }

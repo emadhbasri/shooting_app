@@ -28,23 +28,28 @@ class _ShotsState extends State<Shots> {
                 child: Center(child: Text('no shot. Try shoot a few soon 🙂'))),
           ],
         );
-    return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-        children: state.personalInformation!.posts.map((e) =>
-            PostFromShotProfile(
-              key: UniqueKey(),
-            post: e,onTapTag: gogo,
-              canDelete: true,
-              delete: () {
-                int index = state.personalInformation!.posts.indexOf(e);
-                List<DataPost> temp = state.personalInformation!.posts.toList();
-                temp.removeAt(index);
-                  state.personalInformation!.posts=temp.toList();
-                state.notify();
-              },
-          person: state.personalInformation!,
-        )
-    ).toList(),
+    return RefreshIndicator(
+      onRefresh: ()async{
+        await state.getProfile(force: true);
+      },
+      child: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
+          children: state.personalInformation!.posts.reversed.toList().map((e) =>
+              PostFromShotProfile(
+                key: UniqueKey(),
+              post: e,onTapTag: gogo,
+                canDelete: true,
+                delete: () {
+                  int index = state.personalInformation!.posts.indexOf(e);
+                  List<DataPost> temp = state.personalInformation!.posts.toList();
+                  temp.removeAt(index);
+                    state.personalInformation!.posts=temp.toList();
+                  state.notify();
+                },
+            person: state.personalInformation!,
+          )
+      ).toList(),
+      ),
     );
   }
 }

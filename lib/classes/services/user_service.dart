@@ -22,7 +22,19 @@ class UsersService {
       return null;
     }
   }
-
+  static Future<List<DataPersonalInformation>> search(MyService service,
+      {required String search,int pageNumber=1}) async {//todo
+    debugPrint('search()');
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Administration/users/SearchUsername?'
+        'PartialOrFullUserName=$search&pageNumber=$pageNumber');
+    debugPrint('back search ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return [];
+    }
+    return convertDataList<DataPersonalInformation>(back['data'], 'results', 'DataPersonalInformation');
+  }
   static Future<DataPersonalInformation?> getUser(
       //todo
       MyService service,
@@ -44,7 +56,7 @@ class UsersService {
     debugPrint('followUser($id)');
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Administration/users/follower/add',
-        {'followerId': id},
+        {'friendId': id},
         jsonType: true);
     debugPrint('followUserback ${back}');
     if (back['status'] == false) {
@@ -56,10 +68,20 @@ class UsersService {
   static Future<bool> unFollowUser(MyService service, String id) async {
     debugPrint('unFollowUser($id)');
     Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Administration/users/unfollow?'
-        'friendId=$id',
-        {});
+        '/api/v1/Administration/users/unfollow?',
+        {'friendId': id},jsonType: true);
     debugPrint('unFollowUserback ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+    }
+    return back['status'];
+  }
+  static Future<bool> blockUser(MyService service, String blockId) async {
+    debugPrint('blockUser($blockId)');
+    Map<String, dynamic> back = await service.httpPost(
+        '/api/v1/Administration/BlockFriend?BlockeeId=$blockId',
+        {});
+    debugPrint('blockUser back ${back}');
     if (back['status'] == false) {
       toast(back['error']);
     }

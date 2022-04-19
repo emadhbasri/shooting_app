@@ -61,6 +61,11 @@ class _FanFeedsState extends State<FanFeeds> {
               children: [
                 ...state.allPosts
                     .map((e) => PostFromShot(
+                  delete: (){
+                    state.allPosts.remove(e);
+                    state.notify();
+                  },
+                  key: UniqueKey(),
                           post: e,
                           onTapTag: gogo,
                         ))

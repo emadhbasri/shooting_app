@@ -225,61 +225,64 @@ class _ShootState extends State<Shoot> {
                               )
                           ],
                         )),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Container(
-                            width: doubleWidth(20),
-                            height: doubleHeight(30),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: GestureDetector(
-                                    onVerticalDragStart: (DragStartDetails e) {
-                                      if (positionStart == null)
-                                        positionStart = e.globalPosition.dy;
-                                    },
-                                    onVerticalDragEnd: (DragEndDetails e) {
-                                      setState(() {
-                                        pos = 0;
-                                        positionStart = null;
-                                        position = null;
-                                      });
-                                    },
-                                    onVerticalDragUpdate:
-                                        (DragUpdateDetails e) {
-                                      setState(() {
-                                        position = e.globalPosition.dy;
-                                        if (positionStart != null &&
-                                            position != null) {
-                                          pos = positionStart! - position!;
+                        AbsorbPointer(
+                          absorbing: sending,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              width: doubleWidth(20),
+                              height: doubleHeight(30),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    child: GestureDetector(
+                                      onVerticalDragStart: (DragStartDetails e) {
+                                        if (positionStart == null)
+                                          positionStart = e.globalPosition.dy;
+                                      },
+                                      onVerticalDragEnd: (DragEndDetails e) {
+                                        setState(() {
+                                          pos = 0;
+                                          positionStart = null;
+                                          position = null;
+                                        });
+                                      },
+                                      onVerticalDragUpdate:
+                                          (DragUpdateDetails e) {
+                                        setState(() {
+                                          position = e.globalPosition.dy;
+                                          if (positionStart != null &&
+                                              position != null) {
+                                            pos = positionStart! - position!;
+                                          }
+                                        });
+                                        if (doubleHeight(25) < pos &&
+                                            sending == false) {
+                                          sendData(context);
                                         }
-                                      });
-                                      if (doubleHeight(25) < pos &&
-                                          sending == false) {
-                                        sendData(context);
-                                      }
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: greenCall,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.black45,
-                                                offset: Offset(0, 0),
-                                                blurRadius: 50)
-                                          ]),
-                                      width: doubleWidth(18),
-                                      height: doubleWidth(18),
-                                      padding: EdgeInsets.all(doubleWidth(3)),
-                                      child: Image.asset('assets/images/soccer.png'),
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: greenCall,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black45,
+                                                  offset: Offset(0, 0),
+                                                  blurRadius: 50)
+                                            ]),
+                                        width: doubleWidth(18),
+                                        height: doubleWidth(18),
+                                        padding: EdgeInsets.all(doubleWidth(3)),
+                                        child: sending?simpleCircle():Image.asset('assets/images/soccer.png'),
+                                      ),
                                     ),
-                                  ),
-                                  left: doubleWidth(1),
-                                  bottom: doubleWidth(1) + pos,
-                                )
-                              ],
+                                    left: doubleWidth(1),
+                                    bottom: doubleWidth(1) + pos,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -317,11 +320,11 @@ class _ShootState extends State<Shoot> {
                           FloatingActionButton(
                             heroTag: UniqueKey(),
                             onPressed: () async {
-                              XFile? file = await ImagePicker()
-                                  .pickImage(source: ImageSource.gallery);
-                              if (file != null) {
+                              List<XFile>? files = await ImagePicker()
+                                  .pickMultiImage();
+                              if (files != null) {
                                 setState(() {
-                                  images.add(file);
+                                  images.addAll(files);
                                 });
                               }
                             },

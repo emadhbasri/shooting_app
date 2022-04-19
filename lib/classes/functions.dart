@@ -45,7 +45,14 @@ Widget circle() {
     ),
   );
 }
-Widget simpleCircle() => Center(child: CircularProgressIndicator());
+Widget simpleCircle({Color? color}) => Center(child: CircularProgressIndicator(
+  color: color,
+));
+
+profilePlaceHolder({bool isBig=false})=>Image.asset(
+  isBig?'assets/images/playerbig.png':'assets/images/player.png',
+  fit: BoxFit.fill,
+);
 
 String makeDurationToString(DateTime date) {
   DateTimeRange range = DateTimeRange(start: date, end: DateTime.now());

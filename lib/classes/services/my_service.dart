@@ -138,7 +138,13 @@ class MyService {
         return {'status': false, 'error': jsonn['message']};
       }
     }else{
-      return {'status': false, "data": false,'error':utf.body};
+      String out='';
+      out+='body: '+utf.body;
+      out+='\n status: '+utf.statusCode.toString();
+      if(utf.request!=null){
+        out+='\n url: '+utf.request!.url.toString();
+      }
+      return {'status': false, "data": false,'error':out};
     }
   }
 

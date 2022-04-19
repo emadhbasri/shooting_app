@@ -45,16 +45,18 @@ class _MyNotificationState extends State<MyNotification> {
     if (clean) {
       pageNumber = 1;
       notifs.clear();
+      setState(() {
+        loading = true;
+      });
     }
-    ;
-    setState(() {
-      loading = true;
-    });
-    Map<String, dynamic>? back = await service.getNotif();
-    setState(() {
-      loading = false;
-    });
+
+    Map<String, dynamic>? back = await service.getNotif(pageNumber: pageNumber);
+    if(loading)
+      setState(() {
+        loading = false;
+      });
     if (back != null) {
+      print('back $pageNumber ${back}');
       notifs.addAll(convertDataList<DataNotification>(
           back, 'results', 'DataNotification'));
       print('backnnn ${back.keys}');
@@ -137,7 +139,7 @@ class _MyNotificationState extends State<MyNotification> {
                                           .profilePhoto ??
                                           '',
                                       fit: BoxFit.fill)
-                                      : null),
+                                      : profilePlaceHolder()),
                             ),
                           ),
                           Align(

@@ -47,22 +47,30 @@ class _CommentReplyState extends State<CommentReply> {
                           Go.pushSlideAnim(
                               context, ProfileBuilder(username: reply.personalInformationViewModel.userName));
                         },
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: networkImage(reply
+                        child:
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: SizedBox(
+                              width: doubleHeight(5),
+                              height: doubleHeight(5),
+                              child: Builder(
+                                builder: (context) {
+                                  if (reply
+                                      .personalInformationViewModel
+                                      .profilePhoto != null) {
+                                    return imageNetwork(
+                                      reply
                                           .personalInformationViewModel
-                                          .profilePhoto ??
-                                      ''),
-                                )),
+                                          .profilePhoto!,
+                                      fit: BoxFit.fill,
+                                    );
+                                  }
+                                  return profilePlaceHolder();
+                                },
+                              )
                           ),
-                        ),
+                        )
+
                       ),
                     ),
                     Align(
@@ -178,7 +186,7 @@ class _CommentReplyState extends State<CommentReply> {
                         onTap: () async {
                           if (reply.personalInformationId !=
                               getIt<MainState>().userId) {
-                            toast('you can not delete this comment');
+                            toast('you can not delete this reply');
                             return;
                           }
                           bool? alert = await showDialog(

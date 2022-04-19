@@ -48,20 +48,26 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           Go.pushSlideAnim(
                               context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
                         },
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: networkImage(comment
-                                          .personalInformationViewModel
-                                          .profilePhoto ??
-                                      ''),
-                                )),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: SizedBox(
+                            width: doubleHeight(5),
+                            height: doubleHeight(5),
+                            child: Builder(
+                              builder: (context) {
+                                if (comment
+                                    .personalInformationViewModel
+                                    .profilePhoto != null) {
+                                  return imageNetwork(
+                                    comment
+                                        .personalInformationViewModel
+                                        .profilePhoto!,
+                                    fit: BoxFit.fill,
+                                  );
+                                }
+                                return profilePlaceHolder();
+                              },
+                            )
                           ),
                         ),
                       ),
@@ -133,7 +139,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           height: doubleWidth(5),
                           child: Image.asset('assets/images/chat(2).png',color: greenCall,)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(comment.commentReplyCount))
+                      Text(makeCount(comment.commentReplies.length))
                     ],
                   ),
                   Row(
@@ -225,9 +231,11 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             int index = comment.commentReplies.indexOf(e);
                             List<DataCommentReply> temp =
                                 comment.commentReplies.toList();
-                            temp.removeAt(index);
+                            // temp.removeAt(index);
+
                             setState(() {
-                              comment.commentReplies = temp.toList();
+                              comment.commentReplies.remove(e);
+                              // comment.commentReplies = temp.toList();
                             });
                           }),
                     ))
@@ -241,22 +249,25 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            if (loading) return;
+                            if (loading || controller.value.text.trim()=='') return;
                             setState(() {
                               loading = true;
                             });
-                            print(
-                                'controller.value.text ${controller.value.text}');
+
                             DataCommentReply? back =
                                 await ShotsService.commentReply(
                                     getIt<MyService>(),
                                     commentId: comment.id,
-                                    reply: controller.value.text);
+                                    reply: controller.value.text.trim());
                             setState(() {
                               loading = false;
-                              comment.commentReplies.add(back!);
                             });
-                            controller.clear();
+                            if (back!=null) {
+                              setState(() {
+                                comment.commentReplies.add(back);
+                              });
+                              controller.clear();
+                            }
                           },
                           child: loading
                               ? Transform.scale(
@@ -320,20 +331,26 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                           Go.pushSlideAnim(
                               context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
                         },
-                        child: SizedBox(
-                          width: doubleHeight(5),
-                          height: doubleHeight(5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: networkImage(comment
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: SizedBox(
+                              width: doubleHeight(5),
+                              height: doubleHeight(5),
+                              child: Builder(
+                                builder: (context) {
+                                  if (comment
+                                      .personalInformationViewModel
+                                      .profilePhoto != null) {
+                                    return imageNetwork(
+                                      comment
                                           .personalInformationViewModel
-                                          .profilePhoto ??
-                                      ''),
-                                )),
+                                          .profilePhoto!,
+                                      fit: BoxFit.fill,
+                                    );
+                                  }
+                                  return profilePlaceHolder();
+                                },
+                              )
                           ),
                         ),
                       ),
@@ -424,7 +441,6 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                 comment.commentLikeCount++;
                               });
                           } else {
-
                             bool back = await ShotsService.deleteCommentLike(
                                 service,
                                 commentId: comment.commentLikes.first.id);

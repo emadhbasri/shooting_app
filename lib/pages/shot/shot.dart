@@ -8,7 +8,6 @@ import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 import '../../ui_items/shots/comment_from_shot.dart';
-import '../chat/chat_list.dart';
 
 class Shot extends StatefulWidget {
   const Shot({Key? key, this.post, this.postId}) : super(key: key);
@@ -24,6 +23,10 @@ class _ShotState extends State<Shot> {
   MyService service = getIt<MyService>();
   DataPost? post;
   getData() async {
+    print('getData()');
+    if(post!=null)
+    post = await ShotsService.getShotById(service, post!.id);
+    else
     post = await ShotsService.getShotById(service, widget.postId!);
     setState(() {});
   }
@@ -35,17 +38,24 @@ class _ShotState extends State<Shot> {
     });
     if(controller.value.text.trim()==''){
       toast('please fill the comment field');
+      setState(() {
+        loading=false;
+      });
       return;
     }
     print('controller.value.text ${controller.value.text}');
     DataPostComment? back = await ShotsService.shotsComment(service,
         postId: post!.id, comment: controller.value.text);
+setState(() {
+  loading=false;
+});
+    if (back!=null) {
+      setState(() {
 
-    setState(() {
-      loading=false;
-      post!.postComments.add(back!);
-    });
-    controller.clear();
+        post!.postComments.add(back);
+      });
+      controller.clear();
+    }
   }
 
   @override
@@ -54,9 +64,10 @@ class _ShotState extends State<Shot> {
     print('widget.post $widget.post');
     if (widget.post != null) {
       post = widget.post;
-    } else {
-      getData();
     }
+    // else {
+      getData();
+    // }
   }
 
   @override
@@ -69,21 +80,25 @@ class _ShotState extends State<Shot> {
             ? circle()
             : Column(
                 children: [
-                  PostFromShot(post: post!, canTouch: false, onTapTag: gogo),
                   Flexible(
-                    child: ListView.builder(
-                      itemCount: post!.postComments.length,
-                      itemBuilder: (context, index) =>
-                          CommentFromShot(
-                              key: UniqueKey(),
-                              comment: post!.postComments[index],delete: (){
-                            print('delete comment $index');
-                            List<DataPostComment> temp  =post!.postComments.toList();
-                            temp.removeAt(index);
-                            setState(() {
-                              post!.postComments=temp.toList();
-                            });
-                          }),
+                    child: Container(color: Colors.white,
+                      child: ListView(
+                        children: [
+                          PostFromShot(post: post!, canTouch: false, onTapTag: gogo,delete: (){}),
+                          SizedBox(height: doubleHeight(1)),
+                          ...List.generate(post!.postComments.length, (index) =>
+                              CommentFromShot(
+                                  key: UniqueKey(),
+                                  comment: post!.postComments[index],delete: (){
+                                print('delete comment $index');
+                                List<DataPostComment> temp  =post!.postComments.toList();
+                                temp.removeAt(index);
+                                setState(() {
+                                  post!.postComments=temp.toList();
+                                });
+                              })),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -103,6 +118,9 @@ class _ShotState extends State<Shot> {
                                 horizontal: doubleWidth(8),
                                 vertical: doubleHeight(0.5)),
                             child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: 4,
                               controller: controller,
                               decoration: InputDecoration(
                                   hintStyle: TextStyle(

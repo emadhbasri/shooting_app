@@ -344,7 +344,7 @@ class _TeamState extends State<Team> {
                                 getIt<MyService>(), searchTeam!);
                             if (back) {
                               await getIt<MainState>().getProfile();
-                              Go.pushSlideAnim(context, AppPageBuilder());
+                              Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
                             }
                           }
                         },
