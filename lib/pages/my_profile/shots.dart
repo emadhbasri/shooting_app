@@ -14,41 +14,80 @@ class Shots extends StatefulWidget {
 }
 
 class _ShotsState extends State<Shots> {
+  late ScrollController _listController;
+
+  @override
+  void initState() {
+    super.initState();
+    final MainState state = Provider.of<MainState>(context, listen: false);
+
+    _listController = ScrollController()
+      ..addListener(() {
+        if (state.profilePosts.isNotEmpty) {
+          if (_listController.position.atEdge &&
+              _listController.offset != 0.0) {
+            if (state.profilePostsHasNext) {
+              state.profilePostsPageNumber++;
+              state.getProfileShots();
+            }
+          }
+        }
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final MainState state = Provider.of<MainState>(context, listen: false);
-    if(state.personalInformation!.posts.isEmpty)
-      if(state.personalInformation!.posts.isEmpty)
-        return ListView(
-          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-          children: [
-            SizedBox(
-                height: doubleHeight(40),
-                width: double.maxFinite,
-                child: Center(child: Text('no shot. Try shoot a few soon 🙂'))),
-          ],
+    // final MainState state = Provider.of<MainState>(context, listen: false);
+  List<DataPost> posts=context.watch<MainState>().profilePosts;
+    if(context.read<MainState>().loadingProfilePost){
+      return circle();
+    }
+      if(posts.isEmpty) {
+        return RefreshIndicator(
+          onRefresh: ()async{
+            await context.read<MainState>().getProfileShots(force: true);
+          },
+          child: ListView(
+            padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+            children: [
+              SizedBox(
+                  height: doubleHeight(40),
+                  width: double.maxFinite,
+                  child: Center(child: Text('No Shot. Try Shoot A Few Soon 🙂'))),
+            ],
+          ),
         );
+      }
     return RefreshIndicator(
       onRefresh: ()async{
-        await state.getProfile(force: true);
+        await context.read<MainState>().getProfileShots(force: true);
       },
       child: ListView(
+        controller: _listController,
         physics: AlwaysScrollableScrollPhysics(),
-          children: state.personalInformation!.posts.reversed.toList().map((e) =>
-              PostFromShotProfile(
-                key: UniqueKey(),
-              post: e,onTapTag: gogo,
-                canDelete: true,
-                delete: () {
-                  int index = state.personalInformation!.posts.indexOf(e);
-                  List<DataPost> temp = state.personalInformation!.posts.toList();
-                  temp.removeAt(index);
-                    state.personalInformation!.posts=temp.toList();
-                  state.notify();
-                },
-            person: state.personalInformation!,
-          )
-      ).toList(),
+          children: [
+            ...posts.toList().map((e) =>
+                PostFromShotProfile(
+                  key: UniqueKey(),
+                  post: e,onTapTag: gogo,
+                  canDelete: true,
+                  delete: () {
+                    posts.remove(e);
+                    context.read<MainState>().notify();
+                  },
+                  person: context.read<MainState>().personalInformation!,
+                )
+            ).toList(),
+            if (context.watch<MainState>().profilePostsHasNext)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: doubleHeight(1)),
+                  CircularProgressIndicator(),
+                  SizedBox(height: doubleHeight(1)),
+                ],
+              )
+          ],
       ),
     );
   }

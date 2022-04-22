@@ -160,6 +160,7 @@ class _LoginState extends State<Login> {
                               Go.pushSlideAnim(
                                   context,
                                   VerifyOtp(
+                                    isRegister: false,
                                       username: username, password: password));
                             }
                           }

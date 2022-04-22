@@ -88,6 +88,38 @@ class ShotsService {
       'totalPage':back['data']['total_pages'],
       'list':convertDataList<DataPost>(back['data'], 'results', 'DataPost')};
   }
+  static Future<Map<String,dynamic>> getByUserId(MyService service,//todo
+          {int pageNumber = 1,int PageSize=15}) async {
+    debugPrint('geByUserId($pageNumber)');
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Shots/getPostsByUserId?pageNumber=${pageNumber}&PageSize=$PageSize');
+    debugPrint('back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'totalPage':back['data']['total_pages'],
+      'hasNext':back['data']['hasNext'],
+      'list':convertDataList<DataPost>(back['data'], 'results', 'DataPost')};
+  }
+
+  static Future<Map<String,dynamic>> getByUsername(MyService service,//todo
+          {int pageNumber = 1,int PageSize=15,required String username}) async {
+    username=username.replaceAll('@', '');
+    debugPrint('geByUsername($username)');
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Shots/getPostsByUsername?pageNumber=${pageNumber}&PageSize=${PageSize}&username=$username');
+    debugPrint('back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'totalPage':back['data']['total_pages'],
+      'hasNext':back['data']['hasNext'],
+      'list':convertDataList<DataPost>(back['data'], 'results', 'DataPost')};
+  }
 
   static Future<DataPost?> getShotById(MyService service, String shotId) async {
     debugPrint('getShotById($shotId)');

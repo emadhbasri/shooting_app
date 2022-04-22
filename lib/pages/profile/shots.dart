@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../classes/functions.dart';
+import '../../classes/models.dart';
+import '../../classes/states/main_state.dart';
 import '../../classes/states/profile_state.dart';
 
 class Shots extends StatefulWidget {
@@ -13,37 +15,79 @@ class Shots extends StatefulWidget {
 }
 
 class _ShotsState extends State<Shots> {
+  late ScrollController _listController;
+  @override
+  void initState() {
+    super.initState();
+    final ProfileState state =
+    Provider.of<ProfileState>(context, listen: false);
+
+    _listController = ScrollController()
+      ..addListener(() {
+        if (state.profilePosts.isNotEmpty) {
+          if (_listController.position.atEdge &&
+              _listController.offset != 0.0) {
+            if (state.profilePostsHasNext) {
+              state.profilePostsPageNumber++;
+              state.getProfileShots();
+            }
+          }
+        }
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ProfileState state =
-        Provider.of<ProfileState>(context, listen: false);
-    if(state.personalInformation!.posts.isEmpty)
-      if(state.personalInformation!.posts.isEmpty)
-        return ListView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-          children: [
-            SizedBox(
-                height: doubleHeight(40),
-                width: double.maxFinite,
-                child: Center(child: Text('no shot. 🙂'))),
-          ],
+    // final ProfileState state =
+    //     Provider.of<ProfileState>(context, listen: false);
+    List<DataPost> posts=context.watch<ProfileState>().profilePosts;
+    if(context.read<ProfileState>().loadingProfilePost){
+      return circle();
+    }
+    if(posts.isEmpty) {
+        return RefreshIndicator(
+          onRefresh: ()async{
+            await context.read<ProfileState>().getProfileShots(force: true);
+          },
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+            children: [
+              SizedBox(
+                  height: doubleHeight(40),
+                  width: double.maxFinite,
+                  child: Center(child: Text('no shot. 🙂'))),
+            ],
+          ),
         );
+      }
     return RefreshIndicator(
       onRefresh: ()async{
-        await state.init(state.userName);
+        await context.read<ProfileState>().getProfileShots(force: true);
       },
       child: ListView(
+        controller: _listController,
         physics: BouncingScrollPhysics(),
-        children: state.personalInformation!.posts.reversed.toList()
-            .map((e) => PostFromShotProfile(
-                  post: e,
-                  onTapTag: gogo,
-          canDelete: false,
-          delete: (){},
-                  person: state.personalInformation!,
-                ))
-            .toList(),
+        children: [
+          ...posts.toList()
+              .map((e) => PostFromShotProfile(
+            post: e,
+            onTapTag: gogo,
+            canDelete: false,
+            delete: (){},
+            person: context.read<ProfileState>().personalInformation!,
+          ))
+              .toList(),
+          if (context.watch<ProfileState>().profilePostsHasNext)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: doubleHeight(1)),
+                CircularProgressIndicator(),
+                SizedBox(height: doubleHeight(1)),
+              ],
+            )
+        ],
       ),
     );
   }

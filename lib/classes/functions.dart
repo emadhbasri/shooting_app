@@ -55,6 +55,9 @@ profilePlaceHolder({bool isBig=false})=>Image.asset(
 );
 
 String makeDurationToString(DateTime date) {
+  if(date.isAfter(DateTime.now())){
+    return '';
+  }
   DateTimeRange range = DateTimeRange(start: date, end: DateTime.now());
   Duration duration = range.duration;
   if (duration.inDays > 365) {

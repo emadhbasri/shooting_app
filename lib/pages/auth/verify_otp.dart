@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/auth/team.dart';
 
 import '../../../classes/functions.dart';
@@ -10,7 +9,7 @@ import '../../../main.dart';
 import '../AppPage.dart';
 
 class VerifyOtp extends StatefulWidget {
-  const VerifyOtp({Key? key,this.isRegister=false,required this.username,required this.password}) : super(key: key);
+  const VerifyOtp({Key? key,required this.isRegister,required this.username,required this.password}) : super(key: key);
   final String username;
   final String password;
   final bool isRegister;

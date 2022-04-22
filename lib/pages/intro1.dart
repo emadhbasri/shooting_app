@@ -32,10 +32,19 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
     service.getToken().then((bool value) {
       if (value) {
         Future.delayed(Duration(seconds: 2),
-                () => Go.pushAndRemoveSlideAnim(context, AppPageBuilder()));
+                () {
+                  _controller.stop();
+                  _controller.dispose();
+          Go.pushAndRemoveSlideAnim(context, AppPageBuilder());});
       } else {
         Future.delayed(
-            Duration(seconds: 2), () => Go.pushAndRemoveSlideAnim(context, Auth()));
+            Duration(seconds: 2), ()
+        {
+          _controller.stop();
+          _controller.dispose();
+        Go.pushAndRemoveSlideAnim(context, Auth());
+        }
+        );
       }
     });
   }

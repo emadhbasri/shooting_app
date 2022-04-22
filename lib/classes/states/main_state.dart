@@ -43,8 +43,32 @@ class MainState extends ChangeNotifier {
   }
 
   DataPersonalInformation? personalInformation;
+  List<DataPost> profilePosts=[];
+  int profilePostsPageNumber=1;
+  bool profilePostsHasNext=false;
+  bool loadingProfilePost=false;
+
+  Future<void> getProfileShots({bool force=false}) async {
+    debugPrint('getProfileShots($force)');
+    if (force) {
+      profilePostsPageNumber = 1;
+      profilePosts.clear();
+        loadingProfilePost = true;
+        notifyListeners();
+    }
+    Map<String,dynamic> back = await ShotsService.getByUserId(service,pageNumber: profilePostsPageNumber);
+    loadingProfilePost = false;notifyListeners();
+    if(back.length>0){
+      profilePostsHasNext=back['hasNext'];
+      profilePosts.addAll(back['list']);
+    }
+    // if(noNotify)
+    notifyListeners();
+  }
+
   Future<void> getProfile({bool force=false}) async {
     if (force==false && personalInformation != null) return;
+    getProfileShots(force: true);
     personalInformation = await UsersService.myProfile(getIt<MyService>());
     // if(noNotify)
       notifyListeners();
