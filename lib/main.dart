@@ -16,14 +16,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'pages/intro1.dart';
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 final getIt = GetIt.instance;
 
-
-
 late FirebaseMessaging messaging;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('A bg message just showed up1 : ${message.messageId}');
   // _showNotificationCustomSound(message.hashCode,
   //     message.notification!.title!, message.notification!.body!);
@@ -31,22 +30,21 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print('A bg message just showed up : ${message.messageId}');
 }
 
-void main() async{
+void main() async {
   GetIt.I.registerLazySingleton(() => MyService());
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
   GetIt.I.registerLazySingleton(() => ChatState());
   WidgetsFlutterBinding.ensureInitialized();
 
-
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('app_icon');
+      AndroidInitializationSettings('app_icon');
 
   final IOSInitializationSettings initializationSettingsIOS =
-  IOSInitializationSettings(
+      IOSInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,
     requestSoundPermission: true,
@@ -57,14 +55,14 @@ void main() async{
     iOS: initializationSettingsIOS,
   );
 
-  messaging =FirebaseMessaging.instance;
+  messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
-    announcement: false,
+    announcement: true,
     badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
     sound: true,
   );
 
@@ -81,7 +79,6 @@ void main() async{
     initializationSettings,
   );
 
-
   runApp(MyApp());
 }
 
@@ -95,16 +92,13 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Color.fromRGBO(244, 244, 244, 1),
           primaryColor: mainBlue,
           primarySwatch: mainColor,
-          appBarTheme: AppBarTheme(
-              elevation: 0,
-              centerTitle: true,
-              color: mainBlue
-          )
-      ),
+          appBarTheme:
+              AppBarTheme(elevation: 0, centerTitle: true, color: mainBlue)),
       home: AppFirst(),
     );
   }
 }
+
 MaterialColor mainColor = MaterialColor(
   mainBlue.value,
   <int, Color>{
@@ -120,6 +114,7 @@ MaterialColor mainColor = MaterialColor(
     900: mainBlue,
   },
 );
+
 class AppFirst extends StatefulWidget {
   @override
   _AppFirstState createState() => _AppFirstState();
@@ -135,27 +130,26 @@ class _AppFirstState extends State<AppFirst> {
       print('message come');
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
-      if(notification!=null && android!=null){
+      if (notification != null && android != null) {
         print('message.notification!.title:${message.notification!.title}');
         print('message.notification!.body:${message.notification!.body}');
-        print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
-        _showNotificationCustomSound(notification.hashCode,
-            notification.title!, notification.body!);
+        print(
+            'message.notification!.android!.channelId:${message.notification!.android!.channelId}');
+        _showNotificationCustomSound(
+            notification.hashCode, notification.title!, notification.body!);
       }
     });
     // FirebaseMessaging.onBackgroundMessage((BackgroundMessageHandler message) => message);
-
-
-
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('message come in');
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
-      if(notification!=null && android!=null){
+      if (notification != null && android != null) {
         print('message.notification!.title:${message.notification!.title}');
         print('message.notification!.body:${message.notification!.body}');
-        print('message.notification!.android!.channelId:${message.notification!.android!.channelId}');
+        print(
+            'message.notification!.android!.channelId:${message.notification!.android!.channelId}');
       }
     });
   }
@@ -163,13 +157,12 @@ class _AppFirstState extends State<AppFirst> {
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   @override
@@ -181,46 +174,52 @@ class _AppFirstState extends State<AppFirst> {
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     // return Scaffold(
-    //   body: Center(child: TextButton(
-    //       onPressed: (){
-    //         _showNotificationCustomSound(1346542,
-    //             'titile', 'bododby');
-    //         // _showNotificationCustomSound();
-    //         // flutterLocalNotificationsPlugin.show(
-    //         //     1,
-    //         //     'test title',
-    //         //     'test body',
-    //         //     NotificationDetails(
-    //         //         android: AndroidNotificationDetails(
-    //         //             channel.id,
-    //         //             channel.name,
-    //         //             playSound: true,
-    //         //             color: mainBlue,
-    //         //             channelShowBadge: true,
-    //         //             // icon: '@mipmap/ic_launcher',
-    //         //             channelDescription: channel.description
-    //         //         )
-    //         //     )
-    //         //     // notificationDetails
-    //         // );
-    //       },
-    //       child: Text('notif test')),),
+    //   body: Center(
+    //     child: TextButton(
+    //         onPressed: () {
+    //           _showNotificationCustomSound(1346542, 'titile', 'bododby');
+    //           // _showNotificationCustomSound();
+    //           // flutterLocalNotificationsPlugin.show(
+    //           //     1,
+    //           //     'test title',
+    //           //     'test body',
+    //           //     NotificationDetails(
+    //           //         android: AndroidNotificationDetails(
+    //           //             channel.id,
+    //           //             channel.name,
+    //           //             playSound: true,
+    //           //             color: mainBlue,
+    //           //             channelShowBadge: true,
+    //           //             // icon: '@mipmap/ic_launcher',
+    //           //             channelDescription: channel.description
+    //           //         )
+    //           //     )
+    //           //     // notificationDetails
+    //           // );
+    //         },
+    //         child: Text('notif test')),
+    //   ),
     // );
     // return Team();
     return Intro1();
   }
-
 }
-Future<void> _showNotificationCustomSound(int id,String title,String body) async {
+
+Future<void> _showNotificationCustomSound(
+    int id, String title, String body) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
+      AndroidNotificationDetails(
     'channel 1',
     'your other channel name',
     channelDescription: 'your other channel description',
     sound: RawResourceAndroidNotificationSound('notif'),
   );
   const IOSNotificationDetails iOSPlatformChannelSpecifics =
-  IOSNotificationDetails(sound: 'notif.aiff');
+      IOSNotificationDetails(
+          sound: 'notif.aiff',
+          presentSound: true,
+          presentAlert: true,
+          badgeNumber: 0);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
     android: androidPlatformChannelSpecifics,
     iOS: iOSPlatformChannelSpecifics,
@@ -232,5 +231,3 @@ Future<void> _showNotificationCustomSound(int id,String title,String body) async
     platformChannelSpecifics,
   );
 }
-
-
