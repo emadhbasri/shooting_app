@@ -180,6 +180,7 @@ class _EditProfileState extends State<EditProfile> {
                             setState(() {
                               teamName=backTeam.name;
                             });
+                            toast('Team Changed Successfully');
                           }
                           print('backUser $backUser');
                         }
@@ -250,6 +251,7 @@ class _EditProfileState extends State<EditProfile> {
                                 service, nameController.value.text);
                             if(back)
                               getIt<MainState>().getProfile(force: true);
+                            Go.pop(context);
                           },
                         )),
                     SizedBox(height: doubleHeight(4)),

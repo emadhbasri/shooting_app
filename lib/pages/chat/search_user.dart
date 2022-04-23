@@ -234,8 +234,8 @@ class _UserItemState extends State<UserItem> {
                         },
                         child: Text(
                           !user.followedByMe
-                              ? 'add as user mates'
-                              : 'remove as user mates',
+                              ? 'Add As Fan Mates'
+                              : 'Remove As Fan Mates',
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(

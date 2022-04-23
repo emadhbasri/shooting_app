@@ -36,12 +36,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    ProfileState state = Provider.of(context,listen: false);
-    _controller = TabController(length: 2, vsync: this, initialIndex: 0)..addListener(() {
-      state.selectedTab = state.tabs[_controller.index];
-      state.notify();
-    });
-
+    ProfileState state = Provider.of(context, listen: false);
+    _controller = TabController(length: 2, vsync: this, initialIndex: 0)
+      ..addListener(() {
+        state.selectedTab = state.tabs[_controller.index];
+        state.notify();
+      });
   }
 
   @override
@@ -56,38 +56,77 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               title: Text('Profile'),
               elevation: 0,
               actions: [
-                if(state.personalInformation!.id!=getIt<MainState>().userId)
-                  PopupMenuButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                if (state.personalInformation!.id != getIt<MainState>().userId)
+                  if (state.personalInformation!.blockedByMe)
+                    PopupMenuButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                            onTap: () async {
+                              DataChatRoom? back =
+                                  await ChatService.createPrivateChat(
+                                      state.service,
+                                      friendId: state.personalInformation!.id);
+                              if (back != null) {
+                                Go.replaceSlideAnim(
+                                    context,
+                                    ChatBuilder(
+                                      state: ChatState()..selectedChat = back,
+                                    ));
+                              }
+                            },
+                            child: Text('Message')),
+                        PopupMenuItem(
+                            onTap: () async {
+                              bool? back = await UsersService.blockUser(
+                                  state.service, state.personalInformation!.id);
+                              print('block $back');
+                              if (back) {
+                                state.personalInformation!.blockedByMe=false;
+                                state.notify();
+                                toast('User Unblocked Successfully');
+                              }
+                            },
+                            child: Text('Unblock'))
+                      ],
+                    )
+                  else
+                    PopupMenuButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                            onTap: () async {
+                              DataChatRoom? back =
+                                  await ChatService.createPrivateChat(
+                                      state.service,
+                                      friendId: state.personalInformation!.id);
+                              if (back != null) {
+                                Go.replaceSlideAnim(
+                                    context,
+                                    ChatBuilder(
+                                      state: ChatState()..selectedChat = back,
+                                    ));
+                              }
+                            },
+                            child: Text('Message')),
+                        PopupMenuItem(
+                            onTap: () async {
+                              bool? back = await UsersService.blockUser(
+                                  state.service, state.personalInformation!.id);
+                              print('block $back');
+                              if (back) {
+                                state.personalInformation!.blockedByMe=true;
+                                state.notify();
+                                toast('User Blocked Successfully');
+                              }
+                            },
+                            child: Text('Block')),
+                      ],
                     ),
-                      itemBuilder: (context) =>
-                    [
-                      PopupMenuItem(
-                          onTap: ()async{
-                            DataChatRoom? back = await ChatService.createPrivateChat(state.service,
-                                friendId: state.personalInformation!.id);
-                            if (back!=null) {
-                              Go.replaceSlideAnim(context, ChatBuilder(
-                                state: ChatState()..selectedChat=back,
-                              ));
-                            }
-                          },
-                          child: Text('Message')),
-                      PopupMenuItem(
-                          onTap: ()async{
-                            bool? back = await UsersService.blockUser(state.service, state.personalInformation!.id);
-                            print('block $back');
-                            if(back){
-                              toast('User Blocked Successfully');
-                            }
-                          },
-                          child: Text('Block')),
-                    ],
-                  ),
-                  // IconButton(onPressed: ()async{
-                  //
-                  // }, icon: Icon(Icons.message))
               ],
             ),
             backgroundColor: Colors.white,
@@ -117,21 +156,29 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                       .profilePhoto !=
                                                   null
                                               ? GestureDetector(
-                                            onTap:(){
-                                              Go.push(context, Gal(images: [state.personalInformation!
-                                                  .profilePhoto!]));
-                                            },
-                                                child: CircleAvatar(
-                                            radius: doubleWidth(30),
-                                            backgroundImage: networkImage(state.personalInformation!
-                                                  .profilePhoto!),
-                                          ),
-                                              )
+                                                  onTap: () {
+                                                    Go.push(
+                                                        context,
+                                                        Gal(images: [
+                                                          state
+                                                              .personalInformation!
+                                                              .profilePhoto!
+                                                        ]));
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: doubleWidth(30),
+                                                    backgroundImage:
+                                                        networkImage(state
+                                                            .personalInformation!
+                                                            .profilePhoto!),
+                                                  ),
+                                                )
                                               : CircleAvatar(
-                                            backgroundColor: Colors.white,
-                        radius: doubleWidth(30),
-                    backgroundImage: AssetImage('assets/images/playerbig.png'),
-                  )),
+                                                  backgroundColor: Colors.white,
+                                                  radius: doubleWidth(30),
+                                                  backgroundImage: AssetImage(
+                                                      'assets/images/playerbig.png'),
+                                                )),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
                                         child: SizedBox(
@@ -213,52 +260,55 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   //   ],
                   // ),
                   SizedBox(height: doubleHeight(2)),
-                  if(state.personalInformation!.id!=getIt<MainState>().userId)
-                  Consumer<ProfileState>(
-                    builder: (context, value, child) => ElevatedButton(
-                      onPressed: () async {
-                        print('click');
-                        print(value.personalInformation!.followedByMe);
-                        MyService service = getIt<MyService>();
-                        bool backUser;
-                        if (value.personalInformation!.followedByMe) {
-                          //unfollow
-                          backUser = await UsersService.unFollowUser(
-                              service, value.personalInformation!.id);
-                          print('unfollow $backUser');
-                        } else {
-                          backUser = await UsersService.followUser(
-                              service, value.personalInformation!.id);
-                          print('follow $backUser');
-                        }
-                        if(backUser) {
-                          // state.init(state.userName);
-                          value.personalInformation!.followedByMe =
-                              !value.personalInformation!.followedByMe;
-                          value.notify();
-                        }
-                      },
-                      child: Text(
-                        !value.personalInformation!.followedByMe
-                            ? 'Add As Fan Mates'
-                            : 'Remove As Fan Mates',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            value.personalInformation!.followedByMe
-                                ? Color.fromRGBO(216, 216, 216, 1)
-                                : Color.fromRGBO(78, 255, 187, 1)),
-                        elevation: MaterialStateProperty.all(0),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
-                        )),
-                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                            vertical: doubleHeight(1.7),
-                            horizontal: doubleWidth(4))),
+                  if (state.personalInformation!.id !=
+                      getIt<MainState>().userId)
+                    Consumer<ProfileState>(
+                      builder: (context, value, child) => ElevatedButton(
+                        onPressed: () async {
+                          print('click');
+                          print(value.personalInformation!.followedByMe);
+                          MyService service = getIt<MyService>();
+                          bool backUser;
+                          if (value.personalInformation!.followedByMe) {
+                            //unfollow
+                            backUser = await UsersService.unFollowUser(
+                                service, value.personalInformation!.id);
+                            print('unfollow $backUser');
+                          } else {
+                            backUser = await UsersService.followUser(
+                                service, value.personalInformation!.id);
+                            print('follow $backUser');
+                          }
+                          if (backUser) {
+                            // state.init(state.userName);
+                            value.personalInformation!.followedByMe =
+                                !value.personalInformation!.followedByMe;
+                            value.notify();
+                          }
+                        },
+                        child: Text(
+                          !value.personalInformation!.followedByMe
+                              ? 'Add As Fan Mates'
+                              : 'Remove As Fan Mates',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              value.personalInformation!.followedByMe
+                                  ? Color.fromRGBO(216, 216, 216, 1)
+                                  : Color.fromRGBO(78, 255, 187, 1)),
+                          elevation: MaterialStateProperty.all(0),
+                          shape:
+                              MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          )),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(1.7),
+                                  horizontal: doubleWidth(4))),
+                        ),
                       ),
                     ),
-                  ),
                   SizedBox(height: doubleHeight(2)),
                   Expanded(
                       child: Column(
@@ -266,19 +316,20 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       TabBar(
                         labelStyle: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: doubleWidth(4)
-                        ),
+                            fontSize: doubleWidth(4)),
                         indicatorColor: mainBlue,
-                        indicatorPadding: EdgeInsets.symmetric(
-                            horizontal: doubleWidth(20)),
+                        indicatorPadding:
+                            EdgeInsets.symmetric(horizontal: doubleWidth(20)),
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorWeight: doubleHeight(0.4),
                         labelColor: mainBlue,
                         unselectedLabelColor: mainBlue,
-                        tabs: state.tabs.map((e) => Tab(
-                          // text: e,
-                          child: Text(e),
-                        )).toList(),
+                        tabs: state.tabs
+                            .map((e) => Tab(
+                                  // text: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
                         controller: _controller,
                       ),
                       // SizedBox(
@@ -345,9 +396,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       //         .toList(),
                       //   ),
                       // ),
-                      Expanded(child: TabBarView(
+                      Expanded(
+                          child: TabBarView(
                         controller: _controller,
-                        children: [Shots(),FanMates()],
+                        children: [Shots(), FanMates()],
                       ))
                     ],
                   ))

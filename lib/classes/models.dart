@@ -290,6 +290,7 @@ class DataPersonalInformation {
     postCount = convertData(data, 'postCount', DataType.int);
     followingMe = convertData(data, 'followingMe', DataType.bool);
     followedByMe = convertData(data, 'followedByMe', DataType.bool);
+    blockedByMe = convertData(data, 'blockedByMe', DataType.bool);
     posts = convertDataList<DataPost>(data, 'posts', 'DataPost');
     userFollowers = convertDataList<DataUserFollower>(data, 'userFollowers', 'DataUserFollower');
     // userFollowings = convertDataList<DataUserFollowing>(
@@ -298,6 +299,7 @@ class DataPersonalInformation {
 
   String? email;
   late bool followedByMe;
+  late bool blockedByMe;
   late int followersCount;
   late int followingCount;
   late bool followingMe;
