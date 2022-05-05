@@ -2,6 +2,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 import 'package:shooting_app/ui_items/gal.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
@@ -37,22 +38,32 @@ class _PostFromShotState extends State<PostFromShot> {
       spacing: 3,
       children: split.map((e) {
         if(e.length==0)return Text('');
-        if (e[0] == '#') {
-          return GestureDetector(
-            onLongPress: (){
-              copyText(text);
-            },
-              onTap: () {
-                widget.onTapTag(context, e, false);
-              },
-              child: Text(e, style: TextStyle(color: mainBlue)));
-        } else if (e[0] == '@') {
+        // if (e[0] == '#') {
+        //   return GestureDetector(
+        //     onLongPress: (){
+        //       copyText(text);
+        //     },
+        //       onTap: () {
+        //         widget.onTapTag(context, e, false);
+        //       },
+        //       child: Text(e, style: TextStyle(color: mainBlue)));
+        // } else
+          if (e[0] == '@') {
           return GestureDetector(
               onLongPress: (){
                 copyText(text);
               },
               onTap: () {
                 widget.onTapTag(context, e, true);
+              },
+              child: Text(e, style: TextStyle(color: mainBlue)));
+        } else if (e.startsWith('http')) {
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              onTap: () {
+                openUrl(e);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
@@ -65,13 +76,32 @@ class _PostFromShotState extends State<PostFromShot> {
       }).toList(),
     );
   }
-
-  DataPersonalInformationViewModel? person;
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
   @override
   void initState() {
     super.initState();
     person = widget.post.person;
+
+    init();
   }
+  init()async{
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    {
+      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo=false;
+      });
+    }
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+      controller.dispose();
+  }
+  DataPersonalInformationViewModel? person;
 
   @override
   Widget build(BuildContext context) {
@@ -215,42 +245,73 @@ class _PostFromShotState extends State<PostFromShot> {
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
-                  child: PageView.builder(
-                    controller:
-                    PageController(initialPage: 0, viewportFraction: 0.85),
-                    physics: BouncingScrollPhysics(),
-                    itemCount: widget.post.mediaTypes.length,
-                    itemBuilder: (_, index) => Padding(
-                      padding: EdgeInsets.only(
-                          right: widget.post.mediaTypes.length - 1 != index
-                              ? doubleHeight(2)
-                              : 0),
-                      child: GestureDetector(
-                        onTap: (){
-                          Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child:
-                          // PhotoView(
-                          //
-                          //   enableRotation: false,
-                          //   minScale: 0.0,
-                          //   maxScale: 0.3,
-                          //
-                          //   controller:
-                          //     PhotoViewController(initialPosition: Offset.zero),
-                          //   imageProvider: networkImage(widget.post.mediaTypes[index].media),
-                          // )
+                  child: Builder(
+                      builder: (context) {
+                        if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+                        {
+                          if (loadingVideo) {
+                            return Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const CircularProgressIndicator(),
+                                  SizedBox(height: doubleHeight(1)),
+                                  const Text(
+                                    'loading ...',
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                        color: mainBlue,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          return Center(
+                            child: GestureDetector(
 
-                          imageNetwork(
-                            widget.post.mediaTypes[index].media,
-                            fit: BoxFit.fill,
-                          )
-                        ,
-                        ),
-                      ),
-                    ),
+                              onTap: (){
+                                if(controller.value.isPlaying){
+                                  controller.pause();
+
+                                }else{
+                                  controller.play();
+                                  controller.setLooping(true);
+                                }
+
+                              },
+                              child: AspectRatio(
+                                aspectRatio: controller.value.aspectRatio,
+                                child: VideoPlayer(controller),
+                              ),
+                            ),
+                          );
+                        }
+                        else
+                          return PageView.builder(
+                            controller:
+                            PageController(initialPage: 0, viewportFraction: 0.85),
+                            physics: BouncingScrollPhysics(),
+                            itemCount: widget.post.mediaTypes.length,
+                            itemBuilder: (_, index) => Padding(
+                              padding: EdgeInsets.only(
+                                  right: widget.post.mediaTypes.length - 1 != index
+                                      ? doubleHeight(2)
+                                      : 0),
+                              child: GestureDetector(
+                                onTap: (){
+                                  Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                                },
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: imageNetwork(
+                                      widget.post.mediaTypes[index].media,
+                                      fit: BoxFit.fill,
+                                    )),
+                              ),
+                            ),
+                          );
+                      }
                   ),
                 ),
               ),
@@ -411,20 +472,30 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       spacing: 3,
       children: split.map((e) {
         if(e.length==0)return Text('');
-        if (e[0] == '#') {
-          return GestureDetector(onLongPress: (){
-            copyText(text);
-          },
-              onTap: () {
-                widget.onTapTag(context, e, false);
-              },
-              child: Text(e, style: TextStyle(color: mainBlue)));
-        } else if (e[0] == '@') {
+        // if (e[0] == '#') {
+        //   return GestureDetector(onLongPress: (){
+        //     copyText(text);
+        //   },
+        //       onTap: () {
+        //         widget.onTapTag(context, e, false);
+        //       },
+        //       child: Text(e, style: TextStyle(color: mainBlue)));
+        // } else
+          if (e[0] == '@') {
           return GestureDetector(onLongPress: (){
             copyText(text);
           },
               onTap: () {
                 widget.onTapTag(context, e, true);
+              },
+              child: Text(e, style: TextStyle(color: mainBlue)));
+        } else if (e.startsWith('http')) {
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              onTap: () {
+                openUrl(e);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
@@ -437,7 +508,29 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       }).toList(),
     );
   }
-
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+  init()async{
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    {
+      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo=false;
+      });
+    }
+  }
+@override
+  void dispose() {
+    super.dispose();
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+      controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -576,69 +669,79 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
             _convertHashtag(context, widget.post.details ?? ''),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
-              SizedBox(
+              Container(
+                color: Colors.transparent,
                 width: max,
                 height: doubleWidth(70),
-                child: PageView.builder(
-                  controller:
-                      PageController(initialPage: 0, viewportFraction: 0.85),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: widget.post.mediaTypes.length,
-                  itemBuilder: (_, index) => Padding(
-                    padding: EdgeInsets.only(
-                        right: widget.post.mediaTypes.length - 1 != index
-                            ? doubleHeight(2)
-                            : 0),
-                    child: GestureDetector(
-                      onTap: (){
-                        Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
-                      },
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: imageNetwork(
-                            widget.post.mediaTypes[index].media,
-                            fit: BoxFit.fill,
-                          )),
-                    ),
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+                      {
+                        if (loadingVideo) {
+                          return Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const CircularProgressIndicator(),
+                                SizedBox(height: doubleHeight(1)),
+                                const Text(
+                                  'loading ...',
+                                  textDirection: TextDirection.ltr,
+                                  style: TextStyle(
+                                      color: mainBlue,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                        return Center(
+                          child: GestureDetector(
+
+                            onTap: (){
+                              if(controller.value.isPlaying){
+                                controller.pause();
+
+                              }else{
+                                controller.play();
+                                controller.setLooping(true);
+                              }
+
+                            },
+                            child: AspectRatio(
+                              aspectRatio: controller.value.aspectRatio,
+                              child: VideoPlayer(controller),
+                            ),
+                          ),
+                        );
+                      }
+                    else
+                    return PageView.builder(
+                      controller:
+                          PageController(initialPage: 0, viewportFraction: 0.85),
+                      physics: BouncingScrollPhysics(),
+                      itemCount: widget.post.mediaTypes.length,
+                      itemBuilder: (_, index) => Padding(
+                        padding: EdgeInsets.only(
+                            right: widget.post.mediaTypes.length - 1 != index
+                                ? doubleHeight(2)
+                                : 0),
+                        child: GestureDetector(
+                          onTap: (){
+                            Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                          },
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: imageNetwork(
+                                widget.post.mediaTypes[index].media,
+                                fit: BoxFit.fill,
+                              )),
+                        ),
+                      ),
+                    );
+                  }
                 ),
               ),
-            // sizeh(doubleHeight(1)),
-            // if(widget.post.mediaTypes.isNotEmpty)
-            //   SizedBox(
-            //     width: max,
-            //     height: doubleHeight(20),
-            //     child: SingleChildScrollView(
-            //       scrollDirection: Axis.horizontal,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           ...widget.post.mediaTypes.map((e) =>
-            //               Padding(
-            //                 padding: EdgeInsets.only(
-            //                     right: widget.post.mediaTypes.last!=e?doubleHeight(2):0
-            //                 ),
-            //                 child: ClipRRect(
-            //                     borderRadius: BorderRadius.circular(10),
-            //                     child: imageNetwork(e.media,
-            //                       fit: BoxFit.fill,)),
-            //               )
-            //           ).toList(),
-            //           ...widget.post.mediaTypes.map((e) =>
-            //               Padding(
-            //                 padding: EdgeInsets.only(
-            //                     right: widget.post.mediaTypes.last!=e?doubleHeight(2):0
-            //                 ),
-            //                 child: ClipRRect(
-            //                     borderRadius: BorderRadius.circular(10),
-            //                     child: imageNetwork(e.media,
-            //                       fit: BoxFit.fill,)),
-            //               )
-            //           ).toList(),
-            //         ]
-            //       ),
-            //     )
-            //   ),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -793,20 +896,30 @@ class _PostFromMatchState extends State<PostFromMatch> {
       spacing: 3,
       children: split.map((e) {
         if(e.length==0)return Text('');
-        if (e[0] == '#') {
-          return GestureDetector(onLongPress: (){
-            copyText(text);
-          },
-              onTap: () {
-                widget.onTapTag(context, e, false);
-              },
-              child: Text(e, style: TextStyle(color: mainBlue)));
-        } else if (e[0] == '@') {
+        // if (e[0] == '#') {
+        //   return GestureDetector(onLongPress: (){
+        //     copyText(text);
+        //   },
+        //       onTap: () {
+        //         widget.onTapTag(context, e, false);
+        //       },
+        //       child: Text(e, style: TextStyle(color: mainBlue)));
+        // } else
+          if (e[0] == '@') {
           return GestureDetector(onLongPress: (){
             copyText(text);
           },
               onTap: () {
                 widget.onTapTag(context, e, true);
+              },
+              child: Text(e, style: TextStyle(color: mainBlue)));
+        } else if (e.startsWith('http')) {
+          return GestureDetector(
+              onLongPress: (){
+                copyText(text);
+              },
+              onTap: () {
+                openUrl(e);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
@@ -821,13 +934,34 @@ class _PostFromMatchState extends State<PostFromMatch> {
   }
   late DataPost post;
   DataPersonalInformationViewModel? person;
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
   @override
   void initState() {
     super.initState();
     person = widget.post.person;
     post = widget.post;
+    init();
   }
-  TextEditingController controller = TextEditingController();
+  init()async{
+
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    {
+      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo=false;
+      });
+    }
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+      controller.dispose();
+  }
+
+  TextEditingController controllerT = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -980,18 +1114,73 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
-                  child: PageView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: widget.post.mediaTypes.length,
-                    itemBuilder: (_, index) => GestureDetector(
-                      onTap: (){
-                        Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
-                      },
-                      child: imageNetwork(
-                        widget.post.mediaTypes[index].media,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                  child: Builder(
+                      builder: (context) {
+                        if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+                        {
+                          if (loadingVideo) {
+                            return Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const CircularProgressIndicator(),
+                                  SizedBox(height: doubleHeight(1)),
+                                  const Text(
+                                    'loading ...',
+                                    textDirection: TextDirection.ltr,
+                                    style: TextStyle(
+                                        color: mainBlue,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                          return Center(
+                            child: GestureDetector(
+
+                              onTap: (){
+                                if(controller.value.isPlaying){
+                                  controller.pause();
+
+                                }else{
+                                  controller.play();
+                                  controller.setLooping(true);
+                                }
+
+                              },
+                              child: AspectRatio(
+                                aspectRatio: controller.value.aspectRatio,
+                                child: VideoPlayer(controller),
+                              ),
+                            ),
+                          );
+                        }
+                        else
+                          return PageView.builder(
+                            controller:
+                            PageController(initialPage: 0, viewportFraction: 0.85),
+                            physics: BouncingScrollPhysics(),
+                            itemCount: widget.post.mediaTypes.length,
+                            itemBuilder: (_, index) => Padding(
+                              padding: EdgeInsets.only(
+                                  right: widget.post.mediaTypes.length - 1 != index
+                                      ? doubleHeight(2)
+                                      : 0),
+                              child: GestureDetector(
+                                onTap: (){
+                                  Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                                },
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: imageNetwork(
+                                      widget.post.mediaTypes[index].media,
+                                      fit: BoxFit.fill,
+                                    )),
+                              ),
+                            ),
+                          );
+                      }
                   ),
                 ),
               ),
@@ -1125,25 +1314,25 @@ class _PostFromMatchState extends State<PostFromMatch> {
               ..add(Padding(
                 padding: EdgeInsets.only(left: doubleWidth(8)),
                 child: TextField(
-                  controller: controller,
+                  controller: controllerT,
                   decoration: InputDecoration(
                       hintStyle:
                       TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
                             print(
-                                'controller.value.text ${controller.value.text}');
+                                'controllerT.value.text ${controllerT.value.text}');
                             DataPostComment? back =
                             await ShotsService.shotsComment(
                                 getIt<MyService>(),
                                 postId: post.id,
-                                comment: controller.value.text);
+                                comment: controllerT.value.text);
                             if(back!=null){
                               setState(() {
                                 post.postComments.add(back);
                               });
                             }
-                            controller.clear();
+                            controllerT.clear();
                           },
                           child: Icon(
                             Icons.send,

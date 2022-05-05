@@ -32,7 +32,16 @@ Widget convertHashtag(String text, Function(String) onTapTag) {
       spacing: 3,
       children: split.map((e) {
         if (e.length > 0) {
-          if (e[0] == '#') {
+          // if (e[0] == '#') {
+          //   return GestureDetector(onLongPress: (){
+          //     copyText(text);
+          //   },
+          //       onTap: () {
+          //         onTapTag(e);
+          //       },
+          //       child: Text(e, style: TextStyle(color: mainBlue)));
+          // } else
+            if (e[0] == '@') {
             return GestureDetector(onLongPress: (){
               copyText(text);
             },
@@ -40,12 +49,13 @@ Widget convertHashtag(String text, Function(String) onTapTag) {
                   onTapTag(e);
                 },
                 child: Text(e, style: TextStyle(color: mainBlue)));
-          } else if (e[0] == '@') {
-            return GestureDetector(onLongPress: (){
-              copyText(text);
-            },
+          } else if (e.startsWith('http')) {
+            return GestureDetector(
+                onLongPress: (){
+                  copyText(text);
+                },
                 onTap: () {
-                  onTapTag(e);
+                  openUrl(e);
                 },
                 child: Text(e, style: TextStyle(color: mainBlue)));
           } else {

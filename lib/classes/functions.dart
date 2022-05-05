@@ -7,9 +7,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'dataTypes.dart';
-import '../pages/Search.dart';
 import '../pages/profile/profile.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+openUrl(String url)async{
+  if(await canLaunch(url)){
+    launch(url);
+  }
+}
 late Size screenSize;
 double doubleHeight(double value, {double height = 0}) {
   if (height == 0) height = screenSize.height;
@@ -126,15 +130,15 @@ toast(String str, {Toast duration = Toast.LENGTH_SHORT}) {
 }
 
 gogo(BuildContext context, String str, bool isUser) {
-  if (isUser) {
+  // if (isUser) {
     Go.pushSlideAnim(context, ProfileBuilder(username: str));
-  } else {
-    Go.pushSlideAnim(
-        context,
-        Search(
-          search: str,
-        ));
-  }
+  // } else {
+  //   Go.pushSlideAnim(
+  //       context,
+  //       Search(
+  //         search: str,
+  //       ));
+  // }
 }
 
 String makeCount(int num) {

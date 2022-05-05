@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
-import 'package:shooting_app/pages/chat/search_user.dart';
+import 'package:shooting_app/pages/chat/search_chat.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
@@ -27,16 +27,15 @@ class _ChatListState extends State<ChatList> {
     state.init();
     _listController = ScrollController()
       ..addListener(() {
-          if (
-          state.listChats.isNotEmpty
-              && _listController.position.atEdge &&
-              _listController.offset != 0.0) {
-            debugPrint("notifHasNext ${state.chatHasNext}");
-            if (state.chatHasNext) {
-              state.pageNumber++;
-              state.getChatsList();
-            }
+        if (state.listChats.isNotEmpty &&
+            _listController.position.atEdge &&
+            _listController.offset != 0.0) {
+          debugPrint("notifHasNext ${state.chatHasNext}");
+          if (state.chatHasNext) {
+            state.pageNumber++;
+            state.getChatsList();
           }
+        }
       });
   }
 
@@ -47,55 +46,55 @@ class _ChatListState extends State<ChatList> {
         if (state.loadingListCaht) return circle();
 
         return Scaffold(
-            body: RefreshIndicator(
-          onRefresh: () async {
-            await state.getChatsList(clean: true);
-          },
-          child: state.listChats.isEmpty
-              ? ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-                  children: [
-                    SizedBox(
-                        height: doubleHeight(70),
-                        width: double.maxFinite,
-                        child: Center(child: Text('no message. 🙂'))),
-                  ],
-                )
-              : ListView(
-            physics: AlwaysScrollableScrollPhysics(),
-                  controller: _listController,
-                  padding: EdgeInsets.symmetric(
-                      vertical: doubleHeight(2), horizontal: doubleWidth(4)),
-                  children: [
-                    ...state.listChats
-                        .map((e) => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ChatListItem(
-                                  chat: e,
-                                  state: state,
-                                ),
-                                if (e != state.listChats.last)
-                                  Divider(color: grayCallDark)
-                              ],
-                            ))
-                        .toList(),
-                    if (state.chatHasNext)
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: doubleHeight(1)),
-                          CircularProgressIndicator(),
-                          SizedBox(height: doubleHeight(1)),
-                        ],
-                      )
-                  ],
-                ),
-        ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await state.getChatsList(clean: true);
+            },
+            child: state.listChats.isEmpty
+                ? ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+                    children: [
+                      SizedBox(
+                          height: doubleHeight(70),
+                          width: double.maxFinite,
+                          child: Center(child: Text('no message. 🙂'))),
+                    ],
+                  )
+                : ListView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    controller: _listController,
+                    padding: EdgeInsets.symmetric(
+                        vertical: doubleHeight(2), horizontal: doubleWidth(4)),
+                    children: [
+                      ...state.listChats
+                          .map((e) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ChatListItem(
+                                    chat: e,
+                                    state: state,
+                                  ),
+                                  if (e != state.listChats.last)
+                                    Divider(color: grayCallDark)
+                                ],
+                              ))
+                          .toList(),
+                      if (state.chatHasNext)
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(height: doubleHeight(1)),
+                            CircularProgressIndicator(),
+                            SizedBox(height: doubleHeight(1)),
+                          ],
+                        )
+                    ],
+                  ),
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-Go.pushSlideAnim(context, SearchUser());
+              Go.pushSlideAnim(context, SearchChat());
             },
             heroTag: 'Create New Chat',
             child: Icon(Icons.message),
@@ -113,9 +112,8 @@ class ChatListItem extends StatelessWidget {
   final ChatState state;
   @override
   Widget build(BuildContext context) {
-    int index =
-    chat.personalInformations.indexWhere((element) =>
-    element.personalInformation!.id!=getIt<MainState>().userId);
+    int index = chat.personalInformations.indexWhere((element) =>
+        element.personalInformation!.id != getIt<MainState>().userId);
     DataChatRoomUser roomUser = chat.personalInformations[index];
     return ListTile(
       onTap: () async {
@@ -128,7 +126,7 @@ class ChatListItem extends StatelessWidget {
               state: state,
             ));
         if (message != null) {
-          state.selectedChat.chatMessages.insert(0,message);
+          state.selectedChat.chatMessages.insert(0, message);
           state.notify();
         }
       },
@@ -142,14 +140,10 @@ class ChatListItem extends StatelessWidget {
                 height: doubleHeight(5),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: roomUser.personalInformation!
-                                .profilePhoto ==
-                            null
+                    child: roomUser.personalInformation!.profilePhoto == null
                         ? profilePlaceHolder()
                         : imageNetwork(
-                            roomUser.personalInformation!
-                                    .profilePhoto ??
-                                '',
+                            roomUser.personalInformation!.profilePhoto ?? '',
                             fit: BoxFit.fill)),
               ),
             if (roomUser.personalInformation!.isOnline)
@@ -163,8 +157,7 @@ class ChatListItem extends StatelessWidget {
           ],
         ),
       ),
-      title: Text(
-          roomUser.personalInformation?.fullName ?? ''),
+      title: Text(roomUser.personalInformation?.fullName ?? ''),
       subtitle: chat.chatMessages.isEmpty
           ? null
           : Text(
@@ -193,4 +186,3 @@ class ChatListItem extends StatelessWidget {
     );
   }
 }
-

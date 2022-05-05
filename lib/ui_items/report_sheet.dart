@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/services/shots_service.dart';
 import 'package:shooting_app/main.dart';
-import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
@@ -115,15 +113,21 @@ class _ReportSheetState extends State<ReportSheet> {
                               padding: MaterialStateProperty.all(
                                   EdgeInsets.symmetric(
                                       vertical: doubleHeight(2.5)))),
-                          child: Text(
+                          child: loading?simpleCircle():Text(
                             'Send Report',
                             style: TextStyle(color: mainBlue),
                           ),
                           onPressed: () async{
+                            setState(() {
+                              loading=true;
+                            });
                             bool back = await ShotsService.shotReport(getIt<MyService>(),
                               message: send.join(','),
                               post: widget.post
                             );
+                            setState(() {
+                              loading=false;
+                            });
                             print('block $back');
                             if(back){
                               toast('Report Send Successfully');
@@ -141,4 +145,5 @@ class _ReportSheetState extends State<ReportSheet> {
       ),
     );
   }
+  bool loading=false;
 }

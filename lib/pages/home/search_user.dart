@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/classes/services/shots_service.dart';
 
 import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/services/user_service.dart';
-import '../../classes/states/main_state.dart';
 import '../../main.dart';
 import '../profile/profile.dart';
 
@@ -28,6 +25,7 @@ class _SearchUserState extends State<SearchUser> {
     });
     MyService service = getIt<MyService>();
     users = await UsersService.search(service, search: controller.value.text);
+    // users = await ChatService.search(service, search: controller.value.text);
     print('users ${users!.length}');
     setState(() {});
   }
@@ -75,7 +73,7 @@ class _SearchUserState extends State<SearchUser> {
                         controller: controller,
                         onChanged: (e) {
                           print('$search!= $e');
-                          if(search!=e) {
+                          if(search.trim()!=e) {
                             print('searchhhhhhhhhh');
                             search = e;
                             getData();

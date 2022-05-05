@@ -66,6 +66,7 @@ class _ShotsState extends State<Shots> {
         await context.read<ProfileState>().getProfileShots(force: true);
       },
       child: ListView(
+        addAutomaticKeepAlives: true,
         controller: _listController,
         physics: BouncingScrollPhysics(),
         children: [

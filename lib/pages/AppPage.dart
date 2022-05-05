@@ -5,6 +5,7 @@ import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
 import 'home/Home.dart';
 import 'Search.dart';
+import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
 import 'my_profile/my_profile.dart';
 import 'notification.dart';
@@ -187,7 +188,8 @@ class _AppPageState extends State<AppPage> {
               color: white,
             ),
             onPressed: () {
-              Go.pushSlideAnim(context, Search());
+              Go.pushSlideAnim(context, SearchUser());
+              // Go.pushSlideAnim(context, Search());
             },
           ),
         ],
@@ -531,8 +533,10 @@ class _AppPageState extends State<AppPage> {
                           height: max,
                           padding: EdgeInsets.all(doubleWidth(3)),
                           child: currentIndex == 3
-                              ? Image.asset('assets/images/flashlight.png')
-                              : Image.asset('assets/images/flashlight(1).png'),
+                              ? Icon(Icons.notifications_active_rounded,color: Colors.black,size: 30,)
+                          // Image.asset('assets/images/flashlight.png')
+                              : Icon(Icons.notifications_none,size: 30,color: Colors.grey,)
+                          // Image.asset('assets/images/flashlight(1).png'),
                         ),
                       ),
                       currentIndex == 3

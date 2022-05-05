@@ -48,6 +48,20 @@ class ChatService{
     return convertData(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
   }
 
+  static Future<List<DataPersonalInformation>> search(MyService service,
+      {required String search,int pageNumber=1}) async {//todo
+    debugPrint('search()');
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Message/SearchMessageUsers?'
+            'PartialOrFullUserName=$search&pageNumber=$pageNumber');
+    debugPrint('back search ${back}');
+    if(back['status']==false){
+      // toast(back['error']);
+      return [];
+    }
+    return convertDataList<DataPersonalInformation>(back['data'], 'results', 'DataPersonalInformation');
+  }
+
   static Future<bool> sendMessage(MyService service,{
     required String chatRoomId,
     required String message,
