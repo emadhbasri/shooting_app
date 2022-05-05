@@ -17,16 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 
 
-*matchup comment
-
-*notif ios
 
 
-refresh token
 
-
-change register login welcome
-
-<!-- *make story read -->
-
-pagin notif and chats test
