@@ -14,8 +14,8 @@ import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
 
-class ShootBuilder extends StatelessWidget {
-  const ShootBuilder({Key? key, this.matchId}) : super(key: key);
+class SendMessageBuilder extends StatelessWidget {
+  const SendMessageBuilder({Key? key, this.matchId}) : super(key: key);
   final int? matchId;
   @override
   Widget build(BuildContext context) {
@@ -47,23 +47,23 @@ class _ShootState extends State<Shoot> {
     setState(() {
       sending = true;
     });
-    if (controller.value.text.trim() == '' && images.isEmpty && video==null) {
+    if (controller.value.text.trim() == '' && images.isEmpty && video == null) {
       toast('Please Enter Text Or Image Or Video');
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
-    } else if(images.isNotEmpty && video!=null){
+    } else if (images.isNotEmpty && video != null) {
       toast('You Can Upload Images Or Video');
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
-    }else {
+    } else {
       DataPost? back = await ShotsService.createShot(service,
           matchId: widget.matchId,
           images: images,
-          video:video,
+          video: video,
           details: controller.value.text);
       setState(() {
         sending = false;
@@ -81,7 +81,8 @@ class _ShootState extends State<Shoot> {
       }
     }
   }
-bool isInOtherPage=false;
+
+  bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -143,23 +144,32 @@ bool isInOtherPage=false;
                                 minLines: 10,
                                 maxLines: 15,
                                 textAlign: TextAlign.left,
-                                onChanged: (e)async{
+                                onChanged: (e) async {
                                   // print('isInOtherPage $')
-                                  if(isInOtherPage)return;
-                                  if(e.endsWith('@')){
-                                    isInOtherPage=true;
-                                    String? userName = await Go.pushSlideAnim(context, SearchUserMention());
-                                    print('controller.value.text ${controller.value.text}');
-                                    controller.text=controller.value.text.substring(0,controller.value.text.length-1);
-                                    print('controller.value.subText ${controller.value.text}');
+                                  if (isInOtherPage) return;
+                                  if (e.endsWith('@')) {
+                                    isInOtherPage = true;
+                                    String? userName = await Go.pushSlideAnim(
+                                        context, SearchUserMention());
+                                    print(
+                                        'controller.value.text ${controller.value.text}');
+                                    controller.text = controller.value.text
+                                        .substring(0,
+                                            controller.value.text.length - 1);
+                                    print(
+                                        'controller.value.subText ${controller.value.text}');
                                     print('userName ${userName}');
-                                    if(userName!=null){
+                                    if (userName != null) {
                                       String pp = '';
-                                      if(!controller.value.text.endsWith(' '))
-                                        pp=' ';
-                                      controller.text=controller.value.text+pp+'@'+userName+' ';
+                                      if (!controller.value.text.endsWith(' '))
+                                        pp = ' ';
+                                      controller.text = controller.value.text +
+                                          pp +
+                                          '@' +
+                                          userName +
+                                          ' ';
                                     }
-                                    isInOtherPage=false;
+                                    isInOtherPage = false;
                                   }
                                 },
                                 decoration: InputDecoration(
@@ -189,9 +199,12 @@ bool isInOtherPage=false;
                                                 alignment: Alignment.bottomLeft,
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    border: Border.all(width: 1,color: mainColor)
-                                                  ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color: mainColor)),
                                                   width: doubleWidth(20),
                                                   height: doubleWidth(20),
                                                   child: ClipRRect(
@@ -458,7 +471,6 @@ bool isInOtherPage=false;
                                 await _controller.initialize();
                                 Duration duration = _controller.value.duration;
                                 if (duration.inSeconds <= 121) {
-
                                   setState(() {
                                     this.video = video;
                                   });
@@ -469,7 +481,6 @@ bool isInOtherPage=false;
                                       duration: Toast.LENGTH_LONG);
                                 }
                               }
-
                             },
                             elevation: 3,
                             backgroundColor: Colors.white,

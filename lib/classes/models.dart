@@ -1,3 +1,5 @@
+import 'package:shooting_app/ui_items/shots/index.dart';
+
 import 'live_match_model.dart';
 
 class DataRefreshRequest {
@@ -156,7 +158,7 @@ class DataMediaType {
 
   late String id;
   late String media;
-  late String postId;
+  String? postId;
 }
 
 class DataPost {
@@ -320,6 +322,9 @@ class DataPersonalInformation {
 class DataChatMessage {
   DataChatMessage.fromJson(Map<String, dynamic> data) {
     chatRoom = convertData(data, 'chatRoom', DataType.clas, classType: 'DataChatRoom');
+    List<DataMediaType> temp = convertDataList<DataMediaType>(data, 'messageMediaTypes', 'DataMediaType');
+    if(temp.isNotEmpty)
+      messageMediaTypes = temp.first;
     // chatRoomId=convertData(data, 'chatRoomId', DataType.string);
     id = convertData(data, 'id', DataType.string);
     name = convertData(data, 'name', DataType.string);
@@ -332,6 +337,7 @@ class DataChatMessage {
   String? name;
   String? text;
   late DateTime timeStamp;
+  DataMediaType? messageMediaTypes;
 }
 
 class DataChatRoom {

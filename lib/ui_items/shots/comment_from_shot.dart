@@ -44,31 +44,32 @@ class _CommentFromShotState extends State<CommentFromShot> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Go.pushSlideAnim(
-                              context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
+                              context,
+                              ProfileBuilder(
+                                  username: comment
+                                      .personalInformationViewModel.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: SizedBox(
-                            width: doubleHeight(5),
-                            height: doubleHeight(5),
-                            child: Builder(
-                              builder: (context) {
-                                if (comment
-                                    .personalInformationViewModel
-                                    .profilePhoto != null) {
-                                  return imageNetwork(
-                                    comment
-                                        .personalInformationViewModel
-                                        .profilePhoto!,
-                                    fit: BoxFit.fill,
-                                  );
-                                }
-                                return profilePlaceHolder();
-                              },
-                            )
-                          ),
+                              width: doubleHeight(5),
+                              height: doubleHeight(5),
+                              child: Builder(
+                                builder: (context) {
+                                  if (comment.personalInformationViewModel
+                                          .profilePhoto !=
+                                      null) {
+                                    return imageNetwork(
+                                      comment.personalInformationViewModel
+                                          .profilePhoto!,
+                                      fit: BoxFit.fill,
+                                    );
+                                  }
+                                  return profilePlaceHolder();
+                                },
+                              )),
                         ),
                       ),
                     ),
@@ -120,6 +121,23 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           color: grayCall,
                           fontWeight: FontWeight.bold,
                           fontSize: doubleWidth(2.5))),
+                  SizedBox(width: doubleWidth(4)),
+                  GestureDetector(
+                    onTap: () {
+                      Go.pushSlideAnimSheet(
+                          context, MyBottomSheetComment(widget.comment));
+                    },
+                    child: Container(
+                      width: doubleWidth(6),
+                      height: doubleWidth(5),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(226, 224, 235, 1),
+                          borderRadius: BorderRadius.circular(5)),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      child: Image.asset('assets/images/menu.png'),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -137,7 +155,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',color: greenCall,)),
+                          child: Image.asset(
+                            'assets/images/chat(2).png',
+                            color: greenCall,
+                          )),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentReplies.length))
                     ],
@@ -149,17 +170,19 @@ class _CommentFromShotState extends State<CommentFromShot> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
                           if (!comment.commentLikedBythisUser) {
-                            String? back = await ShotsService.commentLike(service,
+                            String? back = await ShotsService.commentLike(
+                                service,
                                 postCommentId: comment.id);
-                            if (back!=null) {
+                            if (back != null) {
                               setState(() {
-                                comment.commentLikes.add(DataCommentLike(back, ''));
+                                comment.commentLikes
+                                    .add(DataCommentLike(back, ''));
                                 comment.commentLikedBythisUser = true;
                                 comment.commentLikeCount++;
                               });
                             }
                           } else {
-                            if(comment.commentLikes.isNotEmpty){
+                            if (comment.commentLikes.isNotEmpty) {
                               bool back = await ShotsService.deleteCommentLike(
                                   service,
                                   commentId: comment.commentLikes.first.id);
@@ -249,7 +272,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            if (loading || controller.value.text.trim()=='') return;
+                            if (loading || controller.value.text.trim() == '')
+                              return;
                             setState(() {
                               loading = true;
                             });
@@ -262,7 +286,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             setState(() {
                               loading = false;
                             });
-                            if (back!=null) {
+                            if (back != null) {
                               setState(() {
                                 comment.commentReplies.add(back);
                               });
@@ -327,9 +351,12 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Go.pushSlideAnim(
-                              context, ProfileBuilder(username: comment.personalInformationViewModel.userName));
+                              context,
+                              ProfileBuilder(
+                                  username: comment
+                                      .personalInformationViewModel.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -338,20 +365,18 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               height: doubleHeight(5),
                               child: Builder(
                                 builder: (context) {
-                                  if (comment
-                                      .personalInformationViewModel
-                                      .profilePhoto != null) {
+                                  if (comment.personalInformationViewModel
+                                          .profilePhoto !=
+                                      null) {
                                     return imageNetwork(
-                                      comment
-                                          .personalInformationViewModel
+                                      comment.personalInformationViewModel
                                           .profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
                                   }
                                   return profilePlaceHolder();
                                 },
-                              )
-                          ),
+                              )),
                         ),
                       ),
                     ),
@@ -403,6 +428,23 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                           color: grayCall,
                           fontWeight: FontWeight.bold,
                           fontSize: doubleWidth(2.5))),
+                  SizedBox(width: doubleWidth(4)),
+                  GestureDetector(
+                    onTap: () {
+                      Go.pushSlideAnimSheet(
+                          context, MyBottomSheetComment(widget.comment));
+                    },
+                    child: Container(
+                      width: doubleWidth(6),
+                      height: doubleWidth(5),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(226, 224, 235, 1),
+                          borderRadius: BorderRadius.circular(5)),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      child: Image.asset('assets/images/menu.png'),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -420,7 +462,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',
+                              color: greenCall)),
                       sizew(doubleWidth(1)),
                       // Text(makeCount(comment.commentReplyCount))
                     ],
@@ -432,11 +475,13 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                         onTap: () async {
                           MyService service = await getIt<MyService>();
                           if (!comment.commentLikedBythisUser) {
-                            String? back = await ShotsService.commentLike(service,
+                            String? back = await ShotsService.commentLike(
+                                service,
                                 postCommentId: comment.id);
-                            if (back!=null)
+                            if (back != null)
                               setState(() {
-                                comment.commentLikes.add(DataCommentLike(back, ''));
+                                comment.commentLikes
+                                    .add(DataCommentLike(back, ''));
                                 comment.commentLikedBythisUser = true;
                                 comment.commentLikeCount++;
                               });
@@ -457,7 +502,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
-                                ?  greenCall
+                                ? greenCall
                                 : null),
                       ),
                       sizew(doubleWidth(1)),

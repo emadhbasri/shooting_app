@@ -8,8 +8,10 @@ import '../classes/models.dart';
 import '../classes/services/my_service.dart';
 
 class ReportSheet extends StatefulWidget {
-  const ReportSheet(this.post, {Key? key}) : super(key: key);
-  final DataPost post;
+  const ReportSheet({Key? key,this.post,this.comment,this.reply}) : super(key: key);
+  final DataPost? post;
+  final DataPostComment? comment;
+  final DataCommentReply? reply;
 
   @override
   State<ReportSheet> createState() => _ReportSheetState();
@@ -121,10 +123,29 @@ class _ReportSheetState extends State<ReportSheet> {
                             setState(() {
                               loading=true;
                             });
-                            bool back = await ShotsService.shotReport(getIt<MyService>(),
-                              message: send.join(','),
-                              post: widget.post
-                            );
+                            bool back;
+                            if(widget.post!=null){
+                              back = await ShotsService.shotReport(getIt<MyService>(),
+                                  message: send.join(','),
+                                  post: widget.post!
+                              );
+                            }else if(widget.comment!=null){
+                              back = await ShotsService.commentReport(getIt<MyService>(),
+                                  message: send.join(','),
+                                  comment: widget.comment!
+                              );
+                            }else if(widget.reply!=null){
+                              back = await ShotsService.replyReport(getIt<MyService>(),
+                                  message: send.join(','),
+                                  reply: widget.reply!
+                              );
+                            }else{
+                              back=false;
+                              setState(() {
+                                loading=false;
+                              });
+                              return;
+                            }
                             setState(() {
                               loading=false;
                             });

@@ -65,7 +65,7 @@ class AuthenticationService {
       "confirmPassword": confirmPassword.trim()
     };
     // out['notificationToken'] = 'test';
-    out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = await messaging.getToken();
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/register', out, jsonType: true);
     if (back['status'] == false) {
@@ -108,7 +108,7 @@ class AuthenticationService {
       "rememberMe": true
     };
     // out['notificationToken'] = 'test';
-    out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = await messaging.getToken();
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/login', out, jsonType: true);
     debugPrint('back ${back}');
@@ -150,7 +150,7 @@ class AuthenticationService {
       "rememberMe": true
     };
     // out['notificationToken'] = 'test';
-    out['notificationToken'] = await messaging.getToken();
+    // out['notificationToken'] = await messaging.getToken();
     print('outemd $out');
     Map<String, dynamic> back =
         await service.httpPost('/api/v1/Authentication/validateOtp', out,jsonType: true);

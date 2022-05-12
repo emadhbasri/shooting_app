@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -124,8 +125,8 @@ toast(String str, {Toast duration = Toast.LENGTH_SHORT}) {
       toastLength: duration,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: mainBlue,
-      textColor: Colors.white,
+      backgroundColor: mainGreen1,
+      textColor: black,
       fontSize: 16.0);
 }
 
@@ -180,10 +181,17 @@ abstract class Go {
   }
 
   static Future<dynamic> pushSlideAnim(BuildContext context, Widget page,
-      {bool full: false, var first, var second}) {
+      {bool full: false, var first, var second}) async{
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
-    return Navigator.push(
+    if(Platform.isIOS){
+      return await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => page, fullscreenDialog: full))
+          .catchError((e) => print('Error 1 $e'));
+    }
+    return await Navigator.push(
         context,
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
@@ -284,8 +292,8 @@ abstract class Go {
             })).catchError((e) => print('Error 1 $e'));
   }
 
-  static void push(BuildContext context, Widget page, {bool full: false}) {
-    Navigator.push(
+  static void push(BuildContext context, Widget page, {bool full: false}) async{
+   return await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => page, fullscreenDialog: full))

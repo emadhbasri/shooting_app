@@ -253,7 +253,7 @@ class MyService {
     }else{
       await getToken();
     }
-    debugPrint('Get ${_server + url} $headers');
+    // debugPrint('Get ${_server + url} $headers');
     http.Response utf = await http
         .get(Uri.parse(_server + url), headers: headers)
         .catchError((e) {
@@ -263,7 +263,7 @@ class MyService {
     if (utf.statusCode == 403 && utf.body == 'nonet') {
       return {'status': false, "data": false};
     }
-    debugPrint('body $url $utf');
+    // debugPrint('body $url $utf');
 
     try {
       var json = utf8.decode(utf.bodyBytes);

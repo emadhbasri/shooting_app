@@ -1,10 +1,20 @@
+import 'dart:io';
+
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/services/chat_service.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
+import 'package:shooting_app/ui_items/shots/video_item.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
+import '../../ui_items/gal.dart';
+import '../AppPage.dart';
 
 class ChatBuilder extends StatelessWidget {
   const ChatBuilder({Key? key, this.state}) : super(key: key);
@@ -41,7 +51,6 @@ class _ChatState extends State<Chat> {
   int i = 0;
   startTimer() async {
     if (stopTimer) return;
-    print('i ${i++}');
     await state.getChats();
     await Future.delayed(Duration(seconds: 2));
     return startTimer();
@@ -62,6 +71,19 @@ class _ChatState extends State<Chat> {
           return false;
         },
         child: Scaffold(
+          // floatingActionButton: FloatingActionButton(
+          //   tooltip: 'Send Message',
+          //   onPressed: (){},
+          //   elevation: 2,
+          //   backgroundColor: mainGreen,
+          //   child: Container(
+          //       width: doubleWidth(9),
+          //       height: doubleWidth(9),
+          //       child: Padding(
+          //         padding: EdgeInsets.all(4.0),
+          //         child: Image.asset('assets/images/soccer(1).png'),
+          //       )),
+          // ),
           body: SafeArea(
             child: Column(
               children: [
@@ -229,9 +251,37 @@ class _ChatState extends State<Chat> {
                       ),
                       SizedBox(width: doubleWidth(4)),
                       GestureDetector(
+                        onTap: () async{
+                          // if (controller.value.text.trim() == '') return;
+                          // state.sendMessage(
+                          //     // file: file
+                          // );
+                          // state.notify();
+
+                          XFile? file = await showDialog(
+                              context: context,
+                              builder: (contextD)=>ChooseMediaDialog());
+
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(doubleWidth(4)),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: greenCall,
+                          ),
+                          child: Icon(
+                            Icons.photo_library_rounded,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: doubleWidth(2)),
+                      GestureDetector(
                         onTap: () {
                           if (controller.value.text.trim() == '') return;
-                          state.sendMessage(controller.value.text.trim());
+                          state.sendMessage(
+                            message: controller.value.text.trim()
+                          );
                           state.notify();
                           controller.clear();
                         },
@@ -241,13 +291,13 @@ class _ChatState extends State<Chat> {
                             borderRadius: BorderRadius.circular(10),
                             color: greenCall,
                           ),
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.black,
-                          ),
+                          child: Container(
+                              width: doubleWidth(6),
+                              height: doubleWidth(6),
+                              child: Image.asset('assets/images/soccer(1).png')),
                         ),
                       ),
-                      SizedBox(width: doubleWidth(4)),
+                      SizedBox(width: doubleWidth(2)),
                     ],
                   ),
                 ),
@@ -260,6 +310,120 @@ class _ChatState extends State<Chat> {
     });
   }
 }
+
+
+class ChooseMediaDialog extends StatelessWidget {
+  const ChooseMediaDialog({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+
+      child: Container(
+        margin: EdgeInsets.all(doubleWidth(4)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+
+            Center(
+              child: Text('Please Pick Media',style: Theme.of(context).textTheme.titleLarge ),
+            ),
+            SizedBox(height: doubleHeight(2)),
+
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1,color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ListTile(
+                onTap: ()async{
+                  XFile? out =
+                  await ImagePicker().pickImage(source: ImageSource.camera);
+                  return Go.pop(context,out);
+                },
+                title: Text('Camera Image'),
+                trailing: Icon(
+                  Icons.camera_alt,
+                  color: Color.fromRGBO(107, 79, 187, 1),
+                ),
+              ),
+            ),SizedBox(height: doubleHeight(1)),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1,color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ListTile(
+                onTap: ()async{
+                  XFile? out =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
+                  print('emad $out');
+                  return Go.pop(context,out);
+                },
+                title: Text('Library Image'),
+                trailing: Icon(
+                  Icons.image,
+                  color: Color.fromRGBO(107, 79, 187, 1),
+                ),
+              ),
+            ),SizedBox(height: doubleHeight(1)),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1,color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ListTile(
+                onTap: ()async{
+                  final XFile? video = await ImagePicker()
+                      .pickVideo(source: ImageSource.gallery);
+
+                  if (video != null) {
+                    print('video.mimeType ${video.name}');
+
+                    if (!video.name.endsWith('.mp4')) {
+                      toast('The video format should be mp4');
+                      return;
+                    }
+
+                    if (await video.length() > 20000000) {
+                      print(
+                          'await video.length() ${await video.length()}');
+                      toast('The video should be less than 20M.',
+                          duration: Toast.LENGTH_LONG);
+                      return;
+                    }
+                    VideoPlayerController _controller =
+                    VideoPlayerController.file(
+                        File(video.path));
+                    await _controller.initialize();
+                    Duration duration = _controller.value.duration;
+                    if (duration.inSeconds <= 121) {
+                      return Go.pop(context,video);
+                    } else {
+                      toast(
+                          'The video should be less than 60 seconds.',
+                          duration: Toast.LENGTH_LONG);
+                    }
+                  }
+
+                },
+                title: Text('Library Video'),
+                trailing: Icon(
+                  Icons.video_library_outlined,
+                  color: Color.fromRGBO(107, 79, 187, 1),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class ChatItem extends StatefulWidget {
   const ChatItem(
@@ -276,10 +440,34 @@ class ChatItem extends StatefulWidget {
 }
 
 class _ChatItemState extends State<ChatItem> {
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
+  GlobalKey<PopupMenuButtonState> popupkey = GlobalKey<PopupMenuButtonState>();
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+  init()async{
+
+    if (widget.message.messageMediaTypes!=null && widget.message.messageMediaTypes!.media.contains('video/upload'))
+    {
+      controller = VideoPlayerController.network(widget.message.messageMediaTypes!.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo=false;
+      });
+    }
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    if (widget.message.messageMediaTypes!=null && widget.message.messageMediaTypes!.media.contains('video/upload'))
+      controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    print('message ${widget.message} ${widget.hasDate}');
-
+    // print('message ${widget.message} ${widget.hasDate}');
     bool isMine = widget.message.name == getIt<MainState>().userName;
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
@@ -287,15 +475,97 @@ class _ChatItemState extends State<ChatItem> {
         textDirection: isMine ? TextDirection.rtl : TextDirection.ltr,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-            decoration: BoxDecoration(
-              color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-              borderRadius: BorderRadius.circular(5),
+
+          PopupMenuButton<String>(
+            key: popupkey,
+            itemBuilder: (_)=>[
+              if(widget.message.messageMediaTypes==null)
+                PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
+                PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
+            ],
+            onSelected: (String e){
+              if(e=='Delete'){
+                ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
+              }else if(e=='Copy'){
+                copyText(e);
+              }
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+            child: GestureDetector(
+              onLongPress: (){
+                popupkey.currentState!.showButtonMenu();
+              },
+              child: Builder(builder: (context) {
+                if(widget.message.messageMediaTypes!=null){
+                  if(widget.message.messageMediaTypes!.media.contains('video/upload')){
+                    if(loadingVideo)
+                      init();
+
+                    return Container(
+                      constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                      decoration: BoxDecoration(
+                        // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                      child: loadingVideo?Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CircularProgressIndicator(),
+                            SizedBox(height: doubleHeight(1)),
+                            const Text(
+                              'loading ...',
+                              textDirection: TextDirection.ltr,
+                              style: TextStyle(
+                                  color: mainBlue,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ):Center(
+                        child: VideoItem(controller: controller,),
+                      ),
+                    );
+
+                  }else{
+                    return GestureDetector(
+                      onTap: (){
+                        Go.push(context, Gal(images: [widget.message.messageMediaTypes!.media]));
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                        decoration: BoxDecoration(
+                          // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: imageNetwork(
+                              widget.message.messageMediaTypes!.media,
+                              fit: BoxFit.fill,
+                            )),
+                      ),
+                    );
+                  }
+                }else{
+                  return Container(
+                    constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                    decoration: BoxDecoration(
+                      color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                    child: Text(widget.message.text ?? '',),
+                  );
+                }
+
+              }),
             ),
-            padding: EdgeInsets.symmetric(
-                vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-            child: SelectableText(widget.message.text ?? ''),
           ),
           // if (widget.hasDate)
             Column(
@@ -308,7 +578,7 @@ class _ChatItemState extends State<ChatItem> {
                   children: [
                     // if (isMine)
                     //   SizedBox(
-                    //       width: 15, 
+                    //       width: 15,
                     //       height: 15,
                     //       child: Image.asset(
                     //         'assets/images/seen.png',

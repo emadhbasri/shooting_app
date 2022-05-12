@@ -1,10 +1,23 @@
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../functions.dart';
 import '../models.dart';
 
 import 'my_service.dart';
 class ChatService{
+
+  static Future<bool> deleteMessage(
+      MyService service, {
+        required String messageId,
+      }) async {
+    print('deleteMessage($messageId)');
+    bool back =
+    await service.httpDelete('/api/v1/Message/DeleteChatMessageById$messageId');
+    debugPrint('deleteMessage back $back');
+    return back;
+  }
 
   static Future<List<DataChatMessage>> getPrivateChat(MyService service,{//todo
     required String chatId,
@@ -64,16 +77,24 @@ class ChatService{
 
   static Future<bool> sendMessage(MyService service,{
     required String chatRoomId,
-    required String message,
+    String? message,
+    XFile? file
   }) async {
-    debugPrint('sendMessage($chatRoomId,$message)');//3530f18b-a1ed-406e-0914-08da04b81c0f
-    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/sendMessage'
-        // '?chatRoomId=$chatRoomId&timeStamp=${DateTime.now().toString()}&message=$message'
-        ,{
+    Map<String, dynamic> map = {
       'chatRoomId':chatRoomId,
       'timeStamp':DateTime.now().toString(),
       'message':message,
-    },jsonType: true);
+    };
+    if(message!=null){
+      map['message']=message;
+    }else if(file!=null){
+      MultipartFile temp = await MultipartFile.fromFile(file.path,
+          filename: file.name);
+      map['file']=temp;
+    }
+
+    debugPrint('sendMessage($chatRoomId,$message)');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    Map<String, dynamic> back = await service.httpPostMulti('/api/v1/Message/sendMessage',FormData.fromMap(map),jsonType: true);
     debugPrint('back sendMessage ${back}');
     if(back['status']==false){
       toast(back['error']);

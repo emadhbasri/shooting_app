@@ -329,6 +329,112 @@ class ShotsService {
     }
 
   }
+  static Future<bool> commentReport(MyService service,
+      {required DataPostComment comment, required String message}) async {
+    debugPrint('shotReport()');
+
+    List<bool> checks=[];
+    bool? cText=await checkReportText(comment.comment??'');
+    if(cText==null){
+      toast('please check your connection');
+      return false;
+    }else{
+      checks.add(cText);
+    }
+    // for(int j=0;j<post.mediaTypes.length;j++){
+    //   bool? cImage = await checkReportImage(post.mediaTypes[j].media);
+    //   if(cImage==null){
+    //     toast('please check your connection');
+    //     return false;
+    //   }else{
+    //     checks.add(cImage);
+    //   }
+    // }
+    bool shouldReport=false;
+    for(int j=0;j<checks.length;j++){
+      if(checks[j]){
+        shouldReport=true;
+        break;
+      }
+    }
+    print('checks ${checks}');
+    print('shouldReport $shouldReport');
+
+
+    if(shouldReport){
+      Map<String, dynamic> back = await service.httpPost(
+          '/api/v1/Shots/addCommentReport',
+          {
+            "message": message,
+            "commentIdc": comment.id,
+            "commentOwnerId": comment.personalInformationId,
+            "dateReported": DateTime.now().toString()
+          },
+          jsonType: true);
+      debugPrint('shotReport back $back');
+      if (back['status'] == false) {
+        toast(back['error']);
+      }
+      return back['status'];
+    }else{
+      toast('there is no problem with this content.');
+      return false;
+    }
+
+  }
+  static Future<bool> replyReport(MyService service,
+      {required DataCommentReply reply, required String message}) async {
+    debugPrint('shotReport()');
+
+    List<bool> checks=[];
+    bool? cText=await checkReportText(reply.replyDetail??'');
+    if(cText==null){
+      toast('please check your connection');
+      return false;
+    }else{
+      checks.add(cText);
+    }
+    // for(int j=0;j<post.mediaTypes.length;j++){
+    //   bool? cImage = await checkReportImage(post.mediaTypes[j].media);
+    //   if(cImage==null){
+    //     toast('please check your connection');
+    //     return false;
+    //   }else{
+    //     checks.add(cImage);
+    //   }
+    // }
+    bool shouldReport=false;
+    for(int j=0;j<checks.length;j++){
+      if(checks[j]){
+        shouldReport=true;
+        break;
+      }
+    }
+    print('checks ${checks}');
+    print('shouldReport $shouldReport');
+
+
+    if(shouldReport){
+      Map<String, dynamic> back = await service.httpPost(
+          '/api/v1/Shots/addReplyReport',
+          {
+            "message": message,
+            "commentReplyId": reply.id,
+            "commentReplyOwnerId": reply.personalInformationId,
+            "dateReported": DateTime.now().toString()
+          },
+          jsonType: true);
+      debugPrint('shotReport back $back');
+      if (back['status'] == false) {
+        toast(back['error']);
+      }
+      return back['status'];
+    }else{
+      toast('there is no problem with this content.');
+      return false;
+    }
+
+  }
 
   static Future<bool?> checkReportText(String text) async {
     http.Response utf = await http
@@ -337,9 +443,11 @@ class ShotsService {
             "format=json&api_key=64b03d7273c0635157a724ac65a56835&text="
             "${text}&lang=en"))
         .catchError((e) {
+          print('ev$e');
       FutureOr<http.Response> out = http.Response('nonet', 403);
       return out;
     });
+    print('utf.body ${utf.body}');
     if (utf.statusCode == 403 && utf.body == 'nonet') {
       return null;
     }

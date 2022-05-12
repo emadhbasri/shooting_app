@@ -120,6 +120,23 @@ class _CommentReplyState extends State<CommentReply> {
                           color: grayCall,
                           fontWeight: FontWeight.bold,
                           fontSize: doubleWidth(2.5))),
+                  SizedBox(width: doubleWidth(4)),
+                  GestureDetector(
+                    onTap: () {
+                      Go.pushSlideAnimSheet(
+                          context, MyBottomSheetReply(widget.reply));
+                    },
+                    child: Container(
+                      width: doubleWidth(6),
+                      height: doubleWidth(5),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(226, 224, 235, 1),
+                          borderRadius: BorderRadius.circular(5)),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      child: Image.asset('assets/images/menu.png'),
+                    ),
+                  )
                 ],
               ),
             ),

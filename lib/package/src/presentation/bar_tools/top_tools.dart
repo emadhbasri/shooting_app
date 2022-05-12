@@ -191,7 +191,7 @@ class _TopToolsState extends State<TopTools> {
                         VideoPlayerController _controller=VideoPlayerController.file(File(video.path));
                         await _controller.initialize();
                         Duration duration = _controller.value.duration;
-                        if(duration.inSeconds<=10){
+                        if(duration.inSeconds<=30){
                           MyService service = getIt<MyService>();
                           DataShortVideoStory? back =
                           await service.createStory(mimeType: '.mp4',

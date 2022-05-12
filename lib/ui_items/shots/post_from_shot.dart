@@ -2,6 +2,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 import 'package:shooting_app/ui_items/gal.dart';
+import 'package:shooting_app/ui_items/shots/video_item.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/services/shots_service.dart';
@@ -237,7 +238,21 @@ class _PostFromShotState extends State<PostFromShot> {
                 ],
               ),
             ),
-            _convertHashtag(context, widget.post.details ?? ''),
+            ListTile(
+                  onTap: widget.canTouch
+                      ? () {
+                    Go.pushSlideAnim(
+                        context,
+                        Shot(
+                          post: widget.post,
+                        ));
+                  }
+                      : null,
+              dense: true,
+              minVerticalPadding: 0,
+              contentPadding: EdgeInsets.zero,
+              title:_convertHashtag(context, widget.post.details ?? ''),
+            ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
               ClipRRect(
@@ -443,6 +458,7 @@ class _PostFromShotState extends State<PostFromShot> {
     );
   }
 }
+
 
 class PostFromShotProfile extends StatefulWidget {
   const PostFromShotProfile(
@@ -666,7 +682,21 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 ],
               ),
             ),
-            _convertHashtag(context, widget.post.details ?? ''),
+            ListTile(
+              onTap:
+                   () {
+                Go.pushSlideAnim(
+                    context,
+                    Shot(
+                      post: widget.post,
+                    ));
+              }
+                  ,
+              dense: true,
+              minVerticalPadding: 0,
+              contentPadding: EdgeInsets.zero,
+              title:_convertHashtag(context, widget.post.details ?? ''),
+            ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
               Container(
@@ -696,23 +726,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           );
                         }
                         return Center(
-                          child: GestureDetector(
-
-                            onTap: (){
-                              if(controller.value.isPlaying){
-                                controller.pause();
-
-                              }else{
-                                controller.play();
-                                controller.setLooping(true);
-                              }
-
-                            },
-                            child: AspectRatio(
-                              aspectRatio: controller.value.aspectRatio,
-                              child: VideoPlayer(controller),
-                            ),
-                          ),
+                          child: VideoItem(controller: controller),
                         );
                       }
                     else
@@ -1106,7 +1120,21 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 ],
               ),
             ),
-            _convertHashtag(context, widget.post.details ?? ''),
+            ListTile(
+              onTap: widget.canTouch
+                  ? () {
+                Go.pushSlideAnim(
+                    context,
+                    Shot(
+                      post: widget.post,
+                    ));
+              }
+                  : null,
+              dense: true,
+              minVerticalPadding: 0,
+              contentPadding: EdgeInsets.zero,
+              title:_convertHashtag(context, widget.post.details ?? ''),
+            ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
               ClipRRect(

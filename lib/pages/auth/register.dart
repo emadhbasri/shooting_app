@@ -306,28 +306,6 @@ bool loading=false;
                           fontSize: doubleWidth(3),
                           fontStyle: FontStyle.italic)),
                 ),
-                // RichText(
-                //   textAlign: TextAlign.center,
-                //   text: TextSpan(
-                //       children: [
-                //         TextSpan(text: 'By signing up you agree to our '),
-                //         TextSpan(
-                //             text: 'Terms of Use',
-                //             style: TextStyle(
-                //                 color: mainGreen1,
-                //                 fontStyle: FontStyle.italic)),
-                //         TextSpan(text: ' and'),
-                //         TextSpan(
-                //             text: '\nPrivacy Policy',
-                //             style: TextStyle(
-                //                 color: mainGreen1,
-                //                 fontStyle: FontStyle.italic)),
-                //       ],
-                //       style: TextStyle(
-                //         color: white,
-                //         fontSize: doubleWidth(3),
-                //       )),
-                // ),
                 sizeh(doubleHeight(7)),
               ],
             ),

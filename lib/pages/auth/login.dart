@@ -8,6 +8,8 @@ import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../main.dart';
+import '../../ui_items/dialogs/privacy.dart';
+import '../../ui_items/dialogs/team.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -38,6 +40,7 @@ class _LoginState extends State<Login> {
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SizedBox(height: doubleHeight(20)),
                   Text(
@@ -198,6 +201,58 @@ class _LoginState extends State<Login> {
                           )),
                     ),
                   ),
+                  SizedBox(height: doubleHeight(7)),
+                  Divider(
+                    color: gray,
+                    height: doubleHeight(6),
+                    indent: doubleWidth(6),
+                    endIndent: doubleWidth(6),
+                    thickness: doubleHeight(0.2),
+                  ), //Privacy
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'By signing up you agree to our ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: white,
+                          fontSize: doubleWidth(3),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          showDialog(context: context, builder: (_)=>TeamDialog());
+                        },
+                        child: Text('Terms of Use',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: mainGreen1,fontWeight: FontWeight.bold,
+                                fontSize: doubleWidth(3),
+                                fontStyle: FontStyle.italic)),
+                      ),
+                      Text(
+                        ' and',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: white,
+                          fontSize: doubleWidth(3),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      showDialog(context: context, builder: (_)=>Privacy());
+                    },
+                    child: Text('Privacy Policy',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: mainGreen1,fontWeight: FontWeight.bold,
+                            fontSize: doubleWidth(3),
+                            fontStyle: FontStyle.italic)),
+                  ),
+                  sizeh(doubleHeight(7)),
                 ],
               ),
             ),

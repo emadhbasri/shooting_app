@@ -30,35 +30,15 @@ class AppPage extends StatefulWidget {
 class _AppPageState extends State<AppPage> {
   @override
   void initState() {
-    statusSet(mainBlue);
     super.initState();
+    statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
     state.getProfile();
   }
 
   int currentIndex = 0;
   int subIndex = 1;
-  // loopChange() async {
-  //   if (centerButton == 1) {
-  //     setState(() {
-  //       centerButton = 2;
-  //     });
-  //   } else if (centerButton == 2) {
-  //     setState(() {
-  //       centerButton = 3;
-  //     });
-  //   } else if (centerButton == 3) {
-  //     setState(() {
-  //       centerButton = 4;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       centerButton = 1;
-  //     });
-  //   }
-  //   await Future.delayed(Duration(seconds: 2));
-  //   loopChange();
-  // }
+
 
   // outButtonClick(Widget widget) {
   //   if (buttonClick) {
@@ -480,39 +460,12 @@ class _AppPageState extends State<AppPage> {
                           });
                         }
                       },
-                      elevation: 0,
+                       elevation: 0,
                       backgroundColor: mainGreen,
-                      child: Builder(
-                        builder: (context) {
-                          return Container(
-                              width: doubleWidth(9),
-                              height: doubleWidth(9),
-                              child: Image.asset('assets/images/soccer.png'));
-                          // if (centerButton == 1) {
-                          //   return Icon(
-                          //     Icons.add,
-                          //     color: white,
-                          //     size: doubleWidth(10),
-                          //   );
-                          // } else if (centerButton == 2) {
-                          //   return Icon(
-                          //     Icons.add,
-                          //     color: mainBlue,
-                          //     size: doubleWidth(10),
-                          //   );
-                          // } else if (centerButton == 3) {
-                          //   return Container(
-                          //       width: doubleWidth(9),
-                          //       height: doubleWidth(9),
-                          //       child: Image.asset('assets/images/soccer.png'));
-                          // } else {
-                          //   return Container(
-                          //       width: doubleWidth(9),
-                          //       height: doubleWidth(9),
-                          //       child: Image.asset('assets/images/soccerBall.png'));
-                          // }
-                        },
-                      ),
+                      child: Container(
+                          width: doubleWidth(9),
+                          height: doubleWidth(9),
+                          child: Ball()),
                     ),
                   ),
                 ),
@@ -533,9 +486,9 @@ class _AppPageState extends State<AppPage> {
                           height: max,
                           padding: EdgeInsets.all(doubleWidth(3)),
                           child: currentIndex == 3
-                              ? Icon(Icons.notifications_active_rounded,color: Colors.black,size: 30,)
+                              ? Icon(Icons.notifications_active_rounded,color: Colors.deepPurple,size: 34,)
                           // Image.asset('assets/images/flashlight.png')
-                              : Icon(Icons.notifications_none,size: 30,color: Colors.grey,)
+                              : Icon(Icons.notifications_none,size: 34,color: Colors.grey,)
                           // Image.asset('assets/images/flashlight(1).png'),
                         ),
                       ),
@@ -630,5 +583,55 @@ class _AppPageState extends State<AppPage> {
         ),
       ),
     );
+  }
+}
+
+
+class Ball extends StatefulWidget {
+  const Ball({Key? key}) : super(key: key);
+
+  @override
+  State<Ball> createState() => _BallState();
+}
+
+class _BallState extends State<Ball> {
+
+
+
+
+  int centerButton=1;
+  loopChange() async {
+    if (centerButton == 1) {
+      setState(() {
+        centerButton = 2;
+      });
+    } else if (centerButton == 2) {
+      setState(() {
+        centerButton = 3;
+      });
+    } else {
+      setState(() {
+        centerButton = 1;
+      });
+    }
+    await Future.delayed(Duration(seconds: 2));
+    loopChange();
+  }
+  @override
+  Widget build(BuildContext context) {
+    if(centerButton==1)
+      return Image.asset('assets/images/soccer.png');
+    else if(centerButton==2)
+      return Image.asset('assets/images/football (1).png');
+    else
+      return Image.asset('assets/images/soccer(1).png');
+
+  }
+
+  @override
+  void initState() {
+super.initState();
+    loopChange();
+
   }
 }

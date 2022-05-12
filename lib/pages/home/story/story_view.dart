@@ -33,7 +33,7 @@ class _StoryPageState extends State<StoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StoryPageView(
-        indicatorDuration: Duration(seconds: 10),
+        indicatorDuration: Duration(seconds: 35),
         storyUsers: widget.storyUsers,
         initialPage: widget.index,
         gestureItemBuilder: (context, pageIndex, storyIndex) {
