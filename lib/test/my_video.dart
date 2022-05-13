@@ -1,4 +1,4 @@
-// import 'package:video_player/video_player.dart';
+// import 'package:video_player/my_video_player.dart';
 // import 'package:flutter/material.dart';
 // class MyVideo extends StatefulWidget {
 //   const MyVideo({Key? key}) : super(key: key);

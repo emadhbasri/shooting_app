@@ -154,10 +154,10 @@ setState(() {
                             child: loading?SizedBox(
                               height: 24,
                                 width: 24,
-                                child: CircularProgressIndicator()):Icon(
-                              Icons.arrow_upward,
-                              color: Colors.black,
-                            ),
+                                child: CircularProgressIndicator()):Container(
+                                width: doubleWidth(6),
+                                height: doubleWidth(6),
+                                child: Image.asset('assets/images/soccer(1).png')),
                           ),
                         ),
                         SizedBox(width: doubleWidth(4)),

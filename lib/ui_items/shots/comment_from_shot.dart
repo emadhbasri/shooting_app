@@ -28,6 +28,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    if(comment
+        .personalInformationViewModel==null)return const SizedBox();
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -49,7 +51,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               context,
                               ProfileBuilder(
                                   username: comment
-                                      .personalInformationViewModel.userName));
+                                      .personalInformationViewModel!.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -58,11 +60,11 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               height: doubleHeight(5),
                               child: Builder(
                                 builder: (context) {
-                                  if (comment.personalInformationViewModel
+                                  if (comment.personalInformationViewModel!
                                           .profilePhoto !=
                                       null) {
                                     return imageNetwork(
-                                      comment.personalInformationViewModel
+                                      comment.personalInformationViewModel!
                                           .profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
@@ -84,11 +86,11 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
                               image:
-                                  comment.personalInformationViewModel.team !=
+                                  comment.personalInformationViewModel!.team !=
                                           null
                                       ? DecorationImage(
                                           image: networkImage(comment
-                                                  .personalInformationViewModel
+                                                  .personalInformationViewModel!
                                                   .team!
                                                   .team_badge ??
                                               ''),
@@ -101,14 +103,14 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 ),
               ),
               title: Text(
-                comment.personalInformationViewModel.fullName ?? '',
+                comment.personalInformationViewModel!.fullName ?? '',
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${comment.personalInformationViewModel.userName}',
+                  '@${comment.personalInformationViewModel!.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,
@@ -335,6 +337,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
 
   @override
   Widget build(BuildContext context) {
+    if(comment
+        .personalInformationViewModel==null)return const SizedBox();
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -356,7 +360,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               context,
                               ProfileBuilder(
                                   username: comment
-                                      .personalInformationViewModel.userName));
+                                      .personalInformationViewModel!.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -365,11 +369,11 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               height: doubleHeight(5),
                               child: Builder(
                                 builder: (context) {
-                                  if (comment.personalInformationViewModel
+                                  if (comment.personalInformationViewModel!
                                           .profilePhoto !=
                                       null) {
                                     return imageNetwork(
-                                      comment.personalInformationViewModel
+                                      comment.personalInformationViewModel!
                                           .profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
@@ -391,11 +395,11 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
                               image:
-                                  comment.personalInformationViewModel.team !=
+                                  comment.personalInformationViewModel!.team !=
                                           null
                                       ? DecorationImage(
                                           image: networkImage(comment
-                                                  .personalInformationViewModel
+                                                  .personalInformationViewModel!
                                                   .team!
                                                   .team_badge ??
                                               ''),
@@ -408,14 +412,14 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                 ),
               ),
               title: Text(
-                comment.personalInformationViewModel.fullName ?? '',
+                comment.personalInformationViewModel!.fullName ?? '',
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${comment.personalInformationViewModel.userName}',
+                  '@${comment.personalInformationViewModel!.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,

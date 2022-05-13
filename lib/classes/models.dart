@@ -97,6 +97,7 @@ class DataCommentReply {
     editeddAt = convertData(data, 'editeddAt', DataType.datetime);
     id = convertData(data, 'id', DataType.string);
     personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+
     personalInformationViewModel =
         convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postCommentId = convertData(data, 'postCommentId', DataType.string);
@@ -110,7 +111,7 @@ class DataCommentReply {
   DateTime? editeddAt;
   late String id;
   late String personalInformationId;
-  late DataPersonalInformationViewModel personalInformationViewModel;
+  DataPersonalInformationViewModel? personalInformationViewModel;
   late String postCommentId;
   String? replyDetail;
   late int replyLikeCount;
@@ -145,7 +146,7 @@ class DataPostComment {
   DateTime? editedAt;
   late String id;
   late String personalInformationId;
-  late DataPersonalInformationViewModel personalInformationViewModel;
+  DataPersonalInformationViewModel? personalInformationViewModel;
   late String postId;
 }
 

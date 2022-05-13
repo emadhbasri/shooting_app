@@ -14,19 +14,19 @@ class FanFeeds extends StatefulWidget {
 }
 
 class _FanFeedsState extends State<FanFeeds> {
-  late ScrollController _listController;
+
 
   @override
   void initState() {
     super.initState();
     print('FanFeeds init');
-    MainState state = Provider.of(context, listen: false);
+    MainState state = Provider.of<MainState>(context, listen: false);
     if (state.allPosts.isEmpty) state.getFanFeed();
 
-    _listController = ScrollController()
+    state.listController = ScrollController()
       ..addListener(() {
-        if (state.allPosts.isNotEmpty) if (_listController.position.atEdge &&
-            _listController.offset != 0.0) {
+        if (state.allPosts.isNotEmpty) if (state.listController.position.atEdge &&
+            state.listController.offset != 0.0) {
           debugPrint("state.dataSearchPage!.hasNext ${state.postsHasNext}");
           if (state.postsHasNext) {
             state.postsPageNumber++;
@@ -56,7 +56,7 @@ class _FanFeedsState extends State<FanFeeds> {
                     child: Center(child: Text('no shot. 🙂'))),
               ],
             ):ListView(
-              controller: _listController,
+              controller: state.listController,
               physics: AlwaysScrollableScrollPhysics(),
               children: [
                 ...state.allPosts

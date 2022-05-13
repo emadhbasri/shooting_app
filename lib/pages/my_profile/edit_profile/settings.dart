@@ -6,6 +6,8 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
 import '../../../main.dart';
+import '../../../ui_items/dialogs/privacy.dart';
+import '../../../ui_items/dialogs/team.dart';
 import 'change_phone.dart';
 
 import 'change_email.dart';
@@ -209,7 +211,47 @@ class _SettingsState extends State<Settings> {
                         ],
                       ),
                     )),
-              )
+              ),
+              Spacer(),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  GestureDetector(
+                    onTap: (){
+                      showDialog(context: context, builder: (_)=>TeamDialog());
+                    },
+                    child: Text('Terms of Use',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: mainGreen1,fontWeight: FontWeight.bold,
+                            fontSize: doubleWidth(3),
+                            fontStyle: FontStyle.italic)),
+                  ),
+                  SizedBox(width: doubleWidth(2)),
+                  Text(
+                    'and',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: black,
+                      fontSize: doubleWidth(3),
+                    ),
+                  ),
+                  SizedBox(width: doubleWidth(2)),
+                  GestureDetector(
+                    onTap: (){
+                      showDialog(context: context, builder: (_)=>Privacy());
+                    },
+                    child: Text('Privacy Policy',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: mainGreen1,fontWeight: FontWeight.bold,
+                            fontSize: doubleWidth(3),
+                            fontStyle: FontStyle.italic)),
+                  )
+                ],
+              ),
+              sizeh(doubleHeight(4)),
             ],
           ),
         ),

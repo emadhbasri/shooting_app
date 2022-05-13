@@ -726,7 +726,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           );
                         }
                         return Center(
-                          child: VideoItem(controller: controller),
+                          child: VideoItem(controller: controller,url: widget.post.mediaTypes.first.media,aspectRatio: 2),
                         );
                       }
                     else
@@ -1165,23 +1165,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             );
                           }
                           return Center(
-                            child: GestureDetector(
-
-                              onTap: (){
-                                if(controller.value.isPlaying){
-                                  controller.pause();
-
-                                }else{
-                                  controller.play();
-                                  controller.setLooping(true);
-                                }
-
-                              },
-                              child: AspectRatio(
-                                aspectRatio: controller.value.aspectRatio,
-                                child: VideoPlayer(controller),
-                              ),
-                            ),
+                            child: VideoItem(controller: controller,url: widget.post.mediaTypes.first.media,aspectRatio: 2),
                           );
                         }
                         else

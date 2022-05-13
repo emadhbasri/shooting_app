@@ -55,7 +55,7 @@ class _ChatState extends State<Chat> {
     await Future.delayed(Duration(seconds: 2));
     return startTimer();
   }
-
+bool loadingImageSend=false;
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
@@ -252,16 +252,20 @@ class _ChatState extends State<Chat> {
                       SizedBox(width: doubleWidth(4)),
                       GestureDetector(
                         onTap: () async{
-                          // if (controller.value.text.trim() == '') return;
-                          // state.sendMessage(
-                          //     // file: file
-                          // );
-                          // state.notify();
-
                           XFile? file = await showDialog(
                               context: context,
                               builder: (contextD)=>ChooseMediaDialog());
-
+                          if (file==null) return;
+                          setState(() {
+                            loadingImageSend=true;
+                          });
+                          await state.sendMessage(
+                              file: file
+                          );
+                          setState(() {
+                            loadingImageSend=false;
+                          });
+                          state.notify();
                         },
                         child: Container(
                           padding: EdgeInsets.all(doubleWidth(4)),
@@ -269,7 +273,7 @@ class _ChatState extends State<Chat> {
                             borderRadius: BorderRadius.circular(10),
                             color: greenCall,
                           ),
-                          child: Icon(
+                          child: loadingImageSend?simpleCircle():Icon(
                             Icons.photo_library_rounded,
                             color: Colors.black,
                           ),
@@ -525,7 +529,7 @@ class _ChatItemState extends State<ChatItem> {
                           ],
                         ),
                       ):Center(
-                        child: VideoItem(controller: controller,),
+                        child: VideoItem(controller: controller,url: widget.message.messageMediaTypes!.media),
                       ),
                     );
 

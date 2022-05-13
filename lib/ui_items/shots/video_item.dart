@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
+import 'package:shooting_app/ui_items/my_video_player.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../classes/functions.dart';
+
 class VideoItem extends StatefulWidget {
-  const VideoItem({Key? key, required this.controller}) : super(key: key);
+  const VideoItem({Key? key, required this.controller,required this.url,this.aspectRatio=1}) : super(key: key);
   final VideoPlayerController controller;
+  final double aspectRatio;
+  final String url;
   @override
   State<VideoItem> createState() => _VideoItemState();
 }
@@ -36,16 +41,17 @@ class _VideoItemState extends State<VideoItem> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        if(widget.controller.value.isPlaying){
-          widget.controller.pause();
-        }else{
-          widget.controller.play();
-          widget.controller.setLooping(true);
-
-        }
+        Go.pushSlideAnim(context, MyVideoPlayer(url: widget.url));
+        // if(widget.controller.value.isPlaying){
+        //   widget.controller.pause();
+        // }else{
+        //   widget.controller.play();
+        //   widget.controller.setLooping(true);
+        //
+        // }
       },
       child: AspectRatio(
-        aspectRatio: 1,//widget.controller.value.aspectRatio
+        aspectRatio: widget.aspectRatio,//widget.controller.value.aspectRatio
         child: Stack(
           children: [
             VideoPlayer(widget.controller),

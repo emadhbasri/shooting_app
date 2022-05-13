@@ -16,7 +16,7 @@ import 'chat_state.dart';
 import 'package:soundpool/soundpool.dart';
 class MainState extends ChangeNotifier {
   MyService service = getIt<MyService>();
-
+  late ScrollController listController;
 
   late Soundpool pool;
   late int soundId;

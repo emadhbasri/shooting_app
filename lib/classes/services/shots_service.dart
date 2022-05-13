@@ -145,7 +145,7 @@ class ShotsService {
     return {
       'totalPage': back['data']['total_pages'],
       'hasNext': back['data']['hasNext'],
-      'list': convertDataList<DataPost>(back['data'], 'results', 'DataPost')
+      'list': convertDataList<DataPost>(back['data']['results'], 'getFanFeedDTOs', 'DataPost')
     };
   }
 
@@ -324,7 +324,7 @@ class ShotsService {
       }
       return back['status'];
     }else{
-      toast('there is no problem with this content.');
+      toast('Report Send Successfully');
       return false;
     }
 
@@ -366,7 +366,7 @@ class ShotsService {
           '/api/v1/Shots/addCommentReport',
           {
             "message": message,
-            "commentIdc": comment.id,
+            "commentId": comment.id,
             "commentOwnerId": comment.personalInformationId,
             "dateReported": DateTime.now().toString()
           },
@@ -377,7 +377,7 @@ class ShotsService {
       }
       return back['status'];
     }else{
-      toast('there is no problem with this content.');
+      toast('Report Send Successfully');
       return false;
     }
 
@@ -389,7 +389,7 @@ class ShotsService {
     List<bool> checks=[];
     bool? cText=await checkReportText(reply.replyDetail??'');
     if(cText==null){
-      toast('please check your connection');
+      toast('Report Send Successfully');
       return false;
     }else{
       checks.add(cText);
@@ -430,18 +430,20 @@ class ShotsService {
       }
       return back['status'];
     }else{
-      toast('there is no problem with this content.');
+      toast('Report Send Successfully');
       return false;
     }
 
   }
 
   static Future<bool?> checkReportText(String text) async {
+    print('checkReportText($text)');
+    String url = ""
+        "http://api1.webpurify.com/services/rest/?"
+        "format=json&api_key=64b03d7273c0635157a724ac65a56835&text="
+        "${text}&lang=en";
     http.Response utf = await http
-        .get(Uri.parse(""
-            "http://api1.webpurify.com/services/rest/?"
-            "format=json&api_key=64b03d7273c0635157a724ac65a56835&text="
-            "${text}&lang=en"))
+        .get(Uri.parse(url))
         .catchError((e) {
           print('ev$e');
       FutureOr<http.Response> out = http.Response('nonet', 403);
@@ -461,7 +463,7 @@ class ShotsService {
         print('contain ${json.contains('"found": "0"')}');
         bool b1 = json.contains('"found": "0"');
         // bool b2 = json.contains('found": "0"');
-        return b1;
+        return !b1;
       } else {
         return null;
       }

@@ -152,8 +152,9 @@ class _ReportSheetState extends State<ReportSheet> {
                             print('block $back');
                             if(back){
                               toast('Report Send Successfully');
-                              Go.pop(context);
+
                             }
+                            Go.pop(context);
                           },
                         ),
                       )),

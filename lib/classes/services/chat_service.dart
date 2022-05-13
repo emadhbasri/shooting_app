@@ -83,16 +83,14 @@ class ChatService{
     Map<String, dynamic> map = {
       'chatRoomId':chatRoomId,
       'timeStamp':DateTime.now().toString(),
-      'message':message,
     };
     if(message!=null){
       map['message']=message;
     }else if(file!=null){
       MultipartFile temp = await MultipartFile.fromFile(file.path,
           filename: file.name);
-      map['file']=temp;
+      map['mediaType']=temp;
     }
-
     debugPrint('sendMessage($chatRoomId,$message)');//3530f18b-a1ed-406e-0914-08da04b81c0f
     Map<String, dynamic> back = await service.httpPostMulti('/api/v1/Message/sendMessage',FormData.fromMap(map),jsonType: true);
     debugPrint('back sendMessage ${back}');

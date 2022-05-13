@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../classes/functions.dart';
 
 class MyAlertDialog extends StatelessWidget {
-  const MyAlertDialog({Key? key,this.title='Alert',required this.content}) : super(key: key);
+  const MyAlertDialog({Key? key,this.title='',required this.content}) : super(key: key);
   final String title;
   final String content;
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
+      title: title==''?null:Text(title),
       content: Text(content),
       actions: [
         TextButton(

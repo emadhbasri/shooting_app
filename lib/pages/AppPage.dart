@@ -320,8 +320,11 @@ class _AppPageState extends State<AppPage> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
+                    Provider.of<MainState>(context,listen: false)
+                        .listController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.linear);
                     setState(() {
                       currentIndex = 0;
+
                     });
                   },
                   child: Stack(

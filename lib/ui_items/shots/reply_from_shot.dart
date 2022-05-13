@@ -25,6 +25,8 @@ class _CommentReplyState extends State<CommentReply> {
 
   @override
   Widget build(BuildContext context) {
+    if(reply.personalInformationViewModel==null)
+      return const SizedBox();
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -45,7 +47,7 @@ class _CommentReplyState extends State<CommentReply> {
                       child: GestureDetector(
                         onTap: (){
                           Go.pushSlideAnim(
-                              context, ProfileBuilder(username: reply.personalInformationViewModel.userName));
+                              context, ProfileBuilder(username: reply.personalInformationViewModel!.userName));
                         },
                         child:
                         ClipRRect(
@@ -56,11 +58,11 @@ class _CommentReplyState extends State<CommentReply> {
                               child: Builder(
                                 builder: (context) {
                                   if (reply
-                                      .personalInformationViewModel
+                                      .personalInformationViewModel!
                                       .profilePhoto != null) {
                                     return imageNetwork(
                                       reply
-                                          .personalInformationViewModel
+                                          .personalInformationViewModel!
                                           .profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
@@ -78,16 +80,17 @@ class _CommentReplyState extends State<CommentReply> {
                       child: SizedBox(
                         width: doubleHeight(3),
                         height: doubleHeight(3),
-                        child: Container(
+                        child:
+                        Container(
                           decoration: BoxDecoration(
                               color: white,
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
-                              image: reply.personalInformationViewModel.team !=
+                              image: reply.personalInformationViewModel!.team !=
                                       null
                                   ? DecorationImage(
                                       image: networkImage(reply
-                                              .personalInformationViewModel
+                                              .personalInformationViewModel!
                                               .team!
                                               .team_badge ??
                                           ''),
@@ -100,14 +103,14 @@ class _CommentReplyState extends State<CommentReply> {
                 ),
               ),
               title: Text(
-                reply.personalInformationViewModel.fullName ?? '',
+                reply.personalInformationViewModel!.fullName ?? '',
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
               subtitle: Text(
-                  '@${reply.personalInformationViewModel.userName}',
+                  '@${reply.personalInformationViewModel!.userName}',
                   style: TextStyle(
                       color: grayCall,
                       fontWeight: FontWeight.bold,

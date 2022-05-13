@@ -127,6 +127,7 @@ class ChatListItem extends StatelessWidget {
             ));
         if (message != null) {
           state.selectedChat.chatMessages.insert(0, message);
+          state.getChatsList(clean: true);
           state.notify();
         }
       },
