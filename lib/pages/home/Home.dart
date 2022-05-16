@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/home/mach/match_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
-import '../../classes/functions.dart';
-import '../../classes/dataTypes.dart';
 import '../../main.dart';
 import 'fan_feeds.dart';
 import 'story/story_list.dart';

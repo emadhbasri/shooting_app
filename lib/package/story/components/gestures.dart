@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/package/story/story_page_view.dart';
 import 'package:video_player/video_player.dart';
 
 import '../story_stack_controller.dart';

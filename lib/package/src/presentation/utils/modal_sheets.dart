@@ -8,7 +8,6 @@ import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/painting_notifier.dart';
 import '../../domain/providers/notifiers/text_editing_notifier.dart';
 import '../../domain/sevices/save_as_image.dart';
-import '../../presentation/utils/Extensions/hexColor.dart';
 import '../../presentation/utils/constants/item_type.dart';
 import '../../presentation/widgets/animated_onTap_button.dart';
 

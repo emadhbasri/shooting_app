@@ -1,15 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../classes/functions.dart';
-import '../../classes/models.dart';
 import '../../main.dart';
 import 'components/indicators.dart';
 import 'story_limit_controller.dart';

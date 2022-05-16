@@ -8,6 +8,7 @@ import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 import '../../ui_items/shots/comment_from_shot.dart';
+import '../shoot/shoot_comment.dart';
 
 class Shot extends StatefulWidget {
   const Shot({Key? key, this.post, this.postId}) : super(key: key);
@@ -18,45 +19,18 @@ class Shot extends StatefulWidget {
 }
 
 class _ShotState extends State<Shot> {
-  TextEditingController controller = TextEditingController();
 
   MyService service = getIt<MyService>();
   DataPost? post;
   getData() async {
     print('getData()');
-    if(post!=null)
-    post = await ShotsService.getShotById(service, post!.id);
+    if (post != null)
+      post = await ShotsService.getShotById(service, post!.id);
     else
-    post = await ShotsService.getShotById(service, widget.postId!);
+      post = await ShotsService.getShotById(service, widget.postId!);
     setState(() {});
   }
-  bool loading=false;
-  addComment() async {
-    if(loading)return;
-    setState(() {
-      loading=true;
-    });
-    if(controller.value.text.trim()==''){
-      toast('please fill the comment field');
-      setState(() {
-        loading=false;
-      });
-      return;
-    }
-    print('controller.value.text ${controller.value.text}');
-    DataPostComment? back = await ShotsService.shotsComment(service,
-        postId: post!.id, comment: controller.value.text);
-setState(() {
-  loading=false;
-});
-    if (back!=null) {
-      setState(() {
 
-        post!.postComments.add(back);
-      });
-      controller.clear();
-    }
-  }
 
   @override
   void initState() {
@@ -65,9 +39,7 @@ setState(() {
     if (widget.post != null) {
       post = widget.post;
     }
-    // else {
-      getData();
-    // }
+    getData();
   }
 
   @override
@@ -76,95 +48,50 @@ setState(() {
         appBar: AppBar(
           title: Text('Shot'),
         ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'makeComment',
+          onPressed: () async{
+            if(post!=null){
+              DataPostComment? back = await Go.pushSlideAnimSheet(context, ShootComment(postId: post!.id,));
+              if (back!=null) {
+                setState(() {
+                  post!.postComments.add(back);
+                });
+              }
+            }
+          },
+          elevation: 5,
+          backgroundColor: mainGreen,
+          child: Container(
+              width: doubleWidth(9),
+              height: doubleWidth(9),
+              child: Image.asset('assets/images/soccer.png')),
+        ),
         body: post == null
             ? circle()
-            : Column(
-                children: [
-                  Flexible(
-                    child: Container(color: Colors.white,
-                      child: ListView(
-                        children: [
-                          PostFromShot(post: post!, canTouch: false, onTapTag: gogo,delete: (){}),
-                          SizedBox(height: doubleHeight(1)),
-                          ...List.generate(post!.postComments.length, (index) =>
-                              CommentFromShot(
-                                  key: UniqueKey(),
-                                  comment: post!.postComments[index],delete: (){
-                                print('delete comment $index');
-                                List<DataPostComment> temp  =post!.postComments.toList();
-                                temp.removeAt(index);
-                                setState(() {
-                                  post!.postComments=temp.toList();
-                                });
-                              })),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.white,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.symmetric(vertical: doubleHeight(0.5)),
-                    child: Row(
-                      children: [
-                        SizedBox(width: doubleWidth(4)),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(244, 244, 244, 1),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: doubleWidth(8),
-                                vertical: doubleHeight(0.5)),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 4,
-                              controller: controller,
-                              decoration: InputDecoration(
-                                  hintStyle: TextStyle(
-                                      color: Color.fromRGBO(214, 216, 217, 1)),
-                                  hintText: 'Write your comment...',
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: doubleWidth(4)),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {});
-                            addComment();
-                            // state.selectedChat.messages.add(
-                            //     DataMessage(
-                            //         message: controller.value.text,
-                            //         date: DateTime.now(),
-                            //         isMine: true,
-                            //         read: false
-                            //     )
-                            // );
-                            // state.notify();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(doubleWidth(4)),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: greenCall,
-                            ),
-                            child: loading?SizedBox(
-                              height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator()):Container(
-                                width: doubleWidth(6),
-                                height: doubleWidth(6),
-                                child: Image.asset('assets/images/soccer(1).png')),
-                          ),
-                        ),
-                        SizedBox(width: doubleWidth(4)),
-                      ],
-                    ),
-                  ),
-                ],
-              ));
+            : ListView(
+              children: [
+                PostFromShot(
+                    post: post!,
+                    canTouch: false,
+                    onTapTag: gogo,
+                    delete: () {}),
+                SizedBox(height: doubleHeight(1)),
+                ...List.generate(
+                    post!.postComments.length,
+                    (index) => CommentFromShot(
+                        key: UniqueKey(),
+                        comment: post!.postComments[index],
+                        delete: () {
+                          print('delete comment $index');
+                          List<DataPostComment> temp =
+                              post!.postComments.toList();
+                          temp.removeAt(index);
+                          setState(() {
+                            post!.postComments = temp.toList();
+                          });
+                        })),
+              ],
+            ));
   }
 }

@@ -14,7 +14,6 @@ import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
 import '../../ui_items/gal.dart';
-import '../AppPage.dart';
 
 class ChatBuilder extends StatelessWidget {
   const ChatBuilder({Key? key, this.state}) : super(key: key);

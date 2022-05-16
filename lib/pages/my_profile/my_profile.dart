@@ -7,7 +7,6 @@ import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import 'edit_profile/edit_profile.dart';
-import 'media.dart';
 import 'shots.dart';
 
 class MyProfile extends StatefulWidget {

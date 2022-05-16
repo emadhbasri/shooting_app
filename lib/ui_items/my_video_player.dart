@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
-import 'package:shooting_app/main.dart';
 import 'package:video_player/video_player.dart';
 
 import '../classes/functions.dart';
@@ -87,7 +86,7 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                   Align(
                       alignment: Alignment.topCenter,
                       child: Row(
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirection.ltr,
                         children: [
                           const SizedBox(
                             width: 16,
@@ -99,7 +98,7 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                                 Navigator.pop(context);
                               },
                               icon: const Icon(
-                                Icons.arrow_forward,
+                                Icons.arrow_back,
                                 color: Colors.white,
                               )),
                           const SizedBox(

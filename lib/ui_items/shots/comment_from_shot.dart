@@ -1,11 +1,14 @@
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
+import '../gal.dart';
 import 'index.dart';
+import 'video_item.dart';
 
 class CommentFromShot extends StatefulWidget {
   final VoidCallback delete;
@@ -18,14 +21,38 @@ class CommentFromShot extends StatefulWidget {
 
 class _CommentFromShotState extends State<CommentFromShot> {
   late DataPostComment comment;
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
   @override
   void initState() {
     super.initState();
     comment = widget.comment;
+
+    init();
+  }
+
+  init() async {
+    if (widget.comment.mediaTypes.isNotEmpty &&
+        widget.comment.mediaTypes.first.media.contains('video/upload')) {
+      controller =
+          VideoPlayerController.network(widget.comment.mediaTypes.first.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (widget.comment.mediaTypes.isNotEmpty &&
+        widget.comment.mediaTypes.first.media.contains('video/upload'))
+      controller.dispose();
   }
 
   bool loading = false;
-  TextEditingController controller = TextEditingController();
+  TextEditingController controllerT = TextEditingController();
   @override
   Widget build(BuildContext context) {
     if(comment
@@ -145,6 +172,73 @@ class _CommentFromShotState extends State<CommentFromShot> {
             ),
             sizeh(doubleHeight(1)),
             convertHashtag(comment.comment ?? '', (e) {}),
+            sizeh(doubleHeight(1)),
+            if (widget.comment.mediaTypes.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox(
+                  width: max,
+                  height: doubleWidth(70),
+                  child: Builder(builder: (context) {
+                    if (widget.comment.mediaTypes.isNotEmpty &&
+                        widget.comment.mediaTypes.first.media
+                            .contains('video/upload')) {
+                      if (loadingVideo) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CircularProgressIndicator(),
+                              SizedBox(height: doubleHeight(1)),
+                              const Text(
+                                'loading ...',
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                      return Center(
+                        child: VideoItem(
+                            controller: controller,
+                            url: widget.comment.mediaTypes.first.media,
+                            aspectRatio: 2),
+                      );
+                    } else
+                      return PageView.builder(
+                        controller: PageController(
+                            initialPage: 0, viewportFraction: 0.85),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: widget.comment.mediaTypes.length,
+                        itemBuilder: (_, index) => Padding(
+                          padding: EdgeInsets.only(
+                              right: widget.comment.mediaTypes.length - 1 != index
+                                  ? doubleHeight(2)
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Go.push(
+                                  context,
+                                  Gal(
+                                      images: widget.comment.mediaTypes
+                                          .map((e) => e.media)
+                                          .toList()));
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: imageNetwork(
+                                  widget.comment.mediaTypes[index].media,
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                        ),
+                      );
+                  }),
+                ),
+              ),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -222,14 +316,15 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             return;
                           }
 
-                          bool? alert = await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext dialogContext) {
-                              return MyAlertDialog(
-                                  content: 'Do you want to delete the shot?');
-                            },
-                          );
+                          bool? alert = await MyAlertDialog(context,
+                              content: 'Do you want to delete the shot?');
+                          // showDialog(
+                          //   context: context,
+                          //   barrierDismissible: true,
+                          //   builder: (BuildContext dialogContext) {
+                          //     return ;
+                          //   },
+                          // );
                           if (alert != null && alert) {
                             MyService service = await getIt<MyService>();
                             bool back = await ShotsService.deleteComment(
@@ -253,10 +348,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           key: UniqueKey(),
                           reply: e,
                           delete: () {
-                            int index = comment.commentReplies.indexOf(e);
-                            List<DataCommentReply> temp =
-                                comment.commentReplies.toList();
-                            // temp.removeAt(index);
+
 
                             setState(() {
                               comment.commentReplies.remove(e);
@@ -268,13 +360,13 @@ class _CommentFromShotState extends State<CommentFromShot> {
               ..add(Padding(
                 padding: EdgeInsets.only(left: doubleWidth(8)),
                 child: TextField(
-                  controller: controller,
+                  controller: controllerT,
                   decoration: InputDecoration(
                       hintStyle:
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            if (loading || controller.value.text.trim() == '')
+                            if (loading || controllerT.value.text.trim() == '')
                               return;
                             setState(() {
                               loading = true;
@@ -284,7 +376,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                 await ShotsService.commentReply(
                                     getIt<MyService>(),
                                     commentId: comment.id,
-                                    reply: controller.value.text.trim());
+                                    reply: controllerT.value.text.trim());
                             setState(() {
                               loading = false;
                             });
@@ -292,7 +384,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               setState(() {
                                 comment.commentReplies.add(back);
                               });
-                              controller.clear();
+                              controllerT.clear();
                             }
                           },
                           child: loading
@@ -329,12 +421,35 @@ class CommentFromMatch extends StatefulWidget {
 
 class _CommentFromMatchState extends State<CommentFromMatch> {
   late DataPostComment comment;
+  late VideoPlayerController controller;
+  bool loadingVideo = true;
   @override
   void initState() {
     super.initState();
     comment = widget.comment;
+
+    init();
   }
 
+  init() async {
+    if (widget.comment.mediaTypes.isNotEmpty &&
+        widget.comment.mediaTypes.first.media.contains('video/upload')) {
+      controller =
+          VideoPlayerController.network(widget.comment.mediaTypes.first.media);
+      await controller.initialize();
+      setState(() {
+        loadingVideo = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (widget.comment.mediaTypes.isNotEmpty &&
+        widget.comment.mediaTypes.first.media.contains('video/upload'))
+      controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     if(comment
@@ -455,6 +570,73 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
             sizeh(doubleHeight(1)),
             convertHashtag(comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
+            if (widget.comment.mediaTypes.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox(
+                  width: max,
+                  height: doubleWidth(70),
+                  child: Builder(builder: (context) {
+                    if (widget.comment.mediaTypes.isNotEmpty &&
+                        widget.comment.mediaTypes.first.media
+                            .contains('video/upload')) {
+                      if (loadingVideo) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CircularProgressIndicator(),
+                              SizedBox(height: doubleHeight(1)),
+                              const Text(
+                                'loading ...',
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                      return Center(
+                        child: VideoItem(
+                            controller: controller,
+                            url: widget.comment.mediaTypes.first.media,
+                            aspectRatio: 2),
+                      );
+                    } else
+                      return PageView.builder(
+                        controller: PageController(
+                            initialPage: 0, viewportFraction: 0.85),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: widget.comment.mediaTypes.length,
+                        itemBuilder: (_, index) => Padding(
+                          padding: EdgeInsets.only(
+                              right: widget.comment.mediaTypes.length - 1 != index
+                                  ? doubleHeight(2)
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Go.push(
+                                  context,
+                                  Gal(
+                                      images: widget.comment.mediaTypes
+                                          .map((e) => e.media)
+                                          .toList()));
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: imageNetwork(
+                                  widget.comment.mediaTypes[index].media,
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                        ),
+                      );
+                  }),
+                ),
+              ),
+            sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
               child: Row(
@@ -525,14 +707,15 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                             toast('you can not delete this comment');
                             return;
                           }
-                          bool? alert = await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext dialogContext) {
-                              return MyAlertDialog(
-                                  content: 'Do you want to delete the shot?');
-                            },
-                          );
+                          bool? alert = await MyAlertDialog(context,
+                              content: 'Do you want to delete the shot?');
+                          // showDialog(
+                          //   context: context,
+                          //   barrierDismissible: true,
+                          //   builder: (BuildContext dialogContext) {
+                          //     return ;
+                          //   },
+                          // );
                           if (alert != null && alert) {
                             MyService service = await getIt<MyService>();
                             bool back = await ShotsService.deleteComment(

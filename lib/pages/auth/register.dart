@@ -7,7 +7,6 @@ import '../../classes/services/my_service.dart';
 import '../../main.dart';
 import '../../ui_items/dialogs/team.dart';
 import 'login.dart';
-import 'team.dart';
 
 class Register extends StatefulWidget {
   @override

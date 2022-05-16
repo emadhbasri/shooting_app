@@ -11,8 +11,8 @@ import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 openUrl(String url)async{
-  if(await canLaunch(url)){
-    launch(url);
+  if(await canLaunchUrl(Uri.parse(url))){
+    launchUrl(Uri.parse(url));
   }
 }
 late Size screenSize;
@@ -237,11 +237,12 @@ abstract class Go {
     // })).catchError((e) => print('Error 1 $e'));
   }
 
-  static Future<void> pushSlideAnimSheet(BuildContext context, Widget page,
-      {bool full: false, var first, var second}) async{
+  static Future<dynamic> pushSlideAnimSheet(BuildContext context, Widget page,
+      {bool full: false, var first, var second,Duration? reverseTransitionDuration}) async{
+    reverseTransitionDuration??=Duration(milliseconds: 300);
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
-    await Navigator.push(
+    return await Navigator.push(
         context,
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
@@ -253,6 +254,7 @@ abstract class Go {
                 Animation<double> secendAnimation) {
               return page;
             },
+            reverseTransitionDuration: reverseTransitionDuration,
             transitionsBuilder: (context, Animation<double> animation,
                 Animation<double> secendAnimation, Widget widget) {
               return SlideTransition(

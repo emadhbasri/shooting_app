@@ -4,7 +4,6 @@ import 'package:shooting_app/ui_items/shots/index.dart';
 import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
 import 'home/Home.dart';
-import 'Search.dart';
 import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
 import 'my_profile/my_profile.dart';
@@ -38,7 +37,6 @@ class _AppPageState extends State<AppPage> {
 
   int currentIndex = 0;
   int subIndex = 1;
-
 
   // outButtonClick(Widget widget) {
   //   if (buttonClick) {
@@ -259,26 +257,26 @@ class _AppPageState extends State<AppPage> {
               if (currentIndex == 0) {
                 if (state.isOnMatchPage) {
                   return true;
-                }else{
-                  if(state.tab==MyTab.fanFeed){
+                } else {
+                  if (state.tab == MyTab.fanFeed) {
                     return true;
                   }
-                  state.tab=MyTab.fanFeed;
+                  state.tab = MyTab.fanFeed;
                   state.notify();
                   print('testaaa');
                   setState(() {
-                    subIndex=0;
+                    subIndex = 0;
                   });
-                  Future.delayed(Duration(milliseconds: 50),(){
+                  Future.delayed(Duration(milliseconds: 50), () {
                     setState(() {
-                      subIndex=1;
+                      subIndex = 1;
                     });
                   });
                   return false;
                 }
               } else {
                 setState(() {
-                  currentIndex=0;
+                  currentIndex = 0;
                 });
                 return false;
               }
@@ -299,7 +297,7 @@ class _AppPageState extends State<AppPage> {
             //   return outButtonClick(MyProfileBuilder());
             // }
             if (currentIndex == 0) {
-              return subIndex==1?Home():const SizedBox();
+              return subIndex == 1 ? Home() : const SizedBox();
             } else if (currentIndex == 1) {
               return ChatList();
             } else if (currentIndex == 3) {
@@ -320,11 +318,13 @@ class _AppPageState extends State<AppPage> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    Provider.of<MainState>(context,listen: false)
-                        .listController.animateTo(0, duration: Duration(seconds: 1), curve: Curves.linear);
+                    Provider.of<MainState>(context, listen: false)
+                        .listController
+                        .animateTo(0,
+                            duration: Duration(seconds: 1),
+                            curve: Curves.linear);
                     setState(() {
                       currentIndex = 0;
-
                     });
                   },
                   child: Stack(
@@ -380,7 +380,8 @@ class _AppPageState extends State<AppPage> {
                                   alignment: Alignment.center,
                                   child: currentIndex == 1
                                       ? Image.asset('assets/images/chat.png')
-                                      : Image.asset('assets/images/chat(1).png'),
+                                      : Image.asset(
+                                          'assets/images/chat(1).png'),
                                 ),
                                 // Align(
                                 //     alignment: Alignment(1.4, -1.1),
@@ -427,24 +428,29 @@ class _AppPageState extends State<AppPage> {
                           offset: Offset(0, 3))
                     ], borderRadius: BorderRadius.circular(100)),
                     child: FloatingActionButton(
-                      // padding: EdgeInsets.zero,
                       onPressed: () {
-                        if(currentIndex==0){
+                        if (currentIndex == 0) {
                           MainState state = Provider.of(context, listen: false);
-                          if(state.tab==MyTab.fanFeed){
+                          if (state.tab == MyTab.fanFeed) {
                             Go.pushSlideAnimSheet(context, ShootBuilder());
-                          }else if(state.tab==MyTab.games){
+                          } else if (state.tab == MyTab.games) {
                             if (state.isOnMatchPage) {
                               if (state.match!.home.id.toString() ==
-                                  state.personalInformation!.team!.team_key ||
+                                      state.personalInformation!.team!
+                                          .team_key ||
                                   state.match!.away.id.toString() ==
-                                      state.personalInformation!.team!.team_key) {
+                                      state.personalInformation!.team!
+                                          .team_key) {
                                 if (state.match!.isLive == 0) {
                                   toast('Match Is Not Started');
-                                }else if(state.match!.isLive == 2){
+                                } else if (state.match!.isLive == 2) {
                                   toast('The Match In Finished.');
                                 } else {
-                                  Go.pushSlideAnimSheet(context, ShootBuilder(matchId: state.match!.fixture.id,));
+                                  Go.pushSlideAnimSheet(
+                                      context,
+                                      ShootBuilder(
+                                        matchId: state.match!.fixture.id,
+                                      ));
                                 }
                               } else {
                                 toast(
@@ -453,17 +459,17 @@ class _AppPageState extends State<AppPage> {
                             } else {
                               toast('Please Select A Match.');
                             }
-                          }else{
-                            state.tab=MyTab.fanFeed;
+                          } else {
+                            state.tab = MyTab.fanFeed;
                             state.notify();
                           }
-                        }else{
+                        } else {
                           setState(() {
                             currentIndex = 0;
                           });
                         }
                       },
-                       elevation: 0,
+                      elevation: 0,
                       backgroundColor: mainGreen,
                       child: Container(
                           width: doubleWidth(9),
@@ -485,15 +491,23 @@ class _AppPageState extends State<AppPage> {
                       Align(
                         alignment: Alignment.center,
                         child: Container(
-                          width: doubleWidth(14),
-                          height: max,
-                          padding: EdgeInsets.all(doubleWidth(3)),
-                          child: currentIndex == 3
-                              ? Icon(Icons.notifications_active_rounded,color: Colors.deepPurple,size: 34,)
-                          // Image.asset('assets/images/flashlight.png')
-                              : Icon(Icons.notifications_none,size: 34,color: Colors.grey,)
-                          // Image.asset('assets/images/flashlight(1).png'),
-                        ),
+                            width: doubleWidth(14),
+                            height: max,
+                            padding: EdgeInsets.all(doubleWidth(3)),
+                            child: currentIndex == 3
+                                ? Icon(
+                                    Icons.notifications_active_rounded,
+                                    color: Colors.deepPurple,
+                                    size: 34,
+                                  )
+                                // Image.asset('assets/images/flashlight.png')
+                                : Icon(
+                                    Icons.notifications_none,
+                                    size: 34,
+                                    color: Colors.grey,
+                                  )
+                            // Image.asset('assets/images/flashlight(1).png'),
+                            ),
                       ),
                       currentIndex == 3
                           ? Align(
@@ -539,10 +553,11 @@ class _AppPageState extends State<AppPage> {
                                     return Container(
                                       width: doubleWidth(12),
                                       decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/images/player.png'),
-                                          fit: BoxFit.fill,
-                                        ),
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/images/player.png'),
+                                            fit: BoxFit.fill,
+                                          ),
                                           // color: grayCall,
                                           borderRadius:
                                               BorderRadius.circular(100)),
@@ -589,7 +604,6 @@ class _AppPageState extends State<AppPage> {
   }
 }
 
-
 class Ball extends StatefulWidget {
   const Ball({Key? key}) : super(key: key);
 
@@ -598,11 +612,7 @@ class Ball extends StatefulWidget {
 }
 
 class _BallState extends State<Ball> {
-
-
-
-
-  int centerButton=1;
+  int centerButton = 1;
   loopChange() async {
     if (centerButton == 1) {
       setState(() {
@@ -620,21 +630,20 @@ class _BallState extends State<Ball> {
     await Future.delayed(Duration(seconds: 2));
     loopChange();
   }
+
   @override
   Widget build(BuildContext context) {
-    if(centerButton==1)
+    if (centerButton == 1)
       return Image.asset('assets/images/soccer.png');
-    else if(centerButton==2)
+    else if (centerButton == 2)
       return Image.asset('assets/images/football (1).png');
     else
       return Image.asset('assets/images/soccer(1).png');
-
   }
 
   @override
   void initState() {
-super.initState();
+    super.initState();
     loopChange();
-
   }
 }

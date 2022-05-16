@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-import '../../classes/functions.dart';
 class TeamDialog extends StatefulWidget {
   @override
   State<TeamDialog> createState() => _TeamDialogState();

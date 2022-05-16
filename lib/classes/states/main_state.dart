@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +23,7 @@ class MainState extends ChangeNotifier {
   late String userId;
   late String userName;
   play()async{
-    int streamId = await pool.play(soundId);
+   await pool.play(soundId);
   }
   init() async {
     pool = Soundpool.fromOptions(

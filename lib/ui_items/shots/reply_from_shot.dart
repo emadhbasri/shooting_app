@@ -209,14 +209,15 @@ class _CommentReplyState extends State<CommentReply> {
                             toast('you can not delete this reply');
                             return;
                           }
-                          bool? alert = await showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext dialogContext) {
-                              return MyAlertDialog(
-                                  content: 'Do you want to delete the shot?');
-                            },
-                          );
+                          bool? alert = await MyAlertDialog(context,
+                              content: 'Do you want to delete the shot?');
+                          // showDialog(
+                          //   context: context,
+                          //   barrierDismissible: true,
+                          //   builder: (BuildContext dialogContext) {
+                          //     return ;
+                          //   },
+                          // );
                           if (alert != null && alert) {
                             MyService service = await getIt<MyService>();
                             bool back = await ShotsService.deleteReply(service,

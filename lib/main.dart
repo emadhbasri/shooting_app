@@ -9,8 +9,6 @@ import 'classes/states/main_state.dart';
 import 'classes/states/match_state.dart';
 import 'classes/dataTypes.dart';
 import 'classes/functions.dart';
-import 'pages/auth/team.dart';
-import 'pages/intro.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -58,7 +56,7 @@ void main() async {
   );
 
   messaging = FirebaseMessaging.instance;
-  NotificationSettings settings = await messaging.requestPermission(
+  await messaging.requestPermission(
     alert: true,
     announcement: true,
     badge: true,

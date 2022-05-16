@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/classes/models.dart';
-import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import '../../classes/functions.dart';
-import '../../classes/services/shots_service.dart';
-import '../../main.dart';
 import '../../ui_items/shots/post_from_shot.dart';
 
 class FanFeeds extends StatefulWidget {

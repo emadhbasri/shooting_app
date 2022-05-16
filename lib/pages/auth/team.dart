@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
-import '../../classes/functions.dart';
 import '../../classes/services/live_match_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../classes/dataTypes.dart';
 import '../../main.dart';
 import '../AppPage.dart';
 import '../team_search.dart';

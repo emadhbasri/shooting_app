@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../../main.dart';

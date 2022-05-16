@@ -1,4 +1,5 @@
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
@@ -86,7 +87,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               if (back) {
                                 state.personalInformation!.blockedByMe=false;
                                 state.notify();
-                                toast('User Unblocked Successfully');
+                                Alert(
+                                  context: context,
+                                  style: AlertStyle(
+                                    animationType: AnimationType.shrink
+                                  ),
+                                  type: AlertType.success,
+                                  title: "User Unblocked Successfully",
+                                ).show();
                               }
                             },
                             child: Text('Unblock'))
@@ -121,7 +129,24 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               if (back) {
                                 state.personalInformation!.blockedByMe=true;
                                 state.notify();
-                                toast('User Blocked Successfully');
+                                Alert(
+                                  context: context,
+                                  buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "CLOSE",
+                                        style: TextStyle(color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () => Navigator.pop(context),
+                                    )
+                                  ],
+                                  style: AlertStyle(
+                                    isCloseButton: false,
+                                      animationType: AnimationType.shrink
+                                  ),
+                                  type: AlertType.success,
+                                  title: "User Blocked Successfully",
+                                ).show();
                               }
                             },
                             child: Text('Block')),

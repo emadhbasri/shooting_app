@@ -50,39 +50,36 @@ class _VideoItemState extends State<VideoItem> with SingleTickerProviderStateMix
         //
         // }
       },
-      child: AspectRatio(
-        aspectRatio: widget.aspectRatio,//widget.controller.value.aspectRatio
-        child: Stack(
-          children: [
-            VideoPlayer(widget.controller),
-            Positioned(
-                top: 5,
-                right: 5,
-                child: FadeTransition(
-                  opacity: Tween<double>(begin: 0.3,end: 1).animate(_controller),
-                  child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Builder(
-                        builder: (context) {
-                          if(widget.controller.value.isPlaying){
-                            Duration vidDuration =widget.controller.value.duration;
-                            int vidSec = vidDuration.inSeconds;
-                            Duration position =widget.controller.value.position;
-                            int positionSec = position.inSeconds;
-                            return Text(
-                                (vidSec-positionSec).toString(),style: TextStyle(color: white),
-                            );
-                          }else{
-                            return Image.asset('assets/images/live-stream.png',color: white);
-                          }
-                        },
-                      )
-                      ),
-                )
-            )
-          ],
-        ),
+      child: Stack(
+        children: [
+          VideoPlayer(widget.controller),
+          Positioned(
+              top: 5,
+              right: 5,
+              child: FadeTransition(
+                opacity: Tween<double>(begin: 0.3,end: 1).animate(_controller),
+                child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Builder(
+                      builder: (context) {
+                        if(widget.controller.value.isPlaying){
+                          Duration vidDuration =widget.controller.value.duration;
+                          int vidSec = vidDuration.inSeconds;
+                          Duration position =widget.controller.value.position;
+                          int positionSec = position.inSeconds;
+                          return Text(
+                              (vidSec-positionSec).toString(),style: TextStyle(color: white),
+                          );
+                        }else{
+                          return Image.asset('assets/images/live-stream.png',color: mainGreen1);
+                        }
+                      },
+                    )
+                    ),
+              )
+          )
+        ],
       ),
     );
   }

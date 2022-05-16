@@ -1,4 +1,3 @@
-import 'package:shooting_app/ui_items/shots/index.dart';
 
 import 'live_match_model.dart';
 
@@ -121,6 +120,7 @@ class DataCommentReply {
 
 class DataPostComment {
   DataPostComment.fromJson(Map<String, dynamic> data) {
+    mediaTypes = convertDataList<DataMediaType>(data, 'mediaTypes', 'DataMediaType');
     comment = convertData(data, 'comment', DataType.string);
     commentLikeCount = convertData(data, 'commentLikeCount', DataType.int);
     commentLikedBythisUser = convertData(data, 'commentLikedBythisUser', DataType.bool);
@@ -135,7 +135,7 @@ class DataPostComment {
         convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postId = convertData(data, 'postId', DataType.string);
   }
-
+  late List<DataMediaType> mediaTypes;
   String? comment;
   late int commentLikeCount;
   late bool commentLikedBythisUser;

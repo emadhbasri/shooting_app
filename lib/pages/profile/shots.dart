@@ -4,7 +4,6 @@ import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
-import '../../classes/states/main_state.dart';
 import '../../classes/states/profile_state.dart';
 
 class Shots extends StatefulWidget {

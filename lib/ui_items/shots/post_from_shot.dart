@@ -1,4 +1,3 @@
-import 'package:photo_view/photo_view.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 import 'package:shooting_app/ui_items/gal.dart';
@@ -18,7 +17,7 @@ class PostFromShot extends StatefulWidget {
       {Key? key,
       this.canTouch = true,
       required this.post,
-        required this.delete,
+      required this.delete,
       required this.onTapTag})
       : super(key: key);
   final DataPost post;
@@ -38,7 +37,7 @@ class _PostFromShotState extends State<PostFromShot> {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
-        if(e.length==0)return Text('');
+        if (e.length == 0) return Text('');
         // if (e[0] == '#') {
         //   return GestureDetector(
         //     onLongPress: (){
@@ -49,9 +48,9 @@ class _PostFromShotState extends State<PostFromShot> {
         //       },
         //       child: Text(e, style: TextStyle(color: mainBlue)));
         // } else
-          if (e[0] == '@') {
+        if (e[0] == '@') {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               onTap: () {
@@ -60,7 +59,7 @@ class _PostFromShotState extends State<PostFromShot> {
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e.startsWith('http')) {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               onTap: () {
@@ -69,7 +68,7 @@ class _PostFromShotState extends State<PostFromShot> {
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               child: Text(e, style: TextStyle(color: black)));
@@ -77,6 +76,7 @@ class _PostFromShotState extends State<PostFromShot> {
       }).toList(),
     );
   }
+
   late VideoPlayerController controller;
   bool loadingVideo = true;
   @override
@@ -86,22 +86,27 @@ class _PostFromShotState extends State<PostFromShot> {
 
     init();
   }
-  init()async{
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-    {
-      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+
+  init() async {
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload')) {
+      controller =
+          VideoPlayerController.network(widget.post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
-        loadingVideo=false;
+        loadingVideo = false;
       });
     }
   }
+
   @override
   void dispose() {
     super.dispose();
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
+
   DataPersonalInformationViewModel? person;
 
   @override
@@ -118,11 +123,11 @@ class _PostFromShotState extends State<PostFromShot> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-                  onTap: (){
-                    if(person!=null)
-                      Go.pushSlideAnim(
-                          context, ProfileBuilder(username: person!.userName));
-                  },
+              onTap: () {
+                if (person != null)
+                  Go.pushSlideAnim(
+                      context, ProfileBuilder(username: person!.userName));
+              },
               contentPadding: EdgeInsets.zero,
               dense: true,
               leading: SizedBox(
@@ -239,19 +244,19 @@ class _PostFromShotState extends State<PostFromShot> {
               ),
             ),
             ListTile(
-                  onTap: widget.canTouch
-                      ? () {
-                    Go.pushSlideAnim(
-                        context,
-                        Shot(
-                          post: widget.post,
-                        ));
-                  }
-                      : null,
+              onTap: widget.canTouch
+                  ? () {
+                      Go.pushSlideAnim(
+                          context,
+                          Shot(
+                            post: widget.post,
+                          ));
+                    }
+                  : null,
               dense: true,
               minVerticalPadding: 0,
               contentPadding: EdgeInsets.zero,
-              title:_convertHashtag(context, widget.post.details ?? ''),
+              title: _convertHashtag(context, widget.post.details ?? ''),
             ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
@@ -260,74 +265,63 @@ class _PostFromShotState extends State<PostFromShot> {
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
-                  child: Builder(
-                      builder: (context) {
-                        if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-                        {
-                          if (loadingVideo) {
-                            return Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const CircularProgressIndicator(),
-                                  SizedBox(height: doubleHeight(1)),
-                                  const Text(
-                                    'loading ...',
-                                    textDirection: TextDirection.ltr,
-                                    style: TextStyle(
-                                        color: mainBlue,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                          return Center(
-                            child: GestureDetector(
-
-                              onTap: (){
-                                if(controller.value.isPlaying){
-                                  controller.pause();
-
-                                }else{
-                                  controller.play();
-                                  controller.setLooping(true);
-                                }
-
-                              },
-                              child: AspectRatio(
-                                aspectRatio: controller.value.aspectRatio,
-                                child: VideoPlayer(controller),
-                              ),
-                            ),
-                          );
-                        }
-                        else
-                          return PageView.builder(
-                            controller:
-                            PageController(initialPage: 0, viewportFraction: 0.85),
-                            physics: BouncingScrollPhysics(),
-                            itemCount: widget.post.mediaTypes.length,
-                            itemBuilder: (_, index) => Padding(
-                              padding: EdgeInsets.only(
-                                  right: widget.post.mediaTypes.length - 1 != index
-                                      ? doubleHeight(2)
-                                      : 0),
-                              child: GestureDetector(
-                                onTap: (){
-                                  Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
-                                },
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: imageNetwork(
-                                      widget.post.mediaTypes[index].media,
-                                      fit: BoxFit.fill,
-                                    )),
-                              ),
-                            ),
-                          );
+                  child: Builder(builder: (context) {
+                    if (widget.post.mediaTypes.isNotEmpty &&
+                        widget.post.mediaTypes.first.media
+                            .contains('video/upload')) {
+                      if (loadingVideo) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CircularProgressIndicator(),
+                              SizedBox(height: doubleHeight(1)),
+                              const Text(
+                                'loading ...',
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        );
                       }
-                  ),
+                      return Center(
+                        child: VideoItem(
+                            controller: controller,
+                            url: widget.post.mediaTypes.first.media,
+                            aspectRatio: 2));
+                    } else
+                      return PageView.builder(
+                        controller: PageController(
+                            initialPage: 0, viewportFraction: 0.85),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: widget.post.mediaTypes.length,
+                        itemBuilder: (_, index) => Padding(
+                          padding: EdgeInsets.only(
+                              right: widget.post.mediaTypes.length - 1 != index
+                                  ? doubleHeight(2)
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Go.push(
+                                  context,
+                                  Gal(
+                                      images: widget.post.mediaTypes
+                                          .map((e) => e.media)
+                                          .toList()));
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: imageNetwork(
+                                  widget.post.mediaTypes[index].media,
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                        ),
+                      );
+                  }),
                 ),
               ),
             sizeh(doubleHeight(1)),
@@ -342,17 +336,18 @@ class _PostFromShotState extends State<PostFromShot> {
                       GestureDetector(
                         onTap: widget.canTouch
                             ? () {
-                          Go.pushSlideAnim(
-                              context,
-                              Shot(
-                                post: widget.post,
-                              ));
-                        }
+                                Go.pushSlideAnim(
+                                    context,
+                                    Shot(
+                                      post: widget.post,
+                                    ));
+                              }
                             : null,
                         child: SizedBox(
                             width: doubleWidth(5),
                             height: doubleWidth(5),
-                            child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                            child: Image.asset('assets/images/chat(2).png',
+                                color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postComments.length))
@@ -379,14 +374,15 @@ class _PostFromShotState extends State<PostFromShot> {
                           if (!widget.post.postLikedBythisUser) {
                             String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back!=null)
+                            if (back != null)
                               setState(() {
-                                widget.post.postLikes.add(DataPostLike(back, ''));
+                                widget.post.postLikes
+                                    .add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
                                 widget.post.postLikeCount++;
                               });
                           } else {
-                            if(widget.post.postLikes.isNotEmpty){
+                            if (widget.post.postLikes.isNotEmpty) {
                               bool back = await ShotsService.deleteShotLike(
                                   service,
                                   shotId: widget.post.postLikes.first.id);
@@ -418,18 +414,21 @@ class _PostFromShotState extends State<PostFromShot> {
                       Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  if(widget.canTouch && widget.post.person!.personalInformationId ==
-                      getIt<MainState>().userId)
+                  if (widget.canTouch &&
+                      widget.post.person!.personalInformationId ==
+                          getIt<MainState>().userId)
                     GestureDetector(
-                      onTap: () async{
-                        bool? alert = await showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext dialogContext) {
-                            return MyAlertDialog(content: 'Do you want to delete the shot?');
-                          },
-                        );
-                        if(alert!=null && alert){
+                      onTap: () async {
+                        bool? alert = await MyAlertDialog(context,
+                            content: 'Do you want to delete the shot?');
+                        // showDialog(
+                        //   context: context,
+                        //   barrierDismissible: true,
+                        //   builder: (BuildContext dialogContext) {
+                        //     return ;
+                        //   },
+                        // );
+                        if (alert != null && alert) {
                           MyService service = getIt<MyService>();
                           bool back = await ShotsService.deleteShot(service,
                               shotId: widget.post.id);
@@ -441,13 +440,15 @@ class _PostFromShotState extends State<PostFromShot> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child:Icon(Icons.remove_circle_outline),
+                        child: Icon(Icons.remove_circle_outline),
                         // child: Image.asset('assets/images/share.png')
                       ),
-                    )else SizedBox(
-                    width: doubleWidth(5),
-                    height: doubleWidth(5),
-                  )
+                    )
+                  else
+                    SizedBox(
+                      width: doubleWidth(5),
+                      height: doubleWidth(5),
+                    )
                 ],
               ),
             ),
@@ -459,12 +460,11 @@ class _PostFromShotState extends State<PostFromShot> {
   }
 }
 
-
 class PostFromShotProfile extends StatefulWidget {
   const PostFromShotProfile(
       {Key? key,
-        required this.canDelete,
-        required this.delete,
+      required this.canDelete,
+      required this.delete,
       required this.person,
       required this.post,
       required this.onTapTag})
@@ -487,7 +487,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
-        if(e.length==0)return Text('');
+        if (e.length == 0) return Text('');
         // if (e[0] == '#') {
         //   return GestureDetector(onLongPress: (){
         //     copyText(text);
@@ -497,17 +497,18 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
         //       },
         //       child: Text(e, style: TextStyle(color: mainBlue)));
         // } else
-          if (e[0] == '@') {
-          return GestureDetector(onLongPress: (){
-            copyText(text);
-          },
+        if (e[0] == '@') {
+          return GestureDetector(
+              onLongPress: () {
+                copyText(text);
+              },
               onTap: () {
                 widget.onTapTag(context, e, true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e.startsWith('http')) {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               onTap: () {
@@ -516,7 +517,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               child: Text(e, style: TextStyle(color: black)));
@@ -524,6 +525,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       }).toList(),
     );
   }
+
   late VideoPlayerController controller;
   bool loadingVideo = true;
   @override
@@ -531,22 +533,27 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
     super.initState();
     init();
   }
-  init()async{
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-    {
-      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+
+  init() async {
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload')) {
+      controller =
+          VideoPlayerController.network(widget.post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
-        loadingVideo=false;
+        loadingVideo = false;
       });
     }
   }
-@override
+
+  @override
   void dispose() {
     super.dispose();
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -579,9 +586,11 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Go.pushSlideAnim(
-                                context, ProfileBuilder(username: widget.person.userName));
+                                context,
+                                ProfileBuilder(
+                                    username: widget.person.userName));
                           },
                           child: SizedBox(
                             width: doubleHeight(5),
@@ -648,11 +657,11 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 );
               }),
               subtitle: Builder(builder: (context) {
-                  return Text('@${widget.person.userName}',
-                      style: TextStyle(
-                          color: grayCall,
-                          fontWeight: FontWeight.bold,
-                          fontSize: doubleWidth(2.5)));
+                return Text('@${widget.person.userName}',
+                    style: TextStyle(
+                        color: grayCall,
+                        fontWeight: FontWeight.bold,
+                        fontSize: doubleWidth(2.5)));
               }),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -683,19 +692,17 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
               ),
             ),
             ListTile(
-              onTap:
-                   () {
+              onTap: () {
                 Go.pushSlideAnim(
                     context,
                     Shot(
                       post: widget.post,
                     ));
-              }
-                  ,
+              },
               dense: true,
               minVerticalPadding: 0,
               contentPadding: EdgeInsets.zero,
-              title:_convertHashtag(context, widget.post.details ?? ''),
+              title: _convertHashtag(context, widget.post.details ?? ''),
             ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
@@ -703,36 +710,37 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 color: Colors.transparent,
                 width: max,
                 height: doubleWidth(70),
-                child: Builder(
-                  builder: (context) {
-                    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-                      {
-                        if (loadingVideo) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const CircularProgressIndicator(),
-                                SizedBox(height: doubleHeight(1)),
-                                const Text(
-                                  'loading ...',
-                                  textDirection: TextDirection.ltr,
-                                  style: TextStyle(
-                                      color: mainBlue,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          );
-                        }
-                        return Center(
-                          child: VideoItem(controller: controller,url: widget.post.mediaTypes.first.media,aspectRatio: 2),
-                        );
-                      }
-                    else
+                child: Builder(builder: (context) {
+                  if (widget.post.mediaTypes.isNotEmpty &&
+                      widget.post.mediaTypes.first.media
+                          .contains('video/upload')) {
+                    if (loadingVideo) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CircularProgressIndicator(),
+                            SizedBox(height: doubleHeight(1)),
+                            const Text(
+                              'loading ...',
+                              textDirection: TextDirection.ltr,
+                              style: TextStyle(
+                                  color: mainBlue, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: VideoItem(
+                          controller: controller,
+                          url: widget.post.mediaTypes.first.media,
+                          aspectRatio: 2),
+                    );
+                  } else
                     return PageView.builder(
-                      controller:
-                          PageController(initialPage: 0, viewportFraction: 0.85),
+                      controller: PageController(
+                          initialPage: 0, viewportFraction: 0.85),
                       physics: BouncingScrollPhysics(),
                       itemCount: widget.post.mediaTypes.length,
                       itemBuilder: (_, index) => Padding(
@@ -741,8 +749,13 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 ? doubleHeight(2)
                                 : 0),
                         child: GestureDetector(
-                          onTap: (){
-                            Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
+                          onTap: () {
+                            Go.push(
+                                context,
+                                Gal(
+                                    images: widget.post.mediaTypes
+                                        .map((e) => e.media)
+                                        .toList()));
                           },
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -753,8 +766,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         ),
                       ),
                     );
-                  }
-                ),
+                }),
               ),
             sizeh(doubleHeight(1)),
             SizedBox(
@@ -766,7 +778,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Go.pushSlideAnim(
                               context,
                               Shot(
@@ -776,7 +788,8 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         child: SizedBox(
                             width: doubleWidth(5),
                             height: doubleWidth(5),
-                            child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                            child: Image.asset('assets/images/chat(2).png',
+                                color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postCommentCount))
@@ -802,14 +815,15 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           if (!widget.post.postLikedBythisUser) {
                             String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back!=null)
+                            if (back != null)
                               setState(() {
-                                widget.post.postLikes.add(DataPostLike(back, ''));
+                                widget.post.postLikes
+                                    .add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
                                 widget.post.postLikeCount++;
                               });
                           } else {
-                            if(widget.post.postLikes.isNotEmpty){
+                            if (widget.post.postLikes.isNotEmpty) {
                               bool back = await ShotsService.deleteShotLike(
                                   service,
                                   shotId: widget.post.postLikes.first.id);
@@ -834,45 +848,48 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  if(widget.canDelete)
+                  if (widget.canDelete)
                     GestureDetector(
-                    onTap: () async{
-
-                      print('canDelete ${widget.canDelete}');
-                      // DataPost? backDialog = await showDialog(
-                      //     context: context,
-                      //     builder: (_) => ShareDialog(
-                      //       canDelete: widget.canDelete,
-                      //       post: widget.post,
-                      //     ));
-                      // if(backDialog!=null){
-                      bool? alert = await showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext dialogContext) {
-                          return MyAlertDialog(content: 'Do you want to delete the shot?');
-                        },
-                      );
-                      if(alert!=null && alert){
-                        MyService service = getIt<MyService>();
-                        bool back = await ShotsService.deleteShot(service,
-                            shotId: widget.post.id);
-                        if (back) {
-                          widget.delete();
+                      onTap: () async {
+                        print('canDelete ${widget.canDelete}');
+                        // DataPost? backDialog = await showDialog(
+                        //     context: context,
+                        //     builder: (_) => ShareDialog(
+                        //       canDelete: widget.canDelete,
+                        //       post: widget.post,
+                        //     ));
+                        // if(backDialog!=null){
+                        bool? alert = await MyAlertDialog(context,
+                            content: 'Do you want to delete the shot?');
+                        // showDialog(
+                        //   context: context,
+                        //   barrierDismissible: true,
+                        //   builder: (BuildContext dialogContext) {
+                        //     return ;
+                        //   },
+                        // );
+                        if (alert != null && alert) {
+                          MyService service = getIt<MyService>();
+                          bool back = await ShotsService.deleteShot(service,
+                              shotId: widget.post.id);
+                          if (back) {
+                            widget.delete();
+                          }
                         }
-                      }
-                      // }
-                    },
-                    child: SizedBox(
+                        // }
+                      },
+                      child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child:Icon(Icons.remove_circle_outline),
+                        child: Icon(Icons.remove_circle_outline),
                         // child: Image.asset('assets/images/share.png')
-                    ),
-                  )else SizedBox(
-                    width: doubleWidth(5),
-                    height: doubleWidth(5),
-                  )
+                      ),
+                    )
+                  else
+                    SizedBox(
+                      width: doubleWidth(5),
+                      height: doubleWidth(5),
+                    )
                 ],
               ),
             ),
@@ -887,10 +904,10 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
 class PostFromMatch extends StatefulWidget {
   const PostFromMatch(
       {Key? key,
-        this.canTouch = true,
-        required this.delete,
-        required this.post,
-        required this.onTapTag})
+      this.canTouch = true,
+      required this.delete,
+      required this.post,
+      required this.onTapTag})
       : super(key: key);
   final DataPost post;
   final VoidCallback delete;
@@ -909,7 +926,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       children: split.map((e) {
-        if(e.length==0)return Text('');
+        if (e.length == 0) return Text('');
         // if (e[0] == '#') {
         //   return GestureDetector(onLongPress: (){
         //     copyText(text);
@@ -919,17 +936,18 @@ class _PostFromMatchState extends State<PostFromMatch> {
         //       },
         //       child: Text(e, style: TextStyle(color: mainBlue)));
         // } else
-          if (e[0] == '@') {
-          return GestureDetector(onLongPress: (){
-            copyText(text);
-          },
+        if (e[0] == '@') {
+          return GestureDetector(
+              onLongPress: () {
+                copyText(text);
+              },
               onTap: () {
                 widget.onTapTag(context, e, true);
               },
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else if (e.startsWith('http')) {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               onTap: () {
@@ -938,7 +956,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
               child: Text(e, style: TextStyle(color: mainBlue)));
         } else {
           return GestureDetector(
-              onLongPress: (){
+              onLongPress: () {
                 copyText(text);
               },
               child: Text(e, style: TextStyle(color: black)));
@@ -946,6 +964,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
       }).toList(),
     );
   }
+
   late DataPost post;
   DataPersonalInformationViewModel? person;
   late VideoPlayerController controller;
@@ -957,21 +976,24 @@ class _PostFromMatchState extends State<PostFromMatch> {
     post = widget.post;
     init();
   }
-  init()async{
 
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-    {
-      controller = VideoPlayerController.network(widget.post.mediaTypes.first.media);
+  init() async {
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload')) {
+      controller =
+          VideoPlayerController.network(widget.post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
-        loadingVideo=false;
+        loadingVideo = false;
       });
     }
   }
+
   @override
   void dispose() {
     super.dispose();
-    if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
+    if (widget.post.mediaTypes.isNotEmpty &&
+        widget.post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -984,19 +1006,19 @@ class _PostFromMatchState extends State<PostFromMatch> {
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
         decoration:
-        BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
+            BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
               onTap: widget.canTouch
                   ? () {
-                Go.pushSlideAnim(
-                    context,
-                    Shot(
-                      post: widget.post,
-                    ));
-              }
+                      Go.pushSlideAnim(
+                          context,
+                          Shot(
+                            post: widget.post,
+                          ));
+                    }
                   : null,
               contentPadding: EdgeInsets.zero,
               dense: true,
@@ -1009,10 +1031,10 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: GestureDetector(
-                          onTap: (){
-                            if(person!=null)
-                            Go.pushSlideAnim(
-                                context, ProfileBuilder(username: person!.userName));
+                          onTap: () {
+                            if (person != null)
+                              Go.pushSlideAnim(context,
+                                  ProfileBuilder(username: person!.userName));
                           },
                           child: SizedBox(
                             width: doubleHeight(5),
@@ -1113,7 +1135,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
                       padding:
-                      EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -1123,17 +1145,17 @@ class _PostFromMatchState extends State<PostFromMatch> {
             ListTile(
               onTap: widget.canTouch
                   ? () {
-                Go.pushSlideAnim(
-                    context,
-                    Shot(
-                      post: widget.post,
-                    ));
-              }
+                      Go.pushSlideAnim(
+                          context,
+                          Shot(
+                            post: widget.post,
+                          ));
+                    }
                   : null,
               dense: true,
               minVerticalPadding: 0,
               contentPadding: EdgeInsets.zero,
-              title:_convertHashtag(context, widget.post.details ?? ''),
+              title: _convertHashtag(context, widget.post.details ?? ''),
             ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
@@ -1142,58 +1164,64 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
-                  child: Builder(
-                      builder: (context) {
-                        if (widget.post.mediaTypes.isNotEmpty && widget.post.mediaTypes.first.media.contains('video/upload'))
-                        {
-                          if (loadingVideo) {
-                            return Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const CircularProgressIndicator(),
-                                  SizedBox(height: doubleHeight(1)),
-                                  const Text(
-                                    'loading ...',
-                                    textDirection: TextDirection.ltr,
-                                    style: TextStyle(
-                                        color: mainBlue,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                          return Center(
-                            child: VideoItem(controller: controller,url: widget.post.mediaTypes.first.media,aspectRatio: 2),
-                          );
-                        }
-                        else
-                          return PageView.builder(
-                            controller:
-                            PageController(initialPage: 0, viewportFraction: 0.85),
-                            physics: BouncingScrollPhysics(),
-                            itemCount: widget.post.mediaTypes.length,
-                            itemBuilder: (_, index) => Padding(
-                              padding: EdgeInsets.only(
-                                  right: widget.post.mediaTypes.length - 1 != index
-                                      ? doubleHeight(2)
-                                      : 0),
-                              child: GestureDetector(
-                                onTap: (){
-                                  Go.push(context, Gal(images: widget.post.mediaTypes.map((e) => e.media).toList()));
-                                },
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: imageNetwork(
-                                      widget.post.mediaTypes[index].media,
-                                      fit: BoxFit.fill,
-                                    )),
-                              ),
-                            ),
-                          );
+                  child: Builder(builder: (context) {
+                    if (widget.post.mediaTypes.isNotEmpty &&
+                        widget.post.mediaTypes.first.media
+                            .contains('video/upload')) {
+                      if (loadingVideo) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CircularProgressIndicator(),
+                              SizedBox(height: doubleHeight(1)),
+                              const Text(
+                                'loading ...',
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                    color: mainBlue,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        );
                       }
-                  ),
+                      return Center(
+                        child: VideoItem(
+                            controller: controller,
+                            url: widget.post.mediaTypes.first.media,
+                            aspectRatio: 2),
+                      );
+                    } else
+                      return PageView.builder(
+                        controller: PageController(
+                            initialPage: 0, viewportFraction: 0.85),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: widget.post.mediaTypes.length,
+                        itemBuilder: (_, index) => Padding(
+                          padding: EdgeInsets.only(
+                              right: widget.post.mediaTypes.length - 1 != index
+                                  ? doubleHeight(2)
+                                  : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Go.push(
+                                  context,
+                                  Gal(
+                                      images: widget.post.mediaTypes
+                                          .map((e) => e.media)
+                                          .toList()));
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: imageNetwork(
+                                  widget.post.mediaTypes[index].media,
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                        ),
+                      );
+                  }),
                 ),
               ),
             sizeh(doubleHeight(1)),
@@ -1208,7 +1236,8 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       SizedBox(
                           width: doubleWidth(5),
                           height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',color: greenCall)),
+                          child: Image.asset('assets/images/chat(2).png',
+                              color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(widget.post.postComments.length))
                     ],
@@ -1233,14 +1262,15 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           if (!widget.post.postLikedBythisUser) {
                             String? back = await ShotsService.shotLike(service,
                                 postId: widget.post.id);
-                            if (back!=null)
+                            if (back != null)
                               setState(() {
-                                widget.post.postLikes.add(DataPostLike(back, ''));
+                                widget.post.postLikes
+                                    .add(DataPostLike(back, ''));
                                 widget.post.postLikedBythisUser = true;
                                 widget.post.postLikeCount++;
                               });
                           } else {
-                            if(widget.post.postLikes.isNotEmpty){
+                            if (widget.post.postLikes.isNotEmpty) {
                               bool back = await ShotsService.deleteShotLike(
                                   service,
                                   shotId: widget.post.postLikes.first.id);
@@ -1265,11 +1295,10 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       Text(makeCount(widget.post.postLikeCount))
                     ],
                   ),
-                  if(widget.post.person!.personalInformationId ==
-    getIt<MainState>().userId)
+                  if (widget.post.person!.personalInformationId ==
+                      getIt<MainState>().userId)
                     GestureDetector(
-                      onTap: () async{
-
+                      onTap: () async {
                         // DataPost? backDialog = await showDialog(
                         //     context: context,
                         //     builder: (_) => ShareDialog(
@@ -1277,14 +1306,16 @@ class _PostFromMatchState extends State<PostFromMatch> {
                         //       post: widget.post,
                         //     ));
                         // if(backDialog!=null){
-                        bool? alert = await showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext dialogContext) {
-                            return MyAlertDialog(content: 'Do you want to delete the shot?');
-                          },
-                        );
-                        if(alert!=null && alert){
+                        bool? alert = await MyAlertDialog(context,
+                            content: 'Do you want to delete the shot?');
+                        // showDialog(
+                        //   context: context,
+                        //   barrierDismissible: true,
+                        //   builder: (BuildContext dialogContext) {
+                        //     return ;
+                        //   },
+                        // );
+                        if (alert != null && alert) {
                           MyService service = getIt<MyService>();
                           bool back = await ShotsService.deleteShot(service,
                               shotId: widget.post.id);
@@ -1297,31 +1328,35 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child:Icon(Icons.remove_circle_outline),
+                        child: Icon(Icons.remove_circle_outline),
                         // child: Image.asset('assets/images/share.png')
                       ),
-                    )else SizedBox(
-                    width: doubleWidth(5),
-                    height: doubleWidth(5),
-                  )
+                    )
+                  else
+                    SizedBox(
+                      width: doubleWidth(5),
+                      height: doubleWidth(5),
+                    )
                 ],
               ),
             ),
             sizeh(doubleHeight(1)),
             ...post.postComments
                 .map((e) => Padding(
-              padding: EdgeInsets.only(left: doubleWidth(4)),
-              child: CommentFromMatch(
-                  key: UniqueKey(),
-                  comment: e,delete: (){
-                int index = post.postComments.indexOf(e);
-                List<DataPostComment> temp  =post.postComments.toList();
-                temp.removeAt(index);
-                setState(() {
-                  post.postComments=temp.toList();
-                });
-              }),
-            ))
+                      padding: EdgeInsets.only(left: doubleWidth(4)),
+                      child: CommentFromMatch(
+                          key: UniqueKey(),
+                          comment: e,
+                          delete: () {
+                            int index = post.postComments.indexOf(e);
+                            List<DataPostComment> temp =
+                                post.postComments.toList();
+                            temp.removeAt(index);
+                            setState(() {
+                              post.postComments = temp.toList();
+                            });
+                          }),
+                    ))
                 .toList()
               ..add(Padding(
                 padding: EdgeInsets.only(left: doubleWidth(8)),
@@ -1329,17 +1364,17 @@ class _PostFromMatchState extends State<PostFromMatch> {
                   controller: controllerT,
                   decoration: InputDecoration(
                       hintStyle:
-                      TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
+                          TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
                             print(
                                 'controllerT.value.text ${controllerT.value.text}');
                             DataPostComment? back =
-                            await ShotsService.shotsComment(
-                                getIt<MyService>(),
-                                postId: post.id,
-                                comment: controllerT.value.text);
-                            if(back!=null){
+                                await ShotsService.shotsComment(
+                                    getIt<MyService>(),
+                                    postId: post.id,
+                                    comment: controllerT.value.text);
+                            if (back != null) {
                               setState(() {
                                 post.postComments.add(back);
                               });
@@ -1354,7 +1389,6 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       border: InputBorder.none),
                 ),
               )),
-
           ],
         ),
       ),

@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-import 'package:video_player/video_player.dart';
 
-import '../classes/functions.dart';
-import '../classes/dataTypes.dart';
 import 'auth/auth.dart';
 
 class Intro1 extends StatefulWidget {

@@ -16,7 +16,7 @@ class ShotsService {
   static Future<DataPost?> createShot(
       //todo
       MyService service,
-      {required List<XFile> images,
+      {List<XFile> images=const[],
         XFile? video,
       required String details,
       bool isFriend = false,
@@ -53,12 +53,11 @@ class ShotsService {
     }
     DataPost out = convertData(back['data'], 'data', DataType.clas,
         classType: 'DataPost');
-    ///api/v1/Shots/tagUserInPost
     List<String> split = details.split(' ');
     for(int j=0;j<split.length;j++){
       if (split[j].length > 0 && split[j][0] == '@'){
         String theUserName = split[j].replaceAll('@', '');
-        Map<String, dynamic> backM =
+        // Map<String, dynamic> backM =
         await service.httpPost('/api/v1/Shots/tagUserInPost'
             '?friendUsername=${theUserName}&postId=${out.id}', {});
       }
@@ -201,26 +200,47 @@ class ShotsService {
     MyService service, {
     required String postId,
     required String comment,
+        List<XFile> images=const[],
+        XFile? video,
   }) async {
     debugPrint('shotsComment($postId,$comment)');
     MainState mainS = getIt<MainState>();
-    Map<String, dynamic> back = await service.httpPost(
-        '/api/v1/Shots/comment',
-        {
-          "UserId": mainS.userId,
-          "PostId": postId,
-          "Comment": comment,
-          'createdAt': DateTime.now().toString()
-          // "MediaType": ""
-        },
-        jsonType: false);
-    print('out ${{
+
+    Map<String, dynamic> map = {
       "UserId": mainS.userId,
       "PostId": postId,
-      "Comment": comment,
+      'Comment': comment,
       'createdAt': DateTime.now().toString()
-      // "MediaType": ""
-    }}');
+    };
+    if (images.isNotEmpty) {
+      List<MultipartFile> temp = [];
+      for (int j = 0; j < images.length; j++) {
+        MultipartFile file = await MultipartFile.fromFile(images[j].path,
+            filename: images[j].name);
+        temp.add(file);
+      }
+      map['MediaType'] = temp;
+    }else if(video!=null){
+      MultipartFile file = await MultipartFile.fromFile(video.path,
+          filename: video.name);
+      map['MediaType']=file;
+    }
+
+    print('out ${map}');
+
+    Map<String, dynamic> back =
+    await service.httpPostMulti('/api/v1/Shots/comment', FormData.fromMap(map));
+
+    // Map<String, dynamic> back = await service.httpPost(
+    //     '/api/v1/Shots/comment',
+    //     {
+    //       "UserId": mainS.userId,
+    //       "PostId": postId,
+    //       "Comment": comment,
+    //       'createdAt': DateTime.now().toString()
+    //       // "MediaType": ""
+    //     },
+    //     jsonType: false);
     debugPrint('back shotsComment ${back}');
     if (back['status'])
       return DataPostComment.fromJson(back['data']['data']);
@@ -341,15 +361,15 @@ class ShotsService {
     }else{
       checks.add(cText);
     }
-    // for(int j=0;j<post.mediaTypes.length;j++){
-    //   bool? cImage = await checkReportImage(post.mediaTypes[j].media);
-    //   if(cImage==null){
-    //     toast('please check your connection');
-    //     return false;
-    //   }else{
-    //     checks.add(cImage);
-    //   }
-    // }
+    for(int j=0;j<comment.mediaTypes.length;j++){
+      bool? cImage = await checkReportImage(comment.mediaTypes[j].media);
+      if(cImage==null){
+        toast('please check your connection');
+        return false;
+      }else{
+        checks.add(cImage);
+      }
+    }
     bool shouldReport=false;
     for(int j=0;j<checks.length;j++){
       if(checks[j]){
