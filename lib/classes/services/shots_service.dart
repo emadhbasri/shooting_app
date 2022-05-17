@@ -27,7 +27,7 @@ class ShotsService {
       'Details': details,
       'IsFriend': isFriend,
       'IsPublic': isPublic,
-      'createdAt': DateTime.now().toString()
+      'CreatedAt': DateTime.now().toString()
     };
     if (matchId != null) map['MatchId'] = matchId.toString();
     if (images.isNotEmpty) {
@@ -53,13 +53,15 @@ class ShotsService {
     }
     DataPost out = convertData(back['data'], 'data', DataType.clas,
         classType: 'DataPost');
-    List<String> split = details.split(' ');
-    for(int j=0;j<split.length;j++){
-      if (split[j].length > 0 && split[j][0] == '@'){
-        String theUserName = split[j].replaceAll('@', '');
-        // Map<String, dynamic> backM =
-        await service.httpPost('/api/v1/Shots/tagUserInPost'
-            '?friendUsername=${theUserName}&postId=${out.id}', {});
+    if(matchId==null){
+      List<String> split = details.split(' ');
+      for(int j=0;j<split.length;j++){
+        if (split[j].length > 0 && split[j][0] == '@'){
+          String theUserName = split[j].replaceAll('@', '');
+          // Map<String, dynamic> backM =
+          await service.httpPost('/api/v1/Shots/tagUserInPost'
+              '?friendUsername=${theUserName}&postId=${out.id}', {});
+        }
       }
     }
     return out;

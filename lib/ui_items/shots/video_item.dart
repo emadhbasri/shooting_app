@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/ui_items/my_video_player.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../classes/functions.dart';
 
 class VideoItem extends StatefulWidget {
@@ -41,7 +40,7 @@ class _VideoItemState extends State<VideoItem> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Go.pushSlideAnim(context, MyVideoPlayer(url: widget.url));
+        Go.pushSlideAnim(context, MyVideoPlayer(controller: widget.controller,));
         // if(widget.controller.value.isPlaying){
         //   widget.controller.pause();
         // }else{

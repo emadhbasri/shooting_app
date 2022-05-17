@@ -37,7 +37,8 @@ class _ChangeEmailDoneState extends State<ChangeEmailDone> {
             ),
             SizedBox(height: doubleHeight(2)),
             Text(
-              'Check your email to verify these changes',
+              'Please Check Your Email/spam',
+              // 'TextCheck your email to verify these changes',
               style: TextStyle(color: grayCall),
             ),
             SizedBox(height: doubleHeight(8)),

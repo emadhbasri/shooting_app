@@ -15,6 +15,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 import 'pages/intro1.dart';
+import 'pages/my_profile/edit_profile/change_email.dart';
 final getIt = GetIt.instance;
 
 
@@ -202,6 +203,7 @@ class _AppFirstState extends State<AppFirst> {
     // );
     // return Team();
     return Intro1();
+    // return ChangeEmail(email: 'ss',);
   }
 }
 
