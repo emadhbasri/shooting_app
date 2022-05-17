@@ -3,8 +3,8 @@ import 'package:shooting_app/classes/dataTypes.dart';
 
 import '../../classes/functions.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-MyAlertDialog(context, {String? title, String? content}){
-  Alert(
+MyAlertDialog(context, {String? title, String? content})async{
+  return await Alert(
     context: context,
     type: AlertType.warning,
     title: title,
@@ -33,7 +33,9 @@ MyAlertDialog(context, {String? title, String? content}){
           "YES",
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
-        onPressed: () => Go.pop(context,true),
+        onPressed: (){
+          Go.pop(context,true);
+        },
         color: mainGreen1,
       )
     ],

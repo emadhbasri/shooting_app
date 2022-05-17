@@ -25,7 +25,7 @@ class TopTextTools extends StatelessWidget {
                       editorNotifier.isFontFamily =
                           !editorNotifier.isFontFamily;
                       editorNotifier.isTextAnimation = false;
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                      WidgetsBinding.instance!.addPostFrameCallback((_) {
                         if (editorNotifier.fontFamilyController.hasClients) {
                           editorNotifier.fontFamilyController.animateToPage(
                               editorNotifier.fontFamilyIndex,

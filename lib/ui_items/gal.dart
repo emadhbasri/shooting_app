@@ -13,6 +13,7 @@ class Gal extends StatefulWidget {
 class _GalState extends State<Gal> {
   @override
   Widget build(BuildContext context) {
+    print('images ${widget.images}');
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(

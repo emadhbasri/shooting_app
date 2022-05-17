@@ -318,6 +318,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
 
                           bool? alert = await MyAlertDialog(context,
                               content: 'Do you want to delete the shot?');
+                          print('alert $alert');
                           // showDialog(
                           //   context: context,
                           //   barrierDismissible: true,

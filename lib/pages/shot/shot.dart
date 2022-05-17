@@ -70,6 +70,7 @@ class _ShotState extends State<Shot> {
         body: post == null
             ? circle()
             : ListView(
+          padding: EdgeInsets.only(bottom: doubleHeight(10)),
               children: [
                 PostFromShot(
                     post: post!,
