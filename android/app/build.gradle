@@ -46,8 +46,8 @@ android {
         minSdkVersion 22
         //noinspection OldTargetApi
         targetSdkVersion 30
-        versionCode 11
-        versionName '1.0.5'
+        versionCode 12
+        versionName '1.0.6'
         multiDexEnabled true
     }
 
