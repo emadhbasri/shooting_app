@@ -43,6 +43,8 @@ dependencies:
   firebase_core: ^1.13.1
   flutter_local_notifications: ^9.4.0
 
+  # photo_manager: ^2.1.1
+
   share_plus: ^4.0.2
   soundpool: ^2.3.0
   clipboard: ^0.1.3
