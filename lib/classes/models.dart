@@ -345,12 +345,16 @@ class DataChatRoom {
   DataChatRoom.fromJson(Map<String, dynamic> data) {
     chatMessages = convertDataList<DataChatMessage>(data, 'chatMessages', 'DataChatMessage');
     id = convertData(data, 'id', DataType.string);
-    personalInformations = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
+    name = convertData(data, 'name', DataType.string);
+
+    List<DataChatRoomUser> temp = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
+    personalInformations=temp.map((e) => e.personalInformation).toList();
   }//352408868
 
   List<DataChatMessage> chatMessages = [];
   late String id;
-  List<DataChatRoomUser> personalInformations = [];
+  String? name;
+  List<DataPersonalInformation?> personalInformations = [];
 }
 
 class DataChatRoomUser {

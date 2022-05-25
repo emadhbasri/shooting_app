@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shooting_app/classes/states/chat_state.dart';
-import 'package:shooting_app/pages/chat/chat.dart';
-import 'package:shooting_app/pages/chat/search_chat.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
-import '../../classes/states/main_state.dart';
+import '../../classes/states/group_chat_state.dart';
 import '../../main.dart';
+import 'create_group.dart';
+import 'group_chat.dart';
 
-class ChatList extends StatefulWidget {
-  const ChatList({Key? key}) : super(key: key);
+class GroupChatListBuilder extends StatelessWidget {
+  const GroupChatListBuilder({Key? key}) : super(key: key);
 
   @override
-  State<ChatList> createState() => _ChatListState();
+  Widget build(BuildContext context) {
+    return GroupChatStateProvider(
+        child: GroupChatList());
+  }
 }
 
-class _ChatListState extends State<ChatList> {
-  late ChatState state;
+
+class GroupChatList extends StatefulWidget {
+  const GroupChatList({Key? key}) : super(key: key);
+
+  @override
+  State<GroupChatList> createState() => _GroupChatListState();
+}
+
+class _GroupChatListState extends State<GroupChatList> {
+  late GroupChatState state;
   late ScrollController _listController;
   @override
   void initState() {
     super.initState();
-    state = Provider.of<ChatState>(context, listen: false);
-    state.init();
+    state = Provider.of<GroupChatState>(context, listen: false);
+    Future.delayed(Duration(milliseconds: 500),(){state.init();});
     _listController = ScrollController()
       ..addListener(() {
         if (state.listChats.isNotEmpty &&
@@ -41,12 +51,14 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatState>(
+    // return const SizedBox();
+    return Consumer<GroupChatState>(
       builder: (context, state, child) {
-        if (state.loadingListCaht) return circle();
-
         return Scaffold(
-          body: RefreshIndicator(
+          appBar: AppBar(
+            title: Text('Group Chat'.toUpperCase()),
+          ),
+          body: state.loadingListCaht?circle():RefreshIndicator(
             onRefresh: () async {
               await state.getChatsList(clean: true);
             },
@@ -71,7 +83,7 @@ class _ChatListState extends State<ChatList> {
                           .map((e) => Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  ChatListItem(
+                                  GroupChatListItem(
                                     chat: e,
                                     state: state,
                                   ),
@@ -93,11 +105,14 @@ class _ChatListState extends State<ChatList> {
                   ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Go.pushSlideAnim(context, SearchChat());
+            onPressed: () async{
+              bool? bb = await Go.pushSlideAnim(context, CreateGroup());
+              if(bb!=null && bb){
+                state.getChatsList(clean: true);
+              }
             },
-            heroTag: 'Create New Chat',
-            child: Icon(Icons.message),
+            heroTag: 'Create New Group Chat',
+            child: Icon(Icons.group),
           ),
         );
       },
@@ -105,17 +120,14 @@ class _ChatListState extends State<ChatList> {
   }
 }
 
-class ChatListItem extends StatelessWidget {
-  const ChatListItem({Key? key, required this.chat, required this.state})
+class GroupChatListItem extends StatelessWidget {
+  const GroupChatListItem({Key? key, required this.chat, required this.state})
       : super(key: key);
   final DataChatRoom chat;
-  final ChatState state;
+  final GroupChatState state;
   @override
   Widget build(BuildContext context) {
-    int index = chat.personalInformations.indexWhere((element) =>
-    element==null?false:
-        element.id != getIt<MainState>().userId);
-    DataPersonalInformation? roomUser = chat.personalInformations[index];
+
     return ListTile(
       onTap: () async {
         state.selectedChat = chat;
@@ -123,7 +135,7 @@ class ChatListItem extends StatelessWidget {
         state.notify();
         DataChatMessage? message = await Go.pushSlideAnim(
             context,
-            ChatBuilder(
+            GroupChatBuilder(
               state: state,
             ));
         if (message != null) {
@@ -132,42 +144,33 @@ class ChatListItem extends StatelessWidget {
           state.notify();
         }
       },
-      leading: SizedBox(
-        width: doubleWidth(15),
-        child: Stack(
-          children: [
-            if (roomUser != null)
-              SizedBox(
-                width: doubleHeight(5),
-                height: doubleHeight(5),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: roomUser.profilePhoto == null
-                        ? profilePlaceHolder()
-                        : imageNetwork(
-                            roomUser.profilePhoto ?? '',
-                            fit: BoxFit.fill)),
-              ),
-            if (roomUser!=null && roomUser.isOnline)
-              Align(
-                alignment: Alignment(0.9, 0.9),
-                child: CircleAvatar(
-                  backgroundColor: greenCall,
-                  radius: 5,
-                ),
-              )
-          ],
+      leading: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 1,color: Colors.black),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          // width: doubleWidth(10),
+          child: Center(child: Text(chat.name==null?'':chat.name![0],style: TextStyle(
+            color: Colors.black,
+            fontSize: 17,
+            fontWeight: FontWeight.bold
+          ),)),
         ),
       ),
-      title: Text(roomUser?.fullName ?? ''),
-      subtitle: chat.chatMessages.isEmpty
-          ? null
-          : Text(
-              chat.chatMessages.first.text ?? '',
-              style: TextStyle(height: 2),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+      title:
+      Text(chat.name ?? ''),
+      // Text(roomUser.personalInformation?.fullName ?? ''),
+      subtitle: Text('${chat.personalInformations.length} members'),
+      // subtitle: chat.chatMessages.isEmpty
+      //     ? null
+      //     : Text(
+      //         chat.chatMessages.first.text ?? '',
+      //         style: TextStyle(height: 2),
+      //         maxLines: 1,
+      //         overflow: TextOverflow.ellipsis,
+      //       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,

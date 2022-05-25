@@ -19,11 +19,25 @@ class ChatService{
     return back;
   }
 
+
   static Future<List<DataChatMessage>> getPrivateChat(MyService service,{//todo
     required String chatId,
   }) async {
     debugPrint('getPrivateChat()');//3530f18b-a1ed-406e-0914-08da04b81c0f
     Map<String, dynamic> back = await service.httpGet('/api/v1/Message/getChatRoomById$chatId');
+    if(back['status']==false){
+      toast(back['error']);
+      return [];
+    }
+
+    return convertDataList<DataChatMessage>(back['data'], 'data', 'DataChatMessage');
+  }
+
+  static Future<List<DataChatMessage>> getGroupChatMessages(MyService service,{//todo
+    required String chatId,
+  }) async {
+    debugPrint('getGroupChatMessages()');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    Map<String, dynamic> back = await service.httpGet('/api/v1/Message/getGroupChatRoomMessagesById$chatId');
     if(back['status']==false){
       toast(back['error']);
       return [];
@@ -47,6 +61,21 @@ class ChatService{
       'chats':convertDataList<DataChatRoom>(back['data'], 'results','DataChatRoom')
     };
   }
+  static Future<Map<String,dynamic>> getMyGrouphats(MyService service,{//todo
+    int pageNumber=1,
+  }) async {
+    debugPrint('getMyGrouphats()');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    Map<String, dynamic> back = await service.httpGet('/api/v1/Message/getChatRoomByUserId?pageNumber=$pageNumber');
+    debugPrint('back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'total_pages':back['data']['total_pages'],
+      'chats':convertDataList<DataChatRoom>(back['data'], 'results','DataChatRoom')
+    };
+  }
 
   static Future<DataChatRoom?> createPrivateChat(MyService service,{//todo
     required String friendId,
@@ -59,6 +88,35 @@ class ChatService{
       return null;
     }
     return convertData(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
+  }
+
+  static Future<bool> joinGroupChat(MyService service,{//todo
+    required String chatRoomId,
+    required String userId,
+  }) async {
+    debugPrint('joinGroupChat($userId,$chatRoomId)');
+    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/joinRoom?'
+    'chatRoomId=$chatRoomId&userId=$userId',{});
+    debugPrint('back joinGroupChat ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return false;
+    }
+    return true;
+  }
+
+  static Future<String?> createGroupChat(MyService service,{//todo
+    required String name,
+  }) async {
+    debugPrint('createGroupChat($name)');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/createRoom?name=$name',{});
+    debugPrint('back createGroupChat ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return null;
+    }
+    DataChatRoom out = convertData(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
+    return out.id;
   }
 
   static Future<List<DataPersonalInformation>> search(MyService service,

@@ -12,6 +12,16 @@ import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 export '../../classes/dataTypes.dart';
 
+String? hasUrl(String text){
+  List<String> split = text.split(' ');
+  for(int j=0;j<split.length;j++){
+    if(split[j].startsWith('http')){
+      return split[j];
+    }
+  }
+  return null;
+}
+
 Widget convertHashtag(String text, Function(String) onTapTag) {
   List<String> split = text.split(' ');
   // List<String> split = text.split('#');

@@ -148,16 +148,16 @@ bool isInOtherPage=false;
                                   if(isInOtherPage)return;
                                   if(e.endsWith('@')){
                                     isInOtherPage=true;
-                                    String? userName = await Go.pushSlideAnim(context, SearchUserMention());
+                                    DataPersonalInformation? user = await Go.pushSlideAnim(context, SearchUserMention());
                                     print('controller.value.text ${controller.value.text}');
                                     controller.text=controller.value.text.substring(0,controller.value.text.length-1);
                                     print('controller.value.subText ${controller.value.text}');
-                                    print('userName ${userName}');
-                                    if(userName!=null){
+                                    print('user ${user}');
+                                    if(user!=null){
                                       String pp = '';
                                       if(!controller.value.text.endsWith(' '))
                                         pp=' ';
-                                      controller.text=controller.value.text+pp+'@'+userName+' ';
+                                      controller.text=controller.value.text+pp+'@'+user.userName+' ';
                                     }
                                     isInOtherPage=false;
                                   }

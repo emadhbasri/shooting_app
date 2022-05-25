@@ -161,9 +161,9 @@ class _SearchUserState extends State<SearchUser> {
   }
 }
 class UserItem extends StatefulWidget {
-  const UserItem({Key? key, required this.user}) : super(key: key);
+  const UserItem({Key? key, required this.user,this.hasFollowBtn=true}) : super(key: key);
   final DataPersonalInformation user;
-
+  final bool hasFollowBtn;
   @override
   State<UserItem> createState() => _UserItemState();
 }
@@ -203,8 +203,10 @@ class _UserItemState extends State<UserItem> {
                   '@${user.userName}',
                   style: TextStyle(color: grayCall, fontSize: 12),
                 ),
-                SizedBox(height: doubleHeight(0.5)),
-                Row(
+                if(widget.hasFollowBtn)
+                  SizedBox(height: doubleHeight(0.5)),
+                if(widget.hasFollowBtn)
+                  Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Consumer<MainState>(builder: (context, value, child) {

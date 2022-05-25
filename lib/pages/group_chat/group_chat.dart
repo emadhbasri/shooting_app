@@ -7,41 +7,43 @@ import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
+import 'package:shooting_app/pages/group_chat/group_members.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
+import '../../classes/states/group_chat_state.dart';
 import '../../ui_items/gal.dart';
 
-class ChatBuilder extends StatelessWidget {
-  const ChatBuilder({Key? key, this.state}) : super(key: key);
-  final ChatState? state;
+class GroupChatBuilder extends StatelessWidget {
+  const GroupChatBuilder({Key? key, this.state}) : super(key: key);
+  final GroupChatState? state;
   @override
   Widget build(BuildContext context) {
-    return ChatStateProvider(
-      child: Chat(),
+    return GroupChatStateProvider(
+      child: GroupChat(),
       state: state,
     );
   }
 }
 
-class Chat extends StatefulWidget {
-  const Chat({Key? key}) : super(key: key);
+class GroupChat extends StatefulWidget {
+  const GroupChat({Key? key}) : super(key: key);
 
   @override
-  _ChatState createState() => _ChatState();
+  _GroupChatState createState() => _GroupChatState();
 }
 
-class _ChatState extends State<Chat> {
+class _GroupChatState extends State<GroupChat> {
   TextEditingController controller = TextEditingController();
 
-  late ChatState state;
+  late GroupChatState state;
   @override
   void initState() {
     super.initState();
-    state = Provider.of<ChatState>(context, listen: false);
+    state = Provider.of<GroupChatState>(context, listen: false);
     startTimer();
     state.getChats();
   }
@@ -57,12 +59,8 @@ class _ChatState extends State<Chat> {
 bool loadingImageSend=false;
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatState>(builder: (context, state, child) {
-      int index = state.selectedChat.personalInformations.indexWhere(
-          (element) =>element==null?false:
-              element.id != getIt<MainState>().userId);
-      DataPersonalInformation? roomUser =
-          state.selectedChat.personalInformations[index];
+    return Consumer<GroupChatState>(builder: (context, state, child) {
+
       return WillPopScope(
         onWillPop: () async {
           stopTimer = true;
@@ -70,6 +68,39 @@ bool loadingImageSend=false;
           return false;
         },
         child: Scaffold(
+          appBar: AppBar(
+            title: Padding(
+              padding: EdgeInsets.only(bottom: 4),
+              child: ListTile(
+                onTap: (){
+                  Go.pushSlideAnim(context, GroupChatMemberBuilder());
+                },
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1,color: white),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    // width: doubleWidth(10),
+                    child: Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
+                        color: white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                    ),)),
+                  ),
+                ),
+                title: Text(state.selectedChat.name??'',style: TextStyle(
+                  color: white
+                ),),
+                subtitle: Text('${state.selectedChat.personalInformations.length} members',style: TextStyle(
+                    color: white
+                )),
+              ),
+            ),
+          ),
           // floatingActionButton: FloatingActionButton(
           //   tooltip: 'Send Message',
           //   onPressed: (){},
@@ -86,93 +117,7 @@ bool loadingImageSend=false;
           body: SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  width: double.maxFinite,
-                  height: doubleHeight(17),
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: double.maxFinite,
-                        color: mainBlue,
-                        height: doubleHeight(6),
-                        padding:
-                            EdgeInsets.symmetric(vertical: doubleHeight(1)),
-                        alignment: Alignment(-0.9, 0),
-                        child: GestureDetector(
-                          onTap: () {
-                            stopTimer = true;
-                            Go.pop(
-                                context,
-                                state.chats.isNotEmpty
-                                    ? state.chats.last
-                                    : null);
-                          },
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 35,
-                          ),
-                        ),
-                      ),
-                      if (roomUser != null)
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          top: doubleHeight(2),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (roomUser.profilePhoto !=
-                                      null &&
-                                  roomUser.profilePhoto !=
-                                      null)
-                                GestureDetector(
-                                  onTap: () async {
-                                    stopTimer = true;
-                                    await Go.pushSlideAnim(
-                                        context,
-                                        ProfileBuilder(
-                                            username: roomUser
-
-                                                .userName));
-                                    stopTimer = false;
-                                    startTimer();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: doubleWidth(8),
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: networkImage(roomUser
-                                        .profilePhoto!),
-                                  ),
-                                ),
-                              SizedBox(height: doubleHeight(1)),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: greenCall,
-                                    radius: 6,
-                                  ),
-                                  SizedBox(width: doubleWidth(3)),
-                                  Text(
-                                    roomUser.fullName ??
-                                        '',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: mainBlue),
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: doubleHeight(1)),
-                              Text('@${roomUser.userName}')
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
                 Flexible(
-
                     child: Container(
                   color: Colors.white,
                   child: ListView.separated(
@@ -184,15 +129,20 @@ bool loadingImageSend=false;
                       itemBuilder: (_, index) {
                         if (index + 1 != state.chats.length) {
                           bool first = state.chats[index].name ==
-                              state.selectedChat.personalInformations[0]
-                                  !.userName;
+                              state.selectedChat.personalInformations[0]!
+                                  .userName;
                           bool second = state.chats[index + 1].name ==
-                              state.selectedChat.personalInformations[0]
-                                  !.userName;
+                              state.selectedChat.personalInformations[0]!
+                                  .userName;
 
                           return ChatItem(
-                            person: state.selectedChat.personalInformations[0]
-                                !,
+                            person:
+                                state.selectedChat.personalInformations.singleWhere(
+                                        (element) =>
+                                        element!.userName==state.chats[index].name
+                                )!,
+                            // state.selectedChat.personalInformations[0]
+                            //     .personalInformation!,
                             message: state.chats[index],
                             hasDate: (first == second) ? false : true,
                           );
@@ -204,8 +154,7 @@ bool loadingImageSend=false;
 
                         } else {
                           return ChatItem(
-                            person: state.selectedChat.personalInformations[0]
-                                !,
+                            person: state.selectedChat.personalInformations[0]!,
                             message: state.chats[index],
                             hasDate: true,
                           );
@@ -472,108 +421,145 @@ class _ChatItemState extends State<ChatItem> {
   Widget build(BuildContext context) {
     // print('message ${widget.message} ${widget.hasDate}');
     bool isMine = widget.message.name == getIt<MainState>().userName;
+
     String? hasurl=hasUrl(widget.message.text ?? '');
+
+
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
         textDirection: isMine ? TextDirection.rtl : TextDirection.ltr,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            textDirection: isMine ? TextDirection.rtl : TextDirection.ltr,
+            children: [
+              if(!isMine)
+                GestureDetector(
+                  onTap: () {
+                    Go.pushSlideAnim(
+                        context,
+                        ProfileBuilder(
+                            username: widget.person.userName));
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: SizedBox(
+                        width: doubleHeight(5),
+                        height: doubleHeight(5),
+                        child: Builder(
+                          builder: (context) {
+                            if (widget.person.profilePhoto !=
+                                null) {
+                              return imageNetwork(
+                                widget.person.profilePhoto!,
+                                fit: BoxFit.fill,
+                              );
+                            }
+                            return profilePlaceHolder();
+                          },
+                        )),
+                  ),
+                ),
+              if(!isMine)
+              SizedBox(width: doubleWidth(1)),
+              PopupMenuButton<String>(
+                key: popupkey,
+                itemBuilder: (_)=>[
+                  if(hasurl!=null)
+                    PopupMenuItem<String>(child: Text('open'),value: 'open'),
+                  if(widget.message.messageMediaTypes==null)
+                    PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
+                    PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
+                ],
+                onSelected: (String e){
+                  if(e=='Delete'){
+                    ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
+                  }else if(e=='Copy'){
+                    copyText(widget.message.text??'');
+                  }else if(e=='open'){
+                    openUrl(hasurl!);
+                  }
+                },
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
+                child: GestureDetector(
+                  onLongPress: (){
+                    popupkey.currentState!.showButtonMenu();
+                  },
+                  child: Builder(builder: (context) {
+                    if(widget.message.messageMediaTypes!=null){
+                      if(widget.message.messageMediaTypes!.media.contains('video/upload')){
+                        if(loadingVideo)
+                          init();
 
-          PopupMenuButton<String>(
-            key: popupkey,
-            itemBuilder: (_)=>[
-              if(hasurl!=null)
-                PopupMenuItem<String>(child: Text('open'),value: 'open'),
-              if(widget.message.messageMediaTypes==null)
-                PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
-                PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
-            ],
-            onSelected: (String e){
-              if(e=='Delete'){
-                ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
-              }else if(e=='Copy'){
-                copyText(e);
-              }else if(e=='open'){
-                openUrl(hasurl!);
-              }
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
-            child: GestureDetector(
-              onLongPress: (){
-                popupkey.currentState!.showButtonMenu();
-              },
-              child: Builder(builder: (context) {
-                if(widget.message.messageMediaTypes!=null){
-                  if(widget.message.messageMediaTypes!.media.contains('video/upload')){
-                    if(loadingVideo)
-                      init();
+                        return Container(
+                          constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                          decoration: BoxDecoration(
+                            // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                          child: loadingVideo?Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const CircularProgressIndicator(),
+                                SizedBox(height: doubleHeight(1)),
+                                const Text(
+                                  'loading ...',
+                                  textDirection: TextDirection.ltr,
+                                  style: TextStyle(
+                                      color: mainBlue,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ):Center(
+                            child: VideoItem(controller: controller,url: widget.message.messageMediaTypes!.media),
+                          ),
+                        );
 
-                    return Container(
-                      constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-                      decoration: BoxDecoration(
-                        // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-                      child: loadingVideo?Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const CircularProgressIndicator(),
-                            SizedBox(height: doubleHeight(1)),
-                            const Text(
-                              'loading ...',
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                  color: mainBlue,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ):Center(
-                        child: VideoItem(controller: controller,url: widget.message.messageMediaTypes!.media),
-                      ),
-                    );
-
-                  }else{
-                    return GestureDetector(
-                      onTap: (){
-                        Go.push(context, Gal(images: [widget.message.messageMediaTypes!.media]));
-                      },
-                      child: Container(
+                      }else{
+                        return GestureDetector(
+                          onTap: (){
+                            Go.push(context, Gal(images: [widget.message.messageMediaTypes!.media]));
+                          },
+                          child: Container(
+                            constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                            decoration: BoxDecoration(
+                              // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: imageNetwork(
+                                  widget.message.messageMediaTypes!.media,
+                                  fit: BoxFit.fill,
+                                )),
+                          ),
+                        );
+                      }
+                    }else{
+                      return Container(
                         constraints: BoxConstraints(maxWidth: doubleWidth(70)),
                         decoration: BoxDecoration(
-                          // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                          color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
                           borderRadius: BorderRadius.circular(5),
                         ),
                         padding: EdgeInsets.symmetric(
                             vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: imageNetwork(
-                              widget.message.messageMediaTypes!.media,
-                              fit: BoxFit.fill,
-                            )),
-                      ),
-                    );
-                  }
-                }else{
-                  return Container(
-                    constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-                    decoration: BoxDecoration(
-                      color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-                    child: Text(widget.message.text ?? '',),
-                  );
-                }
+                        child: Text(widget.message.text ?? '',),
+                      );
+                    }
 
-              }),
-            ),
+                  }),
+                ),
+              ),
+            ],
           ),
           // if (widget.hasDate)
             Column(

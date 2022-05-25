@@ -99,11 +99,11 @@ class _MainViewState extends State<MainView> {
 
   /// screen size
   final _screenSize =
-      MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var _control = Provider.of<ControlNotifier>(context, listen: false);
 
       /// initialize control variable provider

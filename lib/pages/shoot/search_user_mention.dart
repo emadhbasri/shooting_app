@@ -107,7 +107,7 @@ class _SearchUserMentionState extends State<SearchUserMention> {
                   padding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(5), vertical: doubleHeight(2)),
                   children: users!
-                      .map((e) => UserItem(
+                      .map((e) => _UserItem(
                       user: e,
                          ))
                       .toList()
@@ -119,15 +119,15 @@ class _SearchUserMentionState extends State<SearchUserMention> {
     );
   }
 }
-class UserItem extends StatefulWidget {
-  const UserItem({Key? key, required this.user}) : super(key: key);
+class _UserItem extends StatefulWidget {
+  const _UserItem({Key? key, required this.user}) : super(key: key);
   final DataPersonalInformation user;
 
   @override
-  State<UserItem> createState() => _UserItemState();
+  State<_UserItem> createState() => _UserItemState();
 }
 
-class _UserItemState extends State<UserItem> {
+class _UserItemState extends State<_UserItem> {
   late DataPersonalInformation user;
   @override
   void initState() {
@@ -139,7 +139,7 @@ class _UserItemState extends State<UserItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Go.pop(context,user.userName);
+        Go.pop(context,user);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),

@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
+import 'classes/states/group_chat_state.dart';
 import 'classes/states/main_state.dart';
 import 'classes/states/match_state.dart';
 import 'classes/dataTypes.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 import 'pages/intro1.dart';
-import 'pages/my_profile/edit_profile/change_email.dart';
 final getIt = GetIt.instance;
 
 
@@ -36,6 +36,7 @@ void main() async {
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
   GetIt.I.registerLazySingleton(() => ChatState());
+  GetIt.I.registerLazySingleton(() => GroupChatState());
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
@@ -94,7 +95,15 @@ class MyApp extends StatelessWidget {
           primaryColor: mainBlue,
           primarySwatch: mainColor,
           appBarTheme:
-              AppBarTheme(elevation: 0, centerTitle: true, color: mainBlue)),
+              AppBarTheme(
+                  elevation: 0,
+                  centerTitle: true,
+                  titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: white
+                  ),
+                  actionsIconTheme: IconThemeData(color: white),
+                  iconTheme: IconThemeData(color: white),
+                  color: mainBlue)),
       home: AppFirst(),
     );
   }

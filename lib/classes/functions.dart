@@ -10,11 +10,13 @@ import 'package:share_plus/share_plus.dart';
 import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
-openUrl(String url)async{
-  if(await canLaunchUrl(Uri.parse(url))){
+
+openUrl(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
     launchUrl(Uri.parse(url));
   }
 }
+
 late Size screenSize;
 double doubleHeight(double value, {double height = 0}) {
   if (height == 0) height = screenSize.height;
@@ -36,7 +38,6 @@ statusSet(Color color) async {
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarDividerColor: Colors.white,
-
     ));
   } on PlatformException catch (e) {
     debugPrint('statusSet $e');
@@ -50,17 +51,32 @@ Widget circle() {
     ),
   );
 }
-Widget simpleCircle({Color? color}) => Center(child: CircularProgressIndicator(
-  color: color,
-));
 
-profilePlaceHolder({bool isBig=false})=>Image.asset(
-  isBig?'assets/images/playerbig.png':'assets/images/player.png',
-  fit: BoxFit.fill,
-);
+Widget simpleCircle({Color? color, double? size}) {
+  if (size != null) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Center(
+          child: CircularProgressIndicator(
+        color: color,
+      )),
+    );
+  } else {
+    return Center(
+        child: CircularProgressIndicator(
+      color: color,
+    ));
+  }
+}
+
+profilePlaceHolder({bool isBig = false}) => Image.asset(
+      isBig ? 'assets/images/playerbig.png' : 'assets/images/player.png',
+      fit: BoxFit.fill,
+    );
 
 String makeDurationToString(DateTime date) {
-  if(date.isAfter(DateTime.now())){
+  if (date.isAfter(DateTime.now())) {
     return '';
   }
   DateTimeRange range = DateTimeRange(start: date, end: DateTime.now());
@@ -112,7 +128,6 @@ String getMonString(DateTime date) {
   }
 }
 
-
 copyText(String text, {String payam = 'text copied to clipboard'}) =>
     FlutterClipboard.copy(text).then((value) => toast(payam));
 
@@ -132,7 +147,7 @@ toast(String str, {Toast duration = Toast.LENGTH_SHORT}) {
 
 gogo(BuildContext context, String str, bool isUser) {
   // if (isUser) {
-    Go.pushSlideAnim(context, ProfileBuilder(username: str));
+  Go.pushSlideAnim(context, ProfileBuilder(username: str));
   // } else {
   //   Go.pushSlideAnim(
   //       context,
@@ -181,14 +196,15 @@ abstract class Go {
   }
 
   static Future<dynamic> pushSlideAnim(BuildContext context, Widget page,
-      {bool full: false, var first, var second}) async{
+      {bool full: false, var first, var second}) async {
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
-    if(Platform.isIOS){
+    print('Platform.isIOS ${Platform.isIOS}');
+    if (Platform.isIOS) {
       return await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => page, fullscreenDialog: full))
+              context,
+              MaterialPageRoute(
+                  builder: (context) => page, fullscreenDialog: full))
           .catchError((e) => print('Error 1 $e'));
     }
     return await Navigator.push(
@@ -238,8 +254,11 @@ abstract class Go {
   }
 
   static Future<dynamic> pushSlideAnimSheet(BuildContext context, Widget page,
-      {bool full: false, var first, var second,Duration? reverseTransitionDuration}) async{
-    reverseTransitionDuration??=Duration(milliseconds: 300);
+      {bool full: false,
+      var first,
+      var second,
+      Duration? reverseTransitionDuration}) async {
+    reverseTransitionDuration ??= Duration(milliseconds: 300);
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
     return await Navigator.push(
@@ -294,8 +313,9 @@ abstract class Go {
             })).catchError((e) => print('Error 1 $e'));
   }
 
-  static void push(BuildContext context, Widget page, {bool full: false}) async{
-   return await Navigator.push(
+  static void push(BuildContext context, Widget page,
+      {bool full: false}) async {
+    return await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => page, fullscreenDialog: full))
@@ -399,11 +419,11 @@ CachedNetworkImage imageNetwork(
         );
       },
       errorWidget: (context, url, error) => SizedBox(
-        width: 50,
-        height: 50,
-        child: CircularProgressIndicator(
-            // valueColor: AlwaysStoppedAnimation(mainBlue),
-            // backgroundColor: mainBlue,
-            ),
-      ));
+            width: 50,
+            height: 50,
+            child: CircularProgressIndicator(
+                // valueColor: AlwaysStoppedAnimation(mainBlue),
+                // backgroundColor: mainBlue,
+                ),
+          ));
 }

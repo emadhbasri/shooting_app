@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
+import 'package:shooting_app/pages/group_chat/group_chat_list.dart';
 
 import '../classes/functions.dart';
 import '../main.dart';
@@ -180,6 +181,9 @@ class _MyDrawerState extends State<MyDrawer>
                   //   ),
                   // ),
                   ListTile(
+                    onTap: (){
+                      Go.pushSlideAnim(context, GroupChatListBuilder());
+                    },
                     contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     title: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -189,10 +193,10 @@ class _MyDrawerState extends State<MyDrawer>
                           'SQUADS ',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          '*coming soon*',
-                          style: TextStyle(color: mainBlue, fontSize: 12),
-                        ),
+                        // Text(
+                        //   '*coming soon*',
+                        //   style: TextStyle(color: mainBlue, fontSize: 12),
+                        // ),
                       ],
                     ),
                     trailing: Icon(
