@@ -517,7 +517,15 @@ class _ChatItemState extends State<ChatItem> {
                               ],
                             ),
                           ):Center(
-                            child: VideoItem(controller: controller,url: widget.message.messageMediaTypes!.media),
+                            child: SizedBox(
+                              width: doubleWidth(70),
+                              height: doubleHeight(30),
+                              child: VideoItem(
+                                  controller: controller,
+                                  url: widget.message.messageMediaTypes!.media,
+                              aspectRatio: 2,
+                              ),
+                            ),
                           ),
                         );
 
@@ -527,7 +535,8 @@ class _ChatItemState extends State<ChatItem> {
                             Go.push(context, Gal(images: [widget.message.messageMediaTypes!.media]));
                           },
                           child: Container(
-                            constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                            width: doubleWidth(70),
+                            height: doubleHeight(30),
                             decoration: BoxDecoration(
                               // color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
                               borderRadius: BorderRadius.circular(5),

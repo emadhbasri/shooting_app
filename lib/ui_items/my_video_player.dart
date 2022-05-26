@@ -93,62 +93,66 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                     if (isTop)
                       Align(
                           alignment: Alignment.topCenter,
-                          child: Row(
-                            textDirection: TextDirection.ltr,
-                            children: [
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              IconButton(
-                                  onPressed: () async {
-                                    // WidgetsFlutterBinding.ensureInitialized();
-                                    // SystemChrome.setPreferredOrientations([
-                                    //   DeviceOrientation.portraitUp,
-                                    // ]);
-                                    // await widget.controller.pause();
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.white,
-                                  )),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              // Expanded(
-                              //   child: Text(
-                              //     widget.video.name,
-                              //           textDirection: TextDirection.rtl,
-                              //           textAlign: TextAlign.right,
-                              //     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              //   ),
-                              // ),
-                              IconButton(
-                                  onPressed: () {
-                                    WidgetsFlutterBinding.ensureInitialized();
-                                    debugPrint(
-                                        'orientation ${MediaQuery.of(context).orientation}');
-                                    if (Orientation.portrait ==
-                                        MediaQuery.of(context).orientation) {
-                                      SystemChrome.setPreferredOrientations([
-                                        DeviceOrientation.landscapeRight,
-                                        DeviceOrientation.landscapeLeft
-                                      ]);
-                                    } else {
-                                      SystemChrome.setPreferredOrientations(
-                                          [DeviceOrientation.portraitUp]);
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    Icons.screen_rotation_rounded,
-                                    color: Colors.white,
-                                  ))
-                            ],
+                          child: Container(
+                            color: Colors.black.withOpacity(.2),
+                            child: Row(
+                              textDirection: TextDirection.ltr,
+                              children: [
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                IconButton(
+                                    onPressed: () async {
+                                      // WidgetsFlutterBinding.ensureInitialized();
+                                      // SystemChrome.setPreferredOrientations([
+                                      //   DeviceOrientation.portraitUp,
+                                      // ]);
+                                      // await widget.controller.pause();
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.white,
+                                    )),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                // Expanded(
+                                //   child: Text(
+                                //     widget.video.name,
+                                //           textDirection: TextDirection.rtl,
+                                //           textAlign: TextAlign.right,
+                                //     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                //   ),
+                                // ),
+                                IconButton(
+                                    onPressed: () {
+                                      WidgetsFlutterBinding.ensureInitialized();
+                                      debugPrint(
+                                          'orientation ${MediaQuery.of(context).orientation}');
+                                      if (Orientation.portrait ==
+                                          MediaQuery.of(context).orientation) {
+                                        SystemChrome.setPreferredOrientations([
+                                          DeviceOrientation.landscapeRight,
+                                          DeviceOrientation.landscapeLeft
+                                        ]);
+                                      } else {
+                                        SystemChrome.setPreferredOrientations(
+                                            [DeviceOrientation.portraitUp]);
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.screen_rotation_rounded,
+                                      color: Colors.white,
+                                    ))
+                              ],
+                            ),
                           )),
                     if (isTop)
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: SizedBox(
+                        child: Container(
+                          color: Colors.black.withOpacity(.2),
                           width: double.maxFinite,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
