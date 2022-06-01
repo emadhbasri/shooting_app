@@ -180,31 +180,31 @@ class _MyDrawerState extends State<MyDrawer>
                   //     size: 20,
                   //   ),
                   // ),
-                  ListTile(
-                    onTap: (){
-                      Go.pushSlideAnim(context, GroupChatListBuilder());
-                    },
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'SQUADS ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        // Text(
-                        //   '*coming soon*',
-                        //   style: TextStyle(color: mainBlue, fontSize: 12),
-                        // ),
-                      ],
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                      size: 20,
-                    ),
-                  ),
+                  // ListTile(
+                  //   onTap: (){
+                  //     Go.pushSlideAnim(context, GroupChatListBuilder());
+                  //   },
+                  //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                  //   title: Row(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Text(
+                  //         'SQUADS ',
+                  //         style: TextStyle(fontWeight: FontWeight.bold),
+                  //       ),
+                  //       // Text(
+                  //       //   '*coming soon*',
+                  //       //   style: TextStyle(color: mainBlue, fontSize: 12),
+                  //       // ),
+                  //     ],
+                  //   ),
+                  //   trailing: Icon(
+                  //     Icons.arrow_forward_ios,
+                  //     color: Colors.black,
+                  //     size: 20,
+                  //   ),
+                  // ),
                   Divider(color: Colors.black),
                   ListTile(
                     onTap: () {

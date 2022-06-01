@@ -138,10 +138,11 @@ bool isInOtherPage=false;
                           children: [
                             Expanded(
                               flex: 2,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: controller,
                                 minLines: 10,
                                 maxLines: 15,
+
                                 textAlign: TextAlign.left,
                                 onChanged: (e)async{
                                   // print('isInOtherPage $')

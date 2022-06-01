@@ -15,7 +15,7 @@ export '../../classes/dataTypes.dart';
 String? hasUrl(String text){
   List<String> split = text.split(' ');
   for(int j=0;j<split.length;j++){
-    if(split[j].startsWith('http')){
+    if(split[j].contains('http://') || split[j].contains('https://')){
       return split[j];
     }
   }

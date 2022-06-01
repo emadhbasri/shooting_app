@@ -61,6 +61,21 @@ class ChatService{
       'chats':convertDataList<DataChatRoom>(back['data'], 'results','DataChatRoom')
     };
   }
+  static Future<Map<String,dynamic>> getAllRoomsByUserId(MyService service,{//todo
+    int pageNumber=1,
+  }) async {
+    debugPrint('GetAllRoomsByUserId()');//3530f18b-a1ed-406e-0914-08da04b81c0f
+    Map<String, dynamic> back = await service.httpGet('/api/v1/Message/GetAllRoomsByUserId?pageNumber=$pageNumber');
+    debugPrint('back ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'total_pages':back['data']['total_pages'],
+      'chats':convertDataList<DataChatRoom>(back['data'], 'results','DataChatRoom')
+    };
+  }
   static Future<Map<String,dynamic>> getMyGrouphats(MyService service,{//todo
     int pageNumber=1,
   }) async {

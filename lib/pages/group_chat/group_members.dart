@@ -83,6 +83,20 @@ bool loadingImageSend=false;
           ),
           appBar: AppBar(
             title: Text('Group Info'.toUpperCase()),
+            actions: [
+              PopupMenuButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                      onTap: () async {
+
+                      },
+                      child: Text('Copy The Group Link')),
+                ],
+              )
+            ],
           ),
 
           body: SafeArea(

@@ -343,9 +343,12 @@ class DataChatMessage {
 
 class DataChatRoom {
   DataChatRoom.fromJson(Map<String, dynamic> data) {
+    print('DataChatRoom ${data.keys}');
     chatMessages = convertDataList<DataChatMessage>(data, 'chatMessages', 'DataChatMessage');
     id = convertData(data, 'id', DataType.string);
+    chatType = convertData(data, 'chatType', DataType.int);
     name = convertData(data, 'name', DataType.string);
+    roomPhoto = convertData(data, 'roomPhoto', DataType.string);
 
     List<DataChatRoomUser> temp = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
     personalInformations=temp.map((e) => e.personalInformation).toList();
@@ -353,7 +356,9 @@ class DataChatRoom {
 
   List<DataChatMessage> chatMessages = [];
   late String id;
+  late int chatType;
   String? name;
+  String? roomPhoto;
   List<DataPersonalInformation?> personalInformations = [];
 }
 

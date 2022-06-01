@@ -635,9 +635,9 @@ class _BallState extends State<Ball> {
   Widget build(BuildContext context) {
     if (centerButton == 1)
       return Image.asset('assets/images/soccer.png');
-    else if (centerButton == 2)
+    else if (centerButton == 2) {
       return Image.asset('assets/images/football (1).png');
-    else
+    } else
       return Image.asset('assets/images/soccer(1).png');
   }
 

@@ -30,7 +30,8 @@ class ChatState extends ChangeNotifier {
     }
     ;
     Map<String, dynamic> back =
-        await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);
+        await ChatService.getAllRoomsByUserId(service, pageNumber: pageNumber);
+        // await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);
     if (loadingListCaht) {
       loadingListCaht = false;
       notifyListeners();
@@ -42,7 +43,13 @@ class ChatState extends ChangeNotifier {
 
   getChats() async {
 
-    chats = await ChatService.getPrivateChat(service, chatId: selectedChat.id);
+    if(selectedChat.chatType==1){
+      chats = await ChatService.getPrivateChat(service, chatId: selectedChat.id);
+      notifyListeners();
+    }else{
+      chats = await ChatService.getGroupChatMessages(service, chatId: selectedChat.id);
+      notifyListeners();
+    }
     // List<DataChatMessage> temps = await ChatService.getPrivateChat(service, chatId: selectedChat.id);
     // print('temps.length ${temps.length}');
     // print('chats.length ${chats.length}');
@@ -59,6 +66,7 @@ class ChatState extends ChangeNotifier {
     //   }
     notifyListeners();
   }
+
 
   sendMessage({String? message, XFile? file}) async {
     await ChatService.sendMessage(service,

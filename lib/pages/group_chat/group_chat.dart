@@ -15,14 +15,15 @@ import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
 import '../../classes/states/group_chat_state.dart';
+import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../ui_items/gal.dart';
 
 class GroupChatBuilder extends StatelessWidget {
   const GroupChatBuilder({Key? key, this.state}) : super(key: key);
-  final GroupChatState? state;
+  final ChatState? state;
   @override
   Widget build(BuildContext context) {
-    return GroupChatStateProvider(
+    return ChatStateProvider(
       child: GroupChat(),
       state: state,
     );
@@ -39,11 +40,11 @@ class GroupChat extends StatefulWidget {
 class _GroupChatState extends State<GroupChat> {
   TextEditingController controller = TextEditingController();
 
-  late GroupChatState state;
+  late ChatState state;
   @override
   void initState() {
     super.initState();
-    state = Provider.of<GroupChatState>(context, listen: false);
+    state = Provider.of<ChatState>(context, listen: false);
     startTimer();
     state.getChats();
   }
@@ -59,7 +60,7 @@ class _GroupChatState extends State<GroupChat> {
 bool loadingImageSend=false;
   @override
   Widget build(BuildContext context) {
-    return Consumer<GroupChatState>(builder: (context, state, child) {
+    return Consumer<ChatState>(builder: (context, state, child) {
 
       return WillPopScope(
         onWillPop: () async {
@@ -100,7 +101,22 @@ bool loadingImageSend=false;
                 )),
               ),
             ),
+            actions: [
+              PopupMenuButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                      onTap: () async {
+
+                      },
+                      child: Text('Copy The Group Link')),
+                ],
+              )
+            ],
           ),
+
           // floatingActionButton: FloatingActionButton(
           //   tooltip: 'Send Message',
           //   onPressed: (){},
@@ -552,6 +568,46 @@ class _ChatItemState extends State<ChatItem> {
                           ),
                         );
                       }
+                    }else if(hasurl!=null){
+                      return Container(
+                        padding: EdgeInsets.only(
+                            top: 4,right: 4,left: 4
+                        ),
+                        decoration: BoxDecoration(
+                          color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                        width: double.maxFinite,
+                        // height: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AbsorbPointer(
+                              absorbing: true,
+                              child: AnyLinkPreview(
+                                link: hasurl.trim(),
+                                doIt: (){},
+                                borderRadius: 0,
+                                displayDirection: UIDirection.uiDirectionVertical,
+                                cache: const Duration(seconds: 1),
+                                backgroundColor: Colors.transparent,
+                                boxShadow: [],
+                                // urlLaunchMode: LaunchMode.platformDefault,
+                                errorWidget: Container(
+                                  color: Colors.grey[300],
+                                  child: const Text('Oops!'),
+                                ),
+                                // errorImage: _errorImage,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(widget.message.text ?? '',),
+                            ),
+                          ],
+                        ),
+                      );
                     }else{
                       return Container(
                         constraints: BoxConstraints(maxWidth: doubleWidth(70)),
