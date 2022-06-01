@@ -82,9 +82,9 @@ class _PostFromShotState extends State<PostFromShot> {
     // text.replaceAll('\n', ' ');
     List<String> split = text.split(' ');
     // print('split $split');
-    for(int j=0;j<split.length;j++){
-      print('$j: ${split[j]}');
-    }
+    // for(int j=0;j<split.length;j++){
+    //   print('$j: ${split[j]}');
+    // }
 
     List<Widget> out=[];
     split.forEach((e) {
@@ -611,9 +611,9 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
     // text.replaceAll('\n', ' ');
     List<String> split = text.split(' ');
     // print('split $split');
-for(int j=0;j<split.length;j++){
-print('$j: ${split[j]}');
-}
+// for(int j=0;j<split.length;j++){
+// print('$j: ${split[j]}');
+// }
 
 List<Widget> out=[];
 split.forEach((e) {
