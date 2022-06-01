@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:shooting_app/ui_items/dialogs/choose_media_dialog.dart';
 
 import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
@@ -25,8 +27,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 late FirebaseMessaging messaging;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('A bg message just showed up1 : ${message.messageId}');
-  // _showNotificationCustomSound(message.hashCode,
-  //     message.notification!.title!, message.notification!.body!);
   await Firebase.initializeApp();
   print('A bg message just showed up : ${message.messageId}');
 }
@@ -69,7 +69,6 @@ void main() async {
   );
 
   String? tokk = await messaging.getToken();
-  //dBfVfFtNTYS-zgXx1v_Yvy:APA91bFr9tIwAdu0BqF_JCNVHTbjaYtM43dl8VtmyC4Qi6yRZ91BSzk0et2G8WALVlbG7yD4n9F1l-iGmzKYneOfebRhUrfXgycwMY26mQ61fBQsD9ZVmf4mP66lABusVNXLbZNBA_L8
   print('tokk $tokk');
   await messaging.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -131,9 +130,42 @@ class AppFirst extends StatefulWidget {
 }
 
 class _AppFirstState extends State<AppFirst> {
+  late StreamSubscription _intentDataStreamSubscription;
+  List<SharedMediaFile>? _sharedFiles;
+  String? _sharedText;
+
+
   @override
   void initState() {
     super.initState();
+
+
+// For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getTextStream().listen((String value) {
+            // showDialog(
+            //     context: context,
+            //     builder: (contextD)=>ChooseMediaDialog());
+          setState(() {
+            _sharedText = value;
+            print("Shared: $_sharedText");
+          });
+        }, onError: (err) {
+          print("getLinkStream error: $err");
+        });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String? value) {
+      // if(value!=null){
+      //   showDialog(
+      //       context: context,
+      //       builder: (contextD)=>ChooseMediaDialog());
+      // }
+      setState(() {
+        print("Shared1: $_sharedText");
+      });
+    });
+
     _requestPermissions();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -149,7 +181,6 @@ class _AppFirstState extends State<AppFirst> {
             notification.hashCode, notification.title!, notification.body!);
       }
     });
-    // FirebaseMessaging.onBackgroundMessage((BackgroundMessageHandler message) => message);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('message come in');
@@ -183,36 +214,8 @@ class _AppFirstState extends State<AppFirst> {
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
-    // return Scaffold(
-    //   body: Center(
-    //     child: TextButton(
-    //         onPressed: () {
-    //           _showNotificationCustomSound(1346542, 'titile', 'bododby');
-    //           // _showNotificationCustomSound();
-    //           // flutterLocalNotificationsPlugin.show(
-    //           //     1,
-    //           //     'test title',
-    //           //     'test body',
-    //           //     NotificationDetails(
-    //           //         android: AndroidNotificationDetails(
-    //           //             channel.id,
-    //           //             channel.name,
-    //           //             playSound: true,
-    //           //             color: mainBlue,
-    //           //             channelShowBadge: true,
-    //           //             // icon: '@mipmap/ic_launcher',
-    //           //             channelDescription: channel.description
-    //           //         )
-    //           //     )
-    //           //     // notificationDetails
-    //           // );
-    //         },
-    //         child: Text('notif test')),
-    //   ),
-    // );
-    // return Team();
+
     return Intro1();
-    // return ChangeEmail(email: 'ss',);
   }
 }
 
