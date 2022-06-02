@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:video_player/video_player.dart';
@@ -462,7 +462,7 @@ class _ShootState extends State<Shoot> {
                                   print(
                                       'await video.length() ${await video.length()}');
                                   toast('The video should be less than 20M.',
-                                      duration: Toast.LENGTH_LONG);
+                                      isLong: true);
                                   return;
                                 }
                                 VideoPlayerController _controller =
@@ -478,7 +478,7 @@ class _ShootState extends State<Shoot> {
                                 } else {
                                   toast(
                                       'The video should be less than 60 seconds.',
-                                      duration: Toast.LENGTH_LONG);
+                                      isLong: true);
                                 }
                               }
                             },

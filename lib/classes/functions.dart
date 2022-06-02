@@ -4,12 +4,64 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// 
+// import 'package:toast/toast.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+enum TextType {link,groupLink,user,text}
+class TheText{
+  final TextType type;
+  final String text;
+
+  TheText({required this.type, required this.text});
+}
+List<TheText> makeText(String text){
+
+  List<TheText> out=[];
+  List<String> split = text.split(' ');
+  split.forEach((e) {
+    if (e.trim().contains('\n')) {
+      List<String> split1 = e.split('\n');
+      if (split1.isNotEmpty)
+        split1.forEach((String f) {
+          print('ff: $f ${f.length}');
+          if (f.length == 0) {
+            out.add(TheText(type: TextType.text, text: ''));
+          } else {
+            if (f[0] == '@') {
+              out.add(TheText(type: TextType.user, text: f));
+            } else if (f.contains('http://') || f.contains('https://')) {
+              out.add(TheText(type: TextType.link, text: f.trim()));
+            } else if(f.contains('FootballBuzz_Group:')){
+              out.add(TheText(type: TextType.groupLink, text: f));
+            } else {
+              out.add(TheText(type: TextType.text, text: f));
+            }
+          }
+        });
+    } else {
+      if (e.length == 0) {
+        out.add(TheText(type: TextType.text, text: ''));
+      } else {
+        if (e[0] == '@') {
+          out.add(TheText(type: TextType.user, text: e));
+        } else if (e.contains('http://') || e.contains('https://')) {
+          out.add(TheText(type: TextType.link, text: e.trim()));
+        } else if(e.contains('FootballBuzz_Group:')){
+          out.add(TheText(type: TextType.groupLink, text: e));
+        } else {
+          out.add(TheText(type: TextType.text, text: e));
+        }
+      }
+    }
+  });
+  return out;
+}
+
 
 openUrl(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
@@ -134,16 +186,26 @@ copyText(String text, {String payam = 'text copied to clipboard'}) =>
 sharePost(String text, {String payam = 'text copied to clipboard'}) =>
     Share.share('check out the post $text');
 
-toast(String str, {Toast duration = Toast.LENGTH_SHORT}) {
-  Fluttertoast.showToast(
-      msg: str,
-      toastLength: duration,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: mainGreen1,
-      textColor: black,
-      fontSize: 16.0);
+toast(String str, {bool isLong=false}) {
+  // Fluttertoast.showToast(
+  //     msg: str,
+  //     toastLength: isLong?Toast.LENGTH_LONG:Toast.LENGTH_SHORT,
+  //     gravity: ToastGravity.BOTTOM,
+  //     timeInSecForIosWeb: 1,
+  //     backgroundColor: mainGreen1,
+  //     textColor: black,
+  //     fontSize: 16.0);
 }
+// toast(String str, context,{bool isLong=false}) {
+//   ToastContext tt =ToastContext();
+//   tt.init(context);
+//   Toast.show(str,
+//     duration: isLong?Toast.lengthLong:Toast.lengthShort,
+//     backgroundColor: mainGreen1,
+//     textStyle: const TextStyle(color: black,fontSize: 16),
+//     backgroundRadius: 10,
+//   );
+// }
 
 gogo(BuildContext context, String str, bool isUser) {
   // if (isUser) {

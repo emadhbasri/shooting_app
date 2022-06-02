@@ -343,7 +343,7 @@ class DataChatMessage {
 
 class DataChatRoom {
   DataChatRoom.fromJson(Map<String, dynamic> data) {
-    print('DataChatRoom ${data.keys}');
+    // print('DataChatRoom ${data.keys}');
     chatMessages = convertDataList<DataChatMessage>(data, 'chatMessages', 'DataChatMessage');
     id = convertData(data, 'id', DataType.string);
     chatType = convertData(data, 'chatType', DataType.int);

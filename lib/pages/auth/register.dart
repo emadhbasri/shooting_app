@@ -1,10 +1,9 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../main.dart';
+import '../../main1.dart';
 import '../../ui_items/dialogs/team.dart';
 import 'login.dart';
 
@@ -216,7 +215,7 @@ bool loading=false;
                           isRegister: true,));
 
                         } else {
-                          toast('If You Register Already You Can Use The The Otp Button.',duration: Toast.LENGTH_LONG);
+                          toast('If You Register Already You Can Use The The Otp Button.',isLong: true);
                           print('nononono');
                         }
                       },

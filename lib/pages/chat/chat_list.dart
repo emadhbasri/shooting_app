@@ -8,7 +8,8 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
-import '../../main.dart';
+import '../../main1.dart';
+import '../group_chat/create_group.dart';
 import '../group_chat/group_chat.dart';
 
 class ChatList extends StatefulWidget {
@@ -100,11 +101,17 @@ class _ChatListState extends State<ChatList> {
                   ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Go.pushSlideAnim(context, SearchChat());
+            onPressed: () async{
+              bool? bb = await Go.pushSlideAnim(context, CreateGroup());
+              if(bb!=null && bb){
+                state.getChatsList(clean: true);
+              }
+
             },
-            heroTag: 'Create New Chat',
-            child: Icon(Icons.message),
+            heroTag: 'Create New Group Chat',
+            child: Icon(Icons.group),
+            // heroTag: 'Create New Chat',
+            // child: Icon(Icons.message),
           ),
         );
       },

@@ -5,7 +5,7 @@ import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/services/user_service.dart';
-import '../../main.dart';
+import '../../main1.dart';
 
 class SearchUserMention extends StatefulWidget {
   const SearchUserMention({Key? key}) : super(key: key);

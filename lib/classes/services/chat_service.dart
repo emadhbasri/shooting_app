@@ -38,6 +38,7 @@ class ChatService{
   }) async {
     debugPrint('getGroupChatMessages()');//3530f18b-a1ed-406e-0914-08da04b81c0f
     Map<String, dynamic> back = await service.httpGet('/api/v1/Message/getGroupChatRoomMessagesById$chatId');
+    // debugPrint('getGroupChatMessages ${back}');
     if(back['status']==false){
       toast(back['error']);
       return [];
@@ -122,9 +123,20 @@ class ChatService{
 
   static Future<String?> createGroupChat(MyService service,{//todo
     required String name,
+    XFile? image,
   }) async {
+    Map<String, dynamic> map = {
+      'name':name,
+    };
+    if(image!=null){
+      MultipartFile temp = await MultipartFile.fromFile(image.path,
+          filename: image.name);
+      map['profilePhoto']=temp;
+    }
     debugPrint('createGroupChat($name)');//3530f18b-a1ed-406e-0914-08da04b81c0f
-    Map<String, dynamic> back = await service.httpPost('/api/v1/Message/createRoom?name=$name',{});
+    // Map<String, dynamic> back = await service.httpPost('/api/v1/Message/createRoom?name=$name',{});
+    Map<String, dynamic> back = await service.httpPostMulti('/api/v1/Message/createRoom',FormData.fromMap(map),jsonType: true);
+
     debugPrint('back createGroupChat ${back}');
     if(back['status']==false){
       toast(back['error']);

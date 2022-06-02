@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-import '../../../../main.dart';
+import '../../../../main1.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/scroll_notifier.dart';
 

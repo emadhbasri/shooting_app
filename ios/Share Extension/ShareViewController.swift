@@ -1,11 +1,3 @@
-//
-//  ShareViewController.swift
-//  Sharing Extension
-//
-//  Created by Kasem Mohamed on 2019-05-30.
-//  Copyright © 2019 The Chromium Authors. All rights reserved.
-//
-
 import UIKit
 import Social
 import MobileCoreServices
@@ -13,7 +5,7 @@ import Photos
 
 class ShareViewController: SLComposeServiceViewController {
     // TODO: IMPORTANT: This should be your host app bundle identifier
-    let hostAppBundleIdentifier = "io.footballbuzz.sharing"
+    let hostAppBundleIdentifier = "com.footballbuzz.ios"
     let sharedKey = "ShareKey"
     var sharedMedia: [SharedMediaFile] = []
     var sharedText: [String] = []
@@ -37,7 +29,7 @@ class ShareViewController: SLComposeServiceViewController {
         // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
         if let content = extensionContext!.inputItems[0] as? NSExtensionItem {
             if let contents = content.attachments {
-                for (index, attachment) in (contents as! [NSItemProvider]).enumerated() {
+                for (index, attachment) in (contents).enumerated() {
                     if attachment.hasItemConformingToTypeIdentifier(imageContentType) {
                         handleImages(content: content, attachment: attachment, index: index)
                     } else if attachment.hasItemConformingToTypeIdentifier(textContentType) {
@@ -285,8 +277,8 @@ class ShareViewController: SLComposeServiceViewController {
         //        let scale = UIScreen.main.scale
         assetImgGenerate.maximumSize =  CGSize(width: 360, height: 360)
         do {
-            let img = try assetImgGenerate.copyCGImage(at: CMTimeMakeWithSeconds(1.0, preferredTimescale: 600), actualTime: nil)
-            try UIImage(cgImage: img).pngData()?.write(to: thumbnailPath)
+            let img = try assetImgGenerate.copyCGImage(at: CMTimeMakeWithSeconds(600, preferredTimescale: Int32(1.0)), actualTime: nil)
+            try UIImage.pngData(UIImage(cgImage: img))()?.write(to: thumbnailPath)
             saved = true
         } catch {
             saved = false

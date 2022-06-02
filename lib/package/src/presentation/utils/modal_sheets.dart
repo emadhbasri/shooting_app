@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_gif_picker/modal_gif_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/functions.dart';
 import '../../domain/models/editable_items.dart';
 import '../../domain/providers/notifiers/control_provider.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
@@ -199,6 +199,6 @@ _resetDefaults({required BuildContext context}) {
 
 _dispose({required context, required message}) {
   _resetDefaults(context: context);
-  Fluttertoast.showToast(msg: message);
+  toast(message);
   Navigator.of(context).pop(true);
 }

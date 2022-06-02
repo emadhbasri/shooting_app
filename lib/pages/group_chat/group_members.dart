@@ -2,18 +2,19 @@
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
+import '../../classes/states/chat_state.dart';
 import '../../classes/states/group_chat_state.dart';
 import '../home/search_user.dart';
 
 class GroupChatMemberBuilder extends StatelessWidget {
   const GroupChatMemberBuilder({Key? key, this.state}) : super(key: key);
-  final GroupChatState? state;
+  final ChatState? state;
   @override
   Widget build(BuildContext context) {
-    return GroupChatStateProvider(
+    return ChatStateProvider(
       child: GroupChatMember(),
       state: state,
     );
@@ -29,11 +30,11 @@ class GroupChatMember extends StatefulWidget {
 
 class _GroupChatMemberState extends State<GroupChatMember> {
   TextEditingController controller = TextEditingController();
-  late GroupChatState state;
+  late ChatState state;
   @override
   void initState() {
     super.initState();
-    state = Provider.of<GroupChatState>(context, listen: false);
+    state = Provider.of<ChatState>(context, listen: false);
     startTimer();
     state.getChats();
   }
@@ -49,7 +50,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
 bool loadingImageSend=false;
   @override
   Widget build(BuildContext context) {
-    return Consumer<GroupChatState>(builder: (context, state, child) {
+    return Consumer<ChatState>(builder: (context, state, child) {
       return WillPopScope(
         onWillPop: () async {
           stopTimer = true;
@@ -91,7 +92,7 @@ bool loadingImageSend=false;
                 itemBuilder: (context) => [
                   PopupMenuItem(
                       onTap: () async {
-
+copyText('FootballBuzz_Group:${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
                 ],
@@ -121,6 +122,10 @@ bool loadingImageSend=false;
                                     decoration: BoxDecoration(
                                       border: Border.all(width: 2,color: black),
                                       borderRadius: BorderRadius.circular(100),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: networkImage(state.selectedChat.roomPhoto??'')
+                                      )
                                     ),
                                     // width: doubleWidth(10),
                                     child: Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(

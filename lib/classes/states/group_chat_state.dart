@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 
-import '../../main.dart';
+import '../../main1.dart';
 import '../services/chat_service.dart';
 
 class GroupChatState extends ChangeNotifier {

@@ -5,7 +5,7 @@ import 'package:shooting_app/classes/services/shots_service.dart';
 import '../classes/functions.dart';
 import '../classes/models.dart';
 import '../classes/dataTypes.dart';
-import '../main.dart';
+import '../main1.dart';
 import '../ui_items/shots/post_from_shot.dart';
 import 'profile/profile.dart';
 

@@ -1,13 +1,15 @@
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/pages/group_chat/group_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
 import 'package:shooting_app/ui_items/gal.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../classes/services/chat_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
-import '../../main.dart';
+import '../../main1.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shot/shot.dart';
@@ -79,89 +81,148 @@ class _PostFromShotState extends State<PostFromShot> {
   //   );
   // }
   Widget _convertHashtag(context, String text) {
-    // text.replaceAll('\n', ' ');
-    List<String> split = text.split(' ');
-    // print('split $split');
-    // for(int j=0;j<split.length;j++){
-    //   print('$j: ${split[j]}');
-    // }
-
-    List<Widget> out=[];
-    split.forEach((e) {
-      if(e.trim().contains('\n')){
-        List<String> split1 = e.split('\n');
-        if(split1.isNotEmpty)
-          split1.forEach((String f) {
-            print('ff: $f ${f.length}');
-            if (f.length == 0) {
-              out.add(Text(''));
-            } else{
-              if (f[0] == '@') {
-                out.add( GestureDetector(
-                    onLongPress: () {
-                      copyText(text);
-                    },
-                    onTap: () {
-                      widget.onTapTag(context, f, true);
-                    },
-                    child: Text(f, style: TextStyle(color: mainBlue))));
-              } else if (f.contains('http://') || f.contains('https://')) {
-                out.add( SizedBox(
-                  width: double.maxFinite,
-                  // height: 100,
-                  child: AnyLinkPreview(doIt: (){},
-                    key: UniqueKey(),
-                    link: f.trim(),
-                    displayDirection: UIDirection.uiDirectionHorizontal,
-                    cache: const Duration(seconds: 1),
-                    backgroundColor: Colors.white,
-                    boxShadow: [],
-                    urlLaunchMode: LaunchMode.platformDefault,
-                    errorWidget: Container(
-                      color: Colors.grey[300],
-                      child: const Text('Oops!'),
-                    ),
-                    // errorImage: _errorImage,
-                  ),
-                ));
-                //
-                // return GestureDetector(
-                //     onLongPress: () {
-                //       copyText(text);
-                //     },
-                //     onTap: () {
-                //       openUrl(e);
-                //     },
-                //     child: Text(e, style: TextStyle(color: mainBlue)));
-              } else {
-                out.add( GestureDetector(
-                    onLongPress: () {
-                      copyText(text);
-                    },
-                    child: Text(f, style: TextStyle(color: black))));
-              }
-            }
-          });
-      }else{
-        if (e.length == 0) {
-          out.add(Text(''));
-        }else{
-          if (e[0] == '@') {
-            out.add( GestureDetector(
+    // List<String> split = text.split(' ');
+    //
+    // List<Widget> out = [];
+    // split.forEach((e) {
+    //   if (e.trim().contains('\n')) {
+    //     List<String> split1 = e.split('\n');
+    //     if (split1.isNotEmpty)
+    //       split1.forEach((String f) {
+    //         print('ff: $f ${f.length}');
+    //         if (f.length == 0) {
+    //           out.add(Text(''));
+    //         } else {
+    //           if (f[0] == '@') {
+    //             out.add(GestureDetector(
+    //                 onLongPress: () {
+    //                   copyText(text);
+    //                 },
+    //                 onTap: () {
+    //                   widget.onTapTag(context, f, true);
+    //                 },
+    //                 child: Text(f, style: TextStyle(color: mainBlue))));
+    //           } else if (f.contains('http://') || f.contains('https://')) {
+    //             out.add(SizedBox(
+    //               width: double.maxFinite,
+    //               // height: 100,
+    //               child: AnyLinkPreview(
+    //                 doIt: () {},
+    //                 key: UniqueKey(),
+    //                 link: f.trim(),
+    //                 displayDirection: UIDirection.uiDirectionHorizontal,
+    //                 cache: const Duration(seconds: 1),
+    //                 backgroundColor: Colors.white,
+    //                 boxShadow: [],
+    //                 urlLaunchMode: LaunchMode.platformDefault,
+    //                 errorWidget: Container(
+    //                   color: Colors.grey[300],
+    //                   child: const Text('Oops!'),
+    //                 ),
+    //                 // errorImage: _errorImage,
+    //               ),
+    //             ));
+    //             //
+    //             // return GestureDetector(
+    //             //     onLongPress: () {
+    //             //       copyText(text);
+    //             //     },
+    //             //     onTap: () {
+    //             //       openUrl(e);
+    //             //     },
+    //             //     child: Text(e, style: TextStyle(color: mainBlue)));
+    //           } else {
+    //             out.add(GestureDetector(
+    //                 onLongPress: () {
+    //                   copyText(text);
+    //                 },
+    //                 child: Text(f, style: TextStyle(color: black))));
+    //           }
+    //         }
+    //       });
+    //   } else {
+    //     if (e.length == 0) {
+    //       out.add(Text(''));
+    //     } else {
+    //       if (e[0] == '@') {
+    //         out.add(GestureDetector(
+    //             onLongPress: () {
+    //               copyText(text);
+    //             },
+    //             onTap: () {
+    //               widget.onTapTag(context, e, true);
+    //             },
+    //             child: Text(e, style: TextStyle(color: mainBlue))));
+    //       } else if (e.contains('http://') || e.contains('https://')) {
+    //         out.add(SizedBox(
+    //           width: double.maxFinite,
+    //           // height: 100,
+    //           child: AnyLinkPreview(
+    //             doIt: () {},
+    //             key: UniqueKey(),
+    //             link: e.trim(),
+    //             displayDirection: UIDirection.uiDirectionHorizontal,
+    //             cache: const Duration(seconds: 1),
+    //             backgroundColor: Colors.white,
+    //             boxShadow: [],
+    //             urlLaunchMode: LaunchMode.platformDefault,
+    //             errorWidget: Container(
+    //               color: Colors.grey[300],
+    //               child: const Text('Oops!'),
+    //             ),
+    //             // errorImage: _errorImage,
+    //           ),
+    //         ));
+    //         //
+    //         // return GestureDetector(
+    //         //     onLongPress: () {
+    //         //       copyText(text);
+    //         //     },
+    //         //     onTap: () {
+    //         //       openUrl(e);
+    //         //     },
+    //         //     child: Text(e, style: TextStyle(color: mainBlue)));
+    //       } else {
+    //         out.add(GestureDetector(
+    //             onLongPress: () {
+    //               copyText(text);
+    //             },
+    //             child: Text(e, style: TextStyle(color: black))));
+    //       }
+    //     }
+    //   }
+    // });
+    //
+    // return Wrap(
+    //   alignment: WrapAlignment.start,
+    //   crossAxisAlignment: WrapCrossAlignment.start,
+    //   runAlignment: WrapAlignment.start,
+    //   spacing: 3,
+    //   runSpacing: 3,
+    //   children: out,
+    // );
+    return Wrap(
+      alignment: WrapAlignment.start,
+      crossAxisAlignment: WrapCrossAlignment.start,
+      runAlignment: WrapAlignment.start,
+      spacing: 3,
+      runSpacing: 3,
+      children: makeText(text).map((e) {
+        switch(e.type){
+          case TextType.text:
+            return GestureDetector(
                 onLongPress: () {
-                  copyText(text);
+                  copyText(e.text);
                 },
-                onTap: () {
-                  widget.onTapTag(context, e, true);
-                },
-                child: Text(e, style: TextStyle(color: mainBlue))));
-          } else if (e.contains('http://') || e.contains('https://')) {
-            out.add( SizedBox(
+                child: Text(e.text, style: TextStyle(color: black)));
+          case TextType.link:
+            return SizedBox(
               width: double.maxFinite,
               // height: 100,
-              child: AnyLinkPreview(doIt: (){},
+              child: AnyLinkPreview(
                 key: UniqueKey(),
-                link: e.trim(),
+                link: e.text.trim(),
+                doIt: () {},
                 displayDirection: UIDirection.uiDirectionHorizontal,
                 cache: const Duration(seconds: 1),
                 backgroundColor: Colors.white,
@@ -173,35 +234,31 @@ class _PostFromShotState extends State<PostFromShot> {
                 ),
                 // errorImage: _errorImage,
               ),
-            ));
-            //
-            // return GestureDetector(
-            //     onLongPress: () {
-            //       copyText(text);
-            //     },
-            //     onTap: () {
-            //       openUrl(e);
-            //     },
-            //     child: Text(e, style: TextStyle(color: mainBlue)));
-          } else {
-            out.add( GestureDetector(
-                onLongPress: () {
-                  copyText(text);
+            );
+          case TextType.groupLink:
+            return GestureDetector(
+                onTap: () async{
+                  String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                  await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                  Go.pushSlideAnim(context, GroupChatBuilder(
+                    groupChatId: chatRoomId,
+                  ));
                 },
-                child: Text(e, style: TextStyle(color: black))));
-          }
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          case TextType.user:
+            return GestureDetector(
+                onLongPress: () {
+                  copyText(e.text);
+                },
+                onTap: () {
+                  widget.onTapTag(context, e.text, true);
+                },
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          default:return const SizedBox();
         }
 
-      }
-    });
-
-    return Wrap(
-      alignment: WrapAlignment.start,
-      crossAxisAlignment: WrapCrossAlignment.start,
-      runAlignment: WrapAlignment.start,
-      spacing: 3,
-      runSpacing: 3,
-      children: out,
+      }).toList(),
     );
   }
 
@@ -416,10 +473,10 @@ class _PostFromShotState extends State<PostFromShot> {
                         );
                       }
                       return Center(
-                        child: VideoItem(
-                            controller: controller,
-                            url: widget.post.mediaTypes.first.media,
-                            aspectRatio: 2));
+                          child: VideoItem(
+                              controller: controller,
+                              url: widget.post.mediaTypes.first.media,
+                              aspectRatio: 2));
                     } else
                       return PageView.builder(
                         controller: PageController(
@@ -608,122 +665,91 @@ class PostFromShotProfile extends StatefulWidget {
 
 class _PostFromShotProfileState extends State<PostFromShotProfile> {
   Widget _convertHashtag(context, String text) {
-    // text.replaceAll('\n', ' ');
-    List<String> split = text.split(' ');
-    // print('split $split');
-// for(int j=0;j<split.length;j++){
-// print('$j: ${split[j]}');
-// }
-
-List<Widget> out=[];
-split.forEach((e) {
-  if(e.trim().contains('\n')){
-    List<String> split1 = e.split('\n');
-    if(split1.isNotEmpty)
-    split1.forEach((String f) {
-      print('ff: $f ${f.length}');
-      if (f.length == 0) {
-              out.add(Text(''));
-            } else{
-        if (f[0] == '@') {
-          out.add( GestureDetector(
-              onLongPress: () {
-                copyText(text);
-              },
-              onTap: () {
-                widget.onTapTag(context, f, true);
-              },
-              child: Text(f, style: TextStyle(color: mainBlue))));
-        } else if (f.contains('http://') || f.contains('https://')) {
-          out.add( SizedBox(
-            width: double.maxFinite,
-            // height: 100,
-            child: AnyLinkPreview(
-              key: UniqueKey(),doIt: (){},
-              link: f.trim(),
-              displayDirection: UIDirection.uiDirectionHorizontal,
-              cache: const Duration(seconds: 1),
-              backgroundColor: Colors.white,
-              boxShadow: [],
-              urlLaunchMode: LaunchMode.platformDefault,
-              errorWidget: Container(
-                color: Colors.grey[300],
-                child: const Text('Oops!'),
-              ),
-              // errorImage: _errorImage,
-            ),
-          ));
-          //
-          // return GestureDetector(
-          //     onLongPress: () {
-          //       copyText(text);
-          //     },
-          //     onTap: () {
-          //       openUrl(e);
-          //     },
-          //     child: Text(e, style: TextStyle(color: mainBlue)));
-        } else {
-          out.add( GestureDetector(
-              onLongPress: () {
-                copyText(text);
-              },
-              child: Text(f, style: TextStyle(color: black))));
-        }
-      }
-    });
-  }else{
-    if (e.length == 0) {
-          out.add(Text(''));
-        }else{
-      if (e[0] == '@') {
-        out.add( GestureDetector(
-            onLongPress: () {
-              copyText(text);
-            },
-            onTap: () {
-              widget.onTapTag(context, e, true);
-            },
-            child: Text(e, style: TextStyle(color: mainBlue))));
-      } else if (e.contains('http://') || e.contains('https://')) {
-        out.add( SizedBox(
-          width: double.maxFinite,
-          // height: 100,
-          child: AnyLinkPreview(
-            key: UniqueKey(),
-            link: e.trim(),
-            doIt: (){},
-            displayDirection: UIDirection.uiDirectionHorizontal,
-            cache: const Duration(seconds: 1),
-            backgroundColor: Colors.white,
-            boxShadow: [],
-            urlLaunchMode: LaunchMode.platformDefault,
-            errorWidget: Container(
-              color: Colors.grey[300],
-              child: const Text('Oops!'),
-            ),
-            // errorImage: _errorImage,
-          ),
-        ));
-        //
-        // return GestureDetector(
-        //     onLongPress: () {
-        //       copyText(text);
-        //     },
-        //     onTap: () {
-        //       openUrl(e);
-        //     },
-        //     child: Text(e, style: TextStyle(color: mainBlue)));
-      } else {
-        out.add( GestureDetector(
-            onLongPress: () {
-              copyText(text);
-            },
-            child: Text(e, style: TextStyle(color: black))));
-      }
-    }
-
-  }
-});
+    // List<String> split = text.split(' ');
+    //
+    // List<Widget> out = [];
+    // split.forEach((e) {
+    //   if (e.trim().contains('\n')) {
+    //     List<String> split1 = e.split('\n');
+    //     if (split1.isNotEmpty)
+    //       split1.forEach((String f) {
+    //         print('ff: $f ${f.length}');
+    //         if (f.length == 0) {
+    //           out.add(Text(''));
+    //         } else {
+    //           if (f[0] == '@') {
+    //             out.add(GestureDetector(
+    //                 onLongPress: () {
+    //                   copyText(text);
+    //                 },
+    //                 onTap: () {
+    //                   widget.onTapTag(context, f, true);
+    //                 },
+    //                 child: Text(f, style: TextStyle(color: mainBlue))));
+    //           } else if (f.contains('http://') || f.contains('https://')) {
+    //             out.add(SizedBox(
+    //               width: double.maxFinite,
+    //               // height: 100,
+    //               child: AnyLinkPreview(
+    //                 key: UniqueKey(), doIt: () {},
+    //                 link: f.trim(),
+    //                 displayDirection: UIDirection.uiDirectionHorizontal,
+    //                 cache: const Duration(seconds: 1),
+    //                 backgroundColor: Colors.white,
+    //                 boxShadow: [],
+    //                 urlLaunchMode: LaunchMode.platformDefault,
+    //                 errorWidget: Container(
+    //                   color: Colors.grey[300],
+    //                   child: const Text('Oops!'),
+    //                 ),
+    //                 // errorImage: _errorImage,
+    //               ),
+    //             ));
+    //             //
+    //             // return GestureDetector(
+    //             //     onLongPress: () {
+    //             //       copyText(text);
+    //             //     },
+    //             //     onTap: () {
+    //             //       openUrl(e);
+    //             //     },
+    //             //     child: Text(e, style: TextStyle(color: mainBlue)));
+    //           } else {
+    //             out.add(GestureDetector(
+    //                 onLongPress: () {
+    //                   copyText(text);
+    //                 },
+    //                 child: Text(f, style: TextStyle(color: black))));
+    //           }
+    //         }
+    //       });
+    //   } else {
+    //     if (e.length == 0) {
+    //       out.add(Text(''));
+    //     } else {
+    //       if (e[0] == '@') {
+    //         out.add();
+    //       } else if (e.contains('http://') || e.contains('https://')) {
+    //         out.add();
+    //         //
+    //         // return GestureDetector(
+    //         //     onLongPress: () {
+    //         //       copyText(text);
+    //         //     },
+    //         //     onTap: () {
+    //         //       openUrl(e);
+    //         //     },
+    //         //     child: Text(e, style: TextStyle(color: mainBlue)));
+    //       } else {
+    //         out.add(GestureDetector(
+    //             onLongPress: () {
+    //               copyText(text);
+    //             },
+    //             child: Text(e, style: TextStyle(color: black))));
+    //       }
+    //     }
+    //   }
+    // });
 
     return Wrap(
       alignment: WrapAlignment.start,
@@ -731,7 +757,58 @@ split.forEach((e) {
       runAlignment: WrapAlignment.start,
       spacing: 3,
       runSpacing: 3,
-      children: out,
+      children: makeText(text).map((e) {
+        switch(e.type){
+          case TextType.text:
+            return GestureDetector(
+                onLongPress: () {
+                  copyText(e.text);
+                },
+                child: Text(e.text, style: TextStyle(color: black)));
+          case TextType.link:
+            return SizedBox(
+              width: double.maxFinite,
+              // height: 100,
+              child: AnyLinkPreview(
+                key: UniqueKey(),
+                link: e.text.trim(),
+                doIt: () {},
+                displayDirection: UIDirection.uiDirectionHorizontal,
+                cache: const Duration(seconds: 1),
+                backgroundColor: Colors.white,
+                boxShadow: [],
+                urlLaunchMode: LaunchMode.platformDefault,
+                errorWidget: Container(
+                  color: Colors.grey[300],
+                  child: const Text('Oops!'),
+                ),
+                // errorImage: _errorImage,
+              ),
+            );
+          case TextType.groupLink:
+            return GestureDetector(
+                onTap: () async{
+                  String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                  await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                  Go.pushSlideAnim(context, GroupChatBuilder(
+                    groupChatId: chatRoomId,
+                  ));
+                },
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          case TextType.user:
+            return GestureDetector(
+                onLongPress: () {
+                  copyText(text);
+                },
+                onTap: () {
+                  widget.onTapTag(context, e.text, true);
+                },
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          default:return const SizedBox();
+        }
+
+      }).toList(),
     );
   }
 

@@ -8,7 +8,7 @@ import 'package:shooting_app/pages/profile/profile.dart';
 
 import '../../classes/services/user_service.dart';
 import '../../classes/dataTypes.dart';
-import '../../main.dart';
+import '../../main1.dart';
 
 class FanMates extends StatefulWidget {
   const FanMates({Key? key}) : super(key: key);

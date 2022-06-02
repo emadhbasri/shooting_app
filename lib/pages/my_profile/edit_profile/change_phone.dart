@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/services/authentication_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import '../../../main.dart';
+import '../../../main1.dart';
 import 'verify_phone.dart';
 
 import '../../../classes/functions.dart';

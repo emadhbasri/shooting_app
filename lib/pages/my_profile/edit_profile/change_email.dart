@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
-import '../../../main.dart';
+import '../../../main1.dart';
 import 'change_email_done.dart';
 
 import '../../../classes/functions.dart';

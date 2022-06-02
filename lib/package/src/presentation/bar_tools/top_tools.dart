@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -10,7 +9,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../classes/models.dart';
 import '../../../../classes/services/my_service.dart';
-import '../../../../main.dart';
+import '../../../../main1.dart';
 import '../../domain/providers/notifiers/control_provider.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/painting_notifier.dart';
@@ -90,9 +89,9 @@ class _TopToolsState extends State<TopTools> {
                             context: context,
                             saveToGallery: true);
                         if (response) {
-                          Fluttertoast.showToast(msg: 'Successfully saved');
+                          toast('Successfully saved');
                         } else {
-                          Fluttertoast.showToast(msg: 'Error');
+                          toast('Error');
                         }
                       }
                     }),
@@ -206,7 +205,7 @@ class _TopToolsState extends State<TopTools> {
                           setState(() {
                             loading=false;
                           });
-                          toast('The video should be less than 10 seconds.',duration: Toast.LENGTH_LONG);
+                          toast('The video should be less than 10 seconds.',isLong: true);
                         }
                       }
                     }

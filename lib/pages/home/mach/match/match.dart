@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../../classes/states/main_state.dart';
-import '../../../../main.dart';
+import '../../../../main1.dart';
 import 'goals.dart';
 import 'lineups.dart';
 import 'stats.dart';

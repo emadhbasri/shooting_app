@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// 
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import '../models.dart';
@@ -93,7 +93,7 @@ return response;
       return out;
     }else{
       print('back $back');
-      toast(back['error'],duration: Toast.LENGTH_LONG);
+      toast(back['error'],isLong: true);
       return [];
     }
   }

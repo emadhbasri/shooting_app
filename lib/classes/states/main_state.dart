@@ -6,7 +6,7 @@ import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
 
-import '../../main.dart';
+import '../../main1.dart';
 import '../../pages/home/Home.dart';
 import '../models.dart';
 import '../services/shots_service.dart';

@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/functions.dart';
 
 class ChooseMediaDialog extends StatelessWidget {
-  const ChooseMediaDialog({Key? key}) : super(key: key);
-
+  const ChooseMediaDialog({Key? key,this.video=true,this.title='Please Pick Media'}) : super(key: key);
+  final bool video;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -24,7 +24,7 @@ class ChooseMediaDialog extends StatelessWidget {
           children: [
 
             Center(
-              child: Text('Please Pick Media',style: Theme.of(context).textTheme.titleLarge ),
+              child: Text(title,style: Theme.of(context).textTheme.titleLarge ),
             ),
             SizedBox(height: doubleHeight(2)),
 
@@ -64,7 +64,10 @@ class ChooseMediaDialog extends StatelessWidget {
                   color: Color.fromRGBO(107, 79, 187, 1),
                 ),
               ),
-            ),SizedBox(height: doubleHeight(1)),
+            ),
+
+            SizedBox(height: doubleHeight(1)),
+            if(video)
             Container(
               decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black),
@@ -87,7 +90,7 @@ class ChooseMediaDialog extends StatelessWidget {
                       print(
                           'await video.length() ${await video.length()}');
                       toast('The video should be less than 20M.',
-                          duration: Toast.LENGTH_LONG);
+                          isLong: true);
                       return;
                     }
                     VideoPlayerController _controller =
@@ -100,7 +103,7 @@ class ChooseMediaDialog extends StatelessWidget {
                     } else {
                       toast(
                           'The video should be less than 60 seconds.',
-                          duration: Toast.LENGTH_LONG);
+                          isLong: true);
                     }
                   }
 

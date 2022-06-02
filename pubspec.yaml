@@ -27,7 +27,7 @@ dependencies:
 
   dashed_circle: ^0.0.2
   modal_gif_picker: ^0.0.1
-  fluttertoast: ^8.0.9
+#  fluttertoast: ^8.0.9
   align_positioned: ^3.0.0
   perfect_freehand: ^1.0.4
   gallery_media_picker: ^0.0.7
@@ -56,7 +56,8 @@ dependencies:
   string_validator: any
   html: any
 
-  receive_sharing_intent: ^1.4.5
+  receive_sharing_intent: 1.4.5
+
 
 
 dev_dependencies:

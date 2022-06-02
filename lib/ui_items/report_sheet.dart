@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/services/shots_service.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';

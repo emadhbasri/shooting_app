@@ -4,7 +4,7 @@ import 'package:shooting_app/classes/dataTypes.dart';
 import '../../../classes/functions.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
-import '../../../main.dart';
+import '../../../main1.dart';
 
 class ChangePassword extends StatefulWidget {
   @override

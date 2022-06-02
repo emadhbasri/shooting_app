@@ -1,21 +1,23 @@
 import 'dart:io';
 
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../ui_items/dialogs/choose_media_dialog.dart';
 import '../../ui_items/gal.dart';
+import '../group_chat/group_chat.dart';
 
 class ChatBuilder extends StatelessWidget {
   const ChatBuilder({Key? key, this.state}) : super(key: key);
@@ -363,7 +365,7 @@ class _ChatItemState extends State<ChatItem> {
   Widget build(BuildContext context) {
     // print('message ${widget.message} ${widget.hasDate}');
     bool isMine = widget.message.name == getIt<MainState>().userName;
-    String? hasurl=hasUrl(widget.message.text ?? '');
+    // String? hasurl=hasUrl(widget.message.text ?? '');
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
@@ -374,8 +376,8 @@ class _ChatItemState extends State<ChatItem> {
           PopupMenuButton<String>(
             key: popupkey,
             itemBuilder: (_)=>[
-              if(hasurl!=null)
-                PopupMenuItem<String>(child: Text('open'),value: 'open'),
+              // if(hasurl!=null)
+              //   PopupMenuItem<String>(child: Text('open'),value: 'open'),
               if(widget.message.messageMediaTypes==null)
                 PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
                 PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
@@ -385,9 +387,10 @@ class _ChatItemState extends State<ChatItem> {
                 ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
               }else if(e=='Copy'){
                 copyText(e);
-              }else if(e=='open'){
-                openUrl(hasurl!);
               }
+              // else if(e=='open'){
+              //   openUrl(hasurl!);
+              // }
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
             child: GestureDetector(
@@ -454,57 +457,80 @@ class _ChatItemState extends State<ChatItem> {
                       ),
                     );
                   }
-                }else if(hasurl!=null){
+                }else {
                   return Container(
-                    padding: EdgeInsets.only(
-                      top: 4,right: 4,left: 4
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-                    width: double.maxFinite,
-                    // height: 100,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AbsorbPointer(
-                          absorbing: true,
-                          child: AnyLinkPreview(
-                            doIt: (){},
-                            link: hasurl.trim(),
-                            borderRadius: 0,
-                            displayDirection: UIDirection.uiDirectionVertical,
-                            cache: const Duration(seconds: 1),
-                            backgroundColor: Colors.transparent,
-                            boxShadow: [],
-                            // urlLaunchMode: LaunchMode.platformDefault,
-                            errorWidget: Container(
-                              color: Colors.grey[300],
-                              child: const Text('Oops!'),
-                            ),
-                            // errorImage: _errorImage,
-                          ),
+                      constraints: BoxConstraints(maxWidth: doubleWidth(70)),
+                      decoration: BoxDecoration(
+                        color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: doubleHeight(1), horizontal: doubleWidth(2)),
+                      child: Builder(
+                        builder: (context) {
+                          return Wrap(
+                            alignment: WrapAlignment.start,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            runAlignment: WrapAlignment.start,
+                            spacing: 3,
+                            runSpacing: 3,
+                            children: makeText(widget.message.text??'').map((e) {
+                              switch(e.type){
+                                case TextType.text:
+                                  return GestureDetector(
+                                      onLongPress: () {
+                                        copyText(e.text);
+                                      },
+                                      child: Text(e.text, style: TextStyle(color: black)));
+                                case TextType.link:
+                                  return SizedBox(
+                                    width: double.maxFinite,
+                                    // height: 100,
+                                    child: AnyLinkPreview(
+                                      link: e.text.trim(),
+                                      doIt: () {
+                                        popupkey.currentState!.showButtonMenu();
+                                      },
+                                      displayDirection: UIDirection.uiDirectionVertical,
+                                      cache: const Duration(seconds: 1),
+                                      backgroundColor: Colors.white,
+                                      boxShadow: [],
+                                      urlLaunchMode: LaunchMode.platformDefault,
+                                      errorWidget: Container(
+                                        color: Colors.grey[300],
+                                        child: const Text('Oops!'),
+                                      ),
+                                      // errorImage: _errorImage,
+                                    ),
+                                  );
+                                case TextType.groupLink:
+                                  return GestureDetector(
+                                      onTap: () async{
+                                        String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                                        await ChatService.joinGroupChat(getIt<MyService>(),
+                                            chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                                        Go.pushSlideAnim(context, GroupChatBuilder(
+                                          groupChatId: chatRoomId,
+                                        ));
+                                      },
+                                      child: Text(e.text, style: TextStyle(color: mainBlue)));
+                                case TextType.user:
+                                  return GestureDetector(
+                                      onLongPress: () {
+                                        copyText(e.text);
+                                      },
+                                      onTap: () {
+                                        Go.pushSlideAnim(context, ProfileBuilder(username: e.text));
+                                      },
+                                      child: Text(e.text, style: TextStyle(color: mainBlue)));
+                                default:return const SizedBox();
+                              }
 
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(widget.message.text ?? '',),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Container(
-                    constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-                    decoration: BoxDecoration(
-                      color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-                    child: Text(widget.message.text ?? '',),
+                            }).toList(),
+                          );
+                        },
+                      )
+                    // Text(widget.message.text ?? '',),
                   );
                 }
 

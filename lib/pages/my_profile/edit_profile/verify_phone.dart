@@ -5,7 +5,7 @@ import '../../../classes/functions.dart';
 import '../../../classes/dataTypes.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
-import '../../../main.dart';
+import '../../../main1.dart';
 
 class VerifyPhone extends StatefulWidget {
   const VerifyPhone({Key? key,required this.number}) : super(key: key);

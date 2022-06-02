@@ -60,7 +60,10 @@
       <string>https</string>
       <string>http</string>
     </array>
-    <key>CFBundleURLTypes</key>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+
+	<key>CFBundleURLTypes</key>
     	<array>
     		<dict>
     			<key>CFBundleTypeRole</key>
@@ -72,7 +75,6 @@
     		</dict>
     		<dict/>
     	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+
 </dict>
 </plist>

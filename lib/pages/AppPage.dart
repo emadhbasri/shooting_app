@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
+import '../ui_items/dialogs/choose_media_dialog.dart';
+import 'chat/search_chat.dart';
 import 'home/Home.dart';
 import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
@@ -27,12 +32,75 @@ class AppPage extends StatefulWidget {
 }
 
 class _AppPageState extends State<AppPage> {
+  handleText(String title){
+
+    showDialog(
+        context: context,
+        builder: (contextD)=>ChooseMediaDialog(
+          title: title,
+        ));
+  }
+  late StreamSubscription _intentDataStreamSubscription;
+  late Stream streamUri;
   @override
   void initState() {
     super.initState();
     statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
     state.getProfile();
+
+
+    // _intentDataStreamSubscription=
+    // ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
+    //   handleText('getMediaStream');
+    //   print("getMediaStream: $value");
+    // }, onError: (err) {
+    //   print("getMediaStream error: $err");
+    // });
+
+    // ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
+    //   handleText('getInitialMedia');
+    //   print("getInitialMedia: $value");
+    // });
+
+    // streamUri=
+    // ReceiveSharingIntent.getTextStreamAsUri();
+    // streamUri.listen((event) {
+    //   print('event $event');
+    // });
+        // .listen((Uri value) {
+      //   handleText('getTextStreamAsUri');
+      //   print("getTextStreamAsUri: $value");
+    // });
+    //     .listen((Uri value) {
+    //   handleText('getTextStreamAsUri');
+    //   print("getTextStreamAsUri: $value");
+    // }, onError: (err) {
+    //   print("getTextStreamAsUri error: $err");
+    // });
+
+    ReceiveSharingIntent.getInitialTextAsUri().then((Uri? value) {
+      if(value!=null){
+        handleText('getInitialTextAsUri');
+      }
+      print("getInitialTextAsUri: $value");
+    });
+
+
+    // ReceiveSharingIntent.getTextStream().listen((String value) {
+    //   handleText('getTextStream');
+    //   print("getTextStream: $value");
+    // }, onError: (err) {
+    //   print("getTextStream error: $err");
+    // });
+
+    // ReceiveSharingIntent.getInitialText().then((String? value) {
+    //   if(value!=null){
+    //     handleText('getInitialText');
+    //   }
+    //   print("getInitialText: $value");
+    // });
+
   }
 
   int currentIndex = 0;
@@ -194,6 +262,11 @@ class _AppPageState extends State<AppPage> {
           'Messages'.toUpperCase(),
           style: TextStyle(color: white),
         ),
+        actions: [
+          IconButton(onPressed: (){
+            Go.pushSlideAnim(context, SearchChat());
+          }, icon: Icon(Icons.message))
+        ],
       );
     } else if (currentIndex == 3) {
       appBar = AppBar(

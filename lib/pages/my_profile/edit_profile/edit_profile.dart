@@ -4,7 +4,7 @@ import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:shooting_app/pages/team_search.dart';
 
 import '../../../classes/functions.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../main.dart';
+import '../../main1.dart';
 import '../models.dart';
 import '../services/my_service.dart';
 import '../services/shots_service.dart';

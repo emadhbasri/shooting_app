@@ -5,7 +5,7 @@ import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
-import '../../../main.dart';
+import '../../../main1.dart';
 import '../../../ui_items/dialogs/privacy.dart';
 import '../../../ui_items/dialogs/team.dart';
 import 'change_phone.dart';

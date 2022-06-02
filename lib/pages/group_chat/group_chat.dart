@@ -1,38 +1,41 @@
 import 'dart:io';
 
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:shooting_app/pages/group_chat/group_members.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../classes/states/chat_state.dart';
 import '../../classes/states/group_chat_state.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
+import '../../ui_items/dialogs/choose_media_dialog.dart';
 import '../../ui_items/gal.dart';
 
 class GroupChatBuilder extends StatelessWidget {
-  const GroupChatBuilder({Key? key, this.state}) : super(key: key);
+  const GroupChatBuilder({Key? key, this.state,this.groupChatId}) : super(key: key);
   final ChatState? state;
+  final String? groupChatId;
   @override
   Widget build(BuildContext context) {
     return ChatStateProvider(
-      child: GroupChat(),
+      child: GroupChat(groupChatId: groupChatId),
       state: state,
     );
   }
 }
 
 class GroupChat extends StatefulWidget {
-  const GroupChat({Key? key}) : super(key: key);
-
+  const GroupChat({Key? key,this.groupChatId}) : super(key: key);
+  final String? groupChatId;
   @override
   _GroupChatState createState() => _GroupChatState();
 }
@@ -46,7 +49,8 @@ class _GroupChatState extends State<GroupChat> {
     super.initState();
     state = Provider.of<ChatState>(context, listen: false);
     startTimer();
-    state.getChats();
+
+    state.getChats(groupChatId: widget.groupChatId);
   }
 
   bool stopTimer = false;
@@ -93,7 +97,7 @@ bool loadingImageSend=false;
                     ),)),
                   ),
                 ),
-                title: Text(state.selectedChat.name??'',style: TextStyle(
+                title: Text(state.selectedChat.name??'',style: TextStyle(//
                   color: white
                 ),),
                 subtitle: Text('${state.selectedChat.personalInformations.length} members',style: TextStyle(
@@ -109,7 +113,7 @@ bool loadingImageSend=false;
                 itemBuilder: (context) => [
                   PopupMenuItem(
                       onTap: () async {
-
+                        copyText('FootballBuzz_Group:${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
                 ],
@@ -280,117 +284,6 @@ bool loadingImageSend=false;
 }
 
 
-class ChooseMediaDialog extends StatelessWidget {
-  const ChooseMediaDialog({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-
-      child: Container(
-        margin: EdgeInsets.all(doubleWidth(4)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-
-            Center(
-              child: Text('Please Pick Media',style: Theme.of(context).textTheme.titleLarge ),
-            ),
-            SizedBox(height: doubleHeight(2)),
-
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 1,color: Colors.black),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: ListTile(
-                onTap: ()async{
-                  XFile? out =
-                  await ImagePicker().pickImage(source: ImageSource.camera);
-                  return Go.pop(context,out);
-                },
-                title: Text('Camera Image'),
-                trailing: Icon(
-                  Icons.camera_alt,
-                  color: Color.fromRGBO(107, 79, 187, 1),
-                ),
-              ),
-            ),SizedBox(height: doubleHeight(1)),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 1,color: Colors.black),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: ListTile(
-                onTap: ()async{
-                  XFile? out =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
-                  print('emad $out');
-                  return Go.pop(context,out);
-                },
-                title: Text('Library Image'),
-                trailing: Icon(
-                  Icons.image,
-                  color: Color.fromRGBO(107, 79, 187, 1),
-                ),
-              ),
-            ),SizedBox(height: doubleHeight(1)),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 1,color: Colors.black),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: ListTile(
-                onTap: ()async{
-                  final XFile? video = await ImagePicker()
-                      .pickVideo(source: ImageSource.gallery);
-
-                  if (video != null) {
-                    print('video.mimeType ${video.name}');
-
-                    if (!video.name.endsWith('.mp4')) {
-                      toast('The video format should be mp4');
-                      return;
-                    }
-
-                    if (await video.length() > 20000000) {
-                      print(
-                          'await video.length() ${await video.length()}');
-                      toast('The video should be less than 20M.',
-                          duration: Toast.LENGTH_LONG);
-                      return;
-                    }
-                    VideoPlayerController _controller =
-                    VideoPlayerController.file(
-                        File(video.path));
-                    await _controller.initialize();
-                    Duration duration = _controller.value.duration;
-                    if (duration.inSeconds <= 121) {
-                      return Go.pop(context,video);
-                    } else {
-                      toast(
-                          'The video should be less than 60 seconds.',
-                          duration: Toast.LENGTH_LONG);
-                    }
-                  }
-
-                },
-                title: Text('Library Video'),
-                trailing: Icon(
-                  Icons.video_library_outlined,
-                  color: Color.fromRGBO(107, 79, 187, 1),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 
 class ChatItem extends StatefulWidget {
@@ -438,7 +331,7 @@ class _ChatItemState extends State<ChatItem> {
     // print('message ${widget.message} ${widget.hasDate}');
     bool isMine = widget.message.name == getIt<MainState>().userName;
 
-    String? hasurl=hasUrl(widget.message.text ?? '');
+    // String? hasurl=hasUrl(widget.message.text ?? '');
 
 
     return Align(
@@ -483,8 +376,8 @@ class _ChatItemState extends State<ChatItem> {
               PopupMenuButton<String>(
                 key: popupkey,
                 itemBuilder: (_)=>[
-                  if(hasurl!=null)
-                    PopupMenuItem<String>(child: Text('open'),value: 'open'),
+                  // if(hasurl!=null)
+                  //   PopupMenuItem<String>(child: Text('open'),value: 'open'),
                   if(widget.message.messageMediaTypes==null)
                     PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
                     PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
@@ -494,9 +387,10 @@ class _ChatItemState extends State<ChatItem> {
                     ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
                   }else if(e=='Copy'){
                     copyText(widget.message.text??'');
-                  }else if(e=='open'){
-                    openUrl(hasurl!);
                   }
+                  // else if(e=='open'){
+                  //   openUrl(hasurl!);
+                  // }
                 },
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),),
                 child: GestureDetector(
@@ -568,47 +462,7 @@ class _ChatItemState extends State<ChatItem> {
                           ),
                         );
                       }
-                    }else if(hasurl!=null){
-                      return Container(
-                        padding: EdgeInsets.only(
-                            top: 4,right: 4,left: 4
-                        ),
-                        decoration: BoxDecoration(
-                          color: isMine ? greenCall : Color.fromRGBO(244, 244, 244, 1),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        constraints: BoxConstraints(maxWidth: doubleWidth(70)),
-                        width: double.maxFinite,
-                        // height: 100,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AbsorbPointer(
-                              absorbing: true,
-                              child: AnyLinkPreview(
-                                link: hasurl.trim(),
-                                doIt: (){},
-                                borderRadius: 0,
-                                displayDirection: UIDirection.uiDirectionVertical,
-                                cache: const Duration(seconds: 1),
-                                backgroundColor: Colors.transparent,
-                                boxShadow: [],
-                                // urlLaunchMode: LaunchMode.platformDefault,
-                                errorWidget: Container(
-                                  color: Colors.grey[300],
-                                  child: const Text('Oops!'),
-                                ),
-                                // errorImage: _errorImage,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(widget.message.text ?? '',),
-                            ),
-                          ],
-                        ),
-                      );
-                    }else{
+                    }else {
                       return Container(
                         constraints: BoxConstraints(maxWidth: doubleWidth(70)),
                         decoration: BoxDecoration(
@@ -617,7 +471,71 @@ class _ChatItemState extends State<ChatItem> {
                         ),
                         padding: EdgeInsets.symmetric(
                             vertical: doubleHeight(1), horizontal: doubleWidth(2)),
-                        child: Text(widget.message.text ?? '',),
+                        child: Builder(
+                          builder: (context) {
+                            return Wrap(
+                              alignment: WrapAlignment.start,
+                              crossAxisAlignment: WrapCrossAlignment.start,
+                              runAlignment: WrapAlignment.start,
+                              spacing: 3,
+                              runSpacing: 3,
+                              children: makeText(widget.message.text??'').map((e) {
+                                switch(e.type){
+                                  case TextType.text:
+                                    return GestureDetector(
+                                        onLongPress: () {
+                                          copyText(e.text);
+                                        },
+                                        child: Text(e.text, style: TextStyle(color: black)));
+                                  case TextType.link:
+                                    return SizedBox(
+                                      width: double.maxFinite,
+                                      // height: 100,
+                                      child: AnyLinkPreview(
+                                        link: e.text.trim(),
+                                        doIt: () {
+                                          popupkey.currentState!.showButtonMenu();
+                                        },
+                                        displayDirection: UIDirection.uiDirectionVertical,
+                                        cache: const Duration(seconds: 1),
+                                        backgroundColor: Colors.white,
+                                        boxShadow: [],
+                                        urlLaunchMode: LaunchMode.platformDefault,
+                                        errorWidget: Container(
+                                          color: Colors.grey[300],
+                                          child: const Text('Oops!'),
+                                        ),
+                                        // errorImage: _errorImage,
+                                      ),
+                                    );
+                                  case TextType.groupLink:
+                                    return GestureDetector(
+                                        onTap: () async{
+                                          String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                                          await ChatService.joinGroupChat(getIt<MyService>(),
+                                              chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                                          Go.pushSlideAnim(context, GroupChatBuilder(
+                                            groupChatId: chatRoomId,
+                                          ));
+                                        },
+                                        child: Text(e.text, style: TextStyle(color: mainBlue)));
+                                  case TextType.user:
+                                    return GestureDetector(
+                                        onLongPress: () {
+                                          copyText(e.text);
+                                        },
+                                        onTap: () {
+                                          Go.pushSlideAnim(context, ProfileBuilder(username: e.text));
+                                        },
+                                        child: Text(e.text, style: TextStyle(color: mainBlue)));
+                                  default:return const SizedBox();
+                                }
+
+                              }).toList(),
+                            );
+                          },
+                        )
+                        // Text(widget.message.text ?? '',),
                       );
                     }
 

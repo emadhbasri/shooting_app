@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// 
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 
 import '../functions.dart';
 import '../models.dart';
@@ -73,7 +73,7 @@ class AuthenticationService {
       if (error is Map && error.containsKey('email')) {
         toast(error['email'].first);
       } else {
-        toast(error, duration: Toast.LENGTH_LONG);
+        toast(error, isLong: true);
       }
       return false;
     }
@@ -207,7 +207,7 @@ class AuthenticationService {
     if(back['status']==false){
       toast(back['error']);
     }
-    toast(back['data']['message'],duration: Toast.LENGTH_LONG);
+    toast(back['data']['message'],isLong: true);
     return back['status'];
   }
   static Future<bool> resetPassword(MyService service,String userName,
@@ -227,7 +227,7 @@ class AuthenticationService {
       toast(back['error']);
       return false;
     }
-    toast(back['data']['message'],duration: Toast.LENGTH_LONG);
+    toast(back['data']['message'],isLong: true);
     return back['status'];
   }
 

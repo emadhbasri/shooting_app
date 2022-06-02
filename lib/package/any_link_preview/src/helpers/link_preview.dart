@@ -295,7 +295,7 @@ class AnyLinkPreviewState extends State<AnyLinkPreview> {
               title: title!,
               description: desc!,
               imageUri: image!,
-              onTap: widget.onTap ?? () => widget.doIt(),
+              onTap: widget.onTap ?? () => _launchURL(widget.link),
               onLongPress: widget.onTap ?? () => widget.doIt(),
               titleTextStyle: widget.titleStyle,
               bodyTextStyle: widget.bodyStyle,

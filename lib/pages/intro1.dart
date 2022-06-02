@@ -1,5 +1,5 @@
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 

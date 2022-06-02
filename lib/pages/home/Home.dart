@@ -4,7 +4,7 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/home/mach/match_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
-import '../../main.dart';
+import '../../main1.dart';
 import 'fan_feeds.dart';
 import 'story/story_list.dart';
 

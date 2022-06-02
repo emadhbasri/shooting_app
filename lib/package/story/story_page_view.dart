@@ -7,7 +7,7 @@ import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../main.dart';
+import '../../main1.dart';
 import 'components/indicators.dart';
 import 'story_limit_controller.dart';
 import 'story_stack_controller.dart';

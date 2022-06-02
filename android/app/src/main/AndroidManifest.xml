@@ -48,7 +48,7 @@
             </intent-filter>
 
 
-
+            <!--TODO: Add this filter, if you want to support sharing text into your app-->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

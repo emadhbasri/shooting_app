@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main.dart';
+import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/ui_items/dialogs/choose_media_dialog.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
@@ -25,7 +29,7 @@ class _CreateGroupState extends State<CreateGroup> {
   void initState() {
     super.initState();
   }
-
+  XFile? file;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +67,34 @@ class _CreateGroupState extends State<CreateGroup> {
               width: double.maxFinite,
               child: Row(
                 children: [
-                  SizedBox(width: doubleWidth(4)),
+                  SizedBox(width: doubleWidth(2)),
+
+                  GestureDetector(
+                    onTap: ()async{
+                      file = await showDialog(context: context, builder: (context)=>
+                      ChooseMediaDialog(video: false,)
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: greenCall, width: 2),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: CircleAvatar(
+                        radius: doubleWidth(7),
+                        backgroundImage: file != null
+                            ? FileImage(File(file!.path))
+                            : null,
+                        child: file == null?CircleAvatar(
+                          radius: doubleWidth(4.5),
+                          backgroundColor: greenCall.withOpacity(0.4),
+                          child: Icon(Icons.camera_alt,
+                              color: greenCall, size: 20),
+                        ):const SizedBox(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: doubleWidth(2)),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
@@ -91,7 +122,11 @@ class _CreateGroupState extends State<CreateGroup> {
                       setState(() {
                         loading=true;
                       });
-                      String? backCreate = await ChatService.createGroupChat(service, name: textEditingController.value.text);
+                      String? backCreate = await
+                      ChatService.createGroupChat(service,
+                          name: textEditingController.value.text,
+                        image:file
+                      );
                       if(backCreate!=null){
                         for(int j=0;j<users.length;j++){
                           if(users[j].userName!=getIt<MainState>().userName){
