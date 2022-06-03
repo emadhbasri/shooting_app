@@ -9,7 +9,7 @@ import 'package:video_player/video_player.dart';
 import '../../classes/services/chat_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shot/shot.dart';
@@ -239,11 +239,10 @@ class _PostFromShotState extends State<PostFromShot> {
             return GestureDetector(
                 onTap: () async{
                   String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
-                  await ChatService.joinGroupChat(getIt<MyService>(),
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                       chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
-                  Go.pushSlideAnim(context, GroupChatBuilder(
-                    groupChatId: chatRoomId,
-                  ));
+                  if(back!=null)
+                    Go.pushSlideAnim(context, GroupChatBuilder(chatRoom: back));
                 },
                 child: Text(e.text, style: TextStyle(color: mainBlue)));
           case TextType.user:
@@ -789,11 +788,15 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
             return GestureDetector(
                 onTap: () async{
                   String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
-                  await ChatService.joinGroupChat(getIt<MyService>(),
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                       chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
-                  Go.pushSlideAnim(context, GroupChatBuilder(
-                    groupChatId: chatRoomId,
-                  ));
+                  if(back!=null) {
+                    await Go.pushSlideAnim(
+                        context,
+                        GroupChatBuilder(
+                          chatRoom: back,
+                        ));
+                  }
                 },
                 child: Text(e.text, style: TextStyle(color: mainBlue)));
           case TextType.user:

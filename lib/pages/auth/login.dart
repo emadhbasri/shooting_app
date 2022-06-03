@@ -7,7 +7,7 @@ import 'package:shooting_app/pages/auth/verify_otp.dart';
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/dataTypes.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../ui_items/dialogs/privacy.dart';
 import '../../ui_items/dialogs/team.dart';
 import 'register.dart';

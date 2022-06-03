@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 import '../models.dart';
 import 'my_service.dart';
 

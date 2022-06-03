@@ -6,7 +6,7 @@ import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_media_dialog.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';

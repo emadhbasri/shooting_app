@@ -3,7 +3,7 @@ import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../ui_items/dialogs/team.dart';
 import 'login.dart';
 

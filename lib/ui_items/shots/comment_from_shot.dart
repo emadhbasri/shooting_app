@@ -3,7 +3,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
 import '../gal.dart';

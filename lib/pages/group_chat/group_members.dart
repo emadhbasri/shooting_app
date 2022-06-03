@@ -2,7 +2,7 @@
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/states/chat_state.dart';
@@ -70,10 +70,10 @@ bool loadingImageSend=false;
                   }
                 }
                 if(!found){
-                  bool back = await ChatService.joinGroupChat(getIt<MyService>(),
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                       chatRoomId: state.selectedChat.id,
                       userId: user.id);
-                  if(back){
+                  if(back!=null){
                     state.selectedChat.personalInformations.add(user);
                   }
                 }

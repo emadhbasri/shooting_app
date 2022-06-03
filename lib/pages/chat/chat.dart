@@ -1,12 +1,9 @@
-import 'dart:io';
-
-
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
@@ -195,6 +192,7 @@ bool loadingImageSend=false;
                                   !.userName;
 
                           return ChatItem(
+                            state: state,
                             person: state.selectedChat.personalInformations[0]
                                 !,
                             message: state.chats[index],
@@ -208,6 +206,7 @@ bool loadingImageSend=false;
 
                         } else {
                           return ChatItem(
+                            state: state,
                             person: state.selectedChat.personalInformations[0]
                                 !,
                             message: state.chats[index],
@@ -326,11 +325,14 @@ class ChatItem extends StatefulWidget {
       {Key? key,
       required this.hasDate,
       required this.message,
-      required this.person})
+      required this.person,
+      required this.state,
+      })
       : super(key: key);
   final bool hasDate;
   final DataPersonalInformation person;
   final DataChatMessage message;
+  final ChatState state;
   @override
   _ChatItemState createState() => _ChatItemState();
 }
@@ -507,11 +509,18 @@ class _ChatItemState extends State<ChatItem> {
                                   return GestureDetector(
                                       onTap: () async{
                                         String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
-                                        await ChatService.joinGroupChat(getIt<MyService>(),
+                                        DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                                             chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
-                                        Go.pushSlideAnim(context, GroupChatBuilder(
-                                          groupChatId: chatRoomId,
-                                        ));
+                                        if(back!=null) {
+                                          DataChatRoom temp = widget.state.selectedChat;
+                                          await Go.pushSlideAnim(
+                                              context,
+                                              GroupChatBuilder(
+                                                chatRoom: back,
+                                              ));
+                                          widget.state.selectedChat=temp;
+                                          widget.state.notify();
+                                        }
                                       },
                                       child: Text(e.text, style: TextStyle(color: mainBlue)));
                                 case TextType.user:

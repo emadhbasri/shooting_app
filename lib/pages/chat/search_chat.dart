@@ -7,7 +7,7 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/services/user_service.dart';
 import '../../classes/states/chat_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import 'chat.dart';
 
 class SearchChat extends StatefulWidget {

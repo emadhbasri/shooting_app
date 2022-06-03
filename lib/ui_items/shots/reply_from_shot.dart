@@ -1,7 +1,7 @@
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
 import 'index.dart';

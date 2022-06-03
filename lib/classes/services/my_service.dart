@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';

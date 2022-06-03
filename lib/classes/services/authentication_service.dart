@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // 
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 
 import '../functions.dart';
 import '../models.dart';

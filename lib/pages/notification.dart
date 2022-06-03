@@ -6,7 +6,7 @@ import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/pages/shot/shot.dart';
 
 import '../classes/dataTypes.dart';
-import '../main1.dart';
+import '../main.dart';
 
 class MyNotification extends StatefulWidget {
   const MyNotification({Key? key}) : super(key: key);

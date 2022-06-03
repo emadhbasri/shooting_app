@@ -8,7 +8,7 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../group_chat/create_group.dart';
 import '../group_chat/group_chat.dart';
 

@@ -106,7 +106,7 @@ class ChatService{
     return convertData(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
   }
 
-  static Future<bool> joinGroupChat(MyService service,{//todo
+  static Future<DataChatRoom?> joinGroupChat(MyService service,{//todo
     required String chatRoomId,
     required String userId,
   }) async {
@@ -116,9 +116,9 @@ class ChatService{
     debugPrint('back joinGroupChat ${back}');
     if(back['status']==false){
       toast(back['error']);
-      return false;
+      return null;
     }
-    return true;
+    return convertData<DataChatRoom>(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
   }
 
   static Future<String?> createGroupChat(MyService service,{//todo

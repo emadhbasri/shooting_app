@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
-import 'package:shooting_app/main1.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../classes/dataTypes.dart';

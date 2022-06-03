@@ -7,7 +7,7 @@ import '../../classes/services/my_service.dart';
 import '../../classes/services/user_service.dart';
 import '../../classes/states/main_state.dart';
 import '../../classes/states/profile_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../ui_items/gal.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';

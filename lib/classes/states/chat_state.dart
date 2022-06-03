@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 
-import '../../main1.dart';
+import '../../main.dart';
 import '../services/chat_service.dart';
 
 class ChatState extends ChangeNotifier {
@@ -41,16 +41,15 @@ class ChatState extends ChangeNotifier {
     notifyListeners();
   }
 
-  getChats({String? groupChatId}) async {
-
+  getChats({DataChatRoom? chatRoom}) async {
+    if(chatRoom!=null)
+      selectedChat=chatRoom;
     if(selectedChat.chatType==1){
       chats = await ChatService.getPrivateChat(service, chatId: selectedChat.id);
       notifyListeners();
     }else{
       // this.selectedChat= await ChatService.getPrivateChat(service, chatId: groupChatId);
-      chats = await ChatService.getGroupChatMessages(service, chatId:
-      groupChatId??
-      selectedChat.id);
+      chats = await ChatService.getGroupChatMessages(service, chatId: selectedChat.id);
       notifyListeners();
     }
     // List<DataChatMessage> temps = await ChatService.getPrivateChat(service, chatId: selectedChat.id);

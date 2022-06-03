@@ -4,7 +4,7 @@ import '../../classes/functions.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import '../../ui_items/dialogs/privacy.dart';
 import '../../ui_items/dialogs/team.dart';
 

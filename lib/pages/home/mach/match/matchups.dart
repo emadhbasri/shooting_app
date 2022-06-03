@@ -5,7 +5,7 @@ import 'package:shooting_app/ui_items/shots/post_from_shot.dart';
 
 import '../../../../classes/functions.dart';
 import '../../../../classes/states/match_state.dart';
-import '../../../../main1.dart';
+import '../../../../main.dart';
 class MatchUps extends StatelessWidget {
   const MatchUps({Key? key}) : super(key: key);
 

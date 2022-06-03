@@ -5,7 +5,7 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/group_chat_state.dart';
-import '../../main1.dart';
+import '../../main.dart';
 import 'create_group.dart';
 import 'group_chat.dart';
 

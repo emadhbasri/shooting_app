@@ -9,7 +9,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../classes/models.dart';
 import '../../../../classes/services/my_service.dart';
-import '../../../../main1.dart';
+import '../../../../main.dart';
 import '../../domain/providers/notifiers/control_provider.dart';
 import '../../domain/providers/notifiers/draggable_widget_notifier.dart';
 import '../../domain/providers/notifiers/painting_notifier.dart';

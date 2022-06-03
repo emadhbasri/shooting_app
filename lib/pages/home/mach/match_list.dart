@@ -5,7 +5,7 @@ import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
-import '../../../main1.dart';
+import '../../../main.dart';
 import 'match/match.dart';
 
 class MatchList extends StatefulWidget {
