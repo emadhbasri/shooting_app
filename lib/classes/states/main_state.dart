@@ -8,12 +8,53 @@ import 'package:shooting_app/classes/states/match_state.dart';
 
 import '../../main.dart';
 import '../../pages/home/Home.dart';
+import '../../pages/profile/profile.dart';
+import '../../pages/shot/shot.dart';
+import '../functions.dart';
 import '../models.dart';
 import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';
 import 'package:soundpool/soundpool.dart';
 class MainState extends ChangeNotifier {
+  ///notification
+  String? notifKind;
+  String? notifData;
+
+  ///share in app
+  bool? isFile;
+  String? shareText;
+  String? shareFile;
+
+  BuildContext? appPageContext;
+  reciveNotif(String notifKind,String notifData)async{
+    print('state.notifData ${notifData}');
+    print('notifKind ${notifKind}');
+    if(appPageContext==null){
+      await Future.delayed(Duration(seconds: 2));
+      reciveNotif(notifKind,notifData);
+    } else{
+      await Future.delayed(Duration(seconds: 2));
+      if (notifData != null && notifKind != null) {
+        if (notifKind == 'User') {
+          Go.pushSlideAnim(appPageContext!,
+              ProfileBuilder(username: notifData!));
+          // notifKind=null;
+          // notifData=null;
+        } else if (notifKind == 'Shot') {
+          Go.pushSlideAnim(
+              appPageContext!,
+              Shot(
+                postId: notifData!,
+              ));
+          // notifKind=null;
+          // notifData=null;
+        }
+      }
+    }
+  }
+
+
   MyService service = getIt<MyService>();
   late ScrollController listController;
 

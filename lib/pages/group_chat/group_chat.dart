@@ -88,9 +88,13 @@ bool loadingImageSend=false;
                     decoration: BoxDecoration(
                       border: Border.all(width: 1,color: white),
                       borderRadius: BorderRadius.circular(100),
+                        image: state.selectedChat.roomPhoto==null?null:DecorationImage(
+                            fit: BoxFit.fill,
+                            image: networkImage(state.selectedChat.roomPhoto!)
+                        )
                     ),
                     // width: doubleWidth(10),
-                    child: Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
+                    child: state.selectedChat.roomPhoto!=null?null:Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
                         color: white,
                         fontSize: 17,
                         fontWeight: FontWeight.bold
@@ -496,6 +500,7 @@ class _ChatItemState extends State<ChatItem> {
                                       width: double.maxFinite,
                                       // height: 100,
                                       child: AnyLinkPreview(
+                                        key: Key('${widget.message.id}group'),
                                         link: e.text.trim(),
                                         doIt: () {
                                           popupkey.currentState!.showButtonMenu();

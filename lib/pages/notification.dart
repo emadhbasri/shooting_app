@@ -176,34 +176,29 @@ class _MyNotificationState extends State<MyNotification> {
                       ),
                     ),
                   ),
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        e.personalInformationViewModel.fullName ??
-                            '',
-                        style: TextStyle(
-                            color: black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: doubleWidth(3.5)),
-                      ),
-                      SizedBox(width: doubleWidth(1)),
-                      Text(
-                        e.notificationMessage ?? '',
-                        style: TextStyle(
-                            color: black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: doubleWidth(3)),
-                      ),
-                      // if (e.hasIcon) SizedBox(width: doubleWidth(1)),
-                      // if (e.hasIcon)
-                      //   SizedBox(
-                      //     width: 18,
-                      //     height: 18,
-                      //     child: Image.asset(e.icon!),
-                      //   ),
-                    ],
-                  ),
+                  title: RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:e.personalInformationViewModel.fullName ??
+                                '',
+                            style: TextStyle(
+                                color: black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: doubleWidth(3.5)),
+                          ),
+
+                          TextSpan(
+                            text:e.notificationMessage ?? '',
+                            style: TextStyle(
+                                color: black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: doubleWidth(3)),
+                          ),
+                      ])),
+
+
                   trailing: e.timeStamp == null
                       ? null
                       : Text(

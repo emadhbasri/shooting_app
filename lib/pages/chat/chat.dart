@@ -489,6 +489,7 @@ class _ChatItemState extends State<ChatItem> {
                                     width: double.maxFinite,
                                     // height: 100,
                                     child: AnyLinkPreview(
+                                      key: Key('${widget.message.id}chat'),
                                       link: e.text.trim(),
                                       doIt: () {
                                         popupkey.currentState!.showButtonMenu();

@@ -232,13 +232,13 @@ class GroupChatListItem extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(width: 1,color: Colors.black),
             borderRadius: BorderRadius.circular(100),
-            image: DecorationImage(
+            image: chat.roomPhoto==null?null:DecorationImage(
               fit: BoxFit.fill,
-              image: networkImage(chat.roomPhoto??'')
+              image: networkImage(chat.roomPhoto!)
             )
           ),
           // width: doubleWidth(10),
-          child: Center(child: Text(chat.name==null?'':chat.name![0],style: TextStyle(
+          child: chat.roomPhoto!=null?null:Center(child: Text(chat.name==null?'':chat.name![0],style: TextStyle(
               color: Colors.black,
               fontSize: 17,
               fontWeight: FontWeight.bold

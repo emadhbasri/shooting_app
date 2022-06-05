@@ -220,7 +220,7 @@ class _PostFromShotState extends State<PostFromShot> {
               width: double.maxFinite,
               // height: 100,
               child: AnyLinkPreview(
-                key: UniqueKey(),
+                key: Key('${widget.post.id}fanfeed'),
                 link: e.text.trim(),
                 doIt: () {},
                 displayDirection: UIDirection.uiDirectionHorizontal,
@@ -769,7 +769,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
               width: double.maxFinite,
               // height: 100,
               child: AnyLinkPreview(
-                key: UniqueKey(),
+                key: Key('${widget.post.id}profile'),
                 link: e.text.trim(),
                 doIt: () {},
                 displayDirection: UIDirection.uiDirectionHorizontal,

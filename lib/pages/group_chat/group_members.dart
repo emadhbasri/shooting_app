@@ -128,7 +128,7 @@ copyText('FootballBuzz_Group:${state.selectedChat.id}');
                                       )
                                     ),
                                     // width: doubleWidth(10),
-                                    child: Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
+                                    child: state.selectedChat.roomPhoto!=null?null:Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
                                         color: black,
                                         fontSize: 45,
                                         fontWeight: FontWeight.bold

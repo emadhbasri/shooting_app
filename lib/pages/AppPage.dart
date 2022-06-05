@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../classes/states/main_state.dart';
@@ -13,7 +14,9 @@ import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
 import 'my_profile/my_profile.dart';
 import 'notification.dart';
+import 'profile/profile.dart';
 import 'shoot/shoot.dart';
+import 'shot/shot.dart';
 
 class AppPageBuilder extends StatelessWidget {
   const AppPageBuilder({Key? key}) : super(key: key);
@@ -32,6 +35,11 @@ class AppPage extends StatefulWidget {
 }
 
 class _AppPageState extends State<AppPage> {
+
+
+
+
+
   handleText(String title){
 
     showDialog(
@@ -674,6 +682,33 @@ class _AppPageState extends State<AppPage> {
         ),
       ),
     );
+  }
+
+
+  @override
+  void didChangeDependencies() async{
+    super.didChangeDependencies();
+    print('didChangeDependencies');
+    MainState state = getIt<MainState>();
+    state.appPageContext=context;
+  }
+
+  @override
+  void didUpdateWidget(AppPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('didUpdateWidget');
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    print('active');
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    print('deactivate');
   }
 }
 

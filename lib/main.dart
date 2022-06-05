@@ -18,6 +18,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 import 'pages/intro1.dart';
+import 'pages/profile/profile.dart';
+import 'pages/shot/shot.dart';
 final getIt = GetIt.instance;
 
 
@@ -134,7 +136,21 @@ class AppFirst extends StatefulWidget {
 
 class _AppFirstState extends State<AppFirst> {
 
-
+  // testingSomeTing()async{
+  //   await Future.delayed(Duration(seconds: 5));
+  //   Map<String,String> data = {"kind": "Shot",
+  //     "data": "7b1d8fb4-06ae-4eba-e785-08da43328857",
+  //   };
+  //   Map<String,String> data1 = {"kind": "User",
+  //     "data": "emadbasri",
+  //   };
+  //   MainState state = getIt<MainState>();
+  //   state.reciveNotif(data1['kind']!, data1['data']!);
+  //   // state.notifKind=data1['kind'];
+  //   // state.notifData=data1['data'];
+  //
+  //   print('asdad');
+  // }
 
 
   String? _sharedText;
@@ -144,10 +160,7 @@ class _AppFirstState extends State<AppFirst> {
   void initState() {
     super.initState();
 
-
-// For sharing or opening urls/text coming from outside the app while the app is in the memory
-
-
+    // testingSomeTing();
 
     _requestPermissions();
 
