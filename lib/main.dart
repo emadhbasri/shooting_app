@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:shooting_app/ui_items/dialogs/choose_media_dialog.dart';
 
 import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
@@ -18,8 +19,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 import 'pages/intro1.dart';
-import 'pages/profile/profile.dart';
-import 'pages/shot/shot.dart';
+
+
+
+
+
 final getIt = GetIt.instance;
 
 
@@ -34,6 +38,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  
   GetIt.I.registerLazySingleton(() => MyService());
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
@@ -80,12 +85,102 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
+    onSelectNotification: (String? data){
+
+      if(data!=null){
+        Map dd = jsonDecode(data);
+        if(
+        dd.containsKey('Kind') && dd['Kind']!=null &&
+            dd.containsKey('Data') && dd['Data']!=null
+        ){
+          MainState state = getIt<MainState>();
+          state.reciveNotif(dd['Kind']!, dd['Data']!);
+        }
+      }
+    }
   );
+
+  // NotificationAppLaunchDetails? notificationAppLaunchDetails= await
+  // flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  // if(notificationAppLaunchDetails?.didNotificationLaunchApp ?? false){
+  //
+  // }
 
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late StreamSubscription _intentDataStreamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    MainState state = getIt<MainState>();
+    // For sharing images coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
+        .listen((List<SharedMediaFile> value) {
+          if(value.isNotEmpty)
+            state.receiveShare(sharedFiles: value);
+      setState(() {
+        if(value.isNotEmpty){
+          value.forEach((element) {
+            print("Shared: getMediaStream ${element.path}");
+          });
+        }
+      });
+    }, onError: (err) {
+      print("getIntentDataStream error: $err");
+    });
+
+    // For sharing images coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
+      if(value.isNotEmpty)
+        state.receiveShare(sharedFiles: value);
+      setState(() {
+        if(value.isNotEmpty){
+          value.forEach((element) {
+            print("Shared: getMediaStream ${element.path}");
+          });
+        }
+      });
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getTextStream().listen((String value) {
+          if(value!=''){
+            state.receiveShare(sharedText: value);
+          }
+          setState(() {
+            print("Shared: getTextStream $value");
+          });
+        }, onError: (err) {
+          print("getLinkStream error: $err");
+        });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String? value) {
+      if(value!='' && value!=null){
+        state.receiveShare(sharedText: value);
+      }
+      setState(() {
+        print("Shared: getInitialText $value");
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // _intentDataStreamSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -153,7 +248,6 @@ class _AppFirstState extends State<AppFirst> {
   // }
 
 
-  String? _sharedText;
 
 
   @override
@@ -165,7 +259,14 @@ class _AppFirstState extends State<AppFirst> {
     _requestPermissions();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('message come');
+      print('message come ${message.data.toString()}');
+      // if(
+      // message.data.containsKey('Kind') && message.data['Kind']!=null &&
+      //     message.data.containsKey('Data') && message.data['Data']!=null
+      // ){
+      //   MainState state = getIt<MainState>();
+      //   state.reciveNotif(message.data['Kind']!, message.data['Data']!);
+      // }
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
@@ -174,12 +275,19 @@ class _AppFirstState extends State<AppFirst> {
         print(
             'message.notification!.android!.channelId:${message.notification!.android!.channelId}');
         _showNotificationCustomSound(
-            notification.hashCode, notification.title!, notification.body!);
+            notification.hashCode, notification.title!, notification.body!,jsonEncode(message.data));
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('message come in');
+      print('message come in ${message.data}');
+      if(
+      message.data.containsKey('Kind') && message.data['Kind']!=null &&
+          message.data.containsKey('Data') && message.data['Data']!=null
+      ){
+        MainState state = getIt<MainState>();
+        state.reciveNotif(message.data['Kind']!, message.data['Data']!);
+      }
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
@@ -216,7 +324,7 @@ class _AppFirstState extends State<AppFirst> {
 }
 
 Future<void> _showNotificationCustomSound(
-    int id, String title, String body) async {
+    int id, String title, String body,String data) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
     'channel 1',
@@ -238,6 +346,6 @@ Future<void> _showNotificationCustomSound(
     id,
     title,
     body,
-    platformChannelSpecifics,
+    platformChannelSpecifics,payload: data
   );
 }

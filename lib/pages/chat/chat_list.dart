@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
-import 'package:shooting_app/pages/chat/search_chat.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
@@ -11,6 +10,7 @@ import '../../classes/states/main_state.dart';
 import '../../main.dart';
 import '../group_chat/create_group.dart';
 import '../group_chat/group_chat.dart';
+
 
 class ChatList extends StatefulWidget {
   const ChatList({Key? key}) : super(key: key);

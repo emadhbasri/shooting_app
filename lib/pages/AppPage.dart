@@ -7,16 +7,13 @@ import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
-import '../ui_items/dialogs/choose_media_dialog.dart';
 import 'chat/search_chat.dart';
 import 'home/Home.dart';
 import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
 import 'my_profile/my_profile.dart';
 import 'notification.dart';
-import 'profile/profile.dart';
 import 'shoot/shoot.dart';
-import 'shot/shot.dart';
 
 class AppPageBuilder extends StatelessWidget {
   const AppPageBuilder({Key? key}) : super(key: key);
@@ -37,19 +34,6 @@ class AppPage extends StatefulWidget {
 class _AppPageState extends State<AppPage> {
 
 
-
-
-
-  handleText(String title){
-
-    showDialog(
-        context: context,
-        builder: (contextD)=>ChooseMediaDialog(
-          title: title,
-        ));
-  }
-  late StreamSubscription _intentDataStreamSubscription;
-  late Stream streamUri;
   @override
   void initState() {
     super.initState();
@@ -87,12 +71,12 @@ class _AppPageState extends State<AppPage> {
     //   print("getTextStreamAsUri error: $err");
     // });
 
-    ReceiveSharingIntent.getInitialTextAsUri().then((Uri? value) {
-      if(value!=null){
-        handleText('getInitialTextAsUri');
-      }
-      print("getInitialTextAsUri: $value");
-    });
+    // ReceiveSharingIntent.getInitialTextAsUri().then((Uri? value) {
+    //   if(value!=null){
+    //     handleText('getInitialTextAsUri');
+    //   }
+    //   print("getInitialTextAsUri: $value");
+    // });
 
 
     // ReceiveSharingIntent.getTextStream().listen((String value) {

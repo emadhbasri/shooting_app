@@ -17,20 +17,21 @@ import '../../ui_items/gal.dart';
 import '../group_chat/group_chat.dart';
 
 class ChatBuilder extends StatelessWidget {
-  const ChatBuilder({Key? key, this.state}) : super(key: key);
+  const ChatBuilder({Key? key, this.state,this.sharedText}) : super(key: key);
   final ChatState? state;
+  final String? sharedText;
   @override
   Widget build(BuildContext context) {
     return ChatStateProvider(
-      child: Chat(),
+      child: Chat(sharedText: sharedText),
       state: state,
     );
   }
 }
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key}) : super(key: key);
-
+  const Chat({Key? key,this.sharedText}) : super(key: key);
+  final String? sharedText;
   @override
   _ChatState createState() => _ChatState();
 }
@@ -42,6 +43,9 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
+    if(widget.sharedText!=null){
+      controller=TextEditingController(text: widget.sharedText);
+    }
     state = Provider.of<ChatState>(context, listen: false);
     startTimer();
     state.getChats();
@@ -498,7 +502,7 @@ class _ChatItemState extends State<ChatItem> {
                                       cache: const Duration(seconds: 1),
                                       backgroundColor: Colors.white,
                                       boxShadow: [],
-                                      urlLaunchMode: LaunchMode.platformDefault,
+                                      urlLaunchMode: LaunchMode.externalApplication,
                                       errorWidget: Container(
                                         color: Colors.grey[300],
                                         child: const Text('Oops!'),

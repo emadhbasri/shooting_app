@@ -21,21 +21,23 @@ import '../../ui_items/dialogs/choose_media_dialog.dart';
 import '../../ui_items/gal.dart';
 
 class GroupChatBuilder extends StatelessWidget {
-  const GroupChatBuilder({Key? key, this.state,this.chatRoom}) : super(key: key);
+  const GroupChatBuilder({Key? key, this.state,this.chatRoom,this.sharedText}) : super(key: key);
   final ChatState? state;
   final DataChatRoom? chatRoom;
+  final String? sharedText;
   @override
   Widget build(BuildContext context) {
     return ChatStateProvider(
-      child: GroupChat(chatRoom: chatRoom),
+      child: GroupChat(chatRoom: chatRoom,sharedText: sharedText),
       state: state,
     );
   }
 }
 
 class GroupChat extends StatefulWidget {
-  const GroupChat({Key? key,this.chatRoom}) : super(key: key);
+  const GroupChat({Key? key,this.chatRoom,this.sharedText}) : super(key: key);
   final DataChatRoom? chatRoom;
+  final String? sharedText;
   @override
   _GroupChatState createState() => _GroupChatState();
 }
@@ -47,6 +49,9 @@ class _GroupChatState extends State<GroupChat> {
   @override
   void initState() {
     super.initState();
+    if(widget.sharedText!=null){
+      controller=TextEditingController(text: widget.sharedText);
+    }
     state = Provider.of<ChatState>(context, listen: false);
     startTimer();
 
@@ -61,7 +66,8 @@ class _GroupChatState extends State<GroupChat> {
     await Future.delayed(Duration(seconds: 2));
     return startTimer();
   }
-bool loadingImageSend=false;
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
@@ -231,13 +237,13 @@ bool loadingImageSend=false;
                               builder: (contextD)=>ChooseMediaDialog());
                           if (file==null) return;
                           setState(() {
-                            loadingImageSend=true;
+                            state.loadingImageSend=true;
                           });
                           await state.sendMessage(
                               file: file
                           );
                           setState(() {
-                            loadingImageSend=false;
+                            state.loadingImageSend=false;
                           });
                           state.notify();
                         },
@@ -247,7 +253,7 @@ bool loadingImageSend=false;
                             borderRadius: BorderRadius.circular(10),
                             color: greenCall,
                           ),
-                          child: loadingImageSend?simpleCircle():Icon(
+                          child: state.loadingImageSend?simpleCircle():Icon(
                             Icons.photo_library_rounded,
                             color: Colors.black,
                           ),
@@ -509,7 +515,7 @@ class _ChatItemState extends State<ChatItem> {
                                         cache: const Duration(seconds: 1),
                                         backgroundColor: Colors.white,
                                         boxShadow: [],
-                                        urlLaunchMode: LaunchMode.platformDefault,
+                                        urlLaunchMode: LaunchMode.externalApplication,
                                         errorWidget: Container(
                                           color: Colors.grey[300],
                                           child: const Text('Oops!'),

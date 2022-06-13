@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,7 +28,9 @@ class ShootBuilder extends StatelessWidget {
 }
 
 class Shoot extends StatefulWidget {
-  const Shoot({Key? key, this.matchId}) : super(key: key);
+  const Shoot({Key? key, this.matchId,this.sharedFiles,this.sharedText}) : super(key: key);
+  final List<SharedMediaFile>? sharedFiles;
+  final String? sharedText;
   final int? matchId;
   @override
   _ShootState createState() => _ShootState();
@@ -70,7 +74,8 @@ class _ShootState extends State<Shoot> {
       });
       print('back sendData $back');
       if (back != null) {
-        MainState state = Provider.of(context, listen: false);
+
+        MainState state = getIt<MainState>();
         if (widget.matchId == null) {
           state.allPosts.insert(0, back);
           state.personalInformation!.posts.insert(0, back);
@@ -81,9 +86,28 @@ class _ShootState extends State<Shoot> {
       }
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.sharedText!=null){
+      controller=TextEditingController(text: widget.sharedText);
+    }
+    if(widget.sharedFiles!=null){
+      for(int j=0;j<widget.sharedFiles!.length;j++){
+        if(widget.sharedFiles![j].type==SharedMediaType.IMAGE){
+          images.add(XFile(widget.sharedFiles![j].path,name: widget.sharedFiles![j].path));
+        }else if(widget.sharedFiles![j].type==SharedMediaType.VIDEO){
+          video=XFile(widget.sharedFiles![j].path,name: widget.sharedFiles![j].path);
+        }
+      }
+    }
+  }
+  GlobalKey<PopupMenuButtonState> _popupKey = GlobalKey<PopupMenuButtonState>();
 bool isInOtherPage=false;
   @override
   Widget build(BuildContext context) {
+
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,

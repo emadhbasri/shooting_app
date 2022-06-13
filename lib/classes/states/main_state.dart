@@ -1,14 +1,20 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
+import 'package:shooting_app/ui_items/dialogs/choose_chat.dart';
+import 'package:shooting_app/ui_items/dialogs/choose_sharing_way.dart';
 
 import '../../main.dart';
 import '../../pages/home/Home.dart';
 import '../../pages/profile/profile.dart';
+import '../../pages/shoot/shoot.dart';
 import '../../pages/shot/shot.dart';
 import '../functions.dart';
 import '../models.dart';
@@ -17,42 +23,58 @@ import '../services/user_service.dart';
 import 'chat_state.dart';
 import 'package:soundpool/soundpool.dart';
 class MainState extends ChangeNotifier {
-  ///notification
-  String? notifKind;
-  String? notifData;
 
   ///share in app
-  bool? isFile;
-  String? shareText;
-  String? shareFile;
+  receiveShare({List<SharedMediaFile>? sharedFiles,String? sharedText})async{
+    print('receiveShare');
+    print('sharedFiles $sharedFiles');
+    print('sharedText $sharedText');
+    if(appPageContext==null){
+      await Future.delayed(Duration(seconds: 1));
+      receiveShare(sharedFiles:sharedFiles,sharedText:sharedText);
+    } else if(sharedFiles!=null || sharedText!=null ){
+      await Future.delayed(Duration(seconds: 1));
+      String? way = await showDialog(context: appPageContext!, builder: (context)=>ChooseSharingWay());
+      print('way $way');
+      if(way!=null){
+        if(way=='chat'){
+          sharedFiles=sharedFiles;
+          sharedText=sharedText;
+          Go.push(appPageContext!, ChooseChatBuilder(sharedText: sharedText,sharedFiles: sharedFiles));
+          notifyListeners();
+        }else{
+          Go.push(appPageContext!, Shoot(sharedText: sharedText,sharedFiles: sharedFiles,));
+        }
+      }
+    }
+  }
 
   BuildContext? appPageContext;
   reciveNotif(String notifKind,String notifData)async{
     print('state.notifData ${notifData}');
     print('notifKind ${notifKind}');
     if(appPageContext==null){
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       reciveNotif(notifKind,notifData);
     } else{
-      await Future.delayed(Duration(seconds: 2));
-      if (notifData != null && notifKind != null) {
+      await Future.delayed(Duration(seconds: 1));
         if (notifKind == 'User') {
           Go.pushSlideAnim(appPageContext!,
-              ProfileBuilder(username: notifData!));
+              ProfileBuilder(username: notifData));
           // notifKind=null;
           // notifData=null;
         } else if (notifKind == 'Shot') {
           Go.pushSlideAnim(
               appPageContext!,
               Shot(
-                postId: notifData!,
+                postId: notifData,
               ));
           // notifKind=null;
           // notifData=null;
         }
-      }
     }
   }
+
 
 
   MyService service = getIt<MyService>();

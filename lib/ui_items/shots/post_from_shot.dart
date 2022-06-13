@@ -227,7 +227,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 cache: const Duration(seconds: 1),
                 backgroundColor: Colors.white,
                 boxShadow: [],
-                urlLaunchMode: LaunchMode.platformDefault,
+                urlLaunchMode: LaunchMode.externalApplication,
                 errorWidget: Container(
                   color: Colors.grey[300],
                   child: const Text('Oops!'),
@@ -776,7 +776,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 cache: const Duration(seconds: 1),
                 backgroundColor: Colors.white,
                 boxShadow: [],
-                urlLaunchMode: LaunchMode.platformDefault,
+                urlLaunchMode: LaunchMode.externalApplication,
                 errorWidget: Container(
                   color: Colors.grey[300],
                   child: const Text('Oops!'),

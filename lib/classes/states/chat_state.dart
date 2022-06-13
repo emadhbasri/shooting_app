@@ -8,6 +8,8 @@ import '../../main.dart';
 import '../services/chat_service.dart';
 
 class ChatState extends ChangeNotifier {
+  bool loadingImageSend=false;
+
   bool loadingListCaht = false;
   List<DataChatRoom> listChats = [];
   List<DataChatMessage> chats = [];
@@ -71,9 +73,16 @@ class ChatState extends ChangeNotifier {
 
 
   sendMessage({String? message, XFile? file}) async {
-    await ChatService.sendMessage(service,
-        chatRoomId: selectedChat.id, message: message, file: file);
-    getChats();
+    loadingImageSend=true;
+    notifyListeners();
+
+      await ChatService.sendMessage(service,
+          chatRoomId: selectedChat.id, message: message, file: file);
+      loadingImageSend=false;
+      notifyListeners();
+      getChats();
+
+
   }
 
   notify() => notifyListeners();
