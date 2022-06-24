@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:video_player/video_player.dart';
 
@@ -5,6 +6,7 @@ import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
+import '../../pages/shoot/search_user_mention.dart';
 import '../dialogs/dialog1.dart';
 import '../gal.dart';
 import 'index.dart';
@@ -50,7 +52,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
         widget.comment.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
-
+  bool isInOtherPage=false;
   bool loading = false;
   TextEditingController controllerT = TextEditingController();
   @override
@@ -171,7 +173,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
               ),
             ),
             sizeh(doubleHeight(1)),
-            convertHashtag(comment.comment ?? '', (e) {}),
+            convertHashtag(context,comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             if (widget.comment.mediaTypes.isNotEmpty)
               ClipRRect(
@@ -303,6 +305,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       Text(makeCount(comment.commentLikeCount)),
                     ],
                   ),
+                  if(widget.comment.personalInformationId ==
+                      getIt<MainState>().userId)
                   Tooltip(
                     message: 'remove the comment',
                     child: SizedBox(
@@ -334,10 +338,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             if (back) widget.delete();
                           }
                         },
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                       ),
                     ),
-                  )
+                  )else const SizedBox(width: 24,)
                 ],
               ),
             ),
@@ -362,6 +366,21 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 padding: EdgeInsets.only(left: doubleWidth(8)),
                 child: TextField(
                   controller: controllerT,
+                  onChanged: (e)async{
+                    if(isInOtherPage)return;
+                    if(e.endsWith('@')){
+                      isInOtherPage=true;
+                      DataPersonalInformation? userName = await Go.pushSlideAnim(context, SearchUserMention());
+                      controllerT.text=controllerT.value.text.substring(0,controllerT.value.text.length-1);
+                      if(userName!=null){
+                        String pp = '';
+                        if(!controllerT.value.text.endsWith(' '))
+                          pp=' ';
+                        controllerT.text=controllerT.value.text+pp+'@'+userName.userName+' ';
+                      }
+                      isInOtherPage=false;
+                    }
+                  },
                   decoration: InputDecoration(
                       hintStyle:
                           TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
@@ -569,7 +588,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
               ),
             ),
             sizeh(doubleHeight(1)),
-            convertHashtag(comment.comment ?? '', (e) {}),
+            convertHashtag(context,comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             if (widget.comment.mediaTypes.isNotEmpty)
               ClipRRect(
@@ -696,6 +715,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       Text(makeCount(comment.commentLikeCount))
                     ],
                   ),
+                  if(widget.comment.personalInformationId ==
+                      getIt<MainState>().userId)
                   Tooltip(
                     message: 'remove the comment',
                     child: SizedBox(
@@ -725,10 +746,11 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                             if (back) widget.delete();
                           }
                         },
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                       ),
                     ),
                   )
+                  else const SizedBox(width: 24,)
                 ],
               ),
             ),

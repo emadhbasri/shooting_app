@@ -68,9 +68,12 @@
     		<dict>
     			<key>CFBundleTypeRole</key>
     			<string>Editor</string>
+    			<key>CFBundleURLName</key>
+                <string>footballbuzz.co</string>
     			<key>CFBundleURLSchemes</key>
     			<array>
     				<string>ShareMedia</string>
+    				<string>footballbuzz</string>
     			</array>
     		</dict>
     		<dict/>

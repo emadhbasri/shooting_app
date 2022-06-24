@@ -36,7 +36,7 @@ class ChooseSharingWay extends StatelessWidget {
                 onTap: ()async{
                   Go.pop(context,'shot');
                 },
-                title: Text('Make New Shot'),
+                title: Text('SHARE IN POST'),
                 trailing: SizedBox(
                     width: 24,
                     height: 24,
@@ -52,7 +52,7 @@ class ChooseSharingWay extends StatelessWidget {
                 onTap: ()async{
                   Go.pop(context,'chat');
                 },
-                title: Text('Send to Group/Chat'),
+                title: Text('SHARE IN GROUP/CHAT'),
                 trailing: SizedBox(
                     width: 24,
                     height: 24,

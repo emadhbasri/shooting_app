@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
+import '../main.dart';
 import 'report_sheet.dart';
 
 class MyBottomSheet extends StatelessWidget {
@@ -25,6 +27,7 @@ class MyBottomSheet extends StatelessWidget {
               //   title: Text('Engagement'),
               //   subtitle: Text(post.engagement.toString()),
               // ),
+
               ListTile(
                 title: Text('Reach'),
                 subtitle: Text(post.reach.toString()),
@@ -45,6 +48,34 @@ class MyBottomSheet extends StatelessWidget {
                 title: Text('Profile Clicks'),
                 subtitle: Text(post.profileClicks.toString()),
               ),
+              if(post.person!=null && post.person!.userName==getIt<MainState>().userName)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                      width: double.maxFinite,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                        child: OutlinedButton(
+                          style: ButtonStyle(
+                              side: MaterialStateProperty.all(
+                                  BorderSide(color: mainBlue)),
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.symmetric(
+                                      vertical: doubleHeight(2.5)))),
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(color: mainBlue),
+                          ),
+                          onPressed: () {
+
+                          },
+                        ),
+                      )),
+                  SizedBox(height: doubleHeight(1)),
+                ],
+              ),
+
               SizedBox(
                   width: double.maxFinite,
                   child: Padding(

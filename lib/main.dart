@@ -20,10 +20,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'pages/intro1.dart';
 
-
-
-
-
 final getIt = GetIt.instance;
 
 
@@ -200,7 +196,9 @@ class _MyAppState extends State<MyApp> {
                   actionsIconTheme: IconThemeData(color: white),
                   iconTheme: IconThemeData(color: white),
                   color: mainBlue)),
-      home: AppFirst(),
+      home:
+      // UniLinksTest(),
+      AppFirst(),
     );
   }
 }

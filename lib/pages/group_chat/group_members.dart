@@ -1,4 +1,3 @@
-
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
@@ -47,7 +46,8 @@ class _GroupChatMemberState extends State<GroupChatMember> {
     await Future.delayed(Duration(seconds: 2));
     return startTimer();
   }
-bool loadingImageSend=false;
+
+  bool loadingImageSend = false;
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
@@ -59,26 +59,31 @@ bool loadingImageSend=false;
         },
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: ()async{
-              DataPersonalInformation? user= await Go.pushSlideAnim(context, SearchUserMention());
-              if(user!=null){
-                bool found=false;
-                for(int j=0;j<state.selectedChat.personalInformations.length;j++){
-                  if(user.userName==state.selectedChat.personalInformations[j]!.userName){
-                    found=true;
+            onPressed: () async {
+              DataPersonalInformation? user =
+                  await Go.pushSlideAnim(context, SearchUserMention());
+              if (user != null) {
+                bool found = false;
+                for (int j = 0;
+                    j < state.selectedChat.personalInformations.length;
+                    j++) {
+                  if (user.userName ==
+                      state.selectedChat.personalInformations[j]!.userName) {
+                    found = true;
                     break;
                   }
                 }
-                if(!found){
-                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                if (!found) {
+                  DataChatRoom? back = await ChatService.joinGroupChat(
+                      getIt<MyService>(),
                       chatRoomId: state.selectedChat.id,
                       userId: user.id);
-                  if(back!=null){
+                  if (back != null) {
                     state.selectedChat.personalInformations.add(user);
                   }
                 }
               }
-              },
+            },
             child: Icon(Icons.add),
             heroTag: '',
           ),
@@ -92,14 +97,13 @@ bool loadingImageSend=false;
                 itemBuilder: (context) => [
                   PopupMenuItem(
                       onTap: () async {
-copyText('FootballBuzz_Group:${state.selectedChat.id}');
+                        copyText('footballbuzz://JoinChat/${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
                 ],
               )
             ],
           ),
-
           body: SafeArea(
             child: Column(
               children: [
@@ -120,19 +124,28 @@ copyText('FootballBuzz_Group:${state.selectedChat.id}');
                                   aspectRatio: 1,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      border: Border.all(width: 2,color: black),
-                                      borderRadius: BorderRadius.circular(100),
-                                      image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: networkImage(state.selectedChat.roomPhoto??'')
-                                      )
-                                    ),
+                                        border:
+                                            Border.all(width: 2, color: black),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: networkImage(
+                                                state.selectedChat.roomPhoto ??
+                                                    ''))),
                                     // width: doubleWidth(10),
-                                    child: state.selectedChat.roomPhoto!=null?null:Center(child: Text(state.selectedChat.name==null?'':state.selectedChat.name![0],style: TextStyle(
-                                        color: black,
-                                        fontSize: 45,
-                                        fontWeight: FontWeight.bold
-                                    ),)),
+                                    child: state.selectedChat.roomPhoto != null
+                                        ? null
+                                        : Center(
+                                            child: Text(
+                                            state.selectedChat.name == null
+                                                ? ''
+                                                : state.selectedChat.name![0],
+                                            style: TextStyle(
+                                                color: black,
+                                                fontSize: 45,
+                                                fontWeight: FontWeight.bold),
+                                          )),
                                   ),
                                 )),
                             SizedBox(height: doubleHeight(1)),
@@ -148,25 +161,28 @@ copyText('FootballBuzz_Group:${state.selectedChat.id}');
                   ),
                 ),
                 SizedBox(height: doubleHeight(2)),
-                Expanded(
-                    child: Builder(
-                      builder: (context) {
-                          return ListView.separated(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: doubleWidth(5), vertical: doubleHeight(2)),
-                              itemCount: state.selectedChat.personalInformations.length,
-                              separatorBuilder: (_,__)=>SizedBox(height: doubleHeight(1)),
-                              itemBuilder: (_,index)=>
-                              state.selectedChat.personalInformations[index]==null?
-                              const SizedBox():
-                              UserItem(
-                                key: UniqueKey(),
-                                user: state.selectedChat.personalInformations[index]!,
-                                hasFollowBtn: false,
-                              ),
-                          );
-                      },
-                    ))
+                Expanded(child: Builder(
+                  builder: (context) {
+                    return ListView.separated(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: doubleWidth(5),
+                          vertical: doubleHeight(2)),
+                      itemCount: state.selectedChat.personalInformations.length,
+                      separatorBuilder: (_, __) =>
+                          SizedBox(height: doubleHeight(1)),
+                      itemBuilder: (_, index) =>
+                          state.selectedChat.personalInformations[index] == null
+                              ? const SizedBox()
+                              : UserItem(
+                                  key: UniqueKey(),
+                                  user: state.selectedChat
+                                      .personalInformations[index]!,
+                                  hasFollowBtn: false,
+                            hasStartChatBtn: true,
+                                ),
+                    );
+                  },
+                ))
               ],
             ),
           ),
@@ -175,8 +191,3 @@ copyText('FootballBuzz_Group:${state.selectedChat.id}');
     });
   }
 }
-
-
-
-
-

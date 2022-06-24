@@ -188,7 +188,13 @@ class _MyNotificationState extends State<MyNotification> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: doubleWidth(3.5)),
                           ),
-
+                          TextSpan(
+                            text:' ',
+                            style: TextStyle(
+                                color: black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: doubleWidth(3)),
+                          ),
                           TextSpan(
                             text:e.notificationMessage ?? '',
                             style: TextStyle(

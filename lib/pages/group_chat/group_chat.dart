@@ -123,7 +123,7 @@ class _GroupChatState extends State<GroupChat> {
                 itemBuilder: (context) => [
                   PopupMenuItem(
                       onTap: () async {
-                        copyText('FootballBuzz_Group:${state.selectedChat.id}');
+                        copyText('footballbuzz://JoinChat/${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
                 ],
@@ -526,7 +526,7 @@ class _ChatItemState extends State<ChatItem> {
                                   case TextType.groupLink:
                                     return GestureDetector(
                                         onTap: () async{
-                                          String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                                          String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
                                           DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                                               chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                                           if(back!=null) {

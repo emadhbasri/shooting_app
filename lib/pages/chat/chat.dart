@@ -513,7 +513,7 @@ class _ChatItemState extends State<ChatItem> {
                                 case TextType.groupLink:
                                   return GestureDetector(
                                       onTap: () async{
-                                        String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                                        String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
                                         DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                                             chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                                         if(back!=null) {

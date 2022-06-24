@@ -15,8 +15,9 @@ import '../../classes/dataTypes.dart';
 
 
 class ShootComment extends StatefulWidget {
-  const ShootComment({Key? key,required this.postId}) : super(key: key);
+  const ShootComment({Key? key,required this.postId,this.comment}) : super(key: key);
   final String postId;
+  final DataPostComment? comment;
   @override
   _ShootCommentState createState() => _ShootCommentState();
 }
@@ -64,6 +65,19 @@ class _ShootCommentState extends State<ShootComment> {
     }
   }
 bool isInOtherPage=false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.comment!=null){
+      controller=TextEditingController(text: widget.comment!.comment);
+      if(widget.comment!.mediaTypes.first.media.contains('video/upload')){
+        
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -130,7 +144,7 @@ bool isInOtherPage=false;
                                   if(isInOtherPage)return;
                                   if(e.endsWith('@')){
                                     isInOtherPage=true;
-                                    String? userName = await Go.pushSlideAnim(context, SearchUserMention());
+                                    DataPersonalInformation? userName = await Go.pushSlideAnim(context, SearchUserMention());
                                     print('controller.value.text ${controller.value.text}');
                                     controller.text=controller.value.text.substring(0,controller.value.text.length-1);
                                     print('controller.value.subText ${controller.value.text}');
@@ -139,7 +153,7 @@ bool isInOtherPage=false;
                                       String pp = '';
                                       if(!controller.value.text.endsWith(' '))
                                         pp=' ';
-                                      controller.text=controller.value.text+pp+'@'+userName+' ';
+                                      controller.text=controller.value.text+pp+'@'+userName.userName+' ';
                                     }
                                     isInOtherPage=false;
                                   }

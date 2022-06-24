@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
@@ -34,6 +36,7 @@ class _CommentReplyState extends State<CommentReply> {
         // decoration: BoxDecoration(
         //     border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -145,7 +148,8 @@ class _CommentReplyState extends State<CommentReply> {
             ),
             // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
-            convertHashtag(reply.replyDetail ?? '', (e) {}),
+            // Text(reply.replyDetail??''),
+            convertHashtag(context,reply.replyDetail ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -197,6 +201,8 @@ class _CommentReplyState extends State<CommentReply> {
                       Text(makeCount(reply.replyLikeCount)),
                     ],
                   ),
+                  if(widget.reply.personalInformationId ==
+                      getIt<MainState>().userId)
                   Tooltip(
                     message: 'remove the reply',
                     child: SizedBox(
@@ -225,10 +231,10 @@ class _CommentReplyState extends State<CommentReply> {
                             if (back) widget.delete();
                           }
                         },
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                       ),
                     ),
-                  )
+                  )else const SizedBox(width: 24,)
                 ],
               ),
             ),

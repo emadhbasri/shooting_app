@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/group_chat/group_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
@@ -25,6 +26,7 @@ class PostFromShot extends StatefulWidget {
       required this.onTapTag})
       : super(key: key);
   final DataPost post;
+
   final VoidCallback delete;
   final Function(BuildContext, String, bool) onTapTag;
   final bool canTouch;
@@ -80,7 +82,16 @@ class _PostFromShotState extends State<PostFromShot> {
   //     }).toList(),
   //   );
   // }
-  Widget _convertHashtag(context, String text) {
+  Widget _convertHashtag(context, String text,{double? fontSize}) {
+
+    if(
+        !text.contains('@') &&
+        !text.contains('http://') &&
+        !text.contains('https://') &&
+        !text.contains('footballbuzz://JoinChat/')
+    )
+      return Text(text,style: TextStyle(fontSize: fontSize),);
+    ///
     // List<String> split = text.split(' ');
     //
     // List<Widget> out = [];
@@ -208,13 +219,14 @@ class _PostFromShotState extends State<PostFromShot> {
       spacing: 3,
       runSpacing: 3,
       children: makeText(text).map((e) {
+        // return Text(e.text);
         switch(e.type){
           case TextType.text:
             return GestureDetector(
                 onLongPress: () {
                   copyText(e.text);
                 },
-                child: Text(e.text, style: TextStyle(color: black)));
+                child: Text(e.text, style: TextStyle(color: black,fontSize: fontSize)));
           case TextType.link:
             return SizedBox(
               width: double.maxFinite,
@@ -238,13 +250,13 @@ class _PostFromShotState extends State<PostFromShot> {
           case TextType.groupLink:
             return GestureDetector(
                 onTap: () async{
-                  String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                  String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
                   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                       chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                   if(back!=null)
                     Go.pushSlideAnim(context, GroupChatBuilder(chatRoom: back));
                 },
-                child: Text(e.text, style: TextStyle(color: mainBlue)));
+                child: Text(e.text, style: TextStyle(color: mainBlue,fontSize: fontSize)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
@@ -253,7 +265,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 onTap: () {
                   widget.onTapTag(context, e.text, true);
                 },
-                child: Text(e.text, style: TextStyle(color: mainBlue)));
+                child: Text(e.text, style: TextStyle(color: mainBlue,fontSize: fontSize)));
           default:return const SizedBox();
         }
 
@@ -387,8 +399,8 @@ class _PostFromShotState extends State<PostFromShot> {
                 );
               }),
               subtitle: Builder(builder: (context) {
-                if (person != null && person!.fullName != null)
-                  return Text('@${person!.fullName!}',
+                if (person != null)
+                  return Text('@${person!.userName}',
                       style: TextStyle(
                           color: grayCall,
                           fontWeight: FontWeight.bold,
@@ -440,7 +452,8 @@ class _PostFromShotState extends State<PostFromShot> {
               dense: true,
               minVerticalPadding: 0,
               contentPadding: EdgeInsets.zero,
-              title: _convertHashtag(context, widget.post.details ?? ''),
+              title: _convertHashtag(context, widget.post.details ?? '',
+                  fontSize: widget.canTouch==false?19:null),
             ),
             sizeh(doubleHeight(1)),
             if (widget.post.mediaTypes.isNotEmpty)
@@ -624,7 +637,7 @@ class _PostFromShotState extends State<PostFromShot> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )
@@ -664,92 +677,13 @@ class PostFromShotProfile extends StatefulWidget {
 
 class _PostFromShotProfileState extends State<PostFromShotProfile> {
   Widget _convertHashtag(context, String text) {
-    // List<String> split = text.split(' ');
-    //
-    // List<Widget> out = [];
-    // split.forEach((e) {
-    //   if (e.trim().contains('\n')) {
-    //     List<String> split1 = e.split('\n');
-    //     if (split1.isNotEmpty)
-    //       split1.forEach((String f) {
-    //         print('ff: $f ${f.length}');
-    //         if (f.length == 0) {
-    //           out.add(Text(''));
-    //         } else {
-    //           if (f[0] == '@') {
-    //             out.add(GestureDetector(
-    //                 onLongPress: () {
-    //                   copyText(text);
-    //                 },
-    //                 onTap: () {
-    //                   widget.onTapTag(context, f, true);
-    //                 },
-    //                 child: Text(f, style: TextStyle(color: mainBlue))));
-    //           } else if (f.contains('http://') || f.contains('https://')) {
-    //             out.add(SizedBox(
-    //               width: double.maxFinite,
-    //               // height: 100,
-    //               child: AnyLinkPreview(
-    //                 key: UniqueKey(), doIt: () {},
-    //                 link: f.trim(),
-    //                 displayDirection: UIDirection.uiDirectionHorizontal,
-    //                 cache: const Duration(seconds: 1),
-    //                 backgroundColor: Colors.white,
-    //                 boxShadow: [],
-    //                 urlLaunchMode: LaunchMode.platformDefault,
-    //                 errorWidget: Container(
-    //                   color: Colors.grey[300],
-    //                   child: const Text('Oops!'),
-    //                 ),
-    //                 // errorImage: _errorImage,
-    //               ),
-    //             ));
-    //             //
-    //             // return GestureDetector(
-    //             //     onLongPress: () {
-    //             //       copyText(text);
-    //             //     },
-    //             //     onTap: () {
-    //             //       openUrl(e);
-    //             //     },
-    //             //     child: Text(e, style: TextStyle(color: mainBlue)));
-    //           } else {
-    //             out.add(GestureDetector(
-    //                 onLongPress: () {
-    //                   copyText(text);
-    //                 },
-    //                 child: Text(f, style: TextStyle(color: black))));
-    //           }
-    //         }
-    //       });
-    //   } else {
-    //     if (e.length == 0) {
-    //       out.add(Text(''));
-    //     } else {
-    //       if (e[0] == '@') {
-    //         out.add();
-    //       } else if (e.contains('http://') || e.contains('https://')) {
-    //         out.add();
-    //         //
-    //         // return GestureDetector(
-    //         //     onLongPress: () {
-    //         //       copyText(text);
-    //         //     },
-    //         //     onTap: () {
-    //         //       openUrl(e);
-    //         //     },
-    //         //     child: Text(e, style: TextStyle(color: mainBlue)));
-    //       } else {
-    //         out.add(GestureDetector(
-    //             onLongPress: () {
-    //               copyText(text);
-    //             },
-    //             child: Text(e, style: TextStyle(color: black))));
-    //       }
-    //     }
-    //   }
-    // });
-
+    if(
+    !text.contains('@') &&
+        !text.contains('http://') &&
+        !text.contains('https://') &&
+        !text.contains('footballbuzz://JoinChat/')
+    )
+      return Text(text);
     return Wrap(
       alignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
@@ -787,7 +721,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
           case TextType.groupLink:
             return GestureDetector(
                 onTap: () async{
-                  String chatRoomId = e.text.replaceAll('FootballBuzz_Group:', '');
+                  String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
                   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                       chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                   if(back!=null) {
@@ -1170,7 +1104,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )
@@ -1207,53 +1141,124 @@ class PostFromMatch extends StatefulWidget {
 }
 
 class _PostFromMatchState extends State<PostFromMatch> {
+  // Widget _convertHashtag(context, String text) {
+  //   List<String> split = text.split(' ');
+  //   return Wrap(
+  //     alignment: WrapAlignment.start,
+  //     crossAxisAlignment: WrapCrossAlignment.start,
+  //     runAlignment: WrapAlignment.start,
+  //     spacing: 3,
+  //     children: split.map((e) {
+  //       if (e.length == 0) return Text('');
+  //       // if (e[0] == '#') {
+  //       //   return GestureDetector(onLongPress: (){
+  //       //     copyText(text);
+  //       //   },
+  //       //       onTap: () {
+  //       //         widget.onTapTag(context, e, false);
+  //       //       },
+  //       //       child: Text(e, style: TextStyle(color: mainBlue)));
+  //       // } else
+  //       if (e[0] == '@') {
+  //         return GestureDetector(
+  //             onLongPress: () {
+  //               copyText(text);
+  //             },
+  //             onTap: () {
+  //               widget.onTapTag(context, e, true);
+  //             },
+  //             child: Text(e, style: TextStyle(color: mainBlue)));
+  //       } else if (e.startsWith('http')) {
+  //         return GestureDetector(
+  //             onLongPress: () {
+  //               copyText(text);
+  //             },
+  //             onTap: () {
+  //               openUrl(e);
+  //             },
+  //             child: Text(e, style: TextStyle(color: mainBlue)));
+  //       } else {
+  //         return GestureDetector(
+  //             onLongPress: () {
+  //               copyText(text);
+  //             },
+  //             child: Text(e, style: TextStyle(color: black)));
+  //       }
+  //     }).toList(),
+  //   );
+  // }
   Widget _convertHashtag(context, String text) {
-    List<String> split = text.split(' ');
+    if(
+    !text.contains('@') &&
+        !text.contains('http://') &&
+        !text.contains('https://') &&
+        !text.contains('footballbuzz://JoinChat/')
+    )
+      return Text(text);
     return Wrap(
       alignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
       runAlignment: WrapAlignment.start,
       spacing: 3,
-      children: split.map((e) {
-        if (e.length == 0) return Text('');
-        // if (e[0] == '#') {
-        //   return GestureDetector(onLongPress: (){
-        //     copyText(text);
-        //   },
-        //       onTap: () {
-        //         widget.onTapTag(context, e, false);
-        //       },
-        //       child: Text(e, style: TextStyle(color: mainBlue)));
-        // } else
-        if (e[0] == '@') {
-          return GestureDetector(
-              onLongPress: () {
-                copyText(text);
-              },
-              onTap: () {
-                widget.onTapTag(context, e, true);
-              },
-              child: Text(e, style: TextStyle(color: mainBlue)));
-        } else if (e.startsWith('http')) {
-          return GestureDetector(
-              onLongPress: () {
-                copyText(text);
-              },
-              onTap: () {
-                openUrl(e);
-              },
-              child: Text(e, style: TextStyle(color: mainBlue)));
-        } else {
-          return GestureDetector(
-              onLongPress: () {
-                copyText(text);
-              },
-              child: Text(e, style: TextStyle(color: black)));
+      runSpacing: 3,
+      children: makeText(text).map((e) {
+        switch(e.type){
+          case TextType.text:
+            return GestureDetector(
+                onLongPress: () {
+                  copyText(e.text);
+                },
+                child: Text(e.text, style: TextStyle(color: black)));
+          case TextType.link:
+            return SizedBox(
+              width: double.maxFinite,
+              // height: 100,
+              child: AnyLinkPreview(
+                key: Key('${widget.post.id}profile'),
+                link: e.text.trim(),
+                doIt: () {},
+                displayDirection: UIDirection.uiDirectionHorizontal,
+                cache: const Duration(seconds: 1),
+                backgroundColor: Colors.white,
+                boxShadow: [],
+                urlLaunchMode: LaunchMode.externalApplication,
+                errorWidget: Container(
+                  color: Colors.grey[300],
+                  child: const Text('Oops!'),
+                ),
+                // errorImage: _errorImage,
+              ),
+            );
+          case TextType.groupLink:
+            return GestureDetector(
+                onTap: () async{
+                  String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                  if(back!=null) {
+                    await Go.pushSlideAnim(
+                        context,
+                        GroupChatBuilder(
+                          chatRoom: back,
+                        ));
+                  }
+                },
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          case TextType.user:
+            return GestureDetector(
+                onLongPress: () {
+                  copyText(text);
+                },
+                onTap: () {
+                  widget.onTapTag(context, e.text, true);
+                },
+                child: Text(e.text, style: TextStyle(color: mainBlue)));
+          default:return const SizedBox();
         }
+
       }).toList(),
     );
   }
-
   late DataPost post;
   DataPersonalInformationViewModel? person;
   late VideoPlayerController controller;
@@ -1391,8 +1396,8 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 );
               }),
               subtitle: Builder(builder: (context) {
-                if (person != null && person!.fullName != null)
-                  return Text('@${person!.fullName!}',
+                if (person != null)
+                  return Text('@${person!.userName}',
                       style: TextStyle(
                           color: grayCall,
                           fontWeight: FontWeight.bold,
@@ -1617,7 +1622,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(Icons.remove_circle_outline),
+                        child: Icon(CupertinoIcons.trash_fill),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )

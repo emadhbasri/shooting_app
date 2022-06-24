@@ -1,19 +1,24 @@
 import 'dart:async';
 
 import 'package:provider/provider.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
+import 'package:uni_links/uni_links.dart';
+import '../classes/services/chat_service.dart';
+import '../classes/services/my_service.dart';
 import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
 import 'chat/search_chat.dart';
+import 'group_chat/group_chat.dart';
 import 'home/Home.dart';
 import 'home/search_user.dart';
 import 'my_profile/edit_profile/settings.dart';
 import 'my_profile/my_profile.dart';
 import 'notification.dart';
+import 'profile/profile.dart';
 import 'shoot/shoot.dart';
+import 'shot/shot.dart';
 
 class AppPageBuilder extends StatelessWidget {
   const AppPageBuilder({Key? key}) : super(key: key);
@@ -33,166 +38,63 @@ class AppPage extends StatefulWidget {
 
 class _AppPageState extends State<AppPage> {
 
-
   @override
   void initState() {
     super.initState();
     statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
     state.getProfile();
-
-
-    // _intentDataStreamSubscription=
-    // ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
-    //   handleText('getMediaStream');
-    //   print("getMediaStream: $value");
-    // }, onError: (err) {
-    //   print("getMediaStream error: $err");
-    // });
-
-    // ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
-    //   handleText('getInitialMedia');
-    //   print("getInitialMedia: $value");
-    // });
-
-    // streamUri=
-    // ReceiveSharingIntent.getTextStreamAsUri();
-    // streamUri.listen((event) {
-    //   print('event $event');
-    // });
-        // .listen((Uri value) {
-      //   handleText('getTextStreamAsUri');
-      //   print("getTextStreamAsUri: $value");
-    // });
-    //     .listen((Uri value) {
-    //   handleText('getTextStreamAsUri');
-    //   print("getTextStreamAsUri: $value");
-    // }, onError: (err) {
-    //   print("getTextStreamAsUri error: $err");
-    // });
-
-    // ReceiveSharingIntent.getInitialTextAsUri().then((Uri? value) {
-    //   if(value!=null){
-    //     handleText('getInitialTextAsUri');
-    //   }
-    //   print("getInitialTextAsUri: $value");
-    // });
-
-
-    // ReceiveSharingIntent.getTextStream().listen((String value) {
-    //   handleText('getTextStream');
-    //   print("getTextStream: $value");
-    // }, onError: (err) {
-    //   print("getTextStream error: $err");
-    // });
-
-    // ReceiveSharingIntent.getInitialText().then((String? value) {
-    //   if(value!=null){
-    //     handleText('getInitialText');
-    //   }
-    //   print("getInitialText: $value");
-    // });
+    _handleIncomingLinks(context);
 
   }
+  void _handleIncomingLinks(context) {
+    StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
+      if (!mounted) return;
+      if(uri!=null){
+        // footballbuzz://Shot/asd
+        // footballbuzz://JoinChat/asd
+        // footballbuzz://User/asd
+        print('''
+            uri $uri
+            ${uri.path}
+            ${uri.host}
+            ${uri.queryParameters}
+            ${uri.queryParametersAll}
+            ${uri.query}
+            
+            ''');
+        String data = uri.path.replaceAll('/', '');
+        if(uri.host=='shot'){
+          Go.pushSlideAnim(
+              context,
+              Shot(
+                postId: data,
+              ));
+        }else if(uri.host=='user'){
+          Go.pushSlideAnim(context,
+              ProfileBuilder(username: data));
+        }else if(uri.host=='joinchat'){
+          DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+              chatRoomId: data, userId: getIt<MainState>().userId);
+          print('back $back');
+          if(back!=null) {
+            await Go.pushSlideAnim(
+                context,
+                GroupChatBuilder(
+                  chatRoom: back,
+                ));
+          }
+        }
 
+      }
+
+    }, onError: (Object err) {
+      if (!mounted) return;
+      print('error uri $err');
+    });
+  }
   int currentIndex = 0;
   int subIndex = 1;
-
-  // outButtonClick(Widget widget) {
-  //   if (buttonClick) {
-  //     return Stack(
-  //       children: [
-  //         widget,
-  //         GestureDetector(
-  //           onTap: () {
-  //             setState(() {
-  //               buttonClick = false;
-  //             });
-  //           },
-  //           child: Container(
-  //             width: double.maxFinite,
-  //             color: Colors.black.withOpacity(0.5),
-  //             alignment: Alignment.bottomCenter,
-  //             child: Row(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: [
-  //                     Container(
-  //                       decoration: BoxDecoration(
-  //                         color: greenCall,
-  //                         boxShadow: [
-  //                           BoxShadow(
-  //                               color: Colors.white,
-  //                               blurRadius: 44,
-  //                               spreadRadius: 0,
-  //                               offset: Offset(0, 4))
-  //                         ],
-  //                         borderRadius: BorderRadius.circular(100),
-  //                       ),
-  //                       width: doubleWidth(12),
-  //                       height: doubleWidth(12),
-  //                       padding: EdgeInsets.all(doubleWidth(2.5)),
-  //                       child: Image.asset('assets/images/live-stream.png'),
-  //                     ),
-  //                     SizedBox(height: doubleHeight(1)),
-  //                     Text(
-  //                       'Go live',
-  //                       style: TextStyle(
-  //                           color: Colors.white, fontWeight: FontWeight.bold),
-  //                     ),
-  //                     SizedBox(height: doubleHeight(1)),
-  //                   ],
-  //                 ),
-  //                 SizedBox(width: doubleWidth(15)),
-  //                 Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: [
-  //                     GestureDetector(
-  //                       onTap: () {
-  //                         MainState mainS = getIt<MainState>();
-  //                         print(
-  //                             'shoot Go ${mainS.match} ${mainS.isOnMatchPage}');
-  //                         // if(mainS.match!=null && mainS.isOnMatchPage)
-  //                         Go.pushSlideAnimSheet(context, Shoot());
-  //                       },
-  //                       child: Container(
-  //                         decoration: BoxDecoration(
-  //                           color: greenCall,
-  //                           boxShadow: [
-  //                             BoxShadow(
-  //                                 color: Colors.white,
-  //                                 blurRadius: 44,
-  //                                 spreadRadius: 0,
-  //                                 offset: Offset(0, 4))
-  //                           ],
-  //                           borderRadius: BorderRadius.circular(100),
-  //                         ),
-  //                         width: doubleWidth(12),
-  //                         height: doubleWidth(12),
-  //                         padding: EdgeInsets.all(doubleWidth(2)),
-  //                         child: Image.asset('assets/images/football.png'),
-  //                       ),
-  //                     ),
-  //                     SizedBox(height: doubleHeight(1)),
-  //                     Text('Shoot',
-  //                         style: TextStyle(
-  //                             color: Colors.white,
-  //                             fontWeight: FontWeight.bold)),
-  //                     SizedBox(height: doubleHeight(1)),
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         )
-  //       ],
-  //     );
-  //   } else {
-  //     return widget;
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -677,23 +579,6 @@ class _AppPageState extends State<AppPage> {
     state.appPageContext=context;
   }
 
-  @override
-  void didUpdateWidget(AppPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print('didUpdateWidget');
-  }
-
-  @override
-  void activate() {
-    super.activate();
-    print('active');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    print('deactivate');
-  }
 }
 
 class Ball extends StatefulWidget {

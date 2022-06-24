@@ -7,9 +7,17 @@ export '../../classes/functions.dart';
 export '../../classes/models.dart';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 export 'package:flutter/material.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
+import '../../classes/models.dart';
+import '../../classes/services/chat_service.dart';
+import '../../classes/services/my_service.dart';
+import '../../classes/states/main_state.dart';
+import '../../main.dart';
+import '../../package/any_link_preview/src/helpers/link_preview.dart';
+import '../../pages/group_chat/group_chat.dart';
 export '../../classes/dataTypes.dart';
 
 String? hasUrl(String text){
@@ -22,78 +30,74 @@ String? hasUrl(String text){
   return null;
 }
 
-Widget convertHashtag(String text, Function(String) onTapTag) {
-  List<String> split = text.split(' ');
-  // List<String> split = text.split('#');
-  // List<String> hashtags = split.getRange(1, split.length).fold([], (t, e) {
-  //   var texts = e.split(" ");
-  //   if (texts.length > 1) {
-  //     return List.from(t)
-  //       ..addAll(["#${texts.first}", "${e.substring(texts.first.length)}"]);
-  //   }
-  //   return List.from(t)..add("#${texts.first}");
-  // });
-  return SizedBox(
-    width: double.maxFinite,
-    child: Wrap(
-      alignment: WrapAlignment.start,
-      crossAxisAlignment: WrapCrossAlignment.start,
-      runAlignment: WrapAlignment.start,
-      spacing: 3,
-      children: split.map((e) {
-        if (e.length > 0) {
-          // if (e[0] == '#') {
-          //   return GestureDetector(onLongPress: (){
-          //     copyText(text);
-          //   },
-          //       onTap: () {
-          //         onTapTag(e);
-          //       },
-          //       child: Text(e, style: TextStyle(color: mainBlue)));
-          // } else
-            if (e[0] == '@') {
-            return GestureDetector(onLongPress: (){
-              copyText(text);
-            },
-                onTap: () {
-                  onTapTag(e);
-                },
-                child: Text(e, style: TextStyle(color: mainBlue)));
-          } else if (e.startsWith('http')) {
-            return GestureDetector(
-                onLongPress: (){
-                  copyText(text);
-                },
-                onTap: () {
-                  openUrl(e);
-                },
-                child: Text(e, style: TextStyle(color: mainBlue)));
-          } else {
-            return GestureDetector(
-                onLongPress: (){
-                  copyText(text);
-                },
-                child: Text(e, style: TextStyle(color: black)));
-          }
-        } else {
-          return Text('', style: TextStyle(color: black));
-        }
-      }).toList(),
-    ),
+Widget convertHashtag(context, String text,Function onTapTag) {
+  if(
+  !text.contains('@') &&
+      !text.contains('http://') &&
+      !text.contains('https://') &&
+      !text.contains('footballbuzz://JoinChat/')
+  )
+    return Text(text);
+  return Wrap(
+    alignment: WrapAlignment.start,
+    crossAxisAlignment: WrapCrossAlignment.start,
+    runAlignment: WrapAlignment.start,
+    spacing: 3,
+    runSpacing: 3,
+    children: makeText(text).map((e) {
+      switch(e.type){
+        case TextType.text:
+          return GestureDetector(
+              onLongPress: () {
+                copyText(e.text);
+              },
+              child: Text(e.text, style: TextStyle(color: black)));
+        case TextType.link:
+          return SizedBox(
+            width: double.maxFinite,
+            // height: 100,
+            child: AnyLinkPreview(
+              link: e.text.trim(),
+              doIt: () {},
+              displayDirection: UIDirection.uiDirectionHorizontal,
+              cache: const Duration(seconds: 1),
+              backgroundColor: Colors.white,
+              boxShadow: [],
+              urlLaunchMode: LaunchMode.externalApplication,
+              errorWidget: Container(
+                color: Colors.grey[300],
+                child: const Text('Oops!'),
+              ),
+              // errorImage: _errorImage,
+            ),
+          );
+        case TextType.groupLink:
+          return GestureDetector(
+              onTap: () async{
+                String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
+                DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                    chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                if(back!=null) {
+                  await Go.pushSlideAnim(
+                      context,
+                      GroupChatBuilder(
+                        chatRoom: back,
+                      ));
+                }
+              },
+              child: Text(e.text, style: TextStyle(color: mainBlue)));
+        case TextType.user:
+          return GestureDetector(
+              onLongPress: () {
+                copyText(text);
+              },
+              onTap: () {
+                onTapTag(context, e.text, true);
+              },
+              child: Text(e.text, style: TextStyle(color: mainBlue)));
+        default:return const SizedBox();
+      }
+
+    }).toList(),
   );
-  // return RichText(
-  //   text: TextSpan(
-  //     children: [TextSpan(text: split.first, style: TextStyle(color: black))]
-  //       ..addAll(hashtags
-  //           .map((text) => text.contains("#")
-  //           ? TextSpan(text: text, style: TextStyle(color: mainBlue),
-  //
-  //         onEnter: (PointerEnterEvent e){
-  //             print('asdasd');
-  //         }
-  //       )
-  //           : TextSpan(text: text, style: TextStyle(color: black)))
-  //           .toList()),
-  //   ),
-  // );
 }

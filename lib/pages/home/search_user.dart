@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 
 import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
+import '../../classes/services/chat_service.dart';
 import '../../classes/services/user_service.dart';
+import '../../classes/states/chat_state.dart';
 import '../../main.dart';
+import '../chat/chat.dart';
 import '../profile/profile.dart';
 
 class SearchUser extends StatefulWidget {
@@ -161,9 +165,10 @@ class _SearchUserState extends State<SearchUser> {
   }
 }
 class UserItem extends StatefulWidget {
-  const UserItem({Key? key, required this.user,this.hasFollowBtn=true}) : super(key: key);
+  const UserItem({Key? key, required this.user,this.hasFollowBtn=true, this.hasStartChatBtn=false}) : super(key: key);
   final DataPersonalInformation user;
   final bool hasFollowBtn;
+  final bool hasStartChatBtn;
   @override
   State<UserItem> createState() => _UserItemState();
 }
@@ -203,58 +208,89 @@ class _UserItemState extends State<UserItem> {
                   '@${user.userName}',
                   style: TextStyle(color: grayCall, fontSize: 12),
                 ),
-                if(widget.hasFollowBtn)
-                  SizedBox(height: doubleHeight(0.5)),
-                if(widget.hasFollowBtn)
-                  Row(
+                if(widget.user.userName!=getIt<MainState>().userName)
+                Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Consumer<MainState>(builder: (context, value, child) {
-                      // int index = value.users.indexOf(user);
-                      // return
-                    ElevatedButton(
-                        onPressed: () async {
-                          print('click');
-                          print(user.followedByMe);
-                          MyService service = getIt<MyService>();
-                          if (user.followedByMe) {
-                            //unfollow
-                            bool backUser = await UsersService.unFollowUser(
-                                service, user.id);
-                            print('unfollow $backUser');
-                          } else {
-                            bool backUser = await UsersService.followUser(
-                                service, user.id);
-                            print('follow $backUser');
-                          }
-                          setState(() {
-                            user.followedByMe = !user.followedByMe;
-                          });
-                          // value.notify();
-                        },
-                        child: Text(
-                          !user.followedByMe
-                              ? 'Add As Fan Mates'
-                              : 'Remove As Fan Mates',
-                          style: TextStyle(color: Colors.black),
+                    if(widget.hasFollowBtn || widget.hasStartChatBtn)
+                      SizedBox(height: doubleHeight(0.5)),
+                    if(widget.hasFollowBtn || widget.hasStartChatBtn)
+                      if(widget.hasStartChatBtn)
+                        ElevatedButton(
+                          onPressed: () async {
+                            DataChatRoom? back =
+                            await ChatService.createPrivateChat(
+                                getIt<MyService>(),
+                                friendId: user.id);
+                            if (back != null) {
+                              Go.replaceSlideAnim(
+                                  context,
+                                  ChatBuilder(
+                                    state: ChatState()..selectedChat = back,
+                                  ));
+                            }
+                          },
+                          child: Text('Start Messaging',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromRGBO(216, 216, 216, 1)),
+                            elevation: MaterialStateProperty.all(0),
+                            shape:
+                            MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            )),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(horizontal: doubleWidth(2))),
+                          ),
+                        )
+                      else
+                        ElevatedButton(
+                          onPressed: () async {
+
+                            print('click');
+                            print(user.followedByMe);
+                            MyService service = getIt<MyService>();
+                            if (user.followedByMe) {
+                              //unfollow
+                              bool backUser = await UsersService.unFollowUser(
+                                  service, user.id);
+                              print('unfollow $backUser');
+                            } else {
+                              bool backUser = await UsersService.followUser(
+                                  service, user.id);
+                              print('follow $backUser');
+                            }
+                            setState(() {
+                              user.followedByMe = !user.followedByMe;
+                            });
+                            // value.notify();
+                          },
+                          child: Text(
+                            !user.followedByMe
+                                ? 'Add As Fan Mates'
+                                : 'Remove As Fan Mates',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                user.followedByMe
+                                    ? Color.fromRGBO(216, 216, 216, 1)
+                                    : Color.fromRGBO(78, 255, 187, 1)),
+                            elevation: MaterialStateProperty.all(0),
+                            shape:
+                            MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            )),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(horizontal: doubleWidth(2))),
+                          ),
                         ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              user.followedByMe
-                                  ? Color.fromRGBO(216, 216, 216, 1)
-                                  : Color.fromRGBO(78, 255, 187, 1)),
-                          elevation: MaterialStateProperty.all(0),
-                          shape:
-                          MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          )),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(horizontal: doubleWidth(2))),
-                        ),
-                      )
-                    // }),
                   ],
-                ),
+                )
+
+
               ],
             ),
             SizedBox(

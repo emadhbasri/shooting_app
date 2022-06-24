@@ -24,11 +24,10 @@ List<TheText> makeText(String text){
   List<TheText> out=[];
   List<String> split = text.split(' ');
   split.forEach((e) {
-    if (e.trim().contains('\n')) {
+    if (e.contains('\n')) {
       List<String> split1 = e.split('\n');
       if (split1.isNotEmpty)
         split1.forEach((String f) {
-          print('ff: $f ${f.length}');
           if (f.length == 0) {
             out.add(TheText(type: TextType.text, text: ''));
           } else {
@@ -36,7 +35,7 @@ List<TheText> makeText(String text){
               out.add(TheText(type: TextType.user, text: f));
             } else if (f.contains('http://') || f.contains('https://')) {
               out.add(TheText(type: TextType.link, text: f.trim()));
-            } else if(f.contains('FootballBuzz_Group:')){
+            } else if(f.contains('footballbuzz://JoinChat/')){
               out.add(TheText(type: TextType.groupLink, text: f));
             } else {
               out.add(TheText(type: TextType.text, text: f));
@@ -51,7 +50,7 @@ List<TheText> makeText(String text){
           out.add(TheText(type: TextType.user, text: e));
         } else if (e.contains('http://') || e.contains('https://')) {
           out.add(TheText(type: TextType.link, text: e.trim()));
-        } else if(e.contains('FootballBuzz_Group:')){
+        } else if(e.contains('footballbuzz://JoinChat/')){
           out.add(TheText(type: TextType.groupLink, text: e));
         } else {
           out.add(TheText(type: TextType.text, text: e));
