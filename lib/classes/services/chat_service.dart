@@ -8,7 +8,51 @@ import '../models.dart';
 import 'my_service.dart';
 class ChatService{
 
+
+
+
+
   ///-----------------------------------------------group
+
+  static Future<DataChatRoom?> editRoom(MyService service,{//todo
+    required String chatRoomId,
+    required String name,
+    XFile? image,
+  }) async {
+    Map<String, dynamic> map = {
+      'name':name,
+    };
+    if(image!=null){
+      MultipartFile temp = await MultipartFile.fromFile(image.path,
+          filename: image.name);
+      map['profilePhoto']=temp;
+    }
+    debugPrint('editRoom($chatRoomId)');
+    Map<String, dynamic> back = await service.httpPutMulti(
+        '/api/v1/Message/editRoom/$chatRoomId',FormData.fromMap(map),jsonType: true);
+    debugPrint('back editRoom ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return null;
+    }
+    return convertData<DataChatRoom>(back['data'], 'data', DataType.clas,classType: 'DataChatRoom');
+  }
+
+  static Future<bool> addAdmin(MyService service,{//todo
+    required String chatRoomId,
+    required String userId,
+  }) async {
+    debugPrint('addAdmin($userId,$chatRoomId)');
+    Map<String, dynamic> back = await service.httpPut(
+        '/api/v1/Message/updateUserRoomRole/$chatRoomId/$userId',{});
+    debugPrint('back addAdmin ${back}');
+    if(back['status']==false){
+      toast(back['error']);
+      return false;
+    }
+    return true;
+  }
+
   static Future<List<DataChatMessage>> getGroupChatMessages(MyService service,{//todo
     required String chatId,
   }) async {

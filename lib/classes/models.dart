@@ -96,6 +96,7 @@ class DataCommentReply {
     editeddAt = convertData(data, 'editeddAt', DataType.datetime);
     id = convertData(data, 'id', DataType.string);
     personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+    stadiaId=convertData(data, 'stadiaId', DataType.string);
 
     personalInformationViewModel =
         convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
@@ -105,7 +106,7 @@ class DataCommentReply {
     replyLikedBythisUser = convertData(data, 'replyLikedBythisUser', DataType.bool);
     replyLikes = convertDataList<DataReplyLike>(data, 'replyLikes', 'DataReplyLike');
   }
-
+String? stadiaId;
   late DateTime createdAt;
   DateTime? editeddAt;
   late String id;
@@ -124,17 +125,19 @@ class DataPostComment {
     comment = convertData(data, 'comment', DataType.string);
     commentLikeCount = convertData(data, 'commentLikeCount', DataType.int);
     commentLikedBythisUser = convertData(data, 'commentLikedBythisUser', DataType.bool);
-    commentLikes = convertDataList<DataCommentLike>(data, 'commentLikes', 'DataCommentLike');
+    commentLikes = convertDataList<DataCommentLike>(data,  'commentLikes', 'DataCommentLike');
     commentReplies = convertDataList<DataCommentReply>(data, 'commentReplies', 'DataCommentReply');
     commentReplyCount = convertData(data, 'commentReplyCount', DataType.int);
     createdAt = convertData(data, 'createdAt', DataType.datetime);
     editedAt = convertData(data, 'editedAt', DataType.datetime);
     id = convertData(data, 'id', DataType.string);
     personalInformationId = convertData(data, 'personalInformationId', DataType.string);
+    stadiaId = convertData(data, 'stadiaId', DataType.string);
     personalInformationViewModel =
         convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postId = convertData(data, 'postId', DataType.string);
   }
+  String? stadiaId;
   late List<DataMediaType> mediaTypes;
   String? comment;
   late int commentLikeCount;
@@ -177,11 +180,12 @@ class DataPost {
     isEdited = convertData(data, 'isEdited', DataType.bool);
     postLikeCount = convertData(data, 'postLikeCount', DataType.int);
     postCommentCount = convertData(data, 'postCommentCount', DataType.int);
+    stadiaId=convertData(data, 'stadiaId', DataType.string);
     person =
         convertData(data, 'personalInformationViewModel', DataType.clas, classType: 'DataPersonalInformationViewModel');
     postLikedBythisUser = convertData(data, 'postLikedBythisUser', DataType.bool);
   }
-
+  String? stadiaId;
   late DateTime createdAt;
   String? details;
   late int engagement;
@@ -350,8 +354,8 @@ class DataChatRoom {
     name = convertData(data, 'name', DataType.string);
     roomPhoto = convertData(data, 'roomPhoto', DataType.string);
 
-    List<DataChatRoomUser> temp = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
-    personalInformations=temp.map((e) => e.personalInformation).toList();
+    chatroomUsers = convertDataList<DataChatRoomUser>(data, 'personalInformations', 'DataChatRoomUser');
+    personalInformations=chatroomUsers.map((e) => e.personalInformation).toList();
   }//352408868
 
   List<DataChatMessage> chatMessages = [];
@@ -360,14 +364,20 @@ class DataChatRoom {
   String? name;
   String? roomPhoto;
   List<DataPersonalInformation?> personalInformations = [];
+  List<DataChatRoomUser> chatroomUsers = [];
 }
 
 class DataChatRoomUser {
   DataChatRoomUser.fromJson(Map<String, dynamic> data) {
+    print('DataChatRoomUser ${data['isRoomOwner']} ${data['userRole']}');
     personalInformation = convertData(data, 'personalInformation', DataType.clas, classType: 'DataPersonalInformation');
+    isRoomOwner=convertData(data, 'isRoomOwner', DataType.bool);
+    userRole=convertData(data, 'userRole', DataType.int);
   }
 
   DataPersonalInformation? personalInformation;
+  late bool isRoomOwner;
+  late int userRole;
 }
 
 ///---------------------------------------------

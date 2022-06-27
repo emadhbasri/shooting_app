@@ -1,11 +1,14 @@
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
+import 'package:shooting_app/pages/group_chat/create_group.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/states/chat_state.dart';
 import '../../classes/states/group_chat_state.dart';
+import '../../ui_items/dialogs/dialog1.dart';
 import '../home/search_user.dart';
 
 class GroupChatMemberBuilder extends StatelessWidget {
@@ -51,6 +54,15 @@ class _GroupChatMemberState extends State<GroupChatMember> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ChatState>(builder: (context, state, child) {
+      // print('myRole ${state.myRole}');
+      // if (state.myRole != null) {
+      //   print('myRole ${state.myRole!.isRoomOwner}');
+      //   print('myRole ${state.myRole!.userRole}');
+      // }
+      state.selectedChat.chatroomUsers.forEach((element) {
+        print('element.isRoomOwner ${element.isRoomOwner}');
+        print('element.userRole ${element.userRole}');
+      });
       return WillPopScope(
         onWillPop: () async {
           stopTimer = true;
@@ -90,16 +102,37 @@ class _GroupChatMemberState extends State<GroupChatMember> {
           appBar: AppBar(
             title: Text('Group Info'.toUpperCase()),
             actions: [
-              PopupMenuButton(
+              PopupMenuButton<String?>(
+                onSelected: (String? value) async{
+                  if(value=='Edit'){
+                    DataChatRoom? back = await Go.pushSlideAnim(
+                        context,
+                        CreateGroup(
+                            isEdit: true, group: state.selectedChat));
+                    if(back!=null){
+                      state.selectedChat.roomPhoto=back.roomPhoto;
+                      state.selectedChat.name=back.name;
+                      state.notify();
+                    }
+                  }
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                itemBuilder: (context) => [
+                itemBuilder: (_) => [
                   PopupMenuItem(
+                    value: null,
                       onTap: () async {
-                        copyText('footballbuzz://JoinChat/${state.selectedChat.id}');
+                        copyText(
+                            'footballbuzz://JoinChat/${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
+                  if (state.myRole != null &&
+                      (state.myRole!.isRoomOwner ||
+                          state.myRole!.userRole == 1))
+                    PopupMenuItem(
+                      value: 'Edit',
+                        child: Text('Edit Group')),
                 ],
               )
             ],
@@ -124,17 +157,18 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                                   aspectRatio: 1,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        border:
-                                            Border.all(width: 2, color: black),
+                                        border: Border.all(
+                                            width: 2, color: black),
                                         borderRadius:
                                             BorderRadius.circular(100),
                                         image: DecorationImage(
                                             fit: BoxFit.fill,
-                                            image: networkImage(
-                                                state.selectedChat.roomPhoto ??
-                                                    ''))),
+                                            image: networkImage(state
+                                                    .selectedChat.roomPhoto ??
+                                                ''))),
                                     // width: doubleWidth(10),
-                                    child: state.selectedChat.roomPhoto != null
+                                    child: state.selectedChat.roomPhoto !=
+                                            null
                                         ? null
                                         : Center(
                                             child: Text(
@@ -170,16 +204,55 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                       itemCount: state.selectedChat.personalInformations.length,
                       separatorBuilder: (_, __) =>
                           SizedBox(height: doubleHeight(1)),
-                      itemBuilder: (_, index) =>
-                          state.selectedChat.personalInformations[index] == null
-                              ? const SizedBox()
-                              : UserItem(
-                                  key: UniqueKey(),
-                                  user: state.selectedChat
-                                      .personalInformations[index]!,
-                                  hasFollowBtn: false,
-                            hasStartChatBtn: true,
-                                ),
+                      itemBuilder: (_, index) => state
+                                  .selectedChat.personalInformations[index] ==
+                              null
+                          ? const SizedBox()
+                          : UserItem(
+                              onLongPress: state.myRole != null &&
+                                      state.myRole!.isRoomOwner &&
+                                      state.selectedChat.chatroomUsers[index]
+                                              .isRoomOwner ==
+                                          false &&
+                                      state.selectedChat.chatroomUsers[index]
+                                              .userRole ==
+                                          0
+                                  ? () async {
+                                      bool? alert = await MyAlertDialog(context,
+                                          content:
+                                              'Do You Want To Admin This User?');
+                                      if (alert == true) {
+                                        bool back = await ChatService.addAdmin(
+                                            getIt<MyService>(),
+                                            chatRoomId: state.selectedChat.id,
+                                            userId: state
+                                                .selectedChat
+                                                .chatroomUsers[index]
+                                                .personalInformation!
+                                                .id);
+                                        if (back) {
+                                          state.selectedChat.chatroomUsers[index].userRole=1;
+                                          state.notify();
+                                          Alert(
+                                            context: context,
+                                            style: AlertStyle(
+                                                animationType:
+                                                    AnimationType.shrink),
+                                            type: AlertType.success,
+                                            title:
+                                                "User Become Admin Successfully",
+                                          ).show();
+                                        }
+                                      }
+                                    }
+                                  : null,
+                              key: UniqueKey(),
+                              roomUser: state.selectedChat.chatroomUsers[index],
+                              user: state
+                                  .selectedChat.personalInformations[index]!,
+                              hasFollowBtn: false,
+                              hasStartChatBtn: true,
+                            ),
                     );
                   },
                 ))

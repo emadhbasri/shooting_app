@@ -22,7 +22,7 @@ class _SearchUserState extends State<SearchUser> {
   // List<String> hashtags = ['YNWA', 'Salah', 'Watfold', 'Anfield', 'EPL'];
   late final TextEditingController controller;
   List<DataPersonalInformation>? users;
-  String search='';
+  String search = '';
   getData() async {
     setState(() {
       users = null;
@@ -77,7 +77,7 @@ class _SearchUserState extends State<SearchUser> {
                         controller: controller,
                         onChanged: (e) {
                           print('$search!= $e');
-                          if(search.trim()!=e) {
+                          if (search.trim() != e) {
                             print('searchhhhhhhhhh');
                             search = e;
                             getData();
@@ -144,29 +144,38 @@ class _SearchUserState extends State<SearchUser> {
           if (controller.value.text == '')
             return Center(child: Text('Please Search In Users.'));
           if (users == null) {
-              return circle();
-            } else if (users!.isEmpty) {
-              return Center(child: Text('No User Found'));
-            } else {
-              return ListView(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: doubleWidth(5), vertical: doubleHeight(2)),
-                  children: users!
-                      .map((e) => UserItem(
-                      user: e,
-                         ))
-                      .toList()
-              );
-            }
+            return circle();
+          } else if (users!.isEmpty) {
+            return Center(child: Text('No User Found'));
+          } else {
+            return ListView(
+                padding: EdgeInsets.symmetric(
+                    horizontal: doubleWidth(5), vertical: doubleHeight(2)),
+                children: users!
+                    .map((e) => UserItem(
+                          user: e,
+                        ))
+                    .toList());
+          }
           // }
         }),
       ),
     );
   }
 }
+
 class UserItem extends StatefulWidget {
-  const UserItem({Key? key, required this.user,this.hasFollowBtn=true, this.hasStartChatBtn=false}) : super(key: key);
+  const UserItem(
+      {Key? key,
+      this.onLongPress,
+      this.roomUser,
+      required this.user,
+      this.hasFollowBtn = true,
+      this.hasStartChatBtn = false})
+      : super(key: key);
+  final Function? onLongPress;
   final DataPersonalInformation user;
+  final DataChatRoomUser? roomUser;
   final bool hasFollowBtn;
   final bool hasStartChatBtn;
   @override
@@ -184,13 +193,16 @@ class _UserItemState extends State<UserItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: widget.onLongPress != null
+          ? () {
+              widget.onLongPress!();
+            }
+          : null,
       onTap: () {
-        Go.pushSlideAnim(
-            context,
-            ProfileBuilder(
-                username: user.userName));
+        Go.pushSlideAnim(context, ProfileBuilder(username: user.userName));
       },
       child: Container(
+        color: trans,
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
         width: double.maxFinite,
         // height: doubleHeight(15),
@@ -202,95 +214,119 @@ class _UserItemState extends State<UserItem> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: doubleHeight(1)),
-                Text(user.fullName ?? ''),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(user.fullName ?? ''),
+                    SizedBox(width: doubleWidth(1)),
+                    if (widget.roomUser != null && widget.roomUser!.isRoomOwner)
+                      Text(
+                        'Owner',
+                        style: TextStyle(
+                            color: mainGreen1, fontWeight: FontWeight.bold),
+                      ),
+                    if (widget.roomUser != null &&
+                        widget.roomUser!.userRole == 1)
+                      Text(
+                        'Admin',
+                        style: TextStyle(
+                            color: mainBlue, fontWeight: FontWeight.bold),
+                      )
+                  ],
+                ),
                 SizedBox(height: doubleHeight(0.5)),
                 Text(
                   '@${user.userName}',
                   style: TextStyle(color: grayCall, fontSize: 12),
                 ),
-                if(widget.user.userName!=getIt<MainState>().userName)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if(widget.hasFollowBtn || widget.hasStartChatBtn)
-                      SizedBox(height: doubleHeight(0.5)),
-                    if(widget.hasFollowBtn || widget.hasStartChatBtn)
-                      if(widget.hasStartChatBtn)
-                        ElevatedButton(
-                          onPressed: () async {
-                            DataChatRoom? back =
-                            await ChatService.createPrivateChat(
-                                getIt<MyService>(),
-                                friendId: user.id);
-                            if (back != null) {
-                              Go.replaceSlideAnim(
-                                  context,
-                                  ChatBuilder(
-                                    state: ChatState()..selectedChat = back,
-                                  ));
-                            }
-                          },
-                          child: Text('Start Messaging',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromRGBO(216, 216, 216, 1)),
-                            elevation: MaterialStateProperty.all(0),
-                            shape:
-                            MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            )),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(horizontal: doubleWidth(2))),
-                          ),
-                        )
-                      else
-                        ElevatedButton(
-                          onPressed: () async {
-
-                            print('click');
-                            print(user.followedByMe);
-                            MyService service = getIt<MyService>();
-                            if (user.followedByMe) {
-                              //unfollow
-                              bool backUser = await UsersService.unFollowUser(
-                                  service, user.id);
-                              print('unfollow $backUser');
-                            } else {
-                              bool backUser = await UsersService.followUser(
-                                  service, user.id);
-                              print('follow $backUser');
-                            }
-                            setState(() {
-                              user.followedByMe = !user.followedByMe;
-                            });
-                            // value.notify();
-                          },
-                          child: Text(
-                            !user.followedByMe
-                                ? 'Add As Fan Mates'
-                                : 'Remove As Fan Mates',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                user.followedByMe
-                                    ? Color.fromRGBO(216, 216, 216, 1)
-                                    : Color.fromRGBO(78, 255, 187, 1)),
-                            elevation: MaterialStateProperty.all(0),
-                            shape:
-                            MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            )),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(horizontal: doubleWidth(2))),
-                          ),
-                        ),
-                  ],
-                )
-
-
+                if (widget.user.userName != getIt<MainState>().userName)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.hasFollowBtn || widget.hasStartChatBtn)
+                        SizedBox(height: doubleHeight(0.5)),
+                      Builder(builder: (context) {
+                        if (widget.hasFollowBtn || widget.hasStartChatBtn) {
+                          if (widget.hasStartChatBtn)
+                            return ElevatedButton(
+                              onPressed: () async {
+                                DataChatRoom? back =
+                                    await ChatService.createPrivateChat(
+                                        getIt<MyService>(),
+                                        friendId: user.id);
+                                if (back != null) {
+                                  Go.replaceSlideAnim(
+                                      context,
+                                      ChatBuilder(
+                                        state: ChatState()..selectedChat = back,
+                                      ));
+                                }
+                              },
+                              child: Text(
+                                'Start Messaging',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color.fromRGBO(216, 216, 216, 1)),
+                                elevation: MaterialStateProperty.all(0),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                )),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        horizontal: doubleWidth(2))),
+                              ),
+                            );
+                          else if (user.userName != getIt<MainState>().userName)
+                            return ElevatedButton(
+                              onPressed: () async {
+                                print('click');
+                                print(user.followedByMe);
+                                MyService service = getIt<MyService>();
+                                if (user.followedByMe) {
+                                  //unfollow
+                                  bool backUser =
+                                      await UsersService.unFollowUser(
+                                          service, user.id);
+                                  print('unfollow $backUser');
+                                } else {
+                                  bool backUser = await UsersService.followUser(
+                                      service, user.id);
+                                  print('follow $backUser');
+                                }
+                                setState(() {
+                                  user.followedByMe = !user.followedByMe;
+                                });
+                                // value.notify();
+                              },
+                              child: Text(
+                                !user.followedByMe
+                                    ? 'Add As Fan Mates'
+                                    : 'Remove As Fan Mates',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    user.followedByMe
+                                        ? Color.fromRGBO(216, 216, 216, 1)
+                                        : Color.fromRGBO(78, 255, 187, 1)),
+                                elevation: MaterialStateProperty.all(0),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                )),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        horizontal: doubleWidth(2))),
+                              ),
+                            );
+                        }
+                        return const SizedBox();
+                      }),
+                    ],
+                  )
               ],
             ),
             SizedBox(
@@ -301,20 +337,17 @@ class _UserItemState extends State<UserItem> {
                   children: [
                     ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: user.profilePhoto !=
-                            null
+                        child: user.profilePhoto != null
                             ? SizedBox(
-                          width: doubleWidth(20),
-                          height: doubleWidth(20),
-                          child: imageNetwork(
-                              user.profilePhoto ??
-                                  '',
-                              fit: BoxFit.fill),
-                        )
+                                width: doubleWidth(20),
+                                height: doubleWidth(20),
+                                child: imageNetwork(user.profilePhoto ?? '',
+                                    fit: BoxFit.fill),
+                              )
                             : SizedBox(
-                            width: doubleWidth(20),
-                            height: doubleWidth(20),
-                            child:profilePlaceHolder())),
+                                width: doubleWidth(20),
+                                height: doubleWidth(20),
+                                child: profilePlaceHolder())),
                     Align(
                       alignment: Alignment(0.9, -0.9),
                       child: SizedBox(
@@ -325,16 +358,11 @@ class _UserItemState extends State<UserItem> {
                             color: Colors.white,
                             border: Border.all(color: Colors.white, width: 3),
                             borderRadius: BorderRadius.circular(100),
-                            image:
-                            user.team != null &&
-                                user.team!
-                                    .team_badge !=
-                                    null
+                            image: user.team != null &&
+                                    user.team!.team_badge != null
                                 ? DecorationImage(
-                              image: networkImage(user
-                                  .team!
-                                  .team_badge!),
-                            )
+                                    image: networkImage(user.team!.team_badge!),
+                                  )
                                 : null,
                           ),
                         ),

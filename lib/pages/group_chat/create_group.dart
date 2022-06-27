@@ -15,7 +15,9 @@ import '../home/search_user.dart';
 import '../shoot/search_user_mention.dart';
 
 class CreateGroup extends StatefulWidget {
-  const CreateGroup({Key? key}) : super(key: key);
+  final bool isEdit;
+  final DataChatRoom? group;
+  const CreateGroup({Key? key,this.isEdit=false,this.group}) : super(key: key);
   @override
   _CreateGroupState createState() => _CreateGroupState();
 }
@@ -25,19 +27,32 @@ class _CreateGroupState extends State<CreateGroup> {
   TextEditingController textEditingController=TextEditingController();
   List<DataPersonalInformation> users = [];
   bool loading=false;
+  String? image;
   @override
   void initState() {
     super.initState();
+    if(widget.isEdit){
+      textEditingController=TextEditingController(text: widget.group!.name);
+      image=widget.group!.roomPhoto;
+      users.addAll(widget.group!.personalInformations.map((e) => e!));
+    }
   }
   XFile? file;
   @override
   Widget build(BuildContext context) {
+    ImageProvider? out;
+    if(file != null){
+      out=FileImage(File(file!.path));
+    }else if(image!=null){
+      out= networkImage(image!);
+    }
     return Scaffold(
       backgroundColor: white,
         appBar: AppBar(
-          title: Text('Create Group'.toUpperCase()),
+          title: Text(
+              '${widget.isEdit?'Edit':'Create'} Group'.toUpperCase()),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: widget.isEdit?null:FloatingActionButton(
           heroTag: 'Find User',
           onPressed: () async {
             DataPersonalInformation? user =
@@ -72,8 +87,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   GestureDetector(
                     onTap: ()async{
                       file = await showDialog(context: context, builder: (context)=>
-                      ChooseMediaDialog(video: false,)
-                      );
+                      ChooseMediaDialog(video: false,));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -82,10 +96,8 @@ class _CreateGroupState extends State<CreateGroup> {
                       ),
                       child: CircleAvatar(
                         radius: doubleWidth(7),
-                        backgroundImage: file != null
-                            ? FileImage(File(file!.path))
-                            : null,
-                        child: file == null?CircleAvatar(
+                        backgroundImage:out,
+                        child: file == null && image==null ?CircleAvatar(
                           radius: doubleWidth(4.5),
                           backgroundColor: greenCall.withOpacity(0.4),
                           child: Icon(Icons.camera_alt,
@@ -122,26 +134,44 @@ class _CreateGroupState extends State<CreateGroup> {
                       setState(() {
                         loading=true;
                       });
-                      String? backCreate = await
-                      ChatService.createGroupChat(service,
-                          name: textEditingController.value.text,
-                        image:file
-                      );
-                      if(backCreate!=null){
-                        for(int j=0;j<users.length;j++){
-                          if(users[j].userName!=getIt<MainState>().userName){
-                            await ChatService.joinGroupChat(service, chatRoomId: backCreate, userId: users[j].id);
-                          }
+
+                      if(widget.isEdit){
+                        DataChatRoom? backEdit = await
+                        ChatService.editRoom(service,
+                            chatRoomId: widget.group!.id,
+                            name: textEditingController.value.text,
+                            image:file
+                        );
+                        if(backEdit!=null){
+                          setState(() {
+                            loading=false;
+                          });
+                          Go.pop(context,backEdit);
+
                         }
-                        // setState(() {
-                        //   loading=false;
-                        // });
-                        Go.pop(context,true);
                       }else{
-                        setState(() {
-                          loading=false;
-                        });
+                        String? backCreate = await
+                        ChatService.createGroupChat(service,
+                            name: textEditingController.value.text,
+                            image:file
+                        );
+                        if(backCreate!=null){
+                          for(int j=0;j<users.length;j++){
+                            if(users[j].userName!=getIt<MainState>().userName){
+                              await ChatService.joinGroupChat(service, chatRoomId: backCreate, userId: users[j].id);
+                            }
+                          }
+                          // setState(() {
+                          //   loading=false;
+                          // });
+                          Go.pop(context,true);
+                        }else{
+                          setState(() {
+                            loading=false;
+                          });
+                        }
                       }
+
                     },
                     child: Container(
                       padding: EdgeInsets.all(doubleWidth(4)),
@@ -159,6 +189,7 @@ class _CreateGroupState extends State<CreateGroup> {
                 ],
               ),
             ),
+            if(widget.isEdit==false)
             Expanded(
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(

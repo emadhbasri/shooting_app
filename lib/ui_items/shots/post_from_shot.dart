@@ -1666,6 +1666,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             DataPostComment? back =
                                 await ShotsService.shotsComment(
                                     getIt<MyService>(),
+                                    stadia: false,
                                     postId: post.id,
                                     comment: controllerT.value.text);
                             if (back != null) {

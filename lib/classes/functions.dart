@@ -4,6 +4,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 // 
 // import 'package:toast/toast.dart';
 import 'package:share_plus/share_plus.dart';
@@ -182,10 +183,11 @@ String getMonString(DateTime date) {
 copyText(String text, {String payam = 'text copied to clipboard'}) =>
     FlutterClipboard.copy(text).then((value) => toast(payam));
 
-sharePost(String text, {String payam = 'text copied to clipboard'}) =>
-    Share.share('check out the post $text');
+sharePost(String text, {String payam = 'Post'}) =>
+    Share.share('Check Out The $payam $text');
 
 toast(String str, {bool isLong=false}) {
+  print('toast $str');//todo
   // Fluttertoast.showToast(
   //     msg: str,
   //     toastLength: isLong?Toast.LENGTH_LONG:Toast.LENGTH_SHORT,
@@ -374,7 +376,7 @@ abstract class Go {
             })).catchError((e) => print('Error 1 $e'));
   }
 
-  static void push(BuildContext context, Widget page,
+  static dynamic push(BuildContext context, Widget page,
       {bool full: false}) async {
     return await Navigator.push(
             context,

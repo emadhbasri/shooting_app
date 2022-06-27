@@ -19,6 +19,7 @@ import '../../classes/states/group_chat_state.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../ui_items/dialogs/choose_media_dialog.dart';
 import '../../ui_items/gal.dart';
+import 'create_group.dart';
 
 class GroupChatBuilder extends StatelessWidget {
   const GroupChatBuilder({Key? key, this.state,this.chatRoom,this.sharedText}) : super(key: key);
@@ -116,16 +117,36 @@ class _GroupChatState extends State<GroupChat> {
               ),
             ),
             actions: [
-              PopupMenuButton(
+              PopupMenuButton<String?>(
+                onSelected: (String? value)async{
+                  if(value=='Edit'){
+                    DataChatRoom? back = await Go.pushSlideAnim(
+                        context,
+                        CreateGroup(
+                            isEdit: true, group: state.selectedChat));
+                    if(back!=null){
+                      state.selectedChat.roomPhoto=back.roomPhoto;
+                      state.selectedChat.name=back.name;
+                      state.notify();
+                    }
+                  }
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
+                    value: null,
                       onTap: () async {
                         copyText('footballbuzz://JoinChat/${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
+                  if (state.myRole != null &&
+                      (state.myRole!.isRoomOwner ||
+                          state.myRole!.userRole == 1))
+                    PopupMenuItem(
+                        value: 'Edit',
+                        child: Text('Edit Group')),
                 ],
               )
             ],

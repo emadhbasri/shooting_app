@@ -13,13 +13,92 @@ import 'my_service.dart';
 import 'package:http/http.dart' as http;
 
 class ShotsService {
-  static Future<DataPost?> createShot(
-      //todo
+
+  static Future<List<String>> getStadiaTags(MyService service) async {
+    debugPrint('getStadiaTags()');
+    Map<String, dynamic> back =
+    await service.httpGet('/api/v1/Shots/GetTopTrendingPost');
+    debugPrint('getStadiaTags back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return [];
+    }
+    return (back['data']['data'] as List<dynamic>).cast<String>();
+  }
+  static Future<List<DataPost>> getStadiaShots(MyService service) async {
+    debugPrint('getStadiaShots()');
+    Map<String, dynamic> back =
+    await service.httpGet('/api/v1/Shots/stadiaPosts');
+    debugPrint('back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return [];
+    }
+    return convertDataList<DataPost>(back['data'], 'data','DataPost');
+  }
+  static Future<List<DataPost>> getStadiaSearch(MyService service, String tag) async {
+    debugPrint('getStadiaSearch($tag)');
+    Map<String, dynamic> back =
+    await service.httpGet('/api/v1/Shots/searchTrending?searchTag=$tag');
+    debugPrint('back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return [];
+    }
+    return convertDataList<DataPost>(back['data'], 'data','DataPost');
+  }
+
+  static Future<DataPost?> editShot(
       MyService service,
-      {List<XFile> images=const[],
+      {
+        List<String> mediaIds=const [],
+        List<XFile> images = const [],
         XFile? video,
+        required String details,
+        required String shotId,
+        }) async {
+    debugPrint('createShot()');
+    Map<String, dynamic> map = {
+      'Details': details,
+    };
+    if (images.isNotEmpty) {
+      List<MultipartFile> temp = [];
+      for (int j = 0; j < images.length; j++) {
+        MultipartFile file = await MultipartFile.fromFile(images[j].path,
+            filename: images[j].name);
+        temp.add(file);
+      }
+      map['MediaType'] = temp;
+    } else if (video != null) {
+      MultipartFile file =
+      await MultipartFile.fromFile(video.path, filename: video.name);
+      map['MediaType'] = file;
+    }
+    map['mediaIds']=mediaIds;
+    print('map $map');
+    print('url ${'/api/v1/Shots/edit/$shotId'}');
+    Map<String, dynamic> back =
+    await service.httpPutMulti('/api/v1/Shots/edit/$shotId', FormData.fromMap(map),jsonType: true);
+    debugPrint('back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return null;
+    }
+    DataPost out =
+      convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
+
+    return out;
+  }
+
+
+
+  static Future<DataPost?> createShot(
+      MyService service,
+      {List<XFile> images = const [],
+      XFile? video,
       required String details,
       bool isFriend = false,
+      required bool stadia,
       bool isPublic = true,
       int? matchId}) async {
     debugPrint('createShot()');
@@ -29,6 +108,7 @@ class ShotsService {
       'IsPublic': isPublic,
       'CreatedAt': DateTime.now().toString()
     };
+    if (stadia) map['StadiaId']='123';
     if (matchId != null) map['MatchId'] = matchId.toString();
     if (images.isNotEmpty) {
       List<MultipartFile> temp = [];
@@ -38,10 +118,10 @@ class ShotsService {
         temp.add(file);
       }
       map['MediaType'] = temp;
-    }else if(video!=null){
-      MultipartFile file = await MultipartFile.fromFile(video.path,
-          filename: video.name);
-      map['MediaType']=file;
+    } else if (video != null) {
+      MultipartFile file =
+          await MultipartFile.fromFile(video.path, filename: video.name);
+      map['MediaType'] = file;
     }
     print('map $map');
     Map<String, dynamic> back =
@@ -51,16 +131,18 @@ class ShotsService {
       toast(back['error']);
       return null;
     }
-    DataPost out = convertData(back['data'], 'data', DataType.clas,
-        classType: 'DataPost');
-    if(matchId==null){
+    DataPost out =
+        convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
+    if (matchId == null) {
       List<String> split = details.split(' ');
-      for(int j=0;j<split.length;j++){
-        if (split[j].length > 0 && split[j][0] == '@'){
+      for (int j = 0; j < split.length; j++) {
+        if (split[j].length > 0 && split[j][0] == '@') {
           String theUserName = split[j].replaceAll('@', '');
           // Map<String, dynamic> backM =
-          await service.httpPost('/api/v1/Shots/tagUserInPost'
-              '?friendUsername=${theUserName}&postId=${out.id}', {});
+          await service.httpPost(
+              '/api/v1/Shots/tagUserInPost'
+              '?friendUsername=${theUserName}&postId=${out.id}',
+              {});
         }
       }
     }
@@ -146,7 +228,8 @@ class ShotsService {
     return {
       'totalPage': back['data']['total_pages'],
       'hasNext': back['data']['hasNext'],
-      'list': convertDataList<DataPost>(back['data']['results'], 'getFanFeedDTOs', 'DataPost')
+      'list': convertDataList<DataPost>(
+          back['data']['results'], 'getFanFeedDTOs', 'DataPost')
     };
   }
 
@@ -200,10 +283,11 @@ class ShotsService {
   static Future<DataPostComment?> shotsComment(
     //todo
     MyService service, {
+        required bool stadia,
     required String postId,
     required String comment,
-        List<XFile> images=const[],
-        XFile? video,
+    List<XFile> images = const [],
+    XFile? video,
   }) async {
     debugPrint('shotsComment($postId,$comment)');
     MainState mainS = getIt<MainState>();
@@ -214,6 +298,7 @@ class ShotsService {
       'Comment': comment,
       'createdAt': DateTime.now().toString()
     };
+    if (stadia) map['StadiaId']='123';
     if (images.isNotEmpty) {
       List<MultipartFile> temp = [];
       for (int j = 0; j < images.length; j++) {
@@ -222,16 +307,16 @@ class ShotsService {
         temp.add(file);
       }
       map['MediaType'] = temp;
-    }else if(video!=null){
-      MultipartFile file = await MultipartFile.fromFile(video.path,
-          filename: video.name);
-      map['MediaType']=file;
+    } else if (video != null) {
+      MultipartFile file =
+          await MultipartFile.fromFile(video.path, filename: video.name);
+      map['MediaType'] = file;
     }
 
     print('out ${map}');
 
-    Map<String, dynamic> back =
-    await service.httpPostMulti('/api/v1/Shots/comment', FormData.fromMap(map));
+    Map<String, dynamic> back = await service.httpPostMulti(
+        '/api/v1/Shots/comment', FormData.fromMap(map));
 
     // Map<String, dynamic> back = await service.httpPost(
     //     '/api/v1/Shots/comment',
@@ -255,6 +340,7 @@ class ShotsService {
   static Future<DataCommentReply?> commentReply(
     //todo
     MyService service, {
+        required bool stadia,
     required String commentId,
     required String reply,
   }) async {
@@ -266,6 +352,7 @@ class ShotsService {
       'createdAt': DateTime.now().toString()
       // "MediaType": ""
     };
+    if (stadia) go['StadiaId']='123';
     print('gogo $go');
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Shots/comment/reply', go, jsonType: false);
@@ -301,42 +388,41 @@ class ShotsService {
       {required DataPost post, required String message}) async {
     debugPrint('shotReport()');
 
-    List<bool> checks=[];
-    bool? cText=await checkReportText(post.details??'');
-    if(cText==null){
+    List<bool> checks = [];
+    bool? cText = await checkReportText(post.details ?? '');
+    if (cText == null) {
       toast('please check your connection');
       return false;
-    }else{
+    } else {
       checks.add(cText);
     }
-    for(int j=0;j<post.mediaTypes.length;j++){
+    for (int j = 0; j < post.mediaTypes.length; j++) {
       bool? cImage = await checkReportImage(post.mediaTypes[j].media);
-      if(cImage==null){
+      if (cImage == null) {
         toast('please check your connection');
         return false;
-      }else{
+      } else {
         checks.add(cImage);
       }
     }
-    bool shouldReport=false;
-    for(int j=0;j<checks.length;j++){
-        if(checks[j]){
-          shouldReport=true;
-          break;
-        }
+    bool shouldReport = false;
+    for (int j = 0; j < checks.length; j++) {
+      if (checks[j]) {
+        shouldReport = true;
+        break;
+      }
     }
     print('checks ${checks}');
     print('shouldReport $shouldReport');
 
-
-    if(shouldReport){
+    if (shouldReport) {
       Map<String, dynamic> back = await service.httpPost(
           '/api/v1/Shots/addPostReport',
           {
             "message": message,
             "postId": post.id,
             "postOwnerId":
-            post.person == null ? '' : post.person!.personalInformationId,
+                post.person == null ? '' : post.person!.personalInformationId,
             "dateReported": DateTime.now().toString()
           },
           jsonType: true);
@@ -345,45 +431,44 @@ class ShotsService {
         toast(back['error']);
       }
       return back['status'];
-    }else{
+    } else {
       toast('Report Send Successfully');
       return false;
     }
-
   }
+
   static Future<bool> commentReport(MyService service,
       {required DataPostComment comment, required String message}) async {
     debugPrint('shotReport()');
 
-    List<bool> checks=[];
-    bool? cText=await checkReportText(comment.comment??'');
-    if(cText==null){
+    List<bool> checks = [];
+    bool? cText = await checkReportText(comment.comment ?? '');
+    if (cText == null) {
       toast('please check your connection');
       return false;
-    }else{
+    } else {
       checks.add(cText);
     }
-    for(int j=0;j<comment.mediaTypes.length;j++){
+    for (int j = 0; j < comment.mediaTypes.length; j++) {
       bool? cImage = await checkReportImage(comment.mediaTypes[j].media);
-      if(cImage==null){
+      if (cImage == null) {
         toast('please check your connection');
         return false;
-      }else{
+      } else {
         checks.add(cImage);
       }
     }
-    bool shouldReport=false;
-    for(int j=0;j<checks.length;j++){
-      if(checks[j]){
-        shouldReport=true;
+    bool shouldReport = false;
+    for (int j = 0; j < checks.length; j++) {
+      if (checks[j]) {
+        shouldReport = true;
         break;
       }
     }
     print('checks ${checks}');
     print('shouldReport $shouldReport');
 
-
-    if(shouldReport){
+    if (shouldReport) {
       Map<String, dynamic> back = await service.httpPost(
           '/api/v1/Shots/addCommentReport',
           {
@@ -398,22 +483,22 @@ class ShotsService {
         toast(back['error']);
       }
       return back['status'];
-    }else{
+    } else {
       toast('Report Send Successfully');
       return false;
     }
-
   }
+
   static Future<bool> replyReport(MyService service,
       {required DataCommentReply reply, required String message}) async {
     debugPrint('shotReport()');
 
-    List<bool> checks=[];
-    bool? cText=await checkReportText(reply.replyDetail??'');
-    if(cText==null){
+    List<bool> checks = [];
+    bool? cText = await checkReportText(reply.replyDetail ?? '');
+    if (cText == null) {
       toast('Report Send Successfully');
       return false;
-    }else{
+    } else {
       checks.add(cText);
     }
     // for(int j=0;j<post.mediaTypes.length;j++){
@@ -425,18 +510,17 @@ class ShotsService {
     //     checks.add(cImage);
     //   }
     // }
-    bool shouldReport=false;
-    for(int j=0;j<checks.length;j++){
-      if(checks[j]){
-        shouldReport=true;
+    bool shouldReport = false;
+    for (int j = 0; j < checks.length; j++) {
+      if (checks[j]) {
+        shouldReport = true;
         break;
       }
     }
     print('checks ${checks}');
     print('shouldReport $shouldReport');
 
-
-    if(shouldReport){
+    if (shouldReport) {
       Map<String, dynamic> back = await service.httpPost(
           '/api/v1/Shots/addReplyReport',
           {
@@ -451,11 +535,10 @@ class ShotsService {
         toast(back['error']);
       }
       return back['status'];
-    }else{
+    } else {
       toast('Report Send Successfully');
       return false;
     }
-
   }
 
   static Future<bool?> checkReportText(String text) async {
@@ -464,10 +547,8 @@ class ShotsService {
         "http://api1.webpurify.com/services/rest/?"
         "format=json&api_key=64b03d7273c0635157a724ac65a56835&text="
         "${text}&lang=en";
-    http.Response utf = await http
-        .get(Uri.parse(url))
-        .catchError((e) {
-          print('ev$e');
+    http.Response utf = await http.get(Uri.parse(url)).catchError((e) {
+      print('ev$e');
       FutureOr<http.Response> out = http.Response('nonet', 403);
       return out;
     });
@@ -499,8 +580,8 @@ class ShotsService {
     http.Response utf = await http
         .get(Uri.parse(""
             "https://im-api1.webpurify.com/services/rest/?"
-        "api_key=aebaa29966e1fac36d56933af4246d54&format="
-        "json&method=webpurify.aim.imgcheck&cats=nudity,wad,offensive,gore,ocr,scam"
+            "api_key=aebaa29966e1fac36d56933af4246d54&format="
+            "json&method=webpurify.aim.imgcheck&cats=nudity,wad,offensive,gore,ocr,scam"
             "&imgurl=$text"))
         .catchError((e) {
       FutureOr<http.Response> out = http.Response('nonet', 403);
@@ -531,13 +612,13 @@ class ShotsService {
         list.add(convertData(res, 'artificialtext', DataType.int));
         // list.add(convertData(res, 'naturaltext', DataType.int));
         list.add(convertData(res, 'scam', DataType.int));
-        bool out=false;
-        for(int j=0;j<list.length;j++){
-              if(list[j]>50){
-                print('jj $j');
-                out=true;
-                break;
-              }
+        bool out = false;
+        for (int j = 0; j < list.length; j++) {
+          if (list[j] > 50) {
+            print('jj $j');
+            out = true;
+            break;
+          }
         }
         return out;
       } else {

@@ -162,14 +162,39 @@ class ChatListItem extends StatelessWidget {
                             roomUser.profilePhoto ?? '',
                             fit: BoxFit.fill)),
               ),
-            if (roomUser!=null && roomUser.isOnline)
-              Align(
-                alignment: Alignment(0.9, 0.9),
-                child: CircleAvatar(
-                  backgroundColor: greenCall,
-                  radius: 5,
+            Align(
+              alignment: Alignment(1, -1),
+              child: SizedBox(
+                width: doubleHeight(3),
+                height: doubleHeight(3),
+                child: Builder(
+                  builder: (context) {
+                    if (roomUser!.team != null &&
+                        roomUser.team!.team_badge != null) {
+                      return Container(
+                        decoration: BoxDecoration(
+                            color: white,
+                            border: Border.all(color: white, width: 2),
+                            borderRadius: BorderRadius.circular(100),
+                            image: DecorationImage(
+                              image: networkImage(
+                                  roomUser.team!.team_badge!),
+                            )),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                 ),
-              )
+              ),
+            )
+            // if (roomUser!=null && roomUser.isOnline)
+            //   Align(
+            //     alignment: Alignment(0.9, 0.9),
+            //     child: CircleAvatar(
+            //       backgroundColor: greenCall,
+            //       radius: 5,
+            //     ),
+            //   )
           ],
         ),
       ),
@@ -182,23 +207,23 @@ class ChatListItem extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-      trailing: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // CircleAvatar(
-          //   radius: 10,
-          //   backgroundColor: greenCall,
-          //   child: Text(chat.newMessages.toString()),
-          // ),
-          // SizedBox(height: doubleHeight(1)),
-          // Text(chat.messages.isNotEmpty?
-          //   '${chat.messages.last.date.hour}'
-          //     ' : ${chat.messages.last.date.minute} ${
-          //   chat.messages.last.date.hour<12?'AM':'PM'
-          //   }':'')
-        ],
-      ),
+      // trailing: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.end,
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: [
+      //     // CircleAvatar(
+      //     //   radius: 10,
+      //     //   backgroundColor: greenCall,
+      //     //   child: Text(chat.newMessages.toString()),
+      //     // ),
+      //     // SizedBox(height: doubleHeight(1)),
+      //     // Text(chat.messages.isNotEmpty?
+      //     //   '${chat.messages.last.date.hour}'
+      //     //     ' : ${chat.messages.last.date.minute} ${
+      //     //   chat.messages.last.date.hour<12?'AM':'PM'
+      //     //   }':'')
+      //   ],
+      // ),
     );
   }
 }

@@ -398,7 +398,9 @@ class _AppPageState extends State<AppPage> {
                       onPressed: () {
                         if (currentIndex == 0) {
                           MainState state = Provider.of(context, listen: false);
-                          if (state.tab == MyTab.fanFeed) {
+                          if (state.tab == MyTab.stadia) {
+                            Go.pushSlideAnimSheet(context, ShootBuilder(stadia: true));
+                          }else if (state.tab == MyTab.fanFeed) {
                             Go.pushSlideAnimSheet(context, ShootBuilder());
                           } else if (state.tab == MyTab.games) {
                             if (state.isOnMatchPage) {

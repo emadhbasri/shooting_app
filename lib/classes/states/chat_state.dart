@@ -3,11 +3,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/states/main_state.dart';
 
 import '../../main.dart';
 import '../services/chat_service.dart';
 
 class ChatState extends ChangeNotifier {
+
+  DataChatRoomUser? myRole;
+
   bool loadingImageSend=false;
 
   bool loadingListCaht = false;
@@ -46,10 +50,18 @@ class ChatState extends ChangeNotifier {
   getChats({DataChatRoom? chatRoom}) async {
     if(chatRoom!=null)
       selectedChat=chatRoom;
+
     if(selectedChat.chatType==1){
       chats = await ChatService.getPrivateChat(service, chatId: selectedChat.id);
       notifyListeners();
     }else{
+      for (DataChatRoomUser element in selectedChat.chatroomUsers){
+        if(element.personalInformation!=null &&
+            element.personalInformation!.userName==getIt<MainState>().userName) {
+          myRole = element;
+          break;
+        }
+      }
       // this.selectedChat= await ChatService.getPrivateChat(service, chatId: groupChatId);
       chats = await ChatService.getGroupChatMessages(service, chatId: selectedChat.id);
       notifyListeners();
@@ -70,7 +82,6 @@ class ChatState extends ChangeNotifier {
     //   }
     notifyListeners();
   }
-
 
   sendMessage({String? message, XFile? file}) async {
     loadingImageSend=true;

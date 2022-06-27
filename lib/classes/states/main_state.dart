@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -22,60 +21,67 @@ import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';
 import 'package:soundpool/soundpool.dart';
-class MainState extends ChangeNotifier {
 
+class MainState extends ChangeNotifier {
   ///share in app
-  receiveShare({List<SharedMediaFile>? sharedFiles,String? sharedText})async{
+  receiveShare({List<SharedMediaFile>? sharedFiles, String? sharedText}) async {
     print('receiveShare');
     print('sharedFiles $sharedFiles');
     print('sharedText $sharedText');
-    if(appPageContext==null){
+    if (appPageContext == null) {
       await Future.delayed(Duration(seconds: 1));
-      receiveShare(sharedFiles:sharedFiles,sharedText:sharedText);
-    } else if(sharedFiles!=null || sharedText!=null ){
+      receiveShare(sharedFiles: sharedFiles, sharedText: sharedText);
+    } else if (sharedFiles != null || sharedText != null) {
       await Future.delayed(Duration(seconds: 1));
-      String? way = await showDialog(context: appPageContext!, builder: (context)=>ChooseSharingWay());
+      String? way = await showDialog(
+          context: appPageContext!, builder: (context) => ChooseSharingWay());
       print('way $way');
-      if(way!=null){
-        if(way=='chat'){
-          sharedFiles=sharedFiles;
-          sharedText=sharedText;
-          Go.push(appPageContext!, ChooseChatBuilder(sharedText: sharedText,sharedFiles: sharedFiles));
+      if (way != null) {
+        if (way == 'chat') {
+          sharedFiles = sharedFiles;
+          sharedText = sharedText;
+          Go.push(
+              appPageContext!,
+              ChooseChatBuilder(
+                  sharedText: sharedText, sharedFiles: sharedFiles));
           notifyListeners();
-        }else{
-          Go.push(appPageContext!, Shoot(sharedText: sharedText,sharedFiles: sharedFiles,));
+        } else {
+          Go.push(
+              appPageContext!,
+              Shoot(
+                sharedText: sharedText,
+                sharedFiles: sharedFiles,
+                stadia: false,
+              ));
         }
       }
     }
   }
 
   BuildContext? appPageContext;
-  reciveNotif(String notifKind,String notifData)async{
+  reciveNotif(String notifKind, String notifData) async {
     print('state.notifData ${notifData}');
     print('notifKind ${notifKind}');
-    if(appPageContext==null){
+    if (appPageContext == null) {
       await Future.delayed(Duration(seconds: 1));
-      reciveNotif(notifKind,notifData);
-    } else{
+      reciveNotif(notifKind, notifData);
+    } else {
       await Future.delayed(Duration(seconds: 1));
-        if (notifKind == 'User') {
-          Go.pushSlideAnim(appPageContext!,
-              ProfileBuilder(username: notifData));
-          // notifKind=null;
-          // notifData=null;
-        } else if (notifKind == 'Shot') {
-          Go.pushSlideAnim(
-              appPageContext!,
-              Shot(
-                postId: notifData,
-              ));
-          // notifKind=null;
-          // notifData=null;
-        }
+      if (notifKind == 'User') {
+        Go.pushSlideAnim(appPageContext!, ProfileBuilder(username: notifData));
+        // notifKind=null;
+        // notifData=null;
+      } else if (notifKind == 'Shot') {
+        Go.pushSlideAnim(
+            appPageContext!,
+            Shot(
+              postId: notifData,
+            ));
+        // notifKind=null;
+        // notifData=null;
+      }
     }
   }
-
-
 
   MyService service = getIt<MyService>();
   late ScrollController listController;
@@ -85,14 +91,13 @@ class MainState extends ChangeNotifier {
   MyTab tab = MyTab.fanFeed;
   late String userId;
   late String userName;
-  play()async{
-   await pool.play(soundId);
+  play() async {
+    await pool.play(soundId);
   }
+
   init() async {
     pool = Soundpool.fromOptions(
-      options: SoundpoolOptions(streamType: StreamType.notification
-      )
-    );
+        options: SoundpoolOptions(streamType: StreamType.notification));
     ByteData soundData = await rootBundle.load("assets/images/shooting.mp3");
     soundId = await pool.load(soundData);
 
@@ -102,57 +107,104 @@ class MainState extends ChangeNotifier {
     ss = await getString('username');
     print('ss $ss');
     userName = ss!;
+    getTags();
+
   }
 
   DataPersonalInformation? personalInformation;
-  List<DataPost> profilePosts=[];
-  int profilePostsPageNumber=1;
-  bool profilePostsHasNext=false;
-  bool loadingProfilePost=false;
+  List<DataPost> profilePosts = [];
+  int profilePostsPageNumber = 1;
+  bool profilePostsHasNext = false;
+  bool loadingProfilePost = false;
 
-  Future<void> getProfileShots({bool force=false}) async {
+  Future<void> getProfileShots({bool force = false}) async {
     debugPrint('getProfileShots($force)');
     if (force) {
       profilePostsPageNumber = 1;
       profilePosts.clear();
-        loadingProfilePost = true;
-        notifyListeners();
+      loadingProfilePost = true;
+      notifyListeners();
     }
-    Map<String,dynamic> back = await ShotsService.getByUserId(service,pageNumber: profilePostsPageNumber);
-    loadingProfilePost = false;notifyListeners();
-    if(back.length>0){
-      profilePostsHasNext=back['hasNext'];
+    Map<String, dynamic> back = await ShotsService.getByUserId(service,
+        pageNumber: profilePostsPageNumber);
+    loadingProfilePost = false;
+    notifyListeners();
+    if (back.length > 0) {
+      profilePostsHasNext = back['hasNext'];
       profilePosts.addAll(back['list']);
     }
     // if(noNotify)
     notifyListeners();
   }
 
-  Future<void> getProfile({bool force=false}) async {
-    if (force==false && personalInformation != null) return;
+  Future<void> getProfile({bool force = false}) async {
+    if (force == false && personalInformation != null) return;
     getProfileShots(force: true);
     personalInformation = await UsersService.myProfile(getIt<MyService>());
     // if(noNotify)
-      notifyListeners();
+    notifyListeners();
   }
+
   int postsPageNumber = 1;
-  bool postsHasNext=false;
+  bool postsHasNext = false;
   List<DataPost> allPosts = [];
-  bool loadingPost=false;
-  getFanFeed({bool add=false}) async {
-    if(!add){loadingPost=true;notifyListeners();}
+  bool loadingPost = false;
+  getFanFeed({bool add = false}) async {
+    if (!add) {
+      loadingPost = true;
+      notifyListeners();
+    }
     // allPosts = await ShotsService.shotsAll(service);
     print('add $add');
-    Map<String,dynamic> bback = await ShotsService.fanFeed(service,pageNumber: postsPageNumber);
-    loadingPost=false;notifyListeners();
-    if(add)
+    Map<String, dynamic> bback =
+        await ShotsService.fanFeed(service, pageNumber: postsPageNumber);
+    loadingPost = false;
+    notifyListeners();
+    if (add)
       allPosts.addAll(bback['list']);
     else
-      allPosts=bback['list'];
+      allPosts = bback['list'];
 
-    postsHasNext=postsPageNumber<bback['totalPage'];
+    postsHasNext = postsPageNumber < bback['totalPage'];
     notifyListeners();
     print('allPosts ${allPosts.length}');
+  }
+
+  List<String> tags = ['global'];
+  String? selectedTag;
+  List<DataPost> stadiaShots = [];
+  bool loadingStadia = false;
+  getTags() async {
+    List<String> tagsTemp = await ShotsService.getStadiaTags(service);
+    print('getTags = ${tagsTemp}');
+    tags.clear();
+    tags.add('global');
+    tags.addAll(tagsTemp.map((e) => e));
+    notifyListeners();
+    await Future.delayed(Duration(minutes: 5));
+    getTags();
+  }
+
+  getStadia() async {
+    if (selectedTag != null) {
+      getStadiaSearch();
+    } else {
+      loadingStadia = true;
+      notifyListeners();
+      stadiaShots = await ShotsService.getStadiaShots(service);
+      loadingStadia = false;
+      notifyListeners();
+    }
+  }
+
+  getStadiaSearch() async {
+    loadingStadia = true;
+    notifyListeners();
+    if (selectedTag != null) {
+      stadiaShots = await ShotsService.getStadiaSearch(service, selectedTag!);
+    }
+    loadingStadia = false;
+    notifyListeners();
   }
 
   DataMatch1? match;
@@ -162,7 +214,7 @@ class MainState extends ChangeNotifier {
 
   List<DataStoryUser>? storyViewed;
   List<DataStoryUser>? newStories;
-  List<DataStoryMain> myStoriesAll=[];
+  List<DataStoryMain> myStoriesAll = [];
   DataStoryUser? myStories;
   // getMyStories() async {
   //   List<DataStoryMain> all = await service.myStories();
@@ -179,7 +231,7 @@ class MainState extends ChangeNotifier {
     List<List<DataStoryMain>> out = [];
     myStoriesAll.clear();
     for (int j = 0; j < all.length; j++) {
-      if(all[j].person.personalInformationId==personalInformation!.id){
+      if (all[j].person.personalInformationId == personalInformation!.id) {
         myStoriesAll.add(all[j]);
         continue;
       }
@@ -193,16 +245,15 @@ class MainState extends ChangeNotifier {
     }
     List<DataStoryUser> allstoryUsers = [];
     for (int j = 0; j < out.length; j++) {
-      if(out[j].isNotEmpty)
-        allstoryUsers.add(DataStoryUser.fromList(out[j]));
+      if (out[j].isNotEmpty) allstoryUsers.add(DataStoryUser.fromList(out[j]));
     }
     storyViewed =
         allstoryUsers.where((element) => element.isAllSeen == true).toList();
     newStories =
         allstoryUsers.where((element) => element.isAllSeen == false).toList();
 
-    if(myStoriesAll.isNotEmpty) {
-      myStories=null;
+    if (myStoriesAll.isNotEmpty) {
+      myStories = null;
       myStories = DataStoryUser.fromList(myStoriesAll);
     }
     notifyListeners();

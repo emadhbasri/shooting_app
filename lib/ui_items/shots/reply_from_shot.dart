@@ -9,8 +9,9 @@ import '../dialogs/dialog1.dart';
 import 'index.dart';
 
 class CommentReply extends StatefulWidget {
+  final String shotId;
   final VoidCallback delete;
-  const CommentReply({Key? key, required this.reply, required this.delete})
+  const CommentReply({Key? key, required this.reply,required this.shotId, required this.delete})
       : super(key: key);
   final DataCommentReply reply;
   @override
@@ -130,7 +131,7 @@ class _CommentReplyState extends State<CommentReply> {
                   GestureDetector(
                     onTap: () {
                       Go.pushSlideAnimSheet(
-                          context, MyBottomSheetReply(widget.reply));
+                          context, MyBottomSheetReply(widget.reply,widget.shotId));
                     },
                     child: Container(
                       width: doubleWidth(6),

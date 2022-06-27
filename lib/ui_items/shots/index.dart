@@ -37,7 +37,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
       !text.contains('https://') &&
       !text.contains('footballbuzz://JoinChat/')
   )
-    return Text(text);
+    return Text(text,);
   return Wrap(
     alignment: WrapAlignment.start,
     crossAxisAlignment: WrapCrossAlignment.start,

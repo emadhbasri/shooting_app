@@ -381,6 +381,62 @@ class MyService {
     }
   }
 
+  Future<Map<String, dynamic>> httpPutMulti(String url, FormData formData,
+      {bool jsonType = false}) async {
+    Dio dio = Dio();
+    Response utf = await dio
+        .put(_server + url,
+        options: Options(headers: {
+          // 'Content-Type':'multipart/form-data',
+          'Authorization': 'Bearer $_access'
+        }),
+        data: formData)
+        .catchError((e) {
+      debugPrint('put catchError $e');
+      FutureOr<Response> out = Response(
+          statusCode: 403,
+          data: 'nonet',
+          requestOptions: RequestOptions(path: ''));
+      return out;
+    });
+    print('formData ${formData.fields}');
+
+    debugPrint('Post ${_server + url} ${{
+      // 'Content-Type':'multipart/form-data',
+      'Authorization': 'Bearer $_access'
+    }} ');
+
+    debugPrint('utf ${utf.data}');
+    if (utf.statusCode == 403 && utf.data == 'nonet') {
+      return {'status': false, "data": false};
+    }
+
+    // var json = utf8.decode(utf.data.toString().codeUnits);
+    // debugPrint('json $json');
+    // var jsonn = jsonDecode(utf.data);
+    // debugPrint('jsonn $jsonn');
+
+    // debugPrint('json $json');
+    // debugPrint('jsonn $jsonn');
+    if (utf.statusCode == 201 ||
+        utf.statusCode == 200 ||
+        utf.statusCode == 204) {
+      return {'status': true, 'data': utf.data};
+    } else if(utf.data is Map){
+
+      if (utf.data.containsKey('errors')) {
+        return {'status': false, 'error': utf.data['errors']};
+      }else if(utf.data.containsKey('data') && utf.data['data'] is List){
+        List ll = utf.data['data'];
+        return {'status': false, 'error': ll.length>1?ll.join('\n'):ll.first};
+      } else {
+        return {'status': false, 'error': utf.data['message']};
+      }
+    }else{
+      return {'status': false, "data": false,'error':utf.data};
+    }
+  }
+
   Future<Map<String,dynamic>?> getNotif({int pageNumber=1}) async {
     debugPrint('getNotif()');
     Map<String, dynamic> back = await httpGet('/api/v1/Notification/notifications/get?pageNumber=$pageNumber');

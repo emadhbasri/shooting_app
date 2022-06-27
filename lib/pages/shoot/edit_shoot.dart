@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,36 +7,20 @@ import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:video_player/video_player.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
-import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
-import '../../classes/states/main_state.dart';
+import '../../classes/services/shots_service.dart';
 
-class ShootBuilder extends StatelessWidget {
-  const ShootBuilder({Key? key, this.matchId, this.stadia = false})
-      : super(key: key);
-  final int? matchId;
-  final bool stadia;
+class EditShoot extends StatefulWidget {
+  final DataPost post;
+  const EditShoot({
+    Key? key,
+    required this.post,
+  }) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return MainStateProvider(
-      child: Shoot(matchId: matchId,stadia: stadia,),
-    );
-  }
+  _EditShootState createState() => _EditShootState();
 }
 
-class Shoot extends StatefulWidget {
-  const Shoot({Key? key,
-    this.matchId, this.sharedFiles, this.sharedText,required this.stadia})
-      : super(key: key);
-  final List<SharedMediaFile>? sharedFiles;
-  final String? sharedText;
-  final bool stadia;
-  final int? matchId;
-  @override
-  _ShootState createState() => _ShootState();
-}
-
-class _ShootState extends State<Shoot> {
+class _EditShootState extends State<EditShoot> {
   double? position;
   double? positionStart;
   double pos = 0;
@@ -46,17 +29,14 @@ class _ShootState extends State<Shoot> {
   MyService service = getIt<MyService>();
   TextEditingController controller = TextEditingController();
   bool sending = false;
-  List<String> mediaIds=[];
-  editData(context)async{
-
-  }
-
-  sendData(context) async {
+  List<String> mediaIds = [];
+  editData(context) async {
     if (sending) return;
     print('sendData()');
     setState(() {
       sending = true;
     });
+
     if (controller.value.text.trim() == '' && images.isEmpty && video == null) {
       toast('Please Enter Text Or Image Or Video');
       await Future.delayed(Duration(seconds: 1));
@@ -69,11 +49,12 @@ class _ShootState extends State<Shoot> {
       setState(() {
         sending = false;
       });
-    } else {
-      DataPost? back = await ShotsService.createShot(service,
-          matchId: widget.matchId,
-          stadia: widget.stadia,
+    }else{
+
+      DataPost? back = await ShotsService.editShot(service,
           images: images,
+          shotId: widget.post.id,
+          mediaIds: mediaIds,
           video: video,
           details: controller.value.text);
       setState(() {
@@ -81,13 +62,7 @@ class _ShootState extends State<Shoot> {
       });
       print('back sendData $back');
       if (back != null) {
-        MainState state = getIt<MainState>();
-        if (widget.matchId == null) {
-          state.allPosts.insert(0, back);
-          state.personalInformation!.posts.insert(0, back);
-          state.notify();
-        }
-        getIt<MainState>().play();
+
         Go.pop(context);
       }
     }
@@ -96,25 +71,13 @@ class _ShootState extends State<Shoot> {
   @override
   void initState() {
     super.initState();
-    if (widget.sharedText != null) {
-      controller = TextEditingController(text: widget.sharedText);
-    }
-    if (widget.sharedFiles != null) {
-      for (int j = 0; j < widget.sharedFiles!.length; j++) {
-        if (widget.sharedFiles![j].type == SharedMediaType.IMAGE) {
-          images.add(XFile(widget.sharedFiles![j].path,
-              name: widget.sharedFiles![j].path));
-        } else if (widget.sharedFiles![j].type == SharedMediaType.VIDEO) {
-          video = XFile(widget.sharedFiles![j].path,
-              name: widget.sharedFiles![j].path);
-        }
-      }
-    }
+    controller = TextEditingController(text: widget.post.details ?? '');
   }
 
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
+    print('asd $mediaIds');
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -211,6 +174,281 @@ class _ShootState extends State<Shoot> {
                                     ),
                               ),
                             ),
+                            if (widget.post.mediaTypes.isNotEmpty)
+                              SizedBox(
+                                width: double.maxFinite,
+                                height: doubleWidth(22),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      ...widget.post.mediaTypes.map((e) {
+                                        if (e.media.contains('video/upload')) {
+                                          return SizedBox(
+                                            width: doubleWidth(22),
+                                            height: doubleWidth(22),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        border: Border.all(
+                                                            width: 1,
+                                                            color: mainColor)),
+                                                    width: doubleWidth(20),
+                                                    height: doubleWidth(20),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      child: Container(
+                                                        width: doubleWidth(20),
+                                                        height: doubleWidth(20),
+                                                        child: Icon(Icons
+                                                            .video_library),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      mediaIds.add(e.id);
+                                                      setState(() {
+                                                        widget.post.mediaTypes
+                                                            .remove(e);
+                                                      });
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: doubleWidth(2.5),
+                                                      backgroundColor:
+                                                          Color.fromRGBO(
+                                                              107, 79, 187, 1),
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: Colors.white,
+                                                        size: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                width: doubleWidth(22),
+                                                height: doubleWidth(22),
+                                                child: Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.bottomLeft,
+                                                      child: SizedBox(
+                                                        width: doubleWidth(20),
+                                                        height: doubleWidth(20),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: SizedBox(
+                                                            width:
+                                                                doubleWidth(20),
+                                                            height:
+                                                                doubleWidth(20),
+                                                            child: imageNetwork(
+                                                              e.media,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          mediaIds.add(e.id);
+                                                          setState(() {
+                                                            widget.post.mediaTypes
+                                                                .remove(e);
+                                                          });
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius:
+                                                              doubleWidth(2.5),
+                                                          backgroundColor:
+                                                              Color.fromRGBO(
+                                                                  107,
+                                                                  79,
+                                                                  187,
+                                                                  1),
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              // if (e != images.last)
+                                              //   SizedBox(
+                                              //       width: doubleWidth(3)),
+                                            ],
+                                          );
+                                        }
+                                      }).toList(),
+                                      if (video != null)
+                                        SizedBox(
+                                          width: doubleWidth(22),
+                                          height: doubleWidth(22),
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.bottomLeft,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color: mainColor)),
+                                                  width: doubleWidth(20),
+                                                  height: doubleWidth(20),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: Container(
+                                                      width: doubleWidth(20),
+                                                      height: doubleWidth(20),
+                                                      child: Icon(
+                                                          Icons.video_library),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.topRight,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      video = null;
+                                                    });
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: doubleWidth(2.5),
+                                                    backgroundColor:
+                                                        Color.fromRGBO(
+                                                            107, 79, 187, 1),
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color: Colors.white,
+                                                      size: 15,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ...images
+                                          .map((e) => Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  SizedBox(
+                                                    width: doubleWidth(22),
+                                                    height: doubleWidth(22),
+                                                    child: Stack(
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                          child: SizedBox(
+                                                            width:
+                                                                doubleWidth(20),
+                                                            height:
+                                                                doubleWidth(20),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child: SizedBox(
+                                                                width:
+                                                                    doubleWidth(
+                                                                        20),
+                                                                height:
+                                                                    doubleWidth(
+                                                                        20),
+                                                                child:
+                                                                    Image.file(
+                                                                  File(e.path),
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                images
+                                                                    .remove(e);
+                                                              });
+                                                            },
+                                                            child: CircleAvatar(
+                                                              radius:
+                                                                  doubleWidth(
+                                                                      2.5),
+                                                              backgroundColor:
+                                                                  Color
+                                                                      .fromRGBO(
+                                                                          107,
+                                                                          79,
+                                                                          187,
+                                                                          1),
+                                                              child: Icon(
+                                                                Icons.close,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 15,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  if (e != images.last)
+                                                    SizedBox(
+                                                        width: doubleWidth(3)),
+                                                ],
+                                              ))
+                                          .toList()
+                                    ],
+                                  ),
+                                ),
+                              ),
                             if (images.isNotEmpty || video != null)
                               SizedBox(
                                 width: double.maxFinite,
@@ -218,7 +456,6 @@ class _ShootState extends State<Shoot> {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                    //
                                     children: [
                                       if (video != null)
                                         SizedBox(
@@ -394,7 +631,7 @@ class _ShootState extends State<Shoot> {
                                         });
                                         if (doubleHeight(25) < pos &&
                                             sending == false) {
-                                            sendData(context);
+                                          editData(context);
                                         }
                                       },
                                       child: Container(

@@ -5,6 +5,7 @@ import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/services/user_service.dart';
+import '../../classes/states/main_state.dart';
 import '../../main.dart';
 
 class SearchUserMention extends StatefulWidget {
@@ -166,6 +167,7 @@ class _UserItemState extends State<_UserItem> {
                     // Consumer<MainState>(builder: (context, value, child) {
                       // int index = value.users.indexOf(user);
                       // return
+                    if (user.userName != getIt<MainState>().userName)
                     ElevatedButton(
                         onPressed: () async {
                           print('click');

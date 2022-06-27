@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/pages/shoot/edit_shoot.dart';
+import 'package:shooting_app/pages/shoot/shoot.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
@@ -28,53 +30,99 @@ class MyBottomSheet extends StatelessWidget {
               //   subtitle: Text(post.engagement.toString()),
               // ),
 
-              ListTile(
-                title: Text('Reach'),
-                subtitle: Text(post.reach.toString()),
-              ),
-              ListTile(
-                title: Text('Replies'),
-                subtitle: Text(post.postCommentCount.toString()),
-              ),
               // ListTile(
-              //   title: Text('Shares'),
-              //   subtitle: Text(post.shares.toString()),
+              //   title: Text('Reach'),
+              //   subtitle: Text(post.reach.toString()),
               // ),
-              ListTile(
-                title: Text('Likes'),
-                subtitle: Text(post.postLikeCount.toString()),
-              ),
-              ListTile(
-                title: Text('Profile Clicks'),
-                subtitle: Text(post.profileClicks.toString()),
-              ),
-              if(post.person!=null && post.person!.userName==getIt<MainState>().userName)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                      width: double.maxFinite,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                              side: MaterialStateProperty.all(
-                                  BorderSide(color: mainBlue)),
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(
-                                      vertical: doubleHeight(2.5)))),
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(color: mainBlue),
+              // ListTile(
+              //   title: Text('Replies'),
+              //   subtitle: Text(post.postCommentCount.toString()),
+              // ),
+              // // ListTile(
+              // //   title: Text('Shares'),
+              // //   subtitle: Text(post.shares.toString()),
+              // // ),
+              // ListTile(
+              //   title: Text('Likes'),
+              //   subtitle: Text(post.postLikeCount.toString()),
+              // ),
+              // ListTile(
+              //   title: Text('Profile Clicks'),
+              //   subtitle: Text(post.profileClicks.toString()),
+              // ),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Copy Link',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        copyText('footballbuzz://shot/${post.id}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Share...',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        sharePost('footballbuzz://shot/${post.id}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              if (post.person != null &&
+                  post.person!.userName == getIt<MainState>().userName)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                          child: OutlinedButton(
+                            style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: mainBlue)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: doubleHeight(2.5)))),
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(color: mainBlue),
+                            ),
+                            onPressed: () {
+                              Go.pushSlideAnimSheet(context, EditShoot(
+                                  post: post,
+                              ));
+                            },
                           ),
-                          onPressed: () {
-
-                          },
-                        ),
-                      )),
-                  SizedBox(height: doubleHeight(1)),
-                ],
-              ),
+                        )),
+                    SizedBox(height: doubleHeight(1)),
+                  ],
+                ),
 
               SizedBox(
                   width: double.maxFinite,
@@ -92,8 +140,7 @@ class MyBottomSheet extends StatelessWidget {
                         style: TextStyle(color: Colors.red),
                       ),
                       onPressed: () {
-                        Go.pushSlideAnimSheet(
-                            context, ReportSheet(post:post));
+                        Go.pushSlideAnimSheet(context, ReportSheet(post: post));
                         // Go.pop(context);
                       },
                     ),
@@ -128,6 +175,7 @@ class MyBottomSheet extends StatelessWidget {
     );
   }
 }
+
 class MyBottomSheetComment extends StatelessWidget {
   const MyBottomSheetComment(this.comment, {Key? key}) : super(key: key);
   final DataPostComment comment;
@@ -152,22 +200,91 @@ class MyBottomSheetComment extends StatelessWidget {
               //   title: Text('Reach'),
               //   subtitle: Text(comment.reach.toString()),
               // ),
-              ListTile(
-                title: Text('Replies'),
-                subtitle: Text(comment.commentReplyCount.toString()),
-              ),
+              // ListTile(
+              //   title: Text('Replies'),
+              //   subtitle: Text(comment.commentReplyCount.toString()),
+              // ),
               // ListTile(
               //   title: Text('Shares'),
               //   subtitle: Text(post.shares.toString()),
               // ),
-              ListTile(
-                title: Text('Likes'),
-                subtitle: Text(comment.commentLikeCount.toString()),
-              ),
+              // ListTile(
+              //   title: Text('Likes'),
+              //   subtitle: Text(comment.commentLikeCount.toString()),
+              // ),
               // ListTile(
               //   title: Text('Profile Clicks'),
               //   subtitle: Text(comment.profileClicks.toString()),
               // ),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Copy Link',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        copyText('footballbuzz://shot/${comment.postId}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Share...',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        sharePost('footballbuzz://shot/${comment.postId}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              if (comment.personalInformationId == getIt<MainState>().userId)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                          child: OutlinedButton(
+                            style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: mainBlue)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: doubleHeight(2.5)))),
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(color: mainBlue),
+                            ),
+                            onPressed: () {},
+                          ),
+                        )),
+                    SizedBox(height: doubleHeight(1)),
+                  ],
+                ),
+
               SizedBox(
                   width: double.maxFinite,
                   child: Padding(
@@ -185,7 +302,7 @@ class MyBottomSheetComment extends StatelessWidget {
                       ),
                       onPressed: () {
                         Go.pushSlideAnimSheet(
-                            context, ReportSheet(comment:comment));
+                            context, ReportSheet(comment: comment));
                         // Go.pop(context);
                       },
                     ),
@@ -220,11 +337,14 @@ class MyBottomSheetComment extends StatelessWidget {
     );
   }
 }
+
 class MyBottomSheetReply extends StatelessWidget {
-  const MyBottomSheetReply(this.reply, {Key? key}) : super(key: key);
+  final String shotId;
+  const MyBottomSheetReply(this.reply,this.shotId, {Key? key}) : super(key: key);
   final DataCommentReply reply;
   @override
   Widget build(BuildContext context) {
+
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -252,14 +372,82 @@ class MyBottomSheetReply extends StatelessWidget {
               //   title: Text('Shares'),
               //   subtitle: Text(reply.shares.toString()),
               // ),
-              ListTile(
-                title: Text('Likes'),
-                subtitle: Text(reply.replyLikeCount.toString()),
-              ),
+              // ListTile(
+              //   title: Text('Likes'),
+              //   subtitle: Text(reply.replyLikeCount.toString()),
+              // ),
               // ListTile(
               //   title: Text('Profile Clicks'),
               //   subtitle: Text(reply.profileClicks.toString()),
               // ),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Copy Link',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        copyText('footballbuzz://shot/${shotId}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              SizedBox(
+                  width: double.maxFinite,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.all(
+                              BorderSide(color: mainBlue)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: doubleHeight(2.5)))),
+                      child: Text(
+                        'Share...',
+                        style: TextStyle(color: mainBlue),
+                      ),
+                      onPressed: () {
+                        sharePost('footballbuzz://shot/${shotId}');
+                      },
+                    ),
+                  )),
+              SizedBox(height: doubleHeight(1)),
+              if (reply.personalInformationId == getIt<MainState>().userId)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+                          child: OutlinedButton(
+                            style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: mainBlue)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: doubleHeight(2.5)))),
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(color: mainBlue),
+                            ),
+                            onPressed: () {},
+                          ),
+                        )),
+                    SizedBox(height: doubleHeight(1)),
+                  ],
+                ),
               SizedBox(
                   width: double.maxFinite,
                   child: Padding(
@@ -277,7 +465,10 @@ class MyBottomSheetReply extends StatelessWidget {
                       ),
                       onPressed: () {
                         Go.pushSlideAnimSheet(
-                            context, ReportSheet(reply: reply,));
+                            context,
+                            ReportSheet(
+                              reply: reply,
+                            ));
                         // Go.pop(context);
                       },
                     ),

@@ -15,8 +15,10 @@ import '../../classes/dataTypes.dart';
 
 
 class ShootComment extends StatefulWidget {
-  const ShootComment({Key? key,required this.postId,this.comment}) : super(key: key);
+  const ShootComment({Key? key,required this.postId,this.comment,
+    required this.stadia}) : super(key: key);
   final String postId;
+  final bool stadia;
   final DataPostComment? comment;
   @override
   _ShootCommentState createState() => _ShootCommentState();
@@ -52,6 +54,7 @@ class _ShootCommentState extends State<ShootComment> {
     }else {
       DataPostComment? back = await ShotsService.shotsComment(service,
           images: images,
+          stadia: widget.stadia,
           video:video,
           postId: widget.postId, comment: controller.value.text);
 

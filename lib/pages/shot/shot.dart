@@ -52,7 +52,9 @@ class _ShotState extends State<Shot> {
           heroTag: 'makeComment',
           onPressed: () async{
             if(post!=null){
-              DataPostComment? back = await Go.pushSlideAnimSheet(context, ShootComment(postId: post!.id,));
+              DataPostComment? back = await
+              Go.pushSlideAnimSheet(context, ShootComment(postId: post!.id,
+              stadia: post!.stadiaId!=null,));
               if (back!=null) {
                 setState(() {
                   post!.postComments.add(back);

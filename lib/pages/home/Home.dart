@@ -2,11 +2,11 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/home/mach/match_list.dart';
+import 'package:shooting_app/pages/home/stadia/stadia.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../main.dart';
 import 'fan_feeds.dart';
-import 'story/story_list.dart';
 
 class Home extends StatefulWidget {
   final int? index;
@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-enum MyTab { games, fanFeed, stories }
+enum MyTab { games, fanFeed, stadia, }//stories
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   MyTab tab = MyTab.fanFeed;
@@ -39,7 +39,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           state.tab=tab;
         });break;
         case 2:setState(() {
-          tab=MyTab.stories;
+          tab=MyTab.stadia;
           state.tab=tab;
         });break;
         default:break;
@@ -71,16 +71,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               tabs: [Tab(
                 // text: e,
                 child: Text(
-                  'Games'.toUpperCase(),
+                  'Games',
                 )),
                   Tab(
                     child: Text(
-                      'Fan Feeds'.toUpperCase(),
+                      'Fan Feeds',
                     ),
                   ),
                   Tab(
                     child: Text(
-                      'Stories'.toUpperCase(),
+                      // 'Stories'),
+                      'Stadia',
                     ),
                   )
               ],
@@ -172,7 +173,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               children: [
                 MatchList(),
                 FanFeeds(),
-                const StoryList()
+                const Stadia()
+                // const StoryList()
               ],
             ),
           ),

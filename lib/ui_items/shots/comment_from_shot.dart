@@ -64,6 +64,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -350,11 +351,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 .map((e) => Padding(
                       padding: EdgeInsets.only(left: doubleWidth(4)),
                       child: CommentReply(
+                        shotId: comment.postId,
                           key: UniqueKey(),
                           reply: e,
                           delete: () {
-
-
                             setState(() {
                               comment.commentReplies.remove(e);
                               // comment.commentReplies = temp.toList();
@@ -395,6 +395,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             DataCommentReply? back =
                                 await ShotsService.commentReply(
                                     getIt<MyService>(),
+                                    stadia: comment.stadiaId!=null,
                                     commentId: comment.id,
                                     reply: controllerT.value.text.trim());
                             setState(() {
