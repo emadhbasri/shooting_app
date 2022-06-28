@@ -49,6 +49,7 @@ class _AppPageState extends State<AppPage> {
   }
   void _handleIncomingLinks(context) {
     StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
+      print('uriuri $uri');
       if (!mounted) return;
       if(uri!=null){
         // footballbuzz://Shot/asd
@@ -64,6 +65,8 @@ class _AppPageState extends State<AppPage> {
             
             ''');
         String data = uri.path.replaceAll('/', '');
+        data = data.replaceAll('https:', '');
+        data = data.replaceAll('footballbuzz:', '');
         if(uri.host=='shot'){
           Go.pushSlideAnim(
               context,

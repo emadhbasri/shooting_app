@@ -41,11 +41,13 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   Widget build(BuildContext context) {
     ImageProvider? out;
+
     if(file != null){
       out=FileImage(File(file!.path));
     }else if(image!=null){
       out= networkImage(image!);
     }
+    print('out $out');
     return Scaffold(
       backgroundColor: white,
         appBar: AppBar(
@@ -88,6 +90,7 @@ class _CreateGroupState extends State<CreateGroup> {
                     onTap: ()async{
                       file = await showDialog(context: context, builder: (context)=>
                       ChooseMediaDialog(video: false,));
+                      setState(() {});
                     },
                     child: Container(
                       decoration: BoxDecoration(

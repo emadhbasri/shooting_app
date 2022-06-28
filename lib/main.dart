@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
@@ -113,10 +114,104 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription _intentDataStreamSubscription;
+  void _handleIncomingLinks(context) {
+    print('_handleIncomingLinks ');
+    StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
+      print(''
+          ' $uri');
+      // if (!mounted) return;
+      if(uri!=null){
+        // footballbuzz://Shot/asd
+        // footballbuzz://JoinChat/asd
+        // footballbuzz://User/asd
+        print('''
+            uri $uri
+            ${uri.path}
+            ${uri.host}
+            ${uri.queryParameters}
+            ${uri.queryParametersAll}
+            ${uri.query}
+            
+            ''');
+        String data = uri.path.replaceAll('/', '');
+        data = data.replaceAll('https:', '');
+        data = data.replaceAll('footballbuzz:', '');
+        // if(uri.host=='shot'){
+        //   Go.pushSlideAnim(
+        //       context,
+        //       Shot(
+        //         postId: data,
+        //       ));
+        // }else if(uri.host=='user'){
+        //   Go.pushSlideAnim(context,
+        //       ProfileBuilder(username: data));
+        // }else if(uri.host=='joinchat'){
+        //   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+        //       chatRoomId: data, userId: getIt<MainState>().userId);
+        //   print('back $back');
+        //   if(back!=null) {
+        //     await Go.pushSlideAnim(
+        //         context,
+        //         GroupChatBuilder(
+        //           chatRoom: back,
+        //         ));
+        //   }
+        // }
 
+      }
+
+    }, onError: (Object err) {
+      // if (!mounted) return;
+      print('error uri $err');
+    });
+    linkStream.listen((String? uri) async{
+      print('linkStream $uri');
+      // if (!mounted) return;
+      if(uri!=null){
+        // footballbuzz://Shot/asd
+        // footballbuzz://JoinChat/asd
+        // footballbuzz://User/asd
+        print('''
+            uri $uri
+            
+            ''');
+        String data = uri.replaceAll('/', '');
+        data = data.replaceAll('https:', '');
+        data = data.replaceAll('footballbuzz:', '');
+        // if(uri.host=='shot'){
+        //   Go.pushSlideAnim(
+        //       context,
+        //       Shot(
+        //         postId: data,
+        //       ));
+        // }else if(uri.host=='user'){
+        //   Go.pushSlideAnim(context,
+        //       ProfileBuilder(username: data));
+        // }else if(uri.host=='joinchat'){
+        //   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+        //       chatRoomId: data, userId: getIt<MainState>().userId);
+        //   print('back $back');
+        //   if(back!=null) {
+        //     await Go.pushSlideAnim(
+        //         context,
+        //         GroupChatBuilder(
+        //           chatRoom: back,
+        //         ));
+        //   }
+        // }
+
+      }
+
+    }, onError: (Object err) {
+      // if (!mounted) return;
+      print('error linkStream $err');
+    });
+  }
   @override
   void initState() {
     super.initState();
+    _handleIncomingLinks(context);
+
     MainState state = getIt<MainState>();
     // For sharing images coming from outside the app while the app is in the memory
     _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
@@ -151,7 +246,8 @@ class _MyAppState extends State<MyApp> {
     _intentDataStreamSubscription =
         ReceiveSharingIntent.getTextStream().listen((String value) {
           if(value!=''){
-            state.receiveShare(sharedText: value);
+            if(!value.startsWith('https://footballbuzz.co'))
+             state.receiveShare(sharedText: value);
           }
           setState(() {
             print("Shared: getTextStream $value");
@@ -162,8 +258,10 @@ class _MyAppState extends State<MyApp> {
 
     // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String? value) {
+
       if(value!='' && value!=null){
-        state.receiveShare(sharedText: value);
+        if(!value.startsWith('https://footballbuzz.co'))
+          state.receiveShare(sharedText: value);
       }
       setState(() {
         print("Shared: getInitialText $value");

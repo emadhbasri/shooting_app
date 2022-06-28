@@ -32,7 +32,7 @@ class _EditShootState extends State<EditShoot> {
   List<String> mediaIds = [];
   editData(context) async {
     if (sending) return;
-    print('sendData()');
+    print('sendData($mediaIds)');
     setState(() {
       sending = true;
     });
@@ -51,7 +51,7 @@ class _EditShootState extends State<EditShoot> {
       });
     }else{
 
-      DataPost? back = await ShotsService.editShot(service,
+      bool back = await ShotsService.editShot(service,
           images: images,
           shotId: widget.post.id,
           mediaIds: mediaIds,
@@ -61,7 +61,7 @@ class _EditShootState extends State<EditShoot> {
         sending = false;
       });
       print('back sendData $back');
-      if (back != null) {
+      if (back) {
 
         Go.pop(context);
       }
@@ -77,7 +77,8 @@ class _EditShootState extends State<EditShoot> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
-    print('asd $mediaIds');
+    print('mediaIds $mediaIds');
+    print('images $images');
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -174,7 +175,6 @@ class _EditShootState extends State<EditShoot> {
                                     ),
                               ),
                             ),
-                            if (widget.post.mediaTypes.isNotEmpty)
                               SizedBox(
                                 width: double.maxFinite,
                                 height: doubleWidth(22),
@@ -182,7 +182,9 @@ class _EditShootState extends State<EditShoot> {
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
                                     children: [
-                                      ...widget.post.mediaTypes.map((e) {
+                                      if (widget.post.mediaTypes.isNotEmpty)
+
+                                        ...widget.post.mediaTypes.map((e) {
                                         if (e.media.contains('video/upload')) {
                                           return SizedBox(
                                             width: doubleWidth(22),
@@ -311,6 +313,7 @@ class _EditShootState extends State<EditShoot> {
                                           );
                                         }
                                       }).toList(),
+
                                       if (video != null)
                                         SizedBox(
                                           width: doubleWidth(22),
@@ -322,8 +325,8 @@ class _EditShootState extends State<EditShoot> {
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
+                                                      BorderRadius.circular(
+                                                          5),
                                                       border: Border.all(
                                                           width: 1,
                                                           color: mainColor)),
@@ -331,8 +334,8 @@ class _EditShootState extends State<EditShoot> {
                                                   height: doubleWidth(20),
                                                   child: ClipRRect(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
+                                                    BorderRadius.circular(
+                                                        5),
                                                     child: Container(
                                                       width: doubleWidth(20),
                                                       height: doubleWidth(20),
@@ -353,8 +356,8 @@ class _EditShootState extends State<EditShoot> {
                                                   child: CircleAvatar(
                                                     radius: doubleWidth(2.5),
                                                     backgroundColor:
-                                                        Color.fromRGBO(
-                                                            107, 79, 187, 1),
+                                                    Color.fromRGBO(
+                                                        107, 79, 187, 1),
                                                     child: Icon(
                                                       Icons.close,
                                                       color: Colors.white,
@@ -366,235 +369,90 @@ class _EditShootState extends State<EditShoot> {
                                             ],
                                           ),
                                         ),
+
                                       ...images
                                           .map((e) => Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    width: doubleWidth(22),
-                                                    height: doubleWidth(22),
-                                                    child: Stack(
-                                                      children: [
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomLeft,
-                                                          child: SizedBox(
-                                                            width:
-                                                                doubleWidth(20),
-                                                            height:
-                                                                doubleWidth(20),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child: SizedBox(
-                                                                width:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                height:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                child:
-                                                                    Image.file(
-                                                                  File(e.path),
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            width: doubleWidth(22),
+                                            height: doubleWidth(22),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment
+                                                      .bottomLeft,
+                                                  child: SizedBox(
+                                                    width:
+                                                    doubleWidth(20),
+                                                    height:
+                                                    doubleWidth(20),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          5),
+                                                      child: SizedBox(
+                                                        width:
+                                                        doubleWidth(
+                                                            20),
+                                                        height:
+                                                        doubleWidth(
+                                                            20),
+                                                        child:
+                                                        Image.file(
+                                                          File(e.path),
+                                                          fit: BoxFit
+                                                              .fill,
                                                         ),
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                images
-                                                                    .remove(e);
-                                                              });
-                                                            },
-                                                            child: CircleAvatar(
-                                                              radius:
-                                                                  doubleWidth(
-                                                                      2.5),
-                                                              backgroundColor:
-                                                                  Color
-                                                                      .fromRGBO(
-                                                                          107,
-                                                                          79,
-                                                                          187,
-                                                                          1),
-                                                              child: Icon(
-                                                                Icons.close,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 15,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
+                                                      ),
                                                     ),
                                                   ),
-                                                  if (e != images.last)
-                                                    SizedBox(
-                                                        width: doubleWidth(3)),
-                                                ],
-                                              ))
+                                                ),
+                                                Align(
+                                                  alignment: Alignment
+                                                      .topRight,
+                                                  child:
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        images
+                                                            .remove(e);
+                                                      });
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius:
+                                                      doubleWidth(
+                                                          2.5),
+                                                      backgroundColor:
+                                                      Color
+                                                          .fromRGBO(
+                                                          107,
+                                                          79,
+                                                          187,
+                                                          1),
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: Colors
+                                                            .white,
+                                                        size: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          if (e != images.last)
+                                            SizedBox(
+                                                width: doubleWidth(3)),
+                                        ],
+                                      ))
                                           .toList()
                                     ],
                                   ),
                                 ),
                               ),
-                            if (images.isNotEmpty || video != null)
-                              SizedBox(
-                                width: double.maxFinite,
-                                height: doubleWidth(22),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      if (video != null)
-                                        SizedBox(
-                                          width: doubleWidth(22),
-                                          height: doubleWidth(22),
-                                          child: Stack(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.bottomLeft,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: mainColor)),
-                                                  width: doubleWidth(20),
-                                                  height: doubleWidth(20),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: Container(
-                                                      width: doubleWidth(20),
-                                                      height: doubleWidth(20),
-                                                      child: Icon(
-                                                          Icons.video_library),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      video = null;
-                                                    });
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: doubleWidth(2.5),
-                                                    backgroundColor:
-                                                        Color.fromRGBO(
-                                                            107, 79, 187, 1),
-                                                    child: Icon(
-                                                      Icons.close,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ...images
-                                          .map((e) => Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  SizedBox(
-                                                    width: doubleWidth(22),
-                                                    height: doubleWidth(22),
-                                                    child: Stack(
-                                                      children: [
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomLeft,
-                                                          child: SizedBox(
-                                                            width:
-                                                                doubleWidth(20),
-                                                            height:
-                                                                doubleWidth(20),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child: SizedBox(
-                                                                width:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                height:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                child:
-                                                                    Image.file(
-                                                                  File(e.path),
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                images
-                                                                    .remove(e);
-                                                              });
-                                                            },
-                                                            child: CircleAvatar(
-                                                              radius:
-                                                                  doubleWidth(
-                                                                      2.5),
-                                                              backgroundColor:
-                                                                  Color
-                                                                      .fromRGBO(
-                                                                          107,
-                                                                          79,
-                                                                          187,
-                                                                          1),
-                                                              child: Icon(
-                                                                Icons.close,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 15,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  if (e != images.last)
-                                                    SizedBox(
-                                                        width: doubleWidth(3)),
-                                                ],
-                                              ))
-                                          .toList()
-                                    ],
-                                  ),
-                                ),
-                              )
                           ],
                         )),
                         AbsorbPointer(

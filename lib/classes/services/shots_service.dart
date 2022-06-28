@@ -48,7 +48,7 @@ class ShotsService {
     return convertDataList<DataPost>(back['data'], 'data','DataPost');
   }
 
-  static Future<DataPost?> editShot(
+  static Future<bool> editShot(
       MyService service,
       {
         List<String> mediaIds=const [],
@@ -57,9 +57,10 @@ class ShotsService {
         required String details,
         required String shotId,
         }) async {
-    debugPrint('createShot()');
+    debugPrint('editShot()');
     Map<String, dynamic> map = {
       'Details': details,
+      'EditedAt':DateTime.now().toString()
     };
     if (images.isNotEmpty) {
       List<MultipartFile> temp = [];
@@ -74,7 +75,7 @@ class ShotsService {
       await MultipartFile.fromFile(video.path, filename: video.name);
       map['MediaType'] = file;
     }
-    map['mediaIds']=mediaIds;
+    map['mediaIds']=mediaIds.join(',');
     print('map $map');
     print('url ${'/api/v1/Shots/edit/$shotId'}');
     Map<String, dynamic> back =
@@ -82,12 +83,12 @@ class ShotsService {
     debugPrint('back ${back}');
     if (back['status'] == false) {
       toast(back['error']);
-      return null;
+      return false;
     }
-    DataPost out =
-      convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
+    // DataPost out =
+    //   convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
 
-    return out;
+    return true;
   }
 
 
@@ -276,9 +277,61 @@ class ShotsService {
     return convertDataList<DataPost>(back['data'], 'data', 'DataPost');
   }
 
-  // Future<DataPost> shotsById({required String id})async {
 
-  // }
+  static Future<DataPostComment?> editComment(
+      //todo
+      MyService service, {
+        required String commentId,
+        required String comment,
+        List<String> mediaIds=const [],
+        List<XFile> images = const [],
+        XFile? video,
+      }) async {
+    debugPrint('editComment($commentId,$comment)');
+    MainState mainS = getIt<MainState>();
+
+    Map<String, dynamic> map = {
+      'Comment': comment,
+      'EditedAt':DateTime.now().toString()
+    };
+    map['mediaIds']=mediaIds.join(',');
+    if (images.isNotEmpty) {
+      List<MultipartFile> temp = [];
+      for (int j = 0; j < images.length; j++) {
+        MultipartFile file = await MultipartFile.fromFile(images[j].path,
+            filename: images[j].name);
+        temp.add(file);
+      }
+      map['MediaType'] = temp;
+    } else if (video != null) {
+      MultipartFile file =
+      await MultipartFile.fromFile(video.path, filename: video.name);
+      map['MediaType'] = file;
+    }
+
+    print('out ${map}');
+
+    Map<String, dynamic> back = await service.httpPostMulti(
+        '/api/v1/Shots/comment/edit/$commentId', FormData.fromMap(map));
+
+    // Map<String, dynamic> back = await service.httpPost(
+    //     '/api/v1/Shots/comment',
+    //     {
+    //       "UserId": mainS.userId,
+    //       "PostId": postId,
+    //       "Comment": comment,
+    //       'createdAt': DateTime.now().toString()
+    //       // "MediaType": ""
+    //     },
+    //     jsonType: false);
+    debugPrint('back shotsComment ${back}');
+    if (back['status'])
+      return DataPostComment.fromJson(back['data']['data']);
+    else {
+      toast(back['error']);
+      return null;
+    }
+  }
 
   static Future<DataPostComment?> shotsComment(
     //todo
@@ -331,6 +384,30 @@ class ShotsService {
     debugPrint('back shotsComment ${back}');
     if (back['status'])
       return DataPostComment.fromJson(back['data']['data']);
+    else {
+      toast(back['error']);
+      return null;
+    }
+  }
+
+  static Future<DataCommentReply?> editReply(
+      //todo
+      MyService service, {
+        required String replyId,
+        required String reply,
+      }) async {
+    debugPrint('editReply($replyId,$reply)');
+    Map<String, dynamic> go = {
+      "Reply": reply,
+      'EditedAt':DateTime.now().toString()
+      // "MediaType": ""
+    };
+    print('gogo $go');
+    Map<String, dynamic> back = await service
+        .httpPost('/api/v1/Shots/commentReply/edit$replyId', go, jsonType: false);
+    debugPrint('back commentReply ${back}');
+    if (back['status'])
+      return DataCommentReply.fromJson(back['data']['data']);
     else {
       toast(back['error']);
       return null;
