@@ -89,7 +89,6 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     child: TextField(
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontFamily: "Peyda",
                             fontStyle: FontStyle.normal,
                             fontSize: 14.0),
                         controller: _listControllers[index],

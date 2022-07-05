@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/services/authentication_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/chat/chat_list.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
@@ -21,17 +22,20 @@ import 'shoot/shoot.dart';
 import 'shot/shot.dart';
 
 class AppPageBuilder extends StatelessWidget {
-  const AppPageBuilder({Key? key}) : super(key: key);
-
+  const AppPageBuilder({Key? key,this.update=false}) : super(key: key);
+  final bool update;
   @override
   Widget build(BuildContext context) {
     return MainStateProvider(
-      child: AppPage(),
+      child: AppPage(update:update),
     );
   }
 }
 
 class AppPage extends StatefulWidget {
+  final bool update;
+
+  const AppPage({Key? key, required this.update}) : super(key: key);
   @override
   _AppPageState createState() => _AppPageState();
 }
@@ -43,9 +47,10 @@ class _AppPageState extends State<AppPage> {
     super.initState();
     statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
+    state.receiveShare(update: widget.update);
     state.getProfile();
     _handleIncomingLinks(context);
-
+    // deviceData();
   }
   void _handleIncomingLinks(context) {
     StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{

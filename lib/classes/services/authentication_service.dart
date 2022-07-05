@@ -6,8 +6,36 @@ import 'package:shooting_app/main.dart';
 import '../functions.dart';
 import '../models.dart';
 import 'my_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:device_info_plus/device_info_plus.dart' as dip;
+import 'dart:io';
+Future<String> deviceData() async {
+  dip.DeviceInfoPlugin deviceInfo = dip.DeviceInfoPlugin();
+   if (Platform.isIOS) {
+     dip.IosDeviceInfo info = await deviceInfo.iosInfo;
+     print('deviceData ${info.identifierForVendor}');
+     return info.identifierForVendor!;
+
+   } else {
+    dip.AndroidDeviceInfo info = await deviceInfo.androidInfo;
+    // print('deviceData ${info.id}');
+    // print('deviceData ${info.type}');
+    // print('deviceData ${info.androidId}');
+    // print('deviceData ${info.hardware}');
+    print('deviceData ${info.toMap()}');
+    // print('deviceData ${info.id}');
+    // print('deviceData ${info.id}');
+    // print('deviceData ${info.id}');
+    return info.id!;
+  }
+}
 
 class AuthenticationService {
+
+
+
+
+
   static logOut(context) {
     getIt<MyService>().httpPost('/api/v1/Authentication/logout', {});
     removeShare('refresh');
@@ -60,6 +88,7 @@ class AuthenticationService {
       "phoneNumber": phoneNumber.trim(),
       "is2FA": false,
       "isOnline": true,
+      'deviceId':await deviceData(),
       "email": email.trim(),
       "password": password.trim(),
       "confirmPassword": confirmPassword.trim()
@@ -105,6 +134,7 @@ class AuthenticationService {
     Map<String, dynamic> out = {
       "user": username.trim(),
       "password": password.trim(),
+      'deviceId':await deviceData(),
       "rememberMe": true
     };
     // out['notificationToken'] = 'test';

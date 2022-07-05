@@ -48,7 +48,7 @@ class ShotsService {
     return convertDataList<DataPost>(back['data'], 'data','DataPost');
   }
 
-  static Future<bool> editShot(
+  static Future<DataPost?> editShot(
       MyService service,
       {
         List<String> mediaIds=const [],
@@ -75,7 +75,8 @@ class ShotsService {
       await MultipartFile.fromFile(video.path, filename: video.name);
       map['MediaType'] = file;
     }
-    map['mediaIds']=mediaIds.join(',');
+    if(mediaIds.isNotEmpty);
+      map['mediaIds']=mediaIds.join(',');
     print('map $map');
     print('url ${'/api/v1/Shots/edit/$shotId'}');
     Map<String, dynamic> back =
@@ -83,12 +84,12 @@ class ShotsService {
     debugPrint('back ${back}');
     if (back['status'] == false) {
       toast(back['error']);
-      return false;
+      return null;
     }
-    // DataPost out =
-    //   convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
+    DataPost out =
+      convertData(back['data'], 'data', DataType.clas, classType: 'DataPost');
 
-    return true;
+    return out;
   }
 
 
@@ -288,13 +289,14 @@ class ShotsService {
         XFile? video,
       }) async {
     debugPrint('editComment($commentId,$comment)');
-    MainState mainS = getIt<MainState>();
 
     Map<String, dynamic> map = {
       'Comment': comment,
       'EditedAt':DateTime.now().toString()
     };
-    map['mediaIds']=mediaIds.join(',');
+    if(mediaIds.isNotEmpty)
+      map['mediaIds']=mediaIds.join(',');
+
     if (images.isNotEmpty) {
       List<MultipartFile> temp = [];
       for (int j = 0; j < images.length; j++) {
@@ -311,19 +313,8 @@ class ShotsService {
 
     print('out ${map}');
 
-    Map<String, dynamic> back = await service.httpPostMulti(
+    Map<String, dynamic> back = await service.httpPutMulti(
         '/api/v1/Shots/comment/edit/$commentId', FormData.fromMap(map));
-
-    // Map<String, dynamic> back = await service.httpPost(
-    //     '/api/v1/Shots/comment',
-    //     {
-    //       "UserId": mainS.userId,
-    //       "PostId": postId,
-    //       "Comment": comment,
-    //       'createdAt': DateTime.now().toString()
-    //       // "MediaType": ""
-    //     },
-    //     jsonType: false);
     debugPrint('back shotsComment ${back}');
     if (back['status'])
       return DataPostComment.fromJson(back['data']['data']);
@@ -404,7 +395,7 @@ class ShotsService {
     };
     print('gogo $go');
     Map<String, dynamic> back = await service
-        .httpPost('/api/v1/Shots/commentReply/edit$replyId', go, jsonType: false);
+        .httpPut('/api/v1/Shots/commentReply/edit$replyId', go, jsonType: false);
     debugPrint('back commentReply ${back}');
     if (back['status'])
       return DataCommentReply.fromJson(back['data']['data']);

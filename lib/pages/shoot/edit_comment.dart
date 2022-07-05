@@ -10,17 +10,17 @@ import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 
-class EditShoot extends StatefulWidget {
-  final DataPost post;
-  const EditShoot({
+class EditComment extends StatefulWidget {
+  final DataPostComment comment;
+  const EditComment({
     Key? key,
-    required this.post,
+    required this.comment,
   }) : super(key: key);
   @override
-  _EditShootState createState() => _EditShootState();
+  _EditCommentState createState() => _EditCommentState();
 }
 
-class _EditShootState extends State<EditShoot> {
+class _EditCommentState extends State<EditComment> {
   double? position;
   double? positionStart;
   double pos = 0;
@@ -51,12 +51,12 @@ class _EditShootState extends State<EditShoot> {
       });
     }else{
 
-      DataPost? back = await ShotsService.editShot(service,
+      DataPostComment? back = await ShotsService.editComment(service,
           images: images,
-          shotId: widget.post.id,
+          commentId:  widget.comment.id,
           mediaIds: mediaIds,
           video: video,
-          details: controller.value.text);
+          comment:  controller.value.text);
       setState(() {
         sending = false;
       });
@@ -70,7 +70,7 @@ class _EditShootState extends State<EditShoot> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: widget.post.details ?? '');
+    controller = TextEditingController(text: widget.comment.comment ?? '');
   }
 
   bool isInOtherPage = false;
@@ -181,9 +181,9 @@ class _EditShootState extends State<EditShoot> {
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
                                     children: [
-                                      if (widget.post.mediaTypes.isNotEmpty)
+                                      if (widget.comment.mediaTypes.isNotEmpty)
 
-                                        ...widget.post.mediaTypes.map((e) {
+                                        ...widget.comment.mediaTypes.map((e) {
                                         if (e.media.contains('video/upload')) {
                                           return SizedBox(
                                             width: doubleWidth(22),
@@ -222,7 +222,7 @@ class _EditShootState extends State<EditShoot> {
                                                     onTap: () {
                                                       mediaIds.add(e.id);
                                                       setState(() {
-                                                        widget.post.mediaTypes
+                                                        widget.comment.mediaTypes
                                                             .remove(e);
                                                       });
                                                     },
@@ -281,7 +281,7 @@ class _EditShootState extends State<EditShoot> {
                                                         onTap: () {
                                                           mediaIds.add(e.id);
                                                           setState(() {
-                                                            widget.post.mediaTypes
+                                                            widget.comment.mediaTypes
                                                                 .remove(e);
                                                           });
                                                         },

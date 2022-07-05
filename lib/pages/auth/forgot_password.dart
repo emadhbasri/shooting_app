@@ -150,7 +150,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         child: TextField(
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                fontFamily: "Peyda",
                                 fontStyle: FontStyle.normal,
                                 fontSize: 14.0),
                             controller: _listControllers[index],

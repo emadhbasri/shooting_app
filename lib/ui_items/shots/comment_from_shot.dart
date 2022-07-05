@@ -34,10 +34,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
   }
 
   init() async {
-    if (widget.comment.mediaTypes.isNotEmpty &&
-        widget.comment.mediaTypes.first.media.contains('video/upload')) {
+    if (comment.mediaTypes.isNotEmpty &&
+        comment.mediaTypes.first.media.contains('video/upload')) {
       controller =
-          VideoPlayerController.network(widget.comment.mediaTypes.first.media);
+          VideoPlayerController.network(comment.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
         loadingVideo = false;
@@ -48,8 +48,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.comment.mediaTypes.isNotEmpty &&
-        widget.comment.mediaTypes.first.media.contains('video/upload'))
+    if (comment.mediaTypes.isNotEmpty &&
+        comment.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
   bool isInOtherPage=false;
@@ -133,18 +133,19 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 ),
               ),
               title: Text(
-                comment.personalInformationViewModel!.fullName ?? '',
+                comment.personalInformationViewModel!.userName,
+                // comment.personalInformationViewModel!.fullName ?? '',
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              subtitle: Text(
-                  '@${comment.personalInformationViewModel!.userName}',
-                  style: TextStyle(
-                      color: grayCall,
-                      fontWeight: FontWeight.bold,
-                      fontSize: doubleWidth(2.5))),
+              // subtitle: Text(
+              //     '@${comment.personalInformationViewModel!.userName}',
+              //     style: TextStyle(
+              //         color: grayCall,
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: doubleWidth(2.5))),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -155,10 +156,15 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           fontSize: doubleWidth(2.5))),
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
-                    onTap: () {
-                      Go.pushSlideAnimSheet(
-                          context, MyBottomSheetComment(widget.comment));
-                    },
+                      onTap: () async{
+                        DataPostComment? back = await Go.pushSlideAnimSheet(
+                            context, MyBottomSheetComment(comment));
+                        if(back!=null){
+                          setState(() {
+                            comment=back;
+                          });
+                        }
+                      },
                     child: Container(
                       width: doubleWidth(6),
                       height: doubleWidth(5),
@@ -176,15 +182,15 @@ class _CommentFromShotState extends State<CommentFromShot> {
             sizeh(doubleHeight(1)),
             convertHashtag(context,comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
-            if (widget.comment.mediaTypes.isNotEmpty)
+            if (comment.mediaTypes.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
                   child: Builder(builder: (context) {
-                    if (widget.comment.mediaTypes.isNotEmpty &&
-                        widget.comment.mediaTypes.first.media
+                    if (comment.mediaTypes.isNotEmpty &&
+                        comment.mediaTypes.first.media
                             .contains('video/upload')) {
                       if (loadingVideo) {
                         return Center(
@@ -207,7 +213,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       return Center(
                         child: VideoItem(
                             controller: controller,
-                            url: widget.comment.mediaTypes.first.media,
+                            url: comment.mediaTypes.first.media,
                             aspectRatio: 2),
                       );
                     } else
@@ -215,10 +221,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                         controller: PageController(
                             initialPage: 0, viewportFraction: 0.85),
                         physics: BouncingScrollPhysics(),
-                        itemCount: widget.comment.mediaTypes.length,
+                        itemCount: comment.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
                           padding: EdgeInsets.only(
-                              right: widget.comment.mediaTypes.length - 1 != index
+                              right: comment.mediaTypes.length - 1 != index
                                   ? doubleHeight(2)
                                   : 0),
                           child: GestureDetector(
@@ -226,14 +232,14 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               Go.push(
                                   context,
                                   Gal(
-                                      images: widget.comment.mediaTypes
+                                      images: comment.mediaTypes
                                           .map((e) => e.media)
                                           .toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: imageNetwork(
-                                  widget.comment.mediaTypes[index].media,
+                                  comment.mediaTypes[index].media,
                                   fit: BoxFit.fill,
                                 )),
                           ),
@@ -306,7 +312,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       Text(makeCount(comment.commentLikeCount)),
                     ],
                   ),
-                  if(widget.comment.personalInformationId ==
+                  if(comment.personalInformationId ==
                       getIt<MainState>().userId)
                   Tooltip(
                     message: 'remove the comment',
@@ -453,10 +459,10 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   }
 
   init() async {
-    if (widget.comment.mediaTypes.isNotEmpty &&
-        widget.comment.mediaTypes.first.media.contains('video/upload')) {
+    if (comment.mediaTypes.isNotEmpty &&
+        comment.mediaTypes.first.media.contains('video/upload')) {
       controller =
-          VideoPlayerController.network(widget.comment.mediaTypes.first.media);
+          VideoPlayerController.network(comment.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
         loadingVideo = false;
@@ -467,8 +473,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.comment.mediaTypes.isNotEmpty &&
-        widget.comment.mediaTypes.first.media.contains('video/upload'))
+    if (comment.mediaTypes.isNotEmpty &&
+        comment.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
   @override
@@ -548,18 +554,18 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                 ),
               ),
               title: Text(
-                comment.personalInformationViewModel!.fullName ?? '',
+                comment.personalInformationViewModel!.userName,
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              subtitle: Text(
-                  '@${comment.personalInformationViewModel!.userName}',
-                  style: TextStyle(
-                      color: grayCall,
-                      fontWeight: FontWeight.bold,
-                      fontSize: doubleWidth(2.5))),
+              // subtitle: Text(
+              //     '@${comment.personalInformationViewModel!.userName}',
+              //     style: TextStyle(
+              //         color: grayCall,
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: doubleWidth(2.5))),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -570,9 +576,14 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                           fontSize: doubleWidth(2.5))),
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
-                    onTap: () {
-                      Go.pushSlideAnimSheet(
-                          context, MyBottomSheetComment(widget.comment));
+                    onTap: () async{
+                      DataPostComment? back = await Go.pushSlideAnimSheet(
+                          context, MyBottomSheetComment(comment));
+                      if(back!=null){
+                        setState(() {
+                          comment=back;
+                        });
+                      }
                     },
                     child: Container(
                       width: doubleWidth(6),
@@ -591,15 +602,15 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
             sizeh(doubleHeight(1)),
             convertHashtag(context,comment.comment ?? '', (e) {}),
             sizeh(doubleHeight(1)),
-            if (widget.comment.mediaTypes.isNotEmpty)
+            if (comment.mediaTypes.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox(
                   width: max,
                   height: doubleWidth(70),
                   child: Builder(builder: (context) {
-                    if (widget.comment.mediaTypes.isNotEmpty &&
-                        widget.comment.mediaTypes.first.media
+                    if (comment.mediaTypes.isNotEmpty &&
+                        comment.mediaTypes.first.media
                             .contains('video/upload')) {
                       if (loadingVideo) {
                         return Center(
@@ -622,7 +633,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       return Center(
                         child: VideoItem(
                             controller: controller,
-                            url: widget.comment.mediaTypes.first.media,
+                            url: comment.mediaTypes.first.media,
                             aspectRatio: 2),
                       );
                     } else
@@ -630,10 +641,10 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                         controller: PageController(
                             initialPage: 0, viewportFraction: 0.85),
                         physics: BouncingScrollPhysics(),
-                        itemCount: widget.comment.mediaTypes.length,
+                        itemCount: comment.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
                           padding: EdgeInsets.only(
-                              right: widget.comment.mediaTypes.length - 1 != index
+                              right: comment.mediaTypes.length - 1 != index
                                   ? doubleHeight(2)
                                   : 0),
                           child: GestureDetector(
@@ -641,14 +652,14 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               Go.push(
                                   context,
                                   Gal(
-                                      images: widget.comment.mediaTypes
+                                      images: comment.mediaTypes
                                           .map((e) => e.media)
                                           .toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: imageNetwork(
-                                  widget.comment.mediaTypes[index].media,
+                                  comment.mediaTypes[index].media,
                                   fit: BoxFit.fill,
                                 )),
                           ),
@@ -716,7 +727,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       Text(makeCount(comment.commentLikeCount))
                     ],
                   ),
-                  if(widget.comment.personalInformationId ==
+                  if(comment.personalInformationId ==
                       getIt<MainState>().userId)
                   Tooltip(
                     message: 'remove the comment',

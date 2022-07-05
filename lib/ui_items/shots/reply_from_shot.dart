@@ -11,7 +11,11 @@ import 'index.dart';
 class CommentReply extends StatefulWidget {
   final String shotId;
   final VoidCallback delete;
-  const CommentReply({Key? key, required this.reply,required this.shotId, required this.delete})
+  const CommentReply(
+      {Key? key,
+      required this.reply,
+      required this.shotId,
+      required this.delete})
       : super(key: key);
   final DataCommentReply reply;
   @override
@@ -28,8 +32,7 @@ class _CommentReplyState extends State<CommentReply> {
 
   @override
   Widget build(BuildContext context) {
-    if(reply.personalInformationViewModel==null)
-      return const SizedBox();
+    if (reply.personalInformationViewModel == null) return const SizedBox();
     return Container(
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -49,43 +52,41 @@ class _CommentReplyState extends State<CommentReply> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
-                        onTap: (){
-                          Go.pushSlideAnim(
-                              context, ProfileBuilder(username: reply.personalInformationViewModel!.userName));
-                        },
-                        child:
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: SizedBox(
-                              width: doubleHeight(5),
-                              height: doubleHeight(5),
-                              child: Builder(
-                                builder: (context) {
-                                  if (reply
-                                      .personalInformationViewModel!
-                                      .profilePhoto != null) {
-                                    return imageNetwork(
-                                      reply
-                                          .personalInformationViewModel!
-                                          .profilePhoto!,
-                                      fit: BoxFit.fill,
-                                    );
-                                  }
-                                  return profilePlaceHolder();
-                                },
-                              )
-                          ),
-                        )
-
-                      ),
+                          onTap: () {
+                            Go.pushSlideAnim(
+                                context,
+                                ProfileBuilder(
+                                    username: reply
+                                        .personalInformationViewModel!
+                                        .userName));
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: SizedBox(
+                                width: doubleHeight(5),
+                                height: doubleHeight(5),
+                                child: Builder(
+                                  builder: (context) {
+                                    if (reply.personalInformationViewModel!
+                                            .profilePhoto !=
+                                        null) {
+                                      return imageNetwork(
+                                        reply.personalInformationViewModel!
+                                            .profilePhoto!,
+                                        fit: BoxFit.fill,
+                                      );
+                                    }
+                                    return profilePlaceHolder();
+                                  },
+                                )),
+                          )),
                     ),
                     Align(
                       alignment: Alignment(1, -1),
                       child: SizedBox(
                         width: doubleHeight(3),
                         height: doubleHeight(3),
-                        child:
-                        Container(
+                        child: Container(
                           decoration: BoxDecoration(
                               color: white,
                               border: Border.all(color: white, width: 2),
@@ -107,18 +108,17 @@ class _CommentReplyState extends State<CommentReply> {
                 ),
               ),
               title: Text(
-                reply.personalInformationViewModel!.fullName ?? '',
+                reply.personalInformationViewModel!.userName,
                 style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              subtitle: Text(
-                  '@${reply.personalInformationViewModel!.userName}',
-                  style: TextStyle(
-                      color: grayCall,
-                      fontWeight: FontWeight.bold,
-                      fontSize: doubleWidth(2.5))),
+              // subtitle: Text('@${reply.personalInformationViewModel!.userName}',
+              //     style: TextStyle(
+              //         color: grayCall,
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: doubleWidth(2.5))),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -129,9 +129,14 @@ class _CommentReplyState extends State<CommentReply> {
                           fontSize: doubleWidth(2.5))),
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
-                    onTap: () {
-                      Go.pushSlideAnimSheet(
-                          context, MyBottomSheetReply(widget.reply,widget.shotId));
+                    onTap: () async {
+                      DataCommentReply? back = await Go.pushSlideAnimSheet(
+                          context, MyBottomSheetReply(reply, widget.shotId));
+                      if (back != null) {
+                        setState(() {
+                          reply = back;
+                        });
+                      }
                     },
                     child: Container(
                       width: doubleWidth(6),
@@ -140,7 +145,7 @@ class _CommentReplyState extends State<CommentReply> {
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
                       padding:
-                      EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -150,7 +155,7 @@ class _CommentReplyState extends State<CommentReply> {
             // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
             // Text(reply.replyDetail??''),
-            convertHashtag(context,reply.replyDetail ?? '', (e) {}),
+            convertHashtag(context, reply.replyDetail ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -170,14 +175,14 @@ class _CommentReplyState extends State<CommentReply> {
                           if (!reply.replyLikedBythisUser) {
                             String? back = await ShotsService.replyLike(service,
                                 commentReplyId: reply.id);
-                            if (back!=null)
+                            if (back != null)
                               setState(() {
                                 reply.replyLikes.add(DataReplyLike(back, ''));
                                 reply.replyLikedBythisUser = true;
                                 reply.replyLikeCount++;
                               });
                           } else {
-                            if(reply.replyLikes.isNotEmpty){
+                            if (reply.replyLikes.isNotEmpty) {
                               bool back = await ShotsService.deleteReplyLike(
                                   service,
                                   replyId: reply.replyLikes.first.id);
@@ -194,48 +199,52 @@ class _CommentReplyState extends State<CommentReply> {
                             reply.replyLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: reply.replyLikedBythisUser
-                                ? greenCall
-                                : null),
+                            color:
+                                reply.replyLikedBythisUser ? greenCall : null),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(reply.replyLikeCount)),
                     ],
                   ),
-                  if(widget.reply.personalInformationId ==
+                  if (widget.reply.personalInformationId ==
                       getIt<MainState>().userId)
-                  Tooltip(
-                    message: 'remove the reply',
-                    child: SizedBox(
-                      width: doubleWidth(5),
-                      height: doubleWidth(5),
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (reply.personalInformationId !=
-                              getIt<MainState>().userId) {
-                            toast('you can not delete this reply');
-                            return;
-                          }
-                          bool? alert = await MyAlertDialog(context,
-                              content: 'Do you want to delete the shot?');
-                          // showDialog(
-                          //   context: context,
-                          //   barrierDismissible: true,
-                          //   builder: (BuildContext dialogContext) {
-                          //     return ;
-                          //   },
-                          // );
-                          if (alert != null && alert) {
-                            MyService service = await getIt<MyService>();
-                            bool back = await ShotsService.deleteReply(service,
-                                replyId: reply.id);
-                            if (back) widget.delete();
-                          }
-                        },
-                        child: Icon(CupertinoIcons.trash_fill),
+                    Tooltip(
+                      message: 'remove the reply',
+                      child: SizedBox(
+                        width: doubleWidth(5),
+                        height: doubleWidth(5),
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (reply.personalInformationId !=
+                                getIt<MainState>().userId) {
+                              toast('you can not delete this reply');
+                              return;
+                            }
+                            bool? alert = await MyAlertDialog(context,
+                                content: 'Do you want to delete the shot?');
+                            // showDialog(
+                            //   context: context,
+                            //   barrierDismissible: true,
+                            //   builder: (BuildContext dialogContext) {
+                            //     return ;
+                            //   },
+                            // );
+                            if (alert != null && alert) {
+                              MyService service = await getIt<MyService>();
+                              bool back = await ShotsService.deleteReply(
+                                  service,
+                                  replyId: reply.id);
+                              if (back) widget.delete();
+                            }
+                          },
+                          child: Icon(CupertinoIcons.trash_fill),
+                        ),
                       ),
-                    ),
-                  )else const SizedBox(width: 24,)
+                    )
+                  else
+                    const SizedBox(
+                      width: 24,
+                    )
                 ],
               ),
             ),

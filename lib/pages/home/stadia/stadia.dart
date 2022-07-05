@@ -39,7 +39,7 @@ class _StadiaState extends State<Stadia> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: state.tags
                         .map((e) => Row(children: [
-                              if ((state.selectedTag == null && e == 'global') ||
+                              if ((state.selectedTag == null && e == 'Global') ||
                                   state.selectedTag != null &&
                                       state.selectedTag == e)
                                 Container(
@@ -53,7 +53,7 @@ class _StadiaState extends State<Stadia> {
                                     child: Text(
                                       '#$e',
                                       style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 17,
                                         color: mainBlue,
                                         fontWeight: FontWeight.bold,
                                         // fontSize:
@@ -62,7 +62,7 @@ class _StadiaState extends State<Stadia> {
                               else
                                 GestureDetector(
                                     onTap: () {
-                                      if (e == 'global') {
+                                      if (e == 'Global') {
                                         state.selectedTag = null;
                                       } else {
                                         state.selectedTag = e;
@@ -102,7 +102,7 @@ class _StadiaState extends State<Stadia> {
                                 SizedBox(
                                     height: doubleHeight(70),
                                     width: double.maxFinite,
-                                    child: Center(child: Text('no shot. 🙂'))),
+                                    child: Center(child: Text('No Shots'))),
                               ],
                             )
                           : ListView(

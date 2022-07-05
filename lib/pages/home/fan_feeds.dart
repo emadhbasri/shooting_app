@@ -49,7 +49,7 @@ class _FanFeedsState extends State<FanFeeds> {
                 SizedBox(
                     height: doubleHeight(70),
                     width: double.maxFinite,
-                    child: Center(child: Text('no shot. 🙂'))),
+                    child: Center(child: Text('No Shots'))),
               ],
             ):ListView(
               controller: state.listController,

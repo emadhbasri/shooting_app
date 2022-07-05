@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:shooting_app/classes/services/authentication_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
@@ -12,6 +15,9 @@ class Intro1 extends StatefulWidget {
 
 class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
   late AnimationController _controller;
+
+
+
   init()async{
     _controller=AnimationController(
       vsync: this,value: 0,duration: Duration(milliseconds: 500),reverseDuration: Duration(milliseconds: 500)
@@ -25,13 +31,32 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
     });
     
     MyService service = getIt<MyService>();
-    service.getToken().then((bool value) {
+    service.getToken().then((bool value) async{
       if (value) {
-        Future.delayed(Duration(seconds: 2),
-                () {
-                  _controller.stop();
-                  _controller.dispose();
-          Go.pushAndRemoveSlideAnim(context, AppPageBuilder());});
+        String? userName = await getString('username');
+        if(userName==null){
+          Go.pushAndRemoveSlideAnim(context, Auth());
+          return;
+        }
+
+        Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update:false,));
+return;
+
+        await getVersion(service,userName);
+        await getDevice(service,userName);
+        if(login==true){
+          AuthenticationService.logOut(context);
+          // Go.pushAndRemoveSlideAnim(context, Auth());
+          return;
+        }else{
+          Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update: update??false,));
+          return;
+        }
+        // Future.delayed(Duration(seconds: 2),
+        //         () {
+        //           _controller.stop();
+        //           _controller.dispose();
+      // });
       } else {
         Future.delayed(
             Duration(seconds: 2), ()
@@ -43,6 +68,40 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
         );
       }
     });
+  }
+
+  bool? update,login;
+
+  getVersion(MyService service,String userName)async{
+    debugPrint('getVersion()');
+    String out = '';
+    if(Platform.isAndroid){
+      out='androidVersion=1';
+    }else{
+      out='iosVersion=1';
+    }
+    var back =
+    await service.httpPost('/api/v1/Authentication/CheckVersion?'
+        '$out&username=$userName', {});
+    print('back1 $back');
+    if(back['data']['message'].toString()=="Update : true"){
+      update=true;
+    }else{
+      update=false;
+    }
+  }
+  getDevice(MyService service,String userName)async{
+    debugPrint('getDevice()');
+    String deviceId= await deviceData();
+    var back =
+    await service.httpPost('/api/v1/Authentication/Config?'
+        'deviceId=$deviceId&username=$userName', {});
+    print('back2 $back');
+    if(back['data']['message'].toString()=="Login : true"){
+      login=true;
+    }else{
+      login=false;
+    }
   }
 
   @override

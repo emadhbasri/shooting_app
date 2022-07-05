@@ -145,7 +145,7 @@ class _SearchState extends State<Search> {
           if (posts == null) {
               return circle();
             } else if (posts!.isEmpty) {
-              return Center(child: Text('No Shot Found'));
+              return Center(child: Text('No Shots'));
             } else {
               return ListView(
 

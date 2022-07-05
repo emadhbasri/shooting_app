@@ -37,7 +37,9 @@ Widget convertHashtag(context, String text,Function onTapTag) {
       !text.contains('https://') &&
       !text.contains('footballbuzz://JoinChat/')
   )
-    return Text(text,);
+    return Text(text,style: TextStyle(
+      fontWeight: FontWeight.bold
+    ),);
   return Wrap(
     alignment: WrapAlignment.start,
     crossAxisAlignment: WrapCrossAlignment.start,
@@ -51,7 +53,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
               onLongPress: () {
                 copyText(e.text);
               },
-              child: Text(e.text, style: TextStyle(color: black)));
+              child: Text(e.text, style: TextStyle(color: black,fontWeight: FontWeight.bold)));
         case TextType.link:
           return SizedBox(
             width: double.maxFinite,
@@ -85,7 +87,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
                       ));
                 }
               },
-              child: Text(e.text, style: TextStyle(color: mainBlue)));
+              child: Text(e.text, style: TextStyle(color: mainBlue,fontWeight: FontWeight.bold)));
         case TextType.user:
           return GestureDetector(
               onLongPress: () {
@@ -94,7 +96,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
               onTap: () {
                 onTapTag(context, e.text, true);
               },
-              child: Text(e.text, style: TextStyle(color: mainBlue)));
+              child: Text(e.text, style: TextStyle(color: mainBlue,fontWeight: FontWeight.bold)));
         default:return const SizedBox();
       }
 

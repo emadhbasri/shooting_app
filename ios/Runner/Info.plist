@@ -22,8 +22,7 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -62,22 +61,37 @@
     </array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+<key>NSExtensionAttributes</key>
+<dict>
+  <key>NSExtensionActivationRule</key>
+  <dict>
+    <key>NSExtensionActivationSupportsText</key>
+    <true/>
+  </dict>
+</dict>
+<key>FlutterDeepLinkingEnabled</key>
+<true/>
 
-	<key>CFBundleURLTypes</key>
+<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:footballbuzz.co</string>
+	</array>
+
+<key>CFBundleURLTypes</key>
     	<array>
     		<dict>
     			<key>CFBundleTypeRole</key>
     			<string>Editor</string>
-    			<key>CFBundleURLName</key>
-                <string>footballbuzz.co</string>
+
     			<key>CFBundleURLSchemes</key>
     			<array>
     				<string>ShareMedia</string>
-    				<string>footballbuzz</string>
+
     			</array>
     		</dict>
     		<dict/>
     	</array>
-
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 </dict>
 </plist>

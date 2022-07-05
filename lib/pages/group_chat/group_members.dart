@@ -220,7 +220,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                                   ? () async {
                                       bool? alert = await MyAlertDialog(context,
                                           content:
-                                              'Do You Want To Admin This User?');
+                                              'Add As Admin?');
                                       if (alert == true) {
                                         bool back = await ChatService.addAdmin(
                                             getIt<MyService>(),

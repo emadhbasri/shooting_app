@@ -72,8 +72,8 @@ void main() async {
     sound: true,
   );
 
-  String? tokk = await messaging.getToken();
-  print('tokk $tokk');
+  // String? tokk = await messaging.getToken();
+  // print('tokk $tokk');
   await messaging.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
@@ -216,6 +216,7 @@ class _MyAppState extends State<MyApp> {
     // For sharing images coming from outside the app while the app is in the memory
     _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
         .listen((List<SharedMediaFile> value) {
+
           if(value.isNotEmpty)
             state.receiveShare(sharedFiles: value);
       setState(() {

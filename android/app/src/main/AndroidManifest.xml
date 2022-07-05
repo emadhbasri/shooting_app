@@ -87,17 +87,17 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
-                <data android:scheme="myscheme" android:host="oauth" />
-                <data
-                    android:scheme="footballbuzz"
-                    android:host="footballbuzz.co"
-                    />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                &lt;!&ndash; Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST &ndash;&gt;-->
+<!--                <data android:scheme="myscheme" android:host="oauth" />-->
+<!--                <data-->
+<!--                    android:scheme="footballbuzz"-->
+<!--                    android:host="footballbuzz.co"-->
+<!--                    />-->
+<!--            </intent-filter>-->
 
             <!-- App Links -->
             <intent-filter android:autoVerify="true">

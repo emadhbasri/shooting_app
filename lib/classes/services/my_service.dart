@@ -113,29 +113,31 @@ class MyService {
     });
     debugPrint('utf ${utf.body}');
     if (utf.statusCode == 403 && utf.body == 'nonet') {
-      return {'status': false, "data": false};
+      return <String,dynamic>{'status': false, "data": false};
     }
 
     var json = utf8.decode(utf.bodyBytes);
     var jsonn;
     try {
       jsonn = jsonDecode(json);
-    } catch (e) {}
+    } catch (e) {
+      print('jsonError $e');
+    }
     // debugPrint('json $json');
     // debugPrint('jsonn $jsonn');
     if (utf.statusCode == 201 ||
         utf.statusCode == 200 ||
         utf.statusCode == 204) {
-      return {'status': true, 'data': jsonn};
+      return <String,dynamic>{'status': true, 'data': jsonn};
     } else if(jsonn is Map){
 
       if (jsonn.containsKey('errors')) {
-        return {'status': false, 'error': jsonn['errors']};
+        return <String,dynamic>{'status': false, 'error': jsonn['errors']};
       }else if(jsonn.containsKey('data') && jsonn['data'] is List){
         List ll = jsonn['data'];
-        return {'status': false, 'error': ll.length>1?ll.join('\n'):ll.first};
+        return <String,dynamic>{'status': false, 'error': ll.length>1?ll.join('\n'):ll.first};
       } else {
-        return {'status': false, 'error': jsonn['message']};
+        return <String,dynamic>{'status': false, 'error': jsonn['message']};
       }
     }else{
       String out='';

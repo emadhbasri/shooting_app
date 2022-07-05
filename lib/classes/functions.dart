@@ -4,9 +4,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-// 
-// import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'dataTypes.dart';
@@ -188,14 +186,14 @@ sharePost(String text, {String payam = 'Post'}) =>
 
 toast(String str, {bool isLong=false}) {
   print('toast $str');//todo
-  // Fluttertoast.showToast(
-  //     msg: str,
-  //     toastLength: isLong?Toast.LENGTH_LONG:Toast.LENGTH_SHORT,
-  //     gravity: ToastGravity.BOTTOM,
-  //     timeInSecForIosWeb: 1,
-  //     backgroundColor: mainGreen1,
-  //     textColor: black,
-  //     fontSize: 16.0);
+  Fluttertoast.showToast(
+      msg: str,
+      toastLength: isLong?Toast.LENGTH_LONG:Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: mainGreen1,
+      textColor: black,
+      fontSize: 16.0);
 }
 // toast(String str, context,{bool isLong=false}) {
 //   ToastContext tt =ToastContext();

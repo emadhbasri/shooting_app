@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,14 +10,17 @@ import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_sharing_way.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 import '../../pages/home/Home.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shoot/shoot.dart';
 import '../../pages/shot/shot.dart';
+import '../../ui_items/dialogs/dialog1.dart';
 import '../functions.dart';
 import '../models.dart';
+import '../services/authentication_service.dart';
 import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';
@@ -24,7 +28,7 @@ import 'package:soundpool/soundpool.dart';
 
 class MainState extends ChangeNotifier {
   ///share in app
-  receiveShare({List<SharedMediaFile>? sharedFiles, String? sharedText}) async {
+  receiveShare({List<SharedMediaFile>? sharedFiles, String? sharedText,bool? update}) async {
     print('receiveShare');
     print('sharedFiles $sharedFiles');
     print('sharedText $sharedText');
@@ -53,6 +57,19 @@ class MainState extends ChangeNotifier {
                 sharedFiles: sharedFiles,
                 stadia: false,
               ));
+        }
+      }
+    }else if(update!=true){
+      bool? alert = await MyAlertDialog(appPageContext,
+          content: 'There is a new version for Football Buzz');
+      //yes to update green
+      //not dismiss
+      if(alert==true){
+        if(Platform.isAndroid){
+          openUrl('https://play.google.com/store/apps/details?id=com.footballbuzz.android');
+        }else{
+          // openUrl('https://apps.apple.com/us/app/football-buzz/id1618681919');
+          openUrl('https://apps.apple.com/us/app/football-buzz/');
         }
       }
     }
@@ -138,6 +155,9 @@ class MainState extends ChangeNotifier {
   }
 
   Future<void> getProfile({bool force = false}) async {
+
+
+
     if (force == false && personalInformation != null) return;
     getProfileShots(force: true);
     personalInformation = await UsersService.myProfile(getIt<MyService>());
@@ -170,7 +190,7 @@ class MainState extends ChangeNotifier {
     print('allPosts ${allPosts.length}');
   }
 
-  List<String> tags = ['global'];
+  List<String> tags = ['Global'];
   String? selectedTag;
   List<DataPost> stadiaShots = [];
   bool loadingStadia = false;
@@ -178,7 +198,7 @@ class MainState extends ChangeNotifier {
     List<String> tagsTemp = await ShotsService.getStadiaTags(service);
     print('getTags = ${tagsTemp}');
     tags.clear();
-    tags.add('global');
+    tags.add('Global');
     tags.addAll(tagsTemp.map((e) => e));
     notifyListeners();
     await Future.delayed(Duration(minutes: 5));

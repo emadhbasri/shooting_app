@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/pages/shoot/edit_comment.dart';
+import 'package:shooting_app/pages/shoot/edit_reply.dart';
 import 'package:shooting_app/pages/shoot/edit_shoot.dart';
 import 'package:shooting_app/pages/shoot/shoot.dart';
 
@@ -113,10 +115,13 @@ class MyBottomSheet extends StatelessWidget {
                               'Edit',
                               style: TextStyle(color: mainBlue),
                             ),
-                            onPressed: () {
-                              Go.pushSlideAnimSheet(context, EditShoot(
+                            onPressed: () async{
+                              DataPost? back = await Go.pushSlideAnimSheet(context, EditShoot(
                                   post: post,
                               ));
+                              if(back!=null){
+                                Go.pop(context,back);
+                              }
                             },
                           ),
                         )),
@@ -278,7 +283,14 @@ class MyBottomSheetComment extends StatelessWidget {
                               'Edit',
                               style: TextStyle(color: mainBlue),
                             ),
-                            onPressed: () {},
+                            onPressed: () async{
+                              DataPostComment? back = await Go.pushSlideAnimSheet(context, EditComment(
+                                comment: comment,
+                              ));
+                              if(back!=null){
+                                Go.pop(context,back);
+                              }
+                            },
                           ),
                         )),
                     SizedBox(height: doubleHeight(1)),
@@ -442,7 +454,14 @@ class MyBottomSheetReply extends StatelessWidget {
                               'Edit',
                               style: TextStyle(color: mainBlue),
                             ),
-                            onPressed: () {},
+                            onPressed: () async{
+                              DataCommentReply? back = await Go.pushSlideAnimSheet(context, EditReply(
+                                reply: reply,
+                              ));
+                              if(back!=null){
+                                Go.pop(context,back);
+                              }
+                            },
                           ),
                         )),
                     SizedBox(height: doubleHeight(1)),

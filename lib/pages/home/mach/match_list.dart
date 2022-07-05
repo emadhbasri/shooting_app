@@ -147,7 +147,7 @@ class _MatchListState extends State<MatchList> {
                           )
                               .toList(),
                         )else
-                          Center(child: Text('No matches for this day'),)
+                          Center(child: Text('No Matches For Today'),)
                     else simpleCircle(),
 
                     // SizedBox(height: doubleHeight(2)),

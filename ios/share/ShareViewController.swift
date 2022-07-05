@@ -4,7 +4,6 @@ import MobileCoreServices
 import Photos
 
 class ShareViewController: SLComposeServiceViewController {
-    // TODO: IMPORTANT: This should be your host app bundle identifier
     let hostAppBundleIdentifier = "com.footballbuzz.ios"
     let sharedKey = "ShareKey"
     var sharedMedia: [SharedMediaFile] = []
