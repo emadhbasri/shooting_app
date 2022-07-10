@@ -47,43 +47,34 @@ class _AppPageState extends State<AppPage> {
     super.initState();
     statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
-    state.receiveShare(update: widget.update);
+    // state.receiveShare(update: widget.update);
     state.getProfile();
     _handleIncomingLinks(context);
     // deviceData();
   }
   void _handleIncomingLinks(context) {
+    print('_handleIncomingLinks');
     StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
-      print('uriuri $uri');
+      print('uriuri ${uri.toString()}');
       if (!mounted) return;
       if(uri!=null){
-        // footballbuzz://Shot/asd
-        // footballbuzz://JoinChat/asd
-        // footballbuzz://User/asd
-        print('''
-            uri $uri
-            ${uri.path}
-            ${uri.host}
-            ${uri.queryParameters}
-            ${uri.queryParametersAll}
-            ${uri.query}
-            
-            ''');
-        String data = uri.path.replaceAll('/', '');
-        data = data.replaceAll('https:', '');
-        data = data.replaceAll('footballbuzz:', '');
-        if(uri.host=='shot'){
+
+        Map<String, String> query=uri.queryParameters;
+        String key = query.keys.first;
+        String value = query.values.first;
+
+        if(key.toLowerCase()=='shot'){
           Go.pushSlideAnim(
               context,
               Shot(
-                postId: data,
+                postId: value,
               ));
-        }else if(uri.host=='user'){
+        }else if(key.toLowerCase()=='user'){
           Go.pushSlideAnim(context,
-              ProfileBuilder(username: data));
-        }else if(uri.host=='joinchat'){
+              ProfileBuilder(username: value));
+        }else if(key.toLowerCase()=='joinchat'){
           DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
-              chatRoomId: data, userId: getIt<MainState>().userId);
+              chatRoomId: value, userId: getIt<MainState>().userId);
           print('back $back');
           if(back!=null) {
             await Go.pushSlideAnim(
@@ -93,9 +84,7 @@ class _AppPageState extends State<AppPage> {
                 ));
           }
         }
-
       }
-
     }, onError: (Object err) {
       if (!mounted) return;
       print('error uri $err');

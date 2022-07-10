@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
-import 'package:shooting_app/pages/group_chat/group_chat_list.dart';
-
 import '../classes/functions.dart';
 import '../main.dart';
 import '../pages/AppPage.dart';

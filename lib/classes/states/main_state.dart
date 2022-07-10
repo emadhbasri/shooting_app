@@ -10,7 +10,6 @@ import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_sharing_way.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 import '../../pages/home/Home.dart';
@@ -20,7 +19,6 @@ import '../../pages/shot/shot.dart';
 import '../../ui_items/dialogs/dialog1.dart';
 import '../functions.dart';
 import '../models.dart';
-import '../services/authentication_service.dart';
 import '../services/shots_service.dart';
 import '../services/user_service.dart';
 import 'chat_state.dart';

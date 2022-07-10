@@ -1,9 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-
 import '../../classes/functions.dart';
 
 class ChooseSharingWay extends StatelessWidget {

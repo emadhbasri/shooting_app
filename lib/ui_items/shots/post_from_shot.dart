@@ -451,6 +451,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 ],
               ),
             ),
+            if(post.details!=null && post.details!.trim()!='')
             ListTile(
               onTap: widget.canTouch
                   ? () {

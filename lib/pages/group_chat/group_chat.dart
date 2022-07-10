@@ -1,6 +1,3 @@
-import 'dart:io';
-
-
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
@@ -13,9 +10,7 @@ import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../classes/states/chat_state.dart';
-import '../../classes/states/group_chat_state.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../ui_items/dialogs/choose_media_dialog.dart';
 import '../../ui_items/gal.dart';

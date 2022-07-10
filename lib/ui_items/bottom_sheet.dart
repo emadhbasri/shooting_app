@@ -4,7 +4,6 @@ import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/pages/shoot/edit_comment.dart';
 import 'package:shooting_app/pages/shoot/edit_reply.dart';
 import 'package:shooting_app/pages/shoot/edit_shoot.dart';
-import 'package:shooting_app/pages/shoot/shoot.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';

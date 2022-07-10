@@ -117,8 +117,7 @@ class _MyAppState extends State<MyApp> {
   void _handleIncomingLinks(context) {
     print('_handleIncomingLinks ');
     StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
-      print(''
-          ' $uri');
+      print('uri11 $uri');
       // if (!mounted) return;
       if(uri!=null){
         // footballbuzz://Shot/asd
@@ -211,7 +210,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _handleIncomingLinks(context);
-
+return;
     MainState state = getIt<MainState>();
     // For sharing images coming from outside the app while the app is in the memory
     _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
@@ -243,7 +242,6 @@ class _MyAppState extends State<MyApp> {
       });
     });
 
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
     _intentDataStreamSubscription =
         ReceiveSharingIntent.getTextStream().listen((String value) {
           if(value!=''){

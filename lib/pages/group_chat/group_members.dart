@@ -7,7 +7,6 @@ import 'package:shooting_app/pages/group_chat/create_group.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/states/chat_state.dart';
-import '../../classes/states/group_chat_state.dart';
 import '../../ui_items/dialogs/dialog1.dart';
 import '../home/search_user.dart';
 
