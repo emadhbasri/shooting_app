@@ -83,9 +83,16 @@ class _ShootState extends State<Shoot> {
       if (back != null) {
         MainState state = getIt<MainState>();
         if (widget.matchId == null) {
-          state.allPosts.insert(0, back);
-          state.personalInformation!.posts.insert(0, back);
-          state.notify();
+          if(widget.stadia){
+            state.stadiaShots.insert(0, back);
+            state.personalInformation!.posts.insert(0, back);
+            state.notify();
+          }else{
+            state.allPosts.insert(0, back);
+            state.personalInformation!.posts.insert(0, back);
+            state.notify();
+          }
+
         }
         getIt<MainState>().play();
         Go.pop(context);

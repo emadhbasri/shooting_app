@@ -47,7 +47,15 @@ class MainState extends ChangeNotifier {
               ChooseChatBuilder(
                   sharedText: sharedText, sharedFiles: sharedFiles));
           notifyListeners();
-        } else {
+        } else if(way == 'stadia') {
+          Go.push(
+              appPageContext!,
+              Shoot(
+                sharedText: sharedText,
+                sharedFiles: sharedFiles,
+                stadia: true,
+              ));
+        }else{
           Go.push(
               appPageContext!,
               Shoot(

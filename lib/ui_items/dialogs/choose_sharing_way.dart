@@ -18,10 +18,25 @@ class ChooseSharingWay extends StatelessWidget {
           children: [
 
             Center(
-              child: Text('Please Pick a Way',style: Theme.of(context).textTheme.titleLarge ),
+              child: Text('Please Pick a Way'.toUpperCase(),style: Theme.of(context).textTheme.titleLarge ),
             ),
             SizedBox(height: doubleHeight(2)),
-
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1,color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ListTile(
+                onTap: ()async{
+                  Go.pop(context,'stadia');
+                },
+                title: Text('SHARE IN STADIA'),
+                trailing: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Image.asset('assets/images/soccer(1).png')),
+              ),
+            ),SizedBox(height: doubleHeight(1)),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(width: 1,color: Colors.black),

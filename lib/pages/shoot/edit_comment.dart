@@ -583,10 +583,10 @@ class _EditCommentState extends State<EditComment> {
                                   return;
                                 }
 
-                                if (await video.length() > 20000000) {
+                                if (await video.length() > 50000000) {
                                   print(
                                       'await video.length() ${await video.length()}');
-                                  toast('The video should be less than 20M.',
+                                  toast('The video should be less than 50M.',
                                       isLong: true);
                                   return;
                                 }

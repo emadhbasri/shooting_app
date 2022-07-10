@@ -9,15 +9,15 @@ import 'package:uni_links/uni_links.dart';
 
 bool _initialUriIsHandled = false;
 
-void main() => runApp(MaterialApp(home: MyApp()));
+void main() => runApp(MaterialApp(home: MyApp1()));
 
-class MyApp extends StatefulWidget {
+class MyApp1 extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyApp1State createState() => _MyApp1State();
 }
 //9JA89QQLNQ.
 //apple-app-site-association
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+class _MyApp1State extends State<MyApp1> with SingleTickerProviderStateMixin {
   Uri? _initialUri;
   Uri? _latestUri;
   Object? _err;
@@ -233,14 +233,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   void _showSnackBar(String msg) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = _scaffoldKey.currentContext;
-      if (context != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(msg),
-        ));
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final context = _scaffoldKey.currentContext;
+    //   if (context != null) {
+    //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //       content: Text(msg),
+    //     ));
+    //   }
+    // });
   }
 }
 

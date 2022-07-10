@@ -52,43 +52,37 @@ class _AppPageState extends State<AppPage> {
     _handleIncomingLinks(context);
     // deviceData();
   }
-  void _handleIncomingLinks(context) {
+  void _handleIncomingLinks(context) async{
     print('_handleIncomingLinks');
-    StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
-      print('uriuri ${uri.toString()}');
-      if (!mounted) return;
-      if(uri!=null){
+    if(mainUri!=null){
+    await Future.delayed(Duration(milliseconds: 500));
+      Map<String, String> query=mainUri!.queryParameters;
+      String key = query.keys.first;
+      String value = query.values.first;
 
-        Map<String, String> query=uri.queryParameters;
-        String key = query.keys.first;
-        String value = query.values.first;
-
-        if(key.toLowerCase()=='shot'){
-          Go.pushSlideAnim(
+      if(key.toLowerCase()=='shot'){
+        Go.pushSlideAnim(
+            context,
+            Shot(
+              postId: value,
+            ));
+      }else if(key.toLowerCase()=='user'){
+        Go.pushSlideAnim(context,
+            ProfileBuilder(username: value));
+      }else if(key.toLowerCase()=='joinchat'){
+        DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+            chatRoomId: value, userId: getIt<MainState>().userId);
+        print('back $back');
+        if(back!=null) {
+          await Go.pushSlideAnim(
               context,
-              Shot(
-                postId: value,
+              GroupChatBuilder(
+                chatRoom: back,
               ));
-        }else if(key.toLowerCase()=='user'){
-          Go.pushSlideAnim(context,
-              ProfileBuilder(username: value));
-        }else if(key.toLowerCase()=='joinchat'){
-          DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
-              chatRoomId: value, userId: getIt<MainState>().userId);
-          print('back $back');
-          if(back!=null) {
-            await Go.pushSlideAnim(
-                context,
-                GroupChatBuilder(
-                  chatRoom: back,
-                ));
-          }
         }
       }
-    }, onError: (Object err) {
-      if (!mounted) return;
-      print('error uri $err');
-    });
+    }
+
   }
   int currentIndex = 0;
   int subIndex = 1;

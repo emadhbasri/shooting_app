@@ -16,7 +16,7 @@ class _RegisterState extends State<Register> {
   TextEditingController name = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController phone = TextEditingController();
+  // TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
   bool obscureText = true;
   @override
@@ -102,25 +102,25 @@ bool loading=false;
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                sizeh(doubleHeight(2)),
-                ClipRRect(
-                  child: Container(
-                    width: max,
-                    height: doubleHeight(7),
-                    color: Color.fromRGBO(216, 216, 216, 1),
-                    child: Center(
-                      child: TextField(
-                        keyboardType: TextInputType.phone,
-                        controller: phone,
-                        decoration: InputDecoration(
-                            prefixText: '        ',
-                            border: InputBorder.none,
-                            hintText: 'PhoneNumber (optinal)'),
-                      ),
-                    ),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                // sizeh(doubleHeight(2)),
+                // ClipRRect(
+                //   child: Container(
+                //     width: max,
+                //     height: doubleHeight(7),
+                //     color: Color.fromRGBO(216, 216, 216, 1),
+                //     child: Center(
+                //       child: TextField(
+                //         keyboardType: TextInputType.phone,
+                //         controller: phone,
+                //         decoration: InputDecoration(
+                //             prefixText: '        ',
+                //             border: InputBorder.none,
+                //             hintText: 'PhoneNumber (optinal)'),
+                //       ),
+                //     ),
+                //   ),
+                //   borderRadius: BorderRadius.circular(10),
+                // ),
                 sizeh(doubleHeight(2)),
                 ClipRRect(
                   child: Container(
@@ -186,13 +186,13 @@ bool loading=false;
                     child: RaisedButton(
                       onPressed: () async {
 
-                        if (phone.value.text.trim()!='') {
-                          if (!phone.value.text.trim().contains('+') ||
-                              phone.value.text.trim().length < 12) {
-                            toast('The phoneNumber is not a valid.');
-                            return;
-                          }
-                        }
+                        // if (phone.value.text.trim()!='') {
+                        //   if (!phone.value.text.trim().contains('+') ||
+                        //       phone.value.text.trim().length < 12) {
+                        //     toast('The phoneNumber is not a valid.');
+                        //     return;
+                        //   }
+                        // }
                         setState(() {
                           loading=true;
                         });
@@ -201,7 +201,7 @@ bool loading=false;
                             service,
                             fullName: name.value.text.trim(),
                             userName: username.value.text.trim(),
-                            phoneNumber: phone.value.text.trim(),
+                            phoneNumber: '',//phone.value.text.trim()
                             email: email.value.text.trim(),
                             password: password.value.text.trim(),
                             confirmPassword: password.value.text.trim());

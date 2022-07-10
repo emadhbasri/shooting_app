@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:shooting_app/main1.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'classes/services/my_service.dart';
@@ -22,8 +24,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'pages/intro1.dart';
 
 final getIt = GetIt.instance;
-
-
+Uri? mainUri;
+bool _initialUriIsHandled = false;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -105,7 +107,6 @@ void main() async {
 
   runApp(MyApp());
 }
-
 class MyApp extends StatefulWidget {
 
   @override
@@ -113,104 +114,52 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription _intentDataStreamSubscription;
-  void _handleIncomingLinks(context) {
-    print('_handleIncomingLinks ');
-    StreamSubscription sub = uriLinkStream.listen((Uri? uri) async{
-      print('uri11 $uri');
-      // if (!mounted) return;
-      if(uri!=null){
-        // footballbuzz://Shot/asd
-        // footballbuzz://JoinChat/asd
-        // footballbuzz://User/asd
-        print('''
-            uri $uri
-            ${uri.path}
-            ${uri.host}
-            ${uri.queryParameters}
-            ${uri.queryParametersAll}
-            ${uri.query}
-            
-            ''');
-        String data = uri.path.replaceAll('/', '');
-        data = data.replaceAll('https:', '');
-        data = data.replaceAll('footballbuzz:', '');
-        // if(uri.host=='shot'){
-        //   Go.pushSlideAnim(
-        //       context,
-        //       Shot(
-        //         postId: data,
-        //       ));
-        // }else if(uri.host=='user'){
-        //   Go.pushSlideAnim(context,
-        //       ProfileBuilder(username: data));
-        // }else if(uri.host=='joinchat'){
-        //   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
-        //       chatRoomId: data, userId: getIt<MainState>().userId);
-        //   print('back $back');
-        //   if(back!=null) {
-        //     await Go.pushSlideAnim(
-        //         context,
-        //         GroupChatBuilder(
-        //           chatRoom: back,
-        //         ));
-        //   }
-        // }
-
+  var _intentDataStreamSubscription;
+  StreamSubscription? _sub;
+  Future<void> _handleInitialUri() async {
+    if (!_initialUriIsHandled) {
+      _initialUriIsHandled = true;
+      try {
+        Uri? uri = await getInitialUri();
+        if (uri == null) {
+          print('no initial uri');
+        } else {
+          mainUri=uri;
+          print('got initial uri: $uri');
+        }
+        if (!mounted) return;
+      } on PlatformException {
+        // Platform messages may fail but we ignore the exception
+        print('falied to get initial uri');
+      } on FormatException catch (err) {
+        if (!mounted) return;
+        print('malformed initial uri');
       }
-
-    }, onError: (Object err) {
-      // if (!mounted) return;
-      print('error uri $err');
-    });
-    linkStream.listen((String? uri) async{
-      print('linkStream $uri');
-      // if (!mounted) return;
-      if(uri!=null){
-        // footballbuzz://Shot/asd
-        // footballbuzz://JoinChat/asd
-        // footballbuzz://User/asd
-        print('''
-            uri $uri
-            
-            ''');
-        String data = uri.replaceAll('/', '');
-        data = data.replaceAll('https:', '');
-        data = data.replaceAll('footballbuzz:', '');
-        // if(uri.host=='shot'){
-        //   Go.pushSlideAnim(
-        //       context,
-        //       Shot(
-        //         postId: data,
-        //       ));
-        // }else if(uri.host=='user'){
-        //   Go.pushSlideAnim(context,
-        //       ProfileBuilder(username: data));
-        // }else if(uri.host=='joinchat'){
-        //   DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
-        //       chatRoomId: data, userId: getIt<MainState>().userId);
-        //   print('back $back');
-        //   if(back!=null) {
-        //     await Go.pushSlideAnim(
-        //         context,
-        //         GroupChatBuilder(
-        //           chatRoom: back,
-        //         ));
-        //   }
-        // }
-
-      }
-
-    }, onError: (Object err) {
-      // if (!mounted) return;
-      print('error linkStream $err');
-    });
+    }
+  }
+  void _handleIncomingLinks() {
+      _sub = uriLinkStream.listen((Uri? uri) {
+        if (!mounted) return;
+        print('got uri: $uri');
+          mainUri=uri;
+      }, onError: (Object err) {
+        if (!mounted) return;
+        print('got err: $err');
+        setState(() {
+          // _latestUri = null;
+          if (err is FormatException) {
+            // _err = err;
+          } else {
+            // _err = null;
+          }
+        });
+      });
   }
   @override
   void initState() {
     super.initState();
-    _handleIncomingLinks(context);
-return;
+    _handleIncomingLinks();
+    _handleInitialUri();
     MainState state = getIt<MainState>();
     // For sharing images coming from outside the app while the app is in the memory
     _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
@@ -294,6 +243,8 @@ return;
                   iconTheme: IconThemeData(color: white),
                   color: mainBlue)),
       home:
+      // const SizedBox(),
+      // MyApp1()
       // UniLinksTest(),
       AppFirst(),
     );
