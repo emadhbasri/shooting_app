@@ -18,7 +18,7 @@ class ChooseSharingWay extends StatelessWidget {
           children: [
 
             Center(
-              child: Text('Please Pick a Way'.toUpperCase(),style: Theme.of(context).textTheme.titleLarge ),
+              child: Text('Select'.toUpperCase(),style: Theme.of(context).textTheme.titleLarge ),
             ),
             SizedBox(height: doubleHeight(2)),
             Container(
