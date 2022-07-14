@@ -19,7 +19,7 @@ class ShareDialog extends StatelessWidget {
             SizedBox(height: doubleHeight(4)),
             TextButton(
                 onPressed: () {
-                  sharePost(post.id);
+                  sharePost('https://footballbuzz.co?shot=${post.id}');
                 },
                 child: Text(
                   'Share',
@@ -28,7 +28,7 @@ class ShareDialog extends StatelessWidget {
             SizedBox(height: doubleHeight(1)),
             TextButton(
                 onPressed: () {
-                  copyText('check out the post ${'www.google.com'}');
+                  copyText('check out the post https://footballbuzz.co?shot=${post.id}');
                 },
                 child: Text(
                   'Copy share link',

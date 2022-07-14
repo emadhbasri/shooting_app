@@ -35,7 +35,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
   !text.contains('@') &&
       !text.contains('http://') &&
       !text.contains('https://') &&
-      !text.contains('footballbuzz://JoinChat/')
+      !text.contains('https://footballbuzz.co?joinchat=')
   )
     return Text(text,style: TextStyle(
       fontWeight: FontWeight.bold
@@ -76,7 +76,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
         case TextType.groupLink:
           return GestureDetector(
               onTap: () async{
-                String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
+                String chatRoomId = e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
                 DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                     chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                 if(back!=null) {

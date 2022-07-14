@@ -86,7 +86,7 @@ class _PostFromShotState extends State<PostFromShot> {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
-        !text.contains('footballbuzz://JoinChat/'))
+        !text.contains('https://footballbuzz.co?joinchat='))
       return Text(
         text,
         style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
@@ -256,7 +256,7 @@ class _PostFromShotState extends State<PostFromShot> {
             return GestureDetector(
                 onTap: () async {
                   String chatRoomId =
-                      e.text.replaceAll('footballbuzz://JoinChat/', '');
+                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
                   DataChatRoom? back = await ChatService.joinGroupChat(
                       getIt<MyService>(),
                       chatRoomId: chatRoomId,
@@ -703,7 +703,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
-        !text.contains('footballbuzz://JoinChat/'))
+        !text.contains('https://footballbuzz.co?joinchat='))
       return Text(
         text,
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -748,7 +748,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
             return GestureDetector(
                 onTap: () async {
                   String chatRoomId =
-                      e.text.replaceAll('footballbuzz://JoinChat/', '');
+                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
                   DataChatRoom? back = await ChatService.joinGroupChat(
                       getIt<MyService>(),
                       chatRoomId: chatRoomId,
@@ -1237,7 +1237,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
-        !text.contains('footballbuzz://JoinChat/'))
+        !text.contains('https://footballbuzz.co?joinchat='))
       return Text(
         text,
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -1282,7 +1282,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
             return GestureDetector(
                 onTap: () async {
                   String chatRoomId =
-                      e.text.replaceAll('footballbuzz://JoinChat/', '');
+                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
                   DataChatRoom? back = await ChatService.joinGroupChat(
                       getIt<MyService>(),
                       chatRoomId: chatRoomId,

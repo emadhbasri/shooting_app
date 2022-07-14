@@ -123,7 +123,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                     value: null,
                       onTap: () async {
                         copyText(
-                            'footballbuzz://JoinChat/${state.selectedChat.id}');
+                            'https://footballbuzz.co?joinchat=${state.selectedChat.id}');
                       },
                       child: Text('Copy The Group Link')),
                   if (state.myRole != null &&

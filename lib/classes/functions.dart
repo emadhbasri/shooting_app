@@ -34,7 +34,7 @@ List<TheText> makeText(String text){
               out.add(TheText(type: TextType.user, text: f));
             } else if (f.contains('http://') || f.contains('https://')) {
               out.add(TheText(type: TextType.link, text: f.trim()));
-            } else if(f.contains('footballbuzz://JoinChat/')){
+            } else if(f.contains('https://footballbuzz.co?joinchat=')){
               out.add(TheText(type: TextType.groupLink, text: f));
             } else {
               out.add(TheText(type: TextType.text, text: f));
@@ -49,7 +49,7 @@ List<TheText> makeText(String text){
           out.add(TheText(type: TextType.user, text: e));
         } else if (e.contains('http://') || e.contains('https://')) {
           out.add(TheText(type: TextType.link, text: e.trim()));
-        } else if(e.contains('footballbuzz://JoinChat/')){
+        } else if(e.contains('https://footballbuzz.co?joinchat=')){
           out.add(TheText(type: TextType.groupLink, text: e));
         } else {
           out.add(TheText(type: TextType.text, text: e));

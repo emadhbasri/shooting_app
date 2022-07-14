@@ -392,7 +392,7 @@ class _ChatItemState extends State<ChatItem> {
               if(e=='Delete'){
                 ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
               }else if(e=='Copy'){
-                copyText(e);
+                copyText(widget.message.text??'');
               }
               // else if(e=='open'){
               //   openUrl(hasurl!);
@@ -513,7 +513,7 @@ class _ChatItemState extends State<ChatItem> {
                                 case TextType.groupLink:
                                   return GestureDetector(
                                       onTap: () async{
-                                        String chatRoomId = e.text.replaceAll('footballbuzz://JoinChat/', '');
+                                        String chatRoomId = e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
                                         DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
                                             chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                                         if(back!=null) {

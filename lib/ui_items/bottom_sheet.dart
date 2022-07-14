@@ -67,7 +67,7 @@ class MyBottomSheet extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        copyText('footballbuzz://shot/${post.id}');
+                        copyText('https://footballbuzz.co?shot=${post.id}');
                       },
                     ),
                   )),
@@ -88,7 +88,7 @@ class MyBottomSheet extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        sharePost('footballbuzz://shot/${post.id}');
+                        sharePost('https://footballbuzz.co?shot=${post.id}');
                       },
                     ),
                   )),
@@ -236,7 +236,7 @@ class MyBottomSheetComment extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        copyText('footballbuzz://shot/${comment.postId}');
+                        copyText('https://footballbuzz.co?shot=${comment.postId}');
                       },
                     ),
                   )),
@@ -257,7 +257,7 @@ class MyBottomSheetComment extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        sharePost('footballbuzz://shot/${comment.postId}');
+                        sharePost('https://footballbuzz.co?shot=${comment.postId}');
                       },
                     ),
                   )),
@@ -407,7 +407,7 @@ class MyBottomSheetReply extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        copyText('footballbuzz://shot/${shotId}');
+                        copyText('https://footballbuzz.co?shot=${shotId}');
                       },
                     ),
                   )),
@@ -428,7 +428,7 @@ class MyBottomSheetReply extends StatelessWidget {
                         style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
-                        sharePost('footballbuzz://shot/${shotId}');
+                        sharePost('https://footballbuzz.co?shot=${shotId}');
                       },
                     ),
                   )),
