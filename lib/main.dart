@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,8 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/main1.dart';
 import 'package:uni_links/uni_links.dart';
 
+import 'classes/models.dart';
+import 'classes/services/chat_service.dart';
 import 'classes/services/my_service.dart';
 import 'classes/states/chat_state.dart';
 import 'classes/states/group_chat_state.dart';
@@ -21,10 +24,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
+import 'pages/group_chat/group_chat.dart';
 import 'pages/intro1.dart';
+import 'pages/profile/profile.dart';
+import 'pages/shot/shot.dart';
 
 final getIt = GetIt.instance;
 Uri? mainUri;
+BuildContext? appContext;
 bool _initialUriIsHandled = false;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -138,10 +145,38 @@ class _MyAppState extends State<MyApp> {
     }
   }
   void _handleIncomingLinks() {
-      _sub = uriLinkStream.listen((Uri? uri) {
+      _sub = uriLinkStream.listen((Uri? uri) async{
         if (!mounted) return;
-        print('got uri: $uri');
+        print('got uri1: $uri');
           mainUri=uri;
+          if(Platform.isIOS && appContext!=null){
+            await Future.delayed(Duration(milliseconds: 500));
+            Map<String, String> query=mainUri!.queryParameters;
+            String key = query.keys.first;
+            String value = query.values.first;
+
+            if(key.toLowerCase()=='shot'){
+              Go.pushSlideAnim(
+                  appContext!,
+                  Shot(
+                    postId: value,
+                  ));
+            }else if(key.toLowerCase()=='user'){
+              Go.pushSlideAnim(appContext!,
+                  ProfileBuilder(username: value));
+            }else if(key.toLowerCase()=='joinchat'){
+              DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                  chatRoomId: value, userId: getIt<MainState>().userId);
+              print('back $back');
+              if(back!=null) {
+                await Go.pushSlideAnim(
+                    appContext!,
+                    GroupChatBuilder(
+                      chatRoom: back,
+                    ));
+              }
+            }
+          }
       }, onError: (Object err) {
         if (!mounted) return;
         print('got err: $err');

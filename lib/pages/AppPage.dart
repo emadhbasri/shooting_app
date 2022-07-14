@@ -47,7 +47,7 @@ class _AppPageState extends State<AppPage> {
     super.initState();
     statusSet(mainBlue);
     MainState state = Provider.of(context, listen: false);
-    // state.receiveShare(update: widget.update);
+    state.receiveShare(update: widget.update);
     state.getProfile();
     _handleIncomingLinks(context);
     // deviceData();
@@ -569,6 +569,7 @@ class _AppPageState extends State<AppPage> {
     super.didChangeDependencies();
     print('didChangeDependencies');
     MainState state = getIt<MainState>();
+    appContext=context;
     state.appPageContext=context;
   }
 

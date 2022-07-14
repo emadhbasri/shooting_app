@@ -39,8 +39,8 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
           return;
         }
 
-        Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update:false,));
-return;
+        // Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update:false,));
+// return;
 
         await getVersion(service,userName);
         await getDevice(service,userName);
@@ -76,9 +76,9 @@ return;
     debugPrint('getVersion()');
     String out = '';
     if(Platform.isAndroid){
-      out='androidVersion=1';
+      out='androidVersion=17';
     }else{
-      out='iosVersion=1';
+      out='iosVersion=17';
     }
     var back =
     await service.httpPost('/api/v1/Authentication/CheckVersion?'

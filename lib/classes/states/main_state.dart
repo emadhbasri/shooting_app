@@ -65,7 +65,7 @@ class MainState extends ChangeNotifier {
               ));
         }
       }
-    }else if(update!=true){
+    }else if(update==true){
       bool? alert = await MyAlertDialog(appPageContext,
           content: 'There is a new version for Football Buzz');
       //yes to update green

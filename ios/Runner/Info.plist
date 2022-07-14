@@ -22,7 +22,28 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ShareMedia</string>
+				<string>footballbuzz</string>
+			</array>
+		</dict>
+		<dict/>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -32,6 +53,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow access to camera to capture photos for shots, stories and user profile photo from your camera</string>
+	<key>NSExtensionAttributes</key>
+	<dict>
+		<key>NSExtensionActivationRule</key>
+		<dict>
+			<key>NSExtensionActivationSupportsText</key>
+			<true/>
+		</dict>
+	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow access to photos to upload photos for shots, stories and user profile photo from your library</string>
 	<key>UIBackgroundModes</key>
@@ -54,41 +83,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>https</string>
-      <string>http</string>
-    </array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-<key>NSExtensionAttributes</key>
-<dict>
-  <key>NSExtensionActivationRule</key>
-  <dict>
-    <key>NSExtensionActivationSupportsText</key>
-    <true/>
-  </dict>
-</dict>
-<key>FlutterDeepLinkingEnabled</key>
-<true/>
-
-
-
-<key>CFBundleURLTypes</key>
-    	<array>
-    		<dict>
-    			<key>CFBundleTypeRole</key>
-    			<string>Editor</string>
-
-    			<key>CFBundleURLSchemes</key>
-    			<array>
-    				<string>ShareMedia</string>
-                    <string>footballbuzz</string>
-    			</array>
-    		</dict>
-    		<dict/>
-    	</array>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
 </dict>
 </plist>
