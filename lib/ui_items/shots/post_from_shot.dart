@@ -10,6 +10,7 @@ import 'package:video_player/video_player.dart';
 import '../../classes/services/chat_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../pages/profile/profile.dart';
@@ -229,7 +230,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: black,
+                        // color: black,
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold)));
           case TextType.link:
@@ -323,6 +324,7 @@ class _PostFromShotState extends State<PostFromShot> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       // height: doubleHeight(20),
@@ -330,7 +332,9 @@ class _PostFromShotState extends State<PostFromShot> {
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
         decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
+            BoxDecoration(
+
+                border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -350,7 +354,8 @@ class _PostFromShotState extends State<PostFromShot> {
                       alignment: Alignment.centerLeft,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
-                        child: SizedBox(
+                        child: Container(
+                          color: white,
                           width: doubleHeight(5),
                           height: doubleHeight(5),
                           child: Builder(
@@ -400,7 +405,7 @@ class _PostFromShotState extends State<PostFromShot> {
               title: Text(
                 person != null ? person!.userName : '',
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
@@ -572,7 +577,9 @@ class _PostFromShotState extends State<PostFromShot> {
                                 color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postComments.length))
+                      Text(makeCount(post.postComments.length),style: TextStyle(
+                          color: isDarkMode?white:black
+                      ),)
                     ],
                   ),
                   // Row(
@@ -628,10 +635,12 @@ class _PostFromShotState extends State<PostFromShot> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color:
-                                post.postLikes.isNotEmpty ? greenCall : null),
+                                post.postLikes.isNotEmpty ? greenCall :  isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount))
+                      Text(makeCount(post.postLikeCount),style: TextStyle(
+                        color: isDarkMode?white:black
+                      ),)
                     ],
                   ),
                   if (widget.canTouch &&
@@ -723,7 +732,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 },
                 child: Text(e.text,
                     style:
-                        TextStyle(color: black, fontWeight: FontWeight.bold)));
+                        TextStyle( fontWeight: FontWeight.bold)));
           case TextType.link:
             return SizedBox(
               width: double.maxFinite,
@@ -813,6 +822,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       // height: doubleHeight(20),
@@ -849,7 +859,8 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                 ProfileBuilder(
                                     username: widget.person.userName));
                           },
-                          child: SizedBox(
+                          child: Container(
+                            color: white,
                             width: doubleHeight(5),
                             height: doubleHeight(5),
                             child: Builder(
@@ -900,7 +911,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
               title: Text(
                 widget.person.userName,
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
@@ -1111,10 +1122,12 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                             post.postLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : null),
+                            color: post.postLikedBythisUser ? greenCall : isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount))
+                      Text(makeCount(post.postLikeCount),style: TextStyle(
+                          color: isDarkMode?white:black
+                      ))
                     ],
                   ),
                   if (widget.canDelete)
@@ -1257,7 +1270,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 },
                 child: Text(e.text,
                     style:
-                        TextStyle(color: black, fontWeight: FontWeight.bold)));
+                        TextStyle( fontWeight: FontWeight.bold)));
           case TextType.link:
             return SizedBox(
               width: double.maxFinite,
@@ -1351,6 +1364,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -1386,7 +1400,8 @@ class _PostFromMatchState extends State<PostFromMatch> {
                               Go.pushSlideAnim(context,
                                   ProfileBuilder(username: person!.userName));
                           },
-                          child: SizedBox(
+                          child: Container(
+                            color: white,
                             width: doubleHeight(5),
                             height: doubleHeight(5),
                             child: Builder(
@@ -1437,7 +1452,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
               title: Text(
                 (person != null) ? person!.userName : '',
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
@@ -1584,7 +1599,9 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           child: Image.asset('assets/images/chat(2).png',
                               color: greenCall)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postComments.length))
+                      Text(makeCount(post.postComments.length),style: TextStyle(
+                          color: isDarkMode?white:black
+                      ))
                     ],
                   ),
                   // Row(
@@ -1631,10 +1648,12 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             post.postLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : null),
+                            color: post.postLikedBythisUser ? greenCall : isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount))
+                      Text(makeCount(post.postLikeCount),style: TextStyle(
+                          color: isDarkMode?white:black
+                      ))
                     ],
                   ),
                   if (post.person!.personalInformationId ==

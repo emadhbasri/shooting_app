@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
 
+import '../../ui_items/my_toast.dart';
 import '../functions.dart';
 import '../models.dart';
 import 'my_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart' as dip;
 import 'dart:io';
 Future<String> deviceData() async {
@@ -34,7 +34,27 @@ class AuthenticationService {
 
 
 
-
+  static deleteAccount(context) async{
+    String? appId = await getString('applicationUserId');
+    // print('appId $appId');
+    // return;
+    getIt<MyService>().httpDelete('/api/v1/Administration/deleteUser$appId');
+    removeShare('refresh');
+    removeShare('access');
+    removeShare('date');
+    MainState state = getIt<MainState>();
+    state.personalInformation=null;
+    state.match=null;
+    state.newStories=null;
+    state.storyViewed=null;
+    state.isOnMatchPage=false;
+    state.userId = '';
+    state.userName = '';
+    removeShare('userid');
+    removeShare('username');
+    removeShare('applicationUserId');
+    Go.pushAndRemove(context, AppFirst());
+  }
 
   static logOut(context) {
     getIt<MyService>().httpPost('/api/v1/Authentication/logout', {});
@@ -55,7 +75,7 @@ class AuthenticationService {
   }
 
   static Future<bool> register(
-    MyService service, {
+    MyService service,GlobalKey<MyToastState> key, {
     required String fullName,
     required String userName,
     required String phoneNumber,
@@ -65,10 +85,10 @@ class AuthenticationService {
   }) async {
     debugPrint('register()');
     if (fullName.trim() == '') {
-      toast('The fullName field is required.');
+      myToast(key,'The fullName field is required.');
       return false;
     } else if (userName.trim() == '') {
-      toast('The userName field is required.');
+      myToast(key,'The userName field is required.');
       return false;
     }
     // else if (phoneNumber.trim() == '') {
@@ -76,10 +96,10 @@ class AuthenticationService {
     //   return false;
     // }
     else if (email.trim() == '') {
-      toast('The email field is required.');
+      myToast(key,'The email field is required.');
       return false;
     } else if (password.trim() == '') {
-      toast('The password field is required.');
+      myToast(key,'The password field is required.');
       return false;
     }
     Map<String, dynamic> out = {
@@ -100,9 +120,18 @@ class AuthenticationService {
     if (back['status'] == false) {
       dynamic error = back['error'];
       if (error is Map && error.containsKey('email')) {
-        toast(error['email'].first);
+        myToast(key,error['email'].first);
       } else {
-        toast(error, isLong: true);
+        myToast(key,error,isLong: true);
+        // if(error is String && error.contains('is already in use')) {
+        //   // myToast(key,'If You Register Already You Can Use The The Otp Button.',isLong: true);
+        //   myToast(key, error
+        //       + '\n\n' +
+        //       'If You Register Already You Can Use The The Otp Button.',
+        //       isLong: true);
+        // }else{
+        //   myToast(key,error,isLong: true);
+        // }
       }
       return false;
     }
@@ -126,7 +155,7 @@ class AuthenticationService {
   }
 
   static Future<bool?> login(
-    MyService service, {
+    MyService service,GlobalKey<MyToastState> key, {
     required String username,
     required String password,
   }) async {
@@ -143,11 +172,11 @@ class AuthenticationService {
         .httpPost('/api/v1/Authentication/login', out, jsonType: true);
     debugPrint('back ${back}');
     if(back['status']==false){
-      toast(back['error']);
+     myToast(key,back['error']);
       return null;
     }
     if(back['status'] && back['data']['data'].containsKey('accessToken')==false){
-      toast(back['data']['message']);
+     myToast(key,back['data']['message']);
       return false;
     }
 
@@ -162,12 +191,13 @@ class AuthenticationService {
     state.userName = pif.userName;
     await setString('userid', pif.id);
     await setString('username', pif.userName);
+    await setString('applicationUserId', pif.applicationUserId);
 
     return back['status'];
   }
 
   static Future<bool> validateOtp(
-    MyService service, {
+    MyService service,GlobalKey<MyToastState> key, {
     required String user,
     required String oTP,
     required String password,
@@ -186,7 +216,7 @@ class AuthenticationService {
         await service.httpPost('/api/v1/Authentication/validateOtp', out,jsonType: true);
     print('validateOtp back $back');
     if(back['status']==false){
-      toast(back['error']);
+      myToast(key,back['error']);
       return back['status'];
     }
     await service.setToken(
@@ -200,6 +230,7 @@ class AuthenticationService {
     state.userName = pif.userName;
     await setString('userid', pif.id);
     await setString('username', pif.userName);
+    await setString('applicationUserId', pif.applicationUserId);
     return back['status'];
   }
 
@@ -227,7 +258,7 @@ class AuthenticationService {
     return back['status'];
   }
 
-  static Future<bool> forgotPassword(MyService service,String userName) async {
+  static Future<bool> forgotPassword(MyService service,GlobalKey<MyToastState> key,String userName) async {
     debugPrint('forgotPassword($userName)');
     Map<String, dynamic> back = await service.httpPost(
         '/api/v1/Administration/forgotPassword',
@@ -235,9 +266,9 @@ class AuthenticationService {
         jsonType: true);
     debugPrint('forgotPassword back ${back}');
     if(back['status']==false){
-      toast(back['error']);
+      myToast(key,back['error']);
     }
-    toast(back['data']['message'],isLong: true);
+    myToast(key,back['data']['message'],isLong: true);
     return back['status'];
   }
   static Future<bool> resetPassword(MyService service,String userName,
@@ -321,4 +352,11 @@ class AuthenticationService {
     return back['status'];
   }
 
+}
+
+
+myToast(GlobalKey<MyToastState> key,String message,{bool isLong=false}){
+  if(key.currentState!=null){
+    key.currentState!.toastAnimate(message,duration: isLong?Duration(seconds: 10):null);
+  }
 }

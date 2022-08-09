@@ -5,6 +5,7 @@ import 'package:shooting_app/pages/home/mach/match_list.dart';
 import 'package:shooting_app/pages/home/stadia/stadia.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import 'fan_feeds.dart';
 
@@ -50,12 +51,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
     return Container(
-      color: Color.fromRGBO(244, 244, 244, 1),
+      // color: Color.fromRGBO(244, 244, 244, 1),
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.white,
+            color: isDarkMode?Color(0xFF1f1b24):Colors.white,
             child: TabBar(
               labelStyle: TextStyle(
                   fontWeight: FontWeight.bold,

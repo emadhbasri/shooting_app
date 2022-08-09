@@ -85,6 +85,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     color: Color.fromRGBO(216, 216, 216, 1),
                     child: Center(
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         readOnly: true,
                         controller: username,
                         decoration: InputDecoration(
@@ -104,6 +107,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         color: Color.fromRGBO(216, 216, 216, 1),
                         child: Center(
                           child: TextField(
+                            style: TextStyle(
+                                color: Colors.black
+                            ),
                             controller: password,
                             decoration: InputDecoration(
                                 prefixText: '        ',
@@ -122,6 +128,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         color: Color.fromRGBO(216, 216, 216, 1),
                         child: Center(
                           child: TextField(
+                            style: TextStyle(
+                                color: Colors.black
+                            ),
                             controller: confirmPassword,
                             decoration: InputDecoration(
                                 prefixText: '        ',
@@ -148,6 +157,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         ),
                         padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
                         child: TextField(
+
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontStyle: FontStyle.normal,

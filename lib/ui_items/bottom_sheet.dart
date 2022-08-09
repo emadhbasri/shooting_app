@@ -7,6 +7,7 @@ import 'package:shooting_app/pages/shoot/edit_shoot.dart';
 
 import '../classes/functions.dart';
 import '../classes/models.dart';
+import '../classes/states/theme_state.dart';
 import '../main.dart';
 import 'report_sheet.dart';
 
@@ -21,7 +22,9 @@ class MyBottomSheet extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Colors.white,
+          color: getIt<ThemeState>().isDarkMode
+              ? Color.fromRGBO(20, 20, 20, 1)
+              : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -191,7 +194,9 @@ class MyBottomSheetComment extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Colors.white,
+          color: getIt<ThemeState>().isDarkMode
+              ? Color.fromRGBO(20, 20, 20, 1)
+              : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -362,7 +367,9 @@ class MyBottomSheetReply extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Colors.white,
+          color: getIt<ThemeState>().isDarkMode
+              ? Color.fromRGBO(20, 20, 20, 1)
+              : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

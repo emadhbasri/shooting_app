@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 
 import '../../classes/functions.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-MyAlertDialog(context, {String? title, String? content})async{
+import '../../package/rflutter_alert/rflutter_alert.dart';
+MyAlertDialog(context, {
+  AlertType type= AlertType.warning,
+  String? title, String? content,String yes='YES',bool no=true})async{
   return await Alert(
     context: context,
-    type: AlertType.warning,
+    type: type,
     title: title,
     desc: content,
     padding: EdgeInsets.symmetric(
@@ -15,28 +17,30 @@ MyAlertDialog(context, {String? title, String? content})async{
         top: doubleHeight(3)
     ),
     style: AlertStyle(
+
       animationType: AnimationType.grow,
       isCloseButton: false,
       overlayColor: Colors.black.withOpacity(0.5)
     ),
     buttons: [
+      if(no)
       DialogButton(
         child: Text(
           'NO',
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 18),
         ),
         onPressed: () => Go.pop(context,false),
         color: pink,
       ),
       DialogButton(
         child: Text(
-          "YES",
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          yes,
+          style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold, fontSize: 18),
         ),
         onPressed: (){
           Go.pop(context,true);
         },
-        color: mainGreen1,
+        color: mainGreen,
       )
     ],
   ).show();

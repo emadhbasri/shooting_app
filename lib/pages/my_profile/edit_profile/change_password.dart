@@ -18,7 +18,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: Text('Change Password')),
-      backgroundColor: Color.fromRGBO(247, 247, 247, 1),
+      // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(6)),
@@ -31,6 +31,9 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
+              style: TextStyle(
+                  color: Colors.black
+              ),
               controller: lastPassword,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
@@ -47,6 +50,9 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
+              style: TextStyle(
+                  color: Colors.black
+              ),
               controller: password,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
@@ -63,6 +69,9 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
+              style: TextStyle(
+                  color: Colors.black
+              ),
               controller: confirmPassword,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(

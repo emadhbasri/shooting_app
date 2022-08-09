@@ -21,7 +21,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: Text('Change Email')),
-      backgroundColor: Color.fromRGBO(247, 247, 247, 1),
+      // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
@@ -44,6 +44,9 @@ class _ChangeEmailState extends State<ChangeEmail> {
             ),
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(8)),
             child: TextField(
+              style: TextStyle(
+                  color: Colors.black
+              ),
               controller: controller,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(

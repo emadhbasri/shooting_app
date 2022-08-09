@@ -10,6 +10,8 @@ import '../classes/services/chat_service.dart';
 import '../classes/services/my_service.dart';
 import '../classes/states/main_state.dart';
 import 'package:shooting_app/ui_items/drawer.dart';
+import '../classes/states/theme_state.dart';
+import '../ui_items/theme_switcher.dart';
 import 'chat/search_chat.dart';
 import 'group_chat/group_chat.dart';
 import 'home/Home.dart';
@@ -89,11 +91,14 @@ class _AppPageState extends State<AppPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
+
     late AppBar appBar;
     if (currentIndex == 0) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: mainBlue,
+        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -113,6 +118,7 @@ class _AppPageState extends State<AppPage> {
           style: TextStyle(color: white),
         ),
         actions: <Widget>[
+          // ThemeSwitcher(),
           IconButton(
             icon: Icon(
               Icons.search,
@@ -128,7 +134,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 1) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: mainBlue,
+        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -156,7 +162,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 3) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: mainBlue,
+        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -179,7 +185,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 4) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: mainBlue,
+        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -270,7 +276,7 @@ class _AppPageState extends State<AppPage> {
           width: max,
           height: doubleHeight(10),
           padding: EdgeInsets.only(bottom: doubleHeight(2)),
-          color: white,
+          color: isDarkMode?Color(0xFF1f1b24):Colors.white,
           child: Row(
             children: <Widget>[
               Expanded(
@@ -507,16 +513,20 @@ class _AppPageState extends State<AppPage> {
                                 builder: (context, state, child) {
                                   if (state.personalInformation == null)
                                     return CircularProgressIndicator();
-                                  else if (state
+                                  else if (
+                                  state
                                           .personalInformation!.profilePhoto ==
                                       null)
                                     return Container(
                                       width: doubleWidth(12),
                                       decoration: BoxDecoration(
+                                          color: Colors.white,
                                           image: DecorationImage(
+
                                             image: AssetImage(
                                                 'assets/images/player.png'),
                                             fit: BoxFit.fill,
+
                                           ),
                                           // color: grayCall,
                                           borderRadius:

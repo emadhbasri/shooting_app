@@ -1,5 +1,4 @@
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/states/chat_state.dart';
 import 'package:shooting_app/pages/chat/chat.dart';
@@ -7,7 +6,9 @@ import '../../classes/services/my_service.dart';
 import '../../classes/services/user_service.dart';
 import '../../classes/states/main_state.dart';
 import '../../classes/states/profile_state.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
+import '../../package/rflutter_alert/rflutter_alert.dart';
 import '../../ui_items/gal.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
@@ -20,6 +21,7 @@ class ProfileBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileStateProvider(
       username: username,
+        context:context,
       child: Profile(),
     );
   }
@@ -154,7 +156,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     ),
               ],
             ),
-            backgroundColor: Colors.white,
+            // backgroundColor: Colors.white,
             body: SafeArea(
               child: Column(
                 children: [
@@ -199,10 +201,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                   ),
                                                 )
                                               : CircleAvatar(
-                                                  backgroundColor: Colors.white,
+                                            backgroundColor: getIt<ThemeState>().isDarkMode?Colors.black:Colors.white,
+
+                                            // backgroundColor: Colors.white,
                                                   radius: doubleWidth(30),
                                                   backgroundImage: AssetImage(
-                                                      'assets/images/playerbig.png'),
+                                                      'assets/images/playerbig.png',
+                                                    // color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
+                                                  ),
                                                 )),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),

@@ -47,7 +47,10 @@ class UsersService {
     if (back['status'])
       return DataPersonalInformation.fromJson(back['data']['data']);
     else {
-      toast(back['error']);
+      try{
+        toast(back['error']);
+      } catch (e){}
+
       return null;
     }
   }

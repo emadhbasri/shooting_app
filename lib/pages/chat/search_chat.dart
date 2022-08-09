@@ -71,6 +71,9 @@ class _SearchChatState extends State<SearchChat> {
                     color: Colors.white,
                     child: Center(
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         enableSuggestions: true,
                         controller: controller,
                         onChanged: (e) {

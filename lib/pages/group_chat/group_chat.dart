@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/group_chat/group_members.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
+import 'package:shooting_app/ui_items/theme_switcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import '../../classes/states/chat_state.dart';
@@ -66,7 +68,7 @@ class _GroupChatState extends State<GroupChat> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatState>(builder: (context, state, child) {
+    return Consumer2<ChatState,ThemeState>(builder: (context, state,theme, child) {
 
       return WillPopScope(
         onWillPop: () async {
@@ -112,6 +114,7 @@ class _GroupChatState extends State<GroupChat> {
               ),
             ),
             actions: [
+              // ThemeSwitcher(),
               PopupMenuButton<String?>(
                 onSelected: (String? value)async{
                   if(value=='Edit'){
@@ -165,7 +168,7 @@ class _GroupChatState extends State<GroupChat> {
               children: [
                 Flexible(
                     child: Container(
-                  color: Colors.white,
+                    color: theme.isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:Colors.white,
                   child: ListView.separated(
                     physics: BouncingScrollPhysics(),
                       reverse: true,
@@ -212,8 +215,12 @@ class _GroupChatState extends State<GroupChat> {
                           SizedBox(height: doubleHeight(1)),
                       itemCount: state.chats.length),
                 )),
+
                 Container(
-                  color: Colors.white,
+                    color: theme.isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:Colors.white,
+                    height: doubleHeight(1)),
+                Container(
+                  color: theme.isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:Colors.white,
                   width: double.maxFinite,
                   child: Row(
                     children: [
@@ -228,6 +235,7 @@ class _GroupChatState extends State<GroupChat> {
                               horizontal: doubleWidth(8),
                               vertical: doubleHeight(0.5)),
                           child: TextField(
+
                             controller: controller,
                             // onChanged: (e){
                             //   setState(() {
@@ -236,10 +244,14 @@ class _GroupChatState extends State<GroupChat> {
                             // },
                             minLines: 1,
                             maxLines: 3,
+                            style: TextStyle(
+                              color: black,
+                            ),
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
                                 hintStyle: TextStyle(
-                                    color: Color.fromRGBO(214, 216, 217, 1)),
+                                    // color: Color.fromRGBO(214, 216, 217, 1)
+                                ),
                                 hintText: 'Write your message...',
                                 border: InputBorder.none),
                           ),
@@ -301,7 +313,9 @@ class _GroupChatState extends State<GroupChat> {
                     ],
                   ),
                 ),
-                Container(height: doubleHeight(2), color: Colors.white),
+                Container(height: doubleHeight(2),
+                    color: theme.isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:Colors.white
+                ),
               ],
             ),
           ),
@@ -532,10 +546,7 @@ class _ChatItemState extends State<ChatItem> {
                                         backgroundColor: Colors.white,
                                         boxShadow: [],
                                         urlLaunchMode: LaunchMode.externalApplication,
-                                        errorWidget: Container(
-                                          color: Colors.grey[300],
-                                          child: const Text('Oops!'),
-                                        ),
+                                        errorWidget: Text(e.text.trim()),
                                         // errorImage: _errorImage,
                                       ),
                                     );
@@ -604,7 +615,9 @@ class _ChatItemState extends State<ChatItem> {
                     Text(
                       '${widget.message.timeStamp.hour}'
                       ' : ${widget.message.timeStamp.minute} ${widget.message.timeStamp.hour < 12 ? 'AM' : 'PM'}',
-                      style: TextStyle(color: grayCall, fontSize: 12),
+                      style: TextStyle(
+                          // color: grayCall,
+                          fontSize: 12),
                     )
                   ],
                 ),

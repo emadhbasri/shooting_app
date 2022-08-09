@@ -42,6 +42,7 @@ class _SearchUserMentionState extends State<SearchUserMention> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -69,6 +70,9 @@ class _SearchUserMentionState extends State<SearchUserMention> {
                     color: Colors.white,
                     child: Center(
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         enableSuggestions: true,
                         controller: controller,
                         onChanged: (e) {

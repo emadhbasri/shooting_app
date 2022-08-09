@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 
 import '../../../classes/dataTypes.dart';
 import '../../../classes/functions.dart';
@@ -13,18 +14,34 @@ class Stadia extends StatefulWidget {
 }
 
 class _StadiaState extends State<Stadia> {
+  late ScrollController listController;
+
   @override
   void initState() {
     super.initState();
     print('Stadia init');
     MainState state = Provider.of<MainState>(context, listen: false);
-    if (state.stadiaShots.isEmpty) state.getStadia();
+    if (state.stadiaShots.isEmpty) state.getStadia(add: false);
+
+    listController = ScrollController()
+      ..addListener(() {
+        if (state.selectedTag==null && state.stadiaShots.isNotEmpty)
+          if (listController.position.atEdge &&
+            listController.offset != 0.0) {
+          debugPrint("state.dataSearchPage!.hasNext ${state.stadiaHasNext}");
+          if (state.stadiaHasNext) {
+            state.stadiaPageNumber++;
+            state.getStadia(add: true);
+          }
+        }
+      });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MainState>(
-      builder: (context, state, child) {
+
+    return Consumer2<MainState,ThemeState>(
+      builder: (context, state,theme, child) {
         return Column(
           children: [
             SizedBox(height: doubleHeight(2)),
@@ -73,7 +90,7 @@ class _StadiaState extends State<Stadia> {
                                     child: Text(
                                       '#$e',
                                       style: TextStyle(
-                                          color: Colors.black,
+                                          color: theme.isDarkMode?white:Colors.black,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     )),
@@ -91,7 +108,11 @@ class _StadiaState extends State<Stadia> {
                   ? circle()
                   : RefreshIndicator(
                       onRefresh: () async {
-                        await state.getStadia();
+                        if(state.selectedTag==null){
+                          state.stadiaPageNumber = 1;
+                          state.stadiaHasNext = false;
+                        }
+                        await state.getStadia(add: false);
                       },
                       child: state.stadiaShots.isEmpty
                           ? ListView(
@@ -106,19 +127,30 @@ class _StadiaState extends State<Stadia> {
                               ],
                             )
                           : ListView(
-                              controller: state.listController,
+                              controller: listController,
                               physics: AlwaysScrollableScrollPhysics(),
-                              children: state.stadiaShots
-                                  .map((e) => PostFromShot(
-                                        delete: () {
-                                          state.stadiaShots.remove(e);
-                                          state.notify();
-                                        },
-                                        key: UniqueKey(),
-                                        post: e,
-                                        onTapTag: gogo,
-                                      ))
-                                  .toList(),
+                              children: [
+                                ...state.stadiaShots
+                                    .map((e) => PostFromShot(
+                                  delete: () {
+                                    state.stadiaShots.remove(e);
+                                    state.notify();
+                                  },
+                                  key: UniqueKey(),
+                                  post: e,
+                                  onTapTag: gogo,
+                                ))
+                                    .toList(),
+                                if (state.stadiaHasNext)
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(height: doubleHeight(1)),
+                                      CircularProgressIndicator(),
+                                      SizedBox(height: doubleHeight(1)),
+                                    ],
+                                  )
+                              ],
                             )),
             ),
           ],

@@ -88,9 +88,11 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
                     child: TextField(
                         style: TextStyle(
+                            color: Colors.black,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal,
-                            fontSize: 14.0),
+                            fontSize: 14.0
+                        ),
                         controller: _listControllers[index],
                         onTap: () {
                           _listControllers[index]!.clear();

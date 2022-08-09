@@ -25,7 +25,7 @@ class _FanMatesState extends State<FanMates> {
     return Container(
       child: RefreshIndicator(
         onRefresh: ()async{
-          await state.init(state.userName);
+          await state.init(state.userName,context);
         },
         child: ListView(physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),

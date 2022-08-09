@@ -8,6 +8,7 @@ import '../../classes/models.dart';
 import '../../classes/services/chat_service.dart';
 import '../../classes/services/user_service.dart';
 import '../../classes/states/chat_state.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../chat/chat.dart';
 import '../profile/profile.dart';
@@ -73,6 +74,9 @@ class _SearchUserState extends State<SearchUser> {
                     color: Colors.white,
                     child: Center(
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         enableSuggestions: true,
                         controller: controller,
                         onChanged: (e) {
@@ -192,6 +196,7 @@ class _UserItemState extends State<UserItem> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return GestureDetector(
       onLongPress: widget.onLongPress != null
           ? () {
@@ -217,7 +222,9 @@ class _UserItemState extends State<UserItem> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(user.fullName ?? ''),
+                    Text(user.fullName ?? '',style: TextStyle(
+                      color: isDarkMode?white:black
+                    ),),
                     SizedBox(width: doubleWidth(1)),
                     if (widget.roomUser != null && widget.roomUser!.isRoomOwner)
                       Text(
@@ -237,7 +244,7 @@ class _UserItemState extends State<UserItem> {
                 SizedBox(height: doubleHeight(0.5)),
                 Text(
                   '@${user.userName}',
-                  style: TextStyle(color: grayCall, fontSize: 12),
+                  style: TextStyle(color: isDarkMode?white:grayCall, fontSize: 12),
                 ),
                 if (widget.user.userName != getIt<MainState>().userName)
                   Column(

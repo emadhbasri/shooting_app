@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/models.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/pages/shot/shot.dart';
 
@@ -68,6 +70,7 @@ class _MyNotificationState extends State<MyNotification> {
   @override
   Widget build(BuildContext context) {
     if (loading) return circle();
+    ThemeState theme = Provider.of<ThemeState>(context,listen: false);
     return RefreshIndicator(
         onRefresh: () async {
           await getData(clean: true);
@@ -184,21 +187,21 @@ class _MyNotificationState extends State<MyNotification> {
                             text:e.personalInformationViewModel.fullName ??
                                 '',
                             style: TextStyle(
-                                color: black,
+                                color: theme.isDarkMode?white:black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: doubleWidth(3.5)),
                           ),
                           TextSpan(
                             text:' ',
                             style: TextStyle(
-                                color: black,
+                                color: theme.isDarkMode?white:black,
                                 fontWeight: FontWeight.w600,
                                 fontSize: doubleWidth(3)),
                           ),
                           TextSpan(
                             text:e.notificationMessage ?? '',
                             style: TextStyle(
-                                color: black,
+                                color: theme.isDarkMode?white:black,
                                 fontWeight: FontWeight.w600,
                                 fontSize: doubleWidth(3)),
                           ),

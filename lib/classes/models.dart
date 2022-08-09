@@ -284,6 +284,7 @@ class DataShortVideoStory {
 class DataPersonalInformation {
   DataPersonalInformation.fromJson(Map<String, dynamic> data) {
     id = convertData(data, 'id', DataType.string);
+    applicationUserId = convertData(data, 'applicationUserId', DataType.string);
     userName = convertData(data, 'userName', DataType.string);
     fullName = convertData(data, 'fullName', DataType.string);
     email = convertData(data, 'email', DataType.string);
@@ -312,6 +313,7 @@ class DataPersonalInformation {
   late bool followingMe;
   String? fullName;
   late String id;
+  late String applicationUserId;
   late bool is2FA;
   late bool isOnline;
   String? phoneNumber;

@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/ui_items/gal.dart';
 import '../../classes/services/my_service.dart';
 import '../../classes/states/main_state.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import 'fan_mates.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
@@ -44,7 +45,7 @@ class _MyProfileState extends State<MyProfile>
         return circle();
       } else {
         return Scaffold(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -86,8 +87,12 @@ class _MyProfileState extends State<MyProfile>
                                                             .profilePhoto!),
                                                   ),
                                               )
-                                              : CircleAvatar(backgroundColor: Colors.white,
-                                              radius: doubleWidth(30),backgroundImage:AssetImage('assets/images/playerbig.png'))),
+                                              : CircleAvatar(
+                                              backgroundColor: getIt<ThemeState>().isDarkMode?Colors.black:Colors.white,
+                                              radius: doubleWidth(30),
+                                              backgroundImage:AssetImage(
+                                                'assets/images/playerbig.png',
+                                              ))),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
                                         child: SizedBox(

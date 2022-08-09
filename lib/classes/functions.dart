@@ -7,9 +7,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../main.dart';
 import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'states/theme_state.dart';
 
 enum TextType {link,groupLink,user,text}
 class TheText{
@@ -123,6 +126,7 @@ Widget simpleCircle({Color? color, double? size}) {
 profilePlaceHolder({bool isBig = false}) => Image.asset(
       isBig ? 'assets/images/playerbig.png' : 'assets/images/player.png',
       fit: BoxFit.fill,
+  color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
     );
 
 String makeDurationToString(DateTime date) {

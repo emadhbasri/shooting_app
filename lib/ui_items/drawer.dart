@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/dataTypes.dart';
 import '../classes/functions.dart';
+import '../classes/states/theme_state.dart';
 import '../main.dart';
 import '../pages/AppPage.dart';
 import '../pages/my_profile/edit_profile/settings.dart';
@@ -33,6 +34,7 @@ class _MyDrawerState extends State<MyDrawer>
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Scaffold(
       backgroundColor: trans,
       appBar: AppBar(
@@ -58,7 +60,7 @@ class _MyDrawerState extends State<MyDrawer>
                   horizontal: doubleWidth(8), vertical: doubleHeight(2)),
               width: double.maxFinite,
               // height: doubleHeight(30),
-              color: Color.fromRGBO(244, 244, 244, 1),
+              color: isDarkMode?Color(0xFF1f1b24):Color.fromRGBO(244, 244, 244, 1),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -152,7 +154,7 @@ class _MyDrawerState extends State<MyDrawer>
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.black,
+                      color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
                       size: 20,
                     ),
                   ),
@@ -203,7 +205,8 @@ class _MyDrawerState extends State<MyDrawer>
                   //     size: 20,
                   //   ),
                   // ),
-                  Divider(color: Colors.black),
+
+                  Divider(color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,),
                   ListTile(
                     onTap: () {
                       _controller.reverse().then((value) {
@@ -218,7 +221,7 @@ class _MyDrawerState extends State<MyDrawer>
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.black,
+                      color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
                       size: 20,
                     ),
                   ),

@@ -22,6 +22,7 @@ const gray = Colors.grey;
 const trans = Colors.transparent;
 const blue = Colors.blue;
 const Color mainBlue = Color.fromRGBO(63, 49, 119, 1);
+const Color mainBlueDark = Color(0xFF332940);
 const gold = Color.fromRGBO(255, 203, 5, 1);
 final con = Container(color: red);
 

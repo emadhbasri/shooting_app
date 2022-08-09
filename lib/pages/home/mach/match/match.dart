@@ -1,4 +1,5 @@
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../../classes/states/main_state.dart';
 import '../../../../main.dart';
@@ -44,8 +45,8 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MatchState>(
-      builder: (context, state, child) => WillPopScope(
+    return Consumer2<MatchState,ThemeState>(
+      builder: (context, state,theme, child) => WillPopScope(
         onWillPop: () async {
           print('wilpop');
           state.matchPage = false;
@@ -59,7 +60,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
           appBar: AppBar(
             backgroundColor: trans,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
+              icon: Icon(Icons.adaptive.arrow_back, color: theme.isDarkMode?white:Colors.black),
               onPressed: () {
                 state.matchPage = false;
                 state.notify();
@@ -72,10 +73,10 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
             centerTitle: true,
             title: Text(
               'Match Stats',
-              style: TextStyle(color: Colors.black),
+              // style: TextStyle(color: Colors.black),
             ),
           ),
-          backgroundColor: Color.fromRGBO(244, 244, 244, 1),
+          // backgroundColor: Color.fromRGBO(244, 244, 244, 1),
           body: SizedBox.expand(
               child: Padding(
             padding: EdgeInsets.all(doubleWidth(6)).copyWith(bottom: 0),
@@ -87,7 +88,8 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                   height: doubleHeight(20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                      color: theme.isDarkMode?Colors.grey:Colors.white
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -144,7 +146,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                                         : state.selectedMatch.awayGoals
                                             .toString(),
                                     style: TextStyle(
-                                        color: Color.fromRGBO(127, 127, 127, 1),
+                                        // color: Color.fromRGBO(127, 127, 127, 1),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24)),
                               ],
@@ -163,7 +165,9 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                                     .toString();
                               return Text(out,
                                   style:
-                                      TextStyle(color: grayCall, fontSize: 10));
+                                      TextStyle(
+                                          // color: grayCall,
+                                          fontSize: 10));
                             })
                           ],
                         ),

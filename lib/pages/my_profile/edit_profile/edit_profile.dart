@@ -4,6 +4,7 @@ import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/services/user_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/team_search.dart';
 
@@ -32,6 +33,7 @@ class _EditProfileState extends State<EditProfile> {
   MyService service = getIt<MyService>();
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -41,7 +43,8 @@ class _EditProfileState extends State<EditProfile> {
             child: Material(
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-              color: Colors.white,
+              color: isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor
+                  :MyThemes.lightTheme.scaffoldBackgroundColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
                 child: Column(
@@ -127,8 +130,11 @@ class _EditProfileState extends State<EditProfile> {
                         // vertical: doubleHeight(1)
                       ),
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         controller: nameController,
-                        style: TextStyle(color: grayCallDark),
+                        // style: TextStyle(color: grayCallDark),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             prefixText: 'Name    ',
@@ -202,7 +208,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             Text(teamName == ''
                                 ? 'no team selected'
-                                : teamName),
+                                : teamName,style: TextStyle(color: black),),
                             // TextFormField(
                             //   style: TextStyle(
                             //       color: grayCallDark

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
@@ -11,6 +12,7 @@ import '../../classes/models.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
+import '../../classes/states/theme_state.dart';
 
 class ShootBuilder extends StatelessWidget {
   const ShootBuilder({Key? key, this.matchId, this.stadia = false})
@@ -122,6 +124,7 @@ class _ShootState extends State<Shoot> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode=getIt<ThemeState>().isDarkMode;
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -131,7 +134,7 @@ class _ShootState extends State<Shoot> {
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: Colors.white,
+            color: isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
               child: Column(
@@ -149,7 +152,7 @@ class _ShootState extends State<Shoot> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: Colors.black,
+                              color: isDarkMode?Colors.white:Colors.black,
                               size: 35,
                             ),
                           ),
@@ -158,7 +161,7 @@ class _ShootState extends State<Shoot> {
                             child: Text(
                               'Take a shot',
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: isDarkMode?Colors.white:Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
+import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../ui_items/shots/post_from_shot.dart';
 
@@ -43,7 +44,8 @@ class _FanFeedsState extends State<FanFeeds> {
               state.postsHasNext = false;
               await state.getFanFeed();
             },
-            child: state.allPosts.isEmpty?ListView(physics: AlwaysScrollableScrollPhysics(),
+            child: state.allPosts.isEmpty?ListView(
+              physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
               children: [
                 SizedBox(
@@ -52,6 +54,7 @@ class _FanFeedsState extends State<FanFeeds> {
                     child: Center(child: Text('No Shots'))),
               ],
             ):ListView(
+              padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
               controller: state.listController,
               physics: AlwaysScrollableScrollPhysics(),
               children: [

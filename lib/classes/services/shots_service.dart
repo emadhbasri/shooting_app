@@ -20,7 +20,7 @@ class ShotsService {
     await service.httpGet('/api/v1/Shots/GetTopTrendingPost');
     debugPrint('getStadiaTags back ${back}');
     if (back['status'] == false) {
-      toast(back['error']);
+      try{toast(back['error']);}catch(e){}
       return [];
     }
     return (back['data']['data'] as List<dynamic>).cast<String>();
@@ -35,6 +35,22 @@ class ShotsService {
       return [];
     }
     return convertDataList<DataPost>(back['data'], 'data','DataPost');
+  }
+  static Future<Map<String, dynamic>> getStadiaShotsPlus(MyService service,
+      {int pageNumber = 1,
+      int pageSize = 15}) async {
+    debugPrint('getStadiaShots()');
+    Map<String, dynamic> back =
+    await service.httpGet('/api/v1/Shots/stadiaPostsPagination?PageNumber=$pageNumber&PageSize=$pageSize');
+    debugPrint('back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'hasNext': back['data']['data']['hasNext'],
+      'list': convertDataList<DataPost>(back['data']['data'], 'getFanFeedDTOs', 'DataPost')
+    };
   }
   static Future<List<DataPost>> getStadiaSearch(MyService service, String tag) async {
     debugPrint('getStadiaSearch($tag)');
@@ -193,6 +209,23 @@ class ShotsService {
     return {
       'totalPage': back['data']['total_pages'],
       'list': convertDataList<DataPost>(back['data'], 'results', 'DataPost')
+    };
+  }
+
+  static Future<Map<String, dynamic>> fanFeedPlus(MyService service, //todo
+          {int pageNumber = 1,
+        int pageSize = 15}) async {
+    debugPrint('fanFeed()');
+    Map<String, dynamic> back =
+    await service.httpGet('/api/v1/Shots/fanFeedsPagination?pageNumber=$pageNumber&PageSize=$pageSize');
+    debugPrint('back ${back}');
+    if (back['status'] == false) {
+      toast(back['error']);
+      return {};
+    }
+    return {
+      'hasNext': back['data']['data']['hasNext'],
+      'list': convertDataList<DataPost>(back['data']['data'], 'getFanFeedDTOs', 'DataPost')
     };
   }
 

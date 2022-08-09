@@ -120,6 +120,9 @@ class _CreateGroupState extends State<CreateGroup> {
                           horizontal: doubleWidth(8),
                           vertical: doubleHeight(0.5)),
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         controller: textEditingController,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(

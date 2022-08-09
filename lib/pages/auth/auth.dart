@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shooting_app/pages/auth/verify_otp.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/dataTypes.dart';
@@ -92,6 +93,8 @@ class _AuthState extends State<Auth> {
                         child: RaisedButton(
                           onPressed: () {
                             Go.push(context, Login());
+                            // Go.push(context, VerifyOtp(isRegister: false, username: 'asd', password: 'asdasd'));
+
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),

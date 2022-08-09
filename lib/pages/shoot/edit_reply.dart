@@ -6,6 +6,7 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
+import '../../classes/states/theme_state.dart';
 
 class EditReply extends StatefulWidget {
   final DataCommentReply reply;
@@ -30,23 +31,21 @@ class _EditReplyState extends State<EditReply> {
       sending = true;
     });
 
-    if (controller.value.text.trim() == '' ) {
+    if (controller.value.text.trim() == '') {
       toast('You Can Upload Images Or Video');
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
-    }else{
-
+    } else {
       DataCommentReply? back = await ShotsService.editReply(service,
-          replyId:  widget.reply.id,
-          reply:  controller.value.text);
+          replyId: widget.reply.id, reply: controller.value.text);
       setState(() {
         sending = false;
       });
       print('back sendData $back');
-      if (back!=null) {
-        Go.pop(context,back);
+      if (back != null) {
+        Go.pop(context, back);
       }
     }
   }
@@ -60,6 +59,8 @@ class _EditReplyState extends State<EditReply> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -69,7 +70,9 @@ class _EditReplyState extends State<EditReply> {
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: Colors.white,
+            color: isDarkMode
+                ? MyThemes.darkTheme.scaffoldBackgroundColor
+                : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
               child: Column(
@@ -87,7 +90,7 @@ class _EditReplyState extends State<EditReply> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: Colors.black,
+                              color: isDarkMode ? Colors.white : Colors.black,
                               size: 35,
                             ),
                           ),
@@ -96,7 +99,8 @@ class _EditReplyState extends State<EditReply> {
                             child: Text(
                               'Take a shot',
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

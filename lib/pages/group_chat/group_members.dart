@@ -1,5 +1,4 @@
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
@@ -7,6 +6,8 @@ import 'package:shooting_app/pages/group_chat/create_group.dart';
 import 'package:shooting_app/pages/shoot/search_user_mention.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../classes/states/chat_state.dart';
+import '../../classes/states/theme_state.dart';
+import '../../package/rflutter_alert/rflutter_alert.dart';
 import '../../ui_items/dialogs/dialog1.dart';
 import '../home/search_user.dart';
 
@@ -52,7 +53,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
   bool loadingImageSend = false;
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatState>(builder: (context, state, child) {
+    return Consumer2<ChatState,ThemeState>(builder: (context, state,theme, child) {
       // print('myRole ${state.myRole}');
       // if (state.myRole != null) {
       //   print('myRole ${state.myRole!.isRoomOwner}');
@@ -182,7 +183,9 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                                   ),
                                 )),
                             SizedBox(height: doubleHeight(1)),
-                            Text(state.selectedChat.name ?? ''),
+                            Text(state.selectedChat.name ?? '',style: TextStyle(
+                              color: theme.isDarkMode?white:black
+                            )),
                             Text(
                               '${state.selectedChat.personalInformations.length} members',
                               style: TextStyle(color: grayCall, fontSize: 12),

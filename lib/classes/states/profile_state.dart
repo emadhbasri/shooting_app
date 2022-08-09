@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../main.dart';
+import '../functions.dart';
 import '../models.dart';
 import '../services/my_service.dart';
 import '../services/shots_service.dart';
@@ -15,8 +16,8 @@ class ProfileState extends ChangeNotifier {
 
   DataPersonalInformation? personalInformation;
   notify() => notifyListeners();
-  ProfileState(String username) {
-    init(username);
+  ProfileState(String username,context) {
+    init(username,context);
   }
   late String userName;
 
@@ -44,24 +45,32 @@ class ProfileState extends ChangeNotifier {
     notifyListeners();
   }
 
-  init(String username) async {
+  init(String username,context) async {
     personalInformation = await UsersService.getUser(service, username);
-    userName=username;
-    getProfileShots(force: true);
-    notifyListeners();
+    print('personalInformation $personalInformation');
+    if(personalInformation!=null){
+      userName=username;
+      getProfileShots(force: true);
+      notifyListeners();
+    }else{
+      toast('User not Found');
+      Go.pop(context);
+    }
+
   }
 }
 
 class ProfileStateProvider extends StatelessWidget {
   final Widget child;
   final String username;
+  final context;
   const ProfileStateProvider(
-      {Key? key, required this.child, required this.username})
+      {Key? key, required this.child, required this.username,required this.context})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListenableProvider<ProfileState>(
-      create: (context) => ProfileState(username),
+      create: (context) => ProfileState(username,context),
       child: child,
     );
   }

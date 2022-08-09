@@ -24,7 +24,7 @@ class _ChangeEmailDoneState extends State<ChangeEmailDone> {
       },
       child: Scaffold(
         appBar: AppBar(elevation: 0, title: Text('Change Email'),automaticallyImplyLeading: false),
-        backgroundColor: Color.fromRGBO(247, 247, 247, 1),
+        // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
         body: SizedBox.expand(
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),

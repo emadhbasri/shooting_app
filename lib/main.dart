@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shooting_app/main1.dart';
@@ -24,6 +25,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
+import 'classes/states/theme_state.dart';
 import 'pages/group_chat/group_chat.dart';
 import 'pages/intro1.dart';
 import 'pages/profile/profile.dart';
@@ -46,6 +48,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   
   GetIt.I.registerLazySingleton(() => MyService());
+  GetIt.I.registerLazySingleton(() => ThemeState());
   GetIt.I.registerLazySingleton(() => MainState());
   GetIt.I.registerLazySingleton(() => MatchState());
   GetIt.I.registerLazySingleton(() => ChatState());
@@ -120,7 +123,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   var _intentDataStreamSubscription;
   StreamSubscription? _sub;
   Future<void> _handleInitialUri() async {
@@ -190,9 +193,15 @@ class _MyAppState extends State<MyApp> {
         });
       });
   }
+
+  ThemeState? themeState;
+  Brightness? _brightness;
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    _brightness = WidgetsBinding.instance.window.platformBrightness;
     super.initState();
+
     _handleIncomingLinks();
     _handleInitialUri();
     MainState state = getIt<MainState>();
@@ -257,9 +266,51 @@ class _MyAppState extends State<MyApp> {
     // _intentDataStreamSubscription.cancel();
     super.dispose();
   }
+  @override
+  void didChangePlatformBrightness() {
+    if (mounted) {
+      setState(() {
+        _brightness = WidgetsBinding.instance.window.platformBrightness;
+      });
+      if(themeState!=null){
+        themeState!.themeMode=
+        _brightness==Brightness.dark?ThemeMode.dark:ThemeMode.light;
+        themeState!.notify();
+      }
 
+    }
+    super.didChangePlatformBrightness();
+  }
   @override
   Widget build(BuildContext context) {
+    // final brightness = MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness;
+    // MediaQuery.of(context).platformBrightness,
+    return ThemeStateProvider(
+      brightness: MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness,
+      child: Consumer<ThemeState>(
+          builder: (context, state, child){
+            if(themeState==null)themeState=state;
+
+           return MaterialApp(
+             themeMode: state.themeMode,
+             theme: MyThemes.lightTheme,
+             darkTheme: MyThemes.darkTheme,
+              debugShowCheckedModeBanner: false,
+              title: 'Shooting App',
+             home:
+             // const SizedBox(),
+             // MyApp1()
+             // UniLinksTest(),
+             // Scaffold(
+             //   body: Center(
+             //     child: Text('asd'),
+             //   ),
+             // )
+             AppFirst(),
+            );
+          }
+      ),
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Shooting App',

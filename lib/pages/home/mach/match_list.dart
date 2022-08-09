@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/classes/states/match_state.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import '../../../main.dart';
 import 'match/match.dart';
@@ -27,8 +28,8 @@ class _MatchListState extends State<MatchList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MatchState>(
-        builder: (context, state, child){
+    return Consumer2<MatchState,ThemeState>(
+        builder: (context, state,theme, child){
           // if(state.loadCountry && state.loadMatchs)
           //   return circle();
 
@@ -49,7 +50,8 @@ class _MatchListState extends State<MatchList> {
                       Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
+                          color: theme.isDarkMode?Colors.grey:Colors.white
+                      ),
                       child: DropdownButton<DataCountry>(
                         items: state.countries
                             .map((e) => DropdownMenuItem<DataCountry>(
@@ -75,7 +77,7 @@ class _MatchListState extends State<MatchList> {
                         ))
                             .toList(),
                         elevation: 3,
-                        dropdownColor: grayCallLight,
+                        dropdownColor: theme.isDarkMode?Colors.grey:grayCallLight,
                         menuMaxHeight: doubleHeight(70),
                         onChanged: (e) {
                           if (e != null) {
@@ -117,7 +119,7 @@ class _MatchListState extends State<MatchList> {
                             e,
                             style: TextStyle(
                                 color: state.selectedDate == e
-                                    ? Colors.black
+                                    ? theme.isDarkMode?Colors.white:Colors.black
                                     : Colors.grey,
                                 fontSize: state.selectedDate == e ? 15 : 12),
                           )))
@@ -141,6 +143,7 @@ class _MatchListState extends State<MatchList> {
                           children: state.leagues
                               .map(
                                 (e) => MatchListItem(
+                                  isDarkMode: theme.isDarkMode,
                               league: e,
                               state: state,
                             ),
@@ -189,8 +192,9 @@ class _MatchListState extends State<MatchList> {
 }
 
 class MatchListItem extends StatefulWidget {
-  const MatchListItem({Key? key, required this.league, required this.state})
+  const MatchListItem({Key? key, required this.league, required this.state, required this.isDarkMode})
       : super(key: key);
+  final bool isDarkMode;
   final DataLeagueMain league;
   final MatchState state;
   @override
@@ -236,6 +240,7 @@ class _MatchListItemState extends State<MatchListItem>
           .map((e) => Column(
                 children: [
                   MatchItem1(
+                    isDarkMode: widget.isDarkMode,
                     match: e,
                     state: widget.state,
                   ),
@@ -252,8 +257,9 @@ class _MatchListItemState extends State<MatchListItem>
 }
 
 class MatchItem1 extends StatelessWidget {
-  const MatchItem1({Key? key, required this.match, required this.state})
+  const MatchItem1({Key? key, required this.match, required this.state, required this.isDarkMode})
       : super(key: key);
+  final bool isDarkMode;
   final DataMatch1 match;
   final MatchState state;
   @override
@@ -282,7 +288,7 @@ class MatchItem1 extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode?Colors.grey:Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
         width: double.maxFinite,

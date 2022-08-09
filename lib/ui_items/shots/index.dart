@@ -53,7 +53,7 @@ Widget convertHashtag(context, String text,Function onTapTag) {
               onLongPress: () {
                 copyText(e.text);
               },
-              child: Text(e.text, style: TextStyle(color: black,fontWeight: FontWeight.bold)));
+              child: Text(e.text, style: TextStyle(fontWeight: FontWeight.bold)));
         case TextType.link:
           return SizedBox(
             width: double.maxFinite,
@@ -65,10 +65,11 @@ Widget convertHashtag(context, String text,Function onTapTag) {
               cache: const Duration(seconds: 1),
               backgroundColor: Colors.white,
               boxShadow: [],
+
               urlLaunchMode: LaunchMode.externalApplication,
               errorWidget: Container(
                 color: Colors.grey[300],
-                child: const Text('Oops!'),
+                child: Text(e.text.trim()),
               ),
               // errorImage: _errorImage,
             ),

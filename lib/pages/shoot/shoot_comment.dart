@@ -11,12 +11,12 @@ import '../../classes/functions.dart';
 import '../../classes/models.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
-
-
+import '../../classes/states/theme_state.dart';
 
 class ShootComment extends StatefulWidget {
-  const ShootComment({Key? key,required this.postId,this.comment,
-    required this.stadia}) : super(key: key);
+  const ShootComment(
+      {Key? key, required this.postId, this.comment, required this.stadia})
+      : super(key: key);
   final String postId;
   final bool stadia;
   final DataPostComment? comment;
@@ -39,50 +39,51 @@ class _ShootCommentState extends State<ShootComment> {
     setState(() {
       sending = true;
     });
-    if (controller.value.text.trim() == '' && images.isEmpty && video==null) {
+    if (controller.value.text.trim() == '' && images.isEmpty && video == null) {
       toast('Please Enter Text Or Image Or Video');
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
-    } else if(images.isNotEmpty && video!=null){
+    } else if (images.isNotEmpty && video != null) {
       toast('You Can Upload Images Or Video');
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
-    }else {
+    } else {
       DataPostComment? back = await ShotsService.shotsComment(service,
           images: images,
           stadia: widget.stadia,
-          video:video,
-          postId: widget.postId, comment: controller.value.text);
+          video: video,
+          postId: widget.postId,
+          comment: controller.value.text);
 
       setState(() {
         sending = false;
       });
       print('back sendData $back');
       if (back != null) {
-        Go.pop(context,back);
+        Go.pop(context, back);
       }
     }
   }
-bool isInOtherPage=false;
 
+  bool isInOtherPage = false;
 
   @override
   void initState() {
     super.initState();
-    if(widget.comment!=null){
-      controller=TextEditingController(text: widget.comment!.comment);
-      if(widget.comment!.mediaTypes.first.media.contains('video/upload')){
-        
-      }
+    if (widget.comment != null) {
+      controller = TextEditingController(text: widget.comment!.comment);
+      if (widget.comment!.mediaTypes.first.media.contains('video/upload')) {}
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -92,7 +93,9 @@ bool isInOtherPage=false;
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: Colors.white,
+            color: isDarkMode
+                ? MyThemes.darkTheme.scaffoldBackgroundColor
+                : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
               child: Column(
@@ -110,7 +113,7 @@ bool isInOtherPage=false;
                             },
                             child: Icon(
                               Icons.close,
-                              color: Colors.black,
+                              color: isDarkMode ? Colors.white : Colors.black,
                               size: 35,
                             ),
                           ),
@@ -119,7 +122,8 @@ bool isInOtherPage=false;
                             child: Text(
                               'Make A Comment',
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )
@@ -138,27 +142,38 @@ bool isInOtherPage=false;
                             Expanded(
                               flex: 2,
                               child: TextField(
+                                style: TextStyle(color: Colors.black),
                                 controller: controller,
                                 minLines: 10,
                                 maxLines: 15,
                                 textAlign: TextAlign.left,
-                                onChanged: (e)async{
+                                onChanged: (e) async {
                                   // print('isInOtherPage $')
-                                  if(isInOtherPage)return;
-                                  if(e.endsWith('@')){
-                                    isInOtherPage=true;
-                                    DataPersonalInformation? userName = await Go.pushSlideAnim(context, SearchUserMention());
-                                    print('controller.value.text ${controller.value.text}');
-                                    controller.text=controller.value.text.substring(0,controller.value.text.length-1);
-                                    print('controller.value.subText ${controller.value.text}');
+                                  if (isInOtherPage) return;
+                                  if (e.endsWith('@')) {
+                                    isInOtherPage = true;
+                                    DataPersonalInformation? userName =
+                                        await Go.pushSlideAnim(
+                                            context, SearchUserMention());
+                                    print(
+                                        'controller.value.text ${controller.value.text}');
+                                    controller.text = controller.value.text
+                                        .substring(0,
+                                            controller.value.text.length - 1);
+                                    print(
+                                        'controller.value.subText ${controller.value.text}');
                                     print('userName ${userName}');
-                                    if(userName!=null){
+                                    if (userName != null) {
                                       String pp = '';
-                                      if(!controller.value.text.endsWith(' '))
-                                        pp=' ';
-                                      controller.text=controller.value.text+pp+'@'+userName.userName+' ';
+                                      if (!controller.value.text.endsWith(' '))
+                                        pp = ' ';
+                                      controller.text = controller.value.text +
+                                          pp +
+                                          '@' +
+                                          userName.userName +
+                                          ' ';
                                     }
-                                    isInOtherPage=false;
+                                    isInOtherPage = false;
                                   }
                                 },
                                 decoration: InputDecoration(
@@ -188,9 +203,12 @@ bool isInOtherPage=false;
                                                 alignment: Alignment.bottomLeft,
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    border: Border.all(width: 1,color: mainColor)
-                                                  ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color: mainColor)),
                                                   width: doubleWidth(20),
                                                   height: doubleWidth(20),
                                                   child: ClipRRect(
@@ -367,7 +385,8 @@ bool isInOtherPage=false;
                                               ]),
                                           width: doubleWidth(18),
                                           height: doubleWidth(18),
-                                          padding: EdgeInsets.all(doubleWidth(3)),
+                                          padding:
+                                              EdgeInsets.all(doubleWidth(3)),
                                           child: sending
                                               ? simpleCircle()
                                               : Image.asset(
@@ -460,7 +479,6 @@ bool isInOtherPage=false;
                                 await _controller.initialize();
                                 Duration duration = _controller.value.duration;
                                 if (duration.inSeconds <= 121) {
-
                                   setState(() {
                                     this.video = video;
                                   });
@@ -471,7 +489,6 @@ bool isInOtherPage=false;
                                       isLong: true);
                                 }
                               }
-
                             },
                             elevation: 3,
                             backgroundColor: Colors.white,

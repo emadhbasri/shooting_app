@@ -62,7 +62,8 @@ class _CommentReplyState extends State<CommentReply> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
-                            child: SizedBox(
+                            child: Container(
+                                color: white,
                                 width: doubleHeight(5),
                                 height: doubleHeight(5),
                                 child: Builder(
@@ -110,7 +111,7 @@ class _CommentReplyState extends State<CommentReply> {
               title: Text(
                 reply.personalInformationViewModel!.userName,
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),

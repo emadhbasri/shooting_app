@@ -16,14 +16,39 @@ class ChangePhone extends StatefulWidget {
 }
 
 class _ChangePhoneState extends State<ChangePhone> {
-  TextEditingController pref = TextEditingController();
-  String prefStr = '';
+
+  getData(context)async{
+    MyService service = getIt<MyService>();
+    Map<String,dynamic> back = await service.httpGet(
+        // '/api/v1/Administration/users/getDialingCodes'
+      '/api/v1/Administration/users/searchDialingCodes?searchString=9'
+    );
+    print('back $back');
+    if(back['status']){
+      setState(() {
+        list=(back['data']['data'] as List<dynamic>).cast<String>();
+        list.sort((a, b) => a.compareTo(b));
+      });
+    }
+  }
+
+  String? prefStr;
+  List<String> list=[];
+
+  @override
+  void initState() {
+    super.initState();
+    getData(context);
+  }
+
+  // TextEditingController pref = TextEditingController();
+  // String prefStr = '';
   TextEditingController number = TextEditingController();
   String numberStr = '';
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: Text('Change Phone')),
-      backgroundColor: Color.fromRGBO(247, 247, 247, 1),
+      // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: doubleWidth(6)),
@@ -52,30 +77,54 @@ class _ChangePhoneState extends State<ChangePhone> {
           Row(
             children: [
               Container(
-                width: doubleWidth(20),
+                // width: doubleWidth(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: doubleWidth(2)),
-                child: TextField(
-                  controller: pref,
-                  onChanged: (e) {
-                    if (e.length > 4) {
-                      pref.text = prefStr;
-                    } else {
+                child: DropdownButton<String>(
+                  underline: const SizedBox(),
+                  borderRadius: BorderRadius.circular(10),
+                  style: TextStyle(
+                    color: black,
+                    // fontSize: 12,
+                  ),
+                  menuMaxHeight: doubleHeight(50),
+                  onChanged: (String? e) {
+                    if(e!=null){
                       setState(() {
-                        prefStr = e;
+                        prefStr=e;
                       });
                     }
                   },
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                      hintStyle: TextStyle(color: grayCallDark),
-                      hintText: '234',
-                      prefixText: '+',
-                      border: InputBorder.none),
-                ),
+                  items: list.map((e) => DropdownMenuItem<String>(
+                      child: Text(e),
+                    value: e,
+                  )).toList(),
+                  value: prefStr,
+                )
+                // TextField(
+                //   style: TextStyle(
+                //       color: Colors.black
+                //   ),
+                //   controller: pref,
+                //   onChanged: (e) {
+                //     if (e.length > 4) {
+                //       pref.text = prefStr;
+                //     } else {
+                //       setState(() {
+                //         prefStr = e;
+                //       });
+                //     }
+                //   },
+                //   keyboardType: TextInputType.phone,
+                //   decoration: InputDecoration(
+                //       hintStyle: TextStyle(color: grayCallDark),
+                //       hintText: '234',
+                //       prefixText: '+',
+                //       border: InputBorder.none),
+                // ),
               ),
               SizedBox(width: doubleWidth(4)),
               Expanded(
@@ -118,12 +167,12 @@ class _ChangePhoneState extends State<ChangePhone> {
                         EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                 onPressed: () async{
                   // print(pref.value.text+number.value.text.trim());
-                  if(pref.value.text.trim() !='' && number.value.text.trim()!=''){
+                  if(prefStr!=null && prefStr!.trim() !='' && number.value.text.trim()!=''){
                     MyService service = getIt<MyService>();
                     bool back = await AuthenticationService.changePhone(service);
                     if(back){
                       Go.replaceSlideAnim(context,
-                          VerifyPhone(number: '+'+pref.value.text.trim()+number.value.text.trim(),));
+                          VerifyPhone(number: '+'+prefStr!.trim()+number.value.text.trim(),));
                     }
                   } else
                     toast('please fill the field.');

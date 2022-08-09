@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shoot/search_user_mention.dart';
@@ -57,6 +58,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
   TextEditingController controllerT = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     if(comment
         .personalInformationViewModel==null)return const SizedBox();
     return Container(
@@ -85,7 +87,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                          child: SizedBox(
+                          child: Container(
+                            color: white,
                               width: doubleHeight(5),
                               height: doubleHeight(5),
                               child: Builder(
@@ -136,7 +139,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                 comment.personalInformationViewModel!.userName,
                 // comment.personalInformationViewModel!.fullName ?? '',
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
@@ -306,10 +309,12 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
                                 ? greenCall
-                                : null),
+                                : isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(comment.commentLikeCount)),
+                      Text(makeCount(comment.commentLikeCount),style: TextStyle(
+                          color: isDarkMode?white:black
+                      )),
                     ],
                   ),
                   if(comment.personalInformationId ==
@@ -479,6 +484,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   }
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = getIt<ThemeState>().isDarkMode;
     if(comment
         .personalInformationViewModel==null)return const SizedBox();
     return Container(
@@ -506,7 +512,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                          child: SizedBox(
+                          child: Container(
+                              color: white,
                               width: doubleHeight(5),
                               height: doubleHeight(5),
                               child: Builder(
@@ -556,7 +563,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
               title: Text(
                 comment.personalInformationViewModel!.userName,
                 style: TextStyle(
-                    color: black,
+                    // color: black,
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
@@ -721,10 +728,12 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
                                 ? greenCall
-                                : null),
+                                : isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(comment.commentLikeCount))
+                      Text(makeCount(comment.commentLikeCount),style: TextStyle(
+                          color: isDarkMode?white:black
+                      )),
                     ],
                   ),
                   if(comment.personalInformationId ==

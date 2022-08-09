@@ -135,12 +135,17 @@ class LinkViewHorizontal extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            Uri.parse(url).host,
-                            style: titleFontSize_,
+                          Expanded(
+                            child: Text(
+                              Uri.parse(url).host,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: titleFontSize_,
+                            ),
                           ),
                           SizedBox(width: doubleWidth(1)),
-                          Icon(Icons.link)
+                          Icon(Icons.link),
+                          SizedBox(width: doubleWidth(1)),
                         ],
                       ),
                     ],

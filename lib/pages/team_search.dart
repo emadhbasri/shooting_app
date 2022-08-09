@@ -73,6 +73,9 @@ class _TeamSearchState extends State<TeamSearch> {
                           autofocus: true,
                           enableSuggestions: true,
                           cursorColor: mainBlue,
+                          style: TextStyle(
+                            color: Colors.black
+                          ),
                           decoration: InputDecoration(
 
                               prefixIcon: Icon(Icons.search),

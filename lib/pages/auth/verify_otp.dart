@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/states/theme_state.dart';
 import 'package:shooting_app/pages/auth/team.dart';
 
 import '../../../classes/functions.dart';
@@ -6,9 +8,12 @@ import '../../../classes/dataTypes.dart';
 import '../../../classes/services/authentication_service.dart';
 import '../../../classes/services/my_service.dart';
 import '../../../main.dart';
+import '../../ui_items/my_toast.dart';
 import '../AppPage.dart';
 
 class VerifyOtp extends StatefulWidget {
+
+
   const VerifyOtp({Key? key,required this.isRegister,required this.username,required this.password}) : super(key: key);
   final String username;
   final String password;
@@ -18,6 +23,8 @@ class VerifyOtp extends StatefulWidget {
 }
 
 class _VerifyOtpState extends State<VerifyOtp> {
+  GlobalKey<MyToastState> key = GlobalKey<MyToastState>();
+
   String code='';
   List<FocusNode?> _listFocusNodes = [
     FocusNode(),
@@ -59,130 +66,148 @@ class _VerifyOtpState extends State<VerifyOtp> {
     TextEditingController()
   ];
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SizedBox.expand(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
-          child: Column(children: [
-            SizedBox(height: doubleHeight(8)),
-            Text('A 6 digit code has been sent to your\nemail',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
-            SizedBox(height: doubleHeight(2)),
-            Text(
-              'Enter code to verify',
-              style: TextStyle(color: grayCall),
-            ),
-            SizedBox(height: doubleHeight(6)),
-            SizedBox(
-              child: Row(
-                  children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int index) {
-                if (index % 2 == 1)
-                  return SizedBox(width: doubleWidth(4));
-                else
-                  return Expanded(
-                      child: Container(
-                    // elevation: 0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
-                    child: TextField(
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 14.0),
-                        controller: _listControllers[index],
-                        onTap: () {
-                          _listControllers[index]!.clear();
-                        },
-                        onChanged: (e) async{
-                          // setState(() {
-                          //   isError=false;
-                          // });
+    return MyToast(
+        key: key,
+      child: Scaffold(
+          body: SizedBox.expand(
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
+            child: Column(children: [
+              SizedBox(height: doubleHeight(8)),
+              Text('A 6 digit code has been sent to your\nemail',
+                  textAlign: TextAlign.center,
+                  style: TextStyle( fontWeight: FontWeight.bold)),
 
-                          if (index == 10) {
-                            if (e.length == 1) {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              _listStrings[index] = e;
+              Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1,color: Provider.of<ThemeState>(context,listen: false).isDarkMode?Colors.white:Colors.black),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: doubleWidth(2),
+                    vertical: doubleHeight(1)
+                  ),
+                  child: Text('Please check your spam message if you can\'t see your OTP in your inbox',
+                      textAlign: TextAlign.center,
+                      style: TextStyle( fontWeight: FontWeight.bold)),
+                ),
+
+              SizedBox(height: doubleHeight(2)),
+              Text(
+                'Enter code to verify',
+                style: TextStyle(color: grayCall),
+              ),
+              SizedBox(height: doubleHeight(6)),
+              SizedBox(
+                child: Row(
+                    children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int index) {
+                  if (index % 2 == 1)
+                    return SizedBox(width: doubleWidth(4));
+                  else
+                    return Expanded(
+                        child: Container(
+                      // elevation: 0,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),
+                      child: TextField(
+                          style: TextStyle(
+                            color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.normal,
+                              fontSize: 14.0),
+                          controller: _listControllers[index],
+                          onTap: () {
+                            _listControllers[index]!.clear();
+                          },
+                          onChanged: (e) async{
+                            // setState(() {
+                            //   isError=false;
+                            // });
+
+                            if (index == 10) {
+                              if (e.length == 1) {
+                                FocusScope.of(context).requestFocus(FocusNode());
+                                _listStrings[index] = e;
+                              } else {
+                                FocusScope.of(context).requestFocus(FocusNode());
+                                _listControllers[index]?.clear();
+                                _listFocusNodes[index]?.requestFocus();
+                              }
                             } else {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              _listControllers[index]?.clear();
-                              _listFocusNodes[index]?.requestFocus();
+                              if (e.length == 1) {
+                                _listFocusNodes[index + 2]?.requestFocus();
+                                _listStrings[index] = e;
+                              } else {
+                                _listFocusNodes[index + 2]?.requestFocus();
+                                _listControllers[index]?.clear();
+                                _listFocusNodes[index]?.requestFocus();
+                              }
                             }
-                          } else {
-                            if (e.length == 1) {
-                              _listFocusNodes[index + 2]?.requestFocus();
-                              _listStrings[index] = e;
-                            } else {
-                              _listFocusNodes[index + 2]?.requestFocus();
-                              _listControllers[index]?.clear();
-                              _listFocusNodes[index]?.requestFocus();
+
+                            code = '';
+                            for (int j = 0; j < _listControllers.length; j++) {
+                              if (_listControllers[j] != null) {
+                                code += _listControllers[j]!.value.text;
+                              }
+                            }
+
+                          },
+                          focusNode: _listFocusNodes[index],
+                          keyboardType: TextInputType.phone,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(border: InputBorder.none)
+                          // enabledBorder: OutlineInputBorder(
+                          // borderSide:
+                          // BorderSide(color: isError?colorErrorLight:colorGray2),
+                          // borderRadius: BorderRadius.circular(8)),
+                          // border: OutlineInputBorder(
+                          //     borderRadius: BorderRadius.circular(8))),
+                          ),
+                    ));
+                }).toList()),
+              ),
+              SizedBox(height: doubleHeight(4)),
+              SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
+                        backgroundColor: MaterialStateProperty.all(mainBlue),
+                        padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
+                    onPressed: () async{
+                      if (code.length != 6) {
+                        myToast(key,'please fill the field.');
+                        return;
+                      }else{
+                        MyService service = getIt<MyService>();
+                        bool back = await AuthenticationService.validateOtp(
+                            service,key,
+                            user:widget.username,
+                            password:widget.password,
+                            oTP: code
+                        );
+                        if(back){
+                          bool bbo = await service.getToken();
+                          if(bbo) {
+                            if(widget.isRegister==false){
+                              Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
+                            }else{
+                              Go.pushSlideAnim(context, Team());
                             }
                           }
 
-                          code = '';
-                          for (int j = 0; j < _listControllers.length; j++) {
-                            if (_listControllers[j] != null) {
-                              code += _listControllers[j]!.value.text;
-                            }
-                          }
-
-                        },
-                        focusNode: _listFocusNodes[index],
-                        keyboardType: TextInputType.phone,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(border: InputBorder.none)
-                        // enabledBorder: OutlineInputBorder(
-                        // borderSide:
-                        // BorderSide(color: isError?colorErrorLight:colorGray2),
-                        // borderRadius: BorderRadius.circular(8)),
-                        // border: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(8))),
-                        ),
-                  ));
-              }).toList()),
-            ),
-            SizedBox(height: doubleHeight(4)),
-            SizedBox(
-              width: double.maxFinite,
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      backgroundColor: MaterialStateProperty.all(mainBlue),
-                      padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
-                  onPressed: () async{
-                    if (code.length != 6) {
-                      toast('please fill the field.');
-                      return;
-                    }else{
-                      MyService service = getIt<MyService>();
-                      bool back = await AuthenticationService.validateOtp(
-                          service,
-                          user:widget.username,
-                          password:widget.password,
-                          oTP: code
-                      );
-                      if(back){
-                        bool bbo = await service.getToken();
-                        if(bbo) {
-                          if(widget.isRegister==false){
-                            Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
-                          }else{
-                            Go.pushSlideAnim(context, Team());
-                          }
                         }
-
                       }
-                    }
-                  },
-                  child: Text('Verify')),
-            )
-          ]),
-        )),
-        appBar: AppBar(elevation: 0, title: Text('Verify Phone')));
+                    },
+                    child: Text('Verify')),
+              )
+            ]),
+          )),
+          appBar: AppBar(elevation: 0, title: Text('Verify'))),
+    );
   }
 }

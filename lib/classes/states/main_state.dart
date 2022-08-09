@@ -12,6 +12,7 @@ import 'package:shooting_app/ui_items/dialogs/choose_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_sharing_way.dart';
 
 import '../../main.dart';
+import '../../package/rflutter_alert/rflutter_alert.dart';
 import '../../pages/home/Home.dart';
 import '../../pages/profile/profile.dart';
 import '../../pages/shoot/shoot.dart';
@@ -28,12 +29,17 @@ class MainState extends ChangeNotifier {
   ///share in app
   receiveShare({List<SharedMediaFile>? sharedFiles, String? sharedText,bool? update}) async {
     print('receiveShare');
+    print('appPageContext $appPageContext');
     print('sharedFiles $sharedFiles');
     print('sharedText $sharedText');
+    print('uupdate ${update}');
     if (appPageContext == null) {
       await Future.delayed(Duration(seconds: 1));
-      receiveShare(sharedFiles: sharedFiles, sharedText: sharedText);
-    } else if (sharedFiles != null || sharedText != null) {
+      receiveShare(sharedFiles: sharedFiles, sharedText: sharedText,update:update);
+      return;
+    }
+
+    if (sharedFiles != null || sharedText != null) {
       await Future.delayed(Duration(seconds: 1));
       String? way = await showDialog(
           context: appPageContext!, builder: (context) => ChooseSharingWay());
@@ -66,8 +72,12 @@ class MainState extends ChangeNotifier {
         }
       }
     }else if(update==true){
+      print('uupdate1 ${update}');
+
       bool? alert = await MyAlertDialog(appPageContext,
-          content: 'There is a new version for Football Buzz');
+          content: 'THERE IS A NEW VERSION OF FOOTBALL BUZZ',
+          type: AlertType.success,
+          yes: 'UPDATE',no: false);
       //yes to update green
       //not dismiss
       if(alert==true){
@@ -183,18 +193,44 @@ class MainState extends ChangeNotifier {
     // allPosts = await ShotsService.shotsAll(service);
     print('add $add');
     Map<String, dynamic> bback =
-        await ShotsService.fanFeed(service, pageNumber: postsPageNumber);
+        await ShotsService.fanFeedPlus(service, pageNumber: postsPageNumber);
     loadingPost = false;
     notifyListeners();
+
     if (add)
       allPosts.addAll(bback['list']);
     else
       allPosts = bback['list'];
 
-    postsHasNext = postsPageNumber < bback['totalPage'];
+    postsHasNext = bback['hasNext'];
     notifyListeners();
     print('allPosts ${allPosts.length}');
   }
+
+  // getFanFeed({bool add = false}) async {
+  //   if (!add) {
+  //     loadingPost = true;
+  //     notifyListeners();
+  //   }
+  //   // allPosts = await ShotsService.shotsAll(service);
+  //   print('add $add');
+  //   Map<String, dynamic> bback =
+  //   await ShotsService.fanFeed(service, pageNumber: postsPageNumber);
+  //   loadingPost = false;
+  //   notifyListeners();
+  //
+  //   if (add)
+  //     allPosts.addAll(bback['list']);
+  //   else
+  //     allPosts = bback['list'];
+  //
+  //   postsHasNext = postsPageNumber < bback['totalPage'];
+  //   notifyListeners();
+  //   print('allPosts ${allPosts.length}');
+  // }
+
+  int stadiaPageNumber = 1;
+  bool stadiaHasNext = false;
 
   List<String> tags = ['Global'];
   String? selectedTag;
@@ -211,17 +247,40 @@ class MainState extends ChangeNotifier {
     getTags();
   }
 
-  getStadia() async {
+  getStadia({bool add = false}) async {
     if (selectedTag != null) {
       getStadiaSearch();
     } else {
-      loadingStadia = true;
-      notifyListeners();
-      stadiaShots = await ShotsService.getStadiaShots(service);
+      if (!add) {
+        loadingPost = true;
+        notifyListeners();
+      }
+      Map<String, dynamic> bback =
+      await ShotsService.getStadiaShotsPlus(service,pageNumber:stadiaPageNumber );
       loadingStadia = false;
+      notifyListeners();
+      if (add)
+        stadiaShots.addAll(bback['list']);
+      else
+        stadiaShots = bback['list'];
+
+      stadiaHasNext = bback['hasNext'];
+          // postsPageNumber < bback['totalPage'];
       notifyListeners();
     }
   }
+
+  // getStadia() async {
+  //   if (selectedTag != null) {
+  //     getStadiaSearch();
+  //   } else {
+  //     loadingStadia = true;
+  //     notifyListeners();
+  //     stadiaShots = await ShotsService.getStadiaShots(service);
+  //     loadingStadia = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   getStadiaSearch() async {
     loadingStadia = true;

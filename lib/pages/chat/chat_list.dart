@@ -11,7 +11,6 @@ import '../../main.dart';
 import '../group_chat/create_group.dart';
 import '../group_chat/group_chat.dart';
 
-
 class ChatList extends StatefulWidget {
   const ChatList({Key? key}) : super(key: key);
 
@@ -73,16 +72,16 @@ class _ChatListState extends State<ChatList> {
                           .map((e) => Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if(e.chatType==1)
-                                  ChatListItem(
-                                    chat: e,
-                                    state: state,
-                                  )
+                                  if (e.chatType == 1)
+                                    ChatListItem(
+                                      chat: e,
+                                      state: state,
+                                    )
                                   else
-                                  GroupChatListItem(
-                                    chat: e,
-                                    state: state,
-                                  ),
+                                    GroupChatListItem(
+                                      chat: e,
+                                      state: state,
+                                    ),
                                   if (e != state.listChats.last)
                                     Divider(color: grayCallDark)
                                 ],
@@ -101,12 +100,11 @@ class _ChatListState extends State<ChatList> {
                   ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () async{
+            onPressed: () async {
               bool? bb = await Go.pushSlideAnim(context, CreateGroup());
-              if(bb!=null && bb){
+              if (bb != null && bb) {
                 state.getChatsList(clean: true);
               }
-
             },
             heroTag: 'Create New Group Chat',
             child: Icon(Icons.group),
@@ -127,8 +125,22 @@ class ChatListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int index = chat.personalInformations.indexWhere((element) =>
-    element==null?false:
-        element.id != getIt<MainState>().userId);
+        element == null ? false : element.id != getIt<MainState>().userId);
+    print('emad personalInformations ${chat.personalInformations.length}');
+    // if (chat.personalInformations.length == 1)
+    //   return ListTile(
+    //     leading: SizedBox(
+    //       width: doubleWidth(15),
+    //       child: SizedBox(
+    //           width: doubleHeight(5),
+    //           height: doubleHeight(5),
+    //           child: ClipRRect(
+    //               borderRadius: BorderRadius.circular(100),
+    //               child: Image.asset('assets/images/playerbig.png',
+    //                   fit: BoxFit.fill))),
+    //     ),
+    //     title: Text('Deleted Account'),
+    //   );
     DataPersonalInformation? roomUser = chat.personalInformations[index];
     return ListTile(
       onTap: () async {
@@ -158,8 +170,7 @@ class ChatListItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                     child: roomUser.profilePhoto == null
                         ? profilePlaceHolder()
-                        : imageNetwork(
-                            roomUser.profilePhoto ?? '',
+                        : imageNetwork(roomUser.profilePhoto ?? '',
                             fit: BoxFit.fill)),
               ),
             Align(
@@ -177,8 +188,7 @@ class ChatListItem extends StatelessWidget {
                             border: Border.all(color: white, width: 2),
                             borderRadius: BorderRadius.circular(100),
                             image: DecorationImage(
-                              image: networkImage(
-                                  roomUser.team!.team_badge!),
+                              image: networkImage(roomUser.team!.team_badge!),
                             )),
                       );
                     }
@@ -227,6 +237,7 @@ class ChatListItem extends StatelessWidget {
     );
   }
 }
+
 class GroupChatListItem extends StatelessWidget {
   const GroupChatListItem({Key? key, required this.chat, required this.state})
       : super(key: key);
@@ -234,7 +245,6 @@ class GroupChatListItem extends StatelessWidget {
   final ChatState state;
   @override
   Widget build(BuildContext context) {
-
     return ListTile(
       onTap: () async {
         state.selectedChat = chat;
@@ -255,24 +265,26 @@ class GroupChatListItem extends StatelessWidget {
         aspectRatio: 1,
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(width: 1,color: Colors.black),
-            borderRadius: BorderRadius.circular(100),
-            image: chat.roomPhoto==null?null:DecorationImage(
-              fit: BoxFit.fill,
-              image: networkImage(chat.roomPhoto!)
-            )
-          ),
+              border: Border.all(width: 1, color: Colors.black),
+              borderRadius: BorderRadius.circular(100),
+              image: chat.roomPhoto == null
+                  ? null
+                  : DecorationImage(
+                      fit: BoxFit.fill, image: networkImage(chat.roomPhoto!))),
           // width: doubleWidth(10),
-          child: chat.roomPhoto!=null?null:Center(child: Text(chat.name==null?'':chat.name![0],style: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-              fontWeight: FontWeight.bold
-          ),)
-          ),
+          child: chat.roomPhoto != null
+              ? null
+              : Center(
+                  child: Text(
+                  chat.name == null ? '' : chat.name![0],
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold),
+                )),
         ),
       ),
-      title:
-      Text(chat.name ?? ''),
+      title: Text(chat.name ?? ''),
       // Text(roomUser.personalInformation?.fullName ?? ''),
       subtitle: Text('${chat.personalInformations.length} members'),
       // subtitle: chat.chatMessages.isEmpty
@@ -303,4 +315,3 @@ class GroupChatListItem extends StatelessWidget {
     );
   }
 }
-

@@ -72,6 +72,9 @@ class _SearchState extends State<Search> {
                     color: white,
                     child: Center(
                       child: TextField(
+                        style: TextStyle(
+                            color: Colors.black
+                        ),
                         enableSuggestions: true,
                         controller: controller,
                         onChanged: (e) {
