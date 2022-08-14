@@ -44,9 +44,9 @@ class _SettingsState extends State<Settings> {
         appBar: AppBar(
           elevation: 0,
           title: Text('Settings'.toUpperCase()),
-          // actions: [
-            // ThemeSwitcher()
-          // ],
+          actions: [
+            ThemeSwitcher()
+          ],
         ),
         body: SizedBox.expand(
           child: Padding(

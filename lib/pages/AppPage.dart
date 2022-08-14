@@ -92,13 +92,13 @@ class _AppPageState extends State<AppPage> {
   @override
   Widget build(BuildContext context) {
 
-    bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
+    // bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
 
     late AppBar appBar;
     if (currentIndex == 0) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
+        // backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -134,7 +134,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 1) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
+        // backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -162,7 +162,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 3) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
+        // backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -185,7 +185,7 @@ class _AppPageState extends State<AppPage> {
     } else if (currentIndex == 4) {
       appBar = AppBar(
         elevation: 0,
-        backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
+        // backgroundColor: isDarkMode?Color(0xFF1f1b24):mainBlue,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -272,11 +272,14 @@ class _AppPageState extends State<AppPage> {
               return const SizedBox();
           },
         ),
-        bottomNavigationBar: Container(
+        bottomNavigationBar: Consumer<ThemeState>(
+          builder: (context, themeState, child) {
+            
+        return Container(
           width: max,
           height: doubleHeight(10),
           padding: EdgeInsets.only(bottom: doubleHeight(2)),
-          color: isDarkMode?Color(0xFF1f1b24):Colors.white,
+          color: themeState.isDarkMode?headerColor:Colors.white,
           child: Row(
             children: <Widget>[
               Expanded(
@@ -300,7 +303,8 @@ class _AppPageState extends State<AppPage> {
                           height: max,
                           padding: EdgeInsets.all(doubleWidth(3)),
                           child: currentIndex == 0
-                              ? Image.asset('assets/images/homebuttom2.png')
+                              ? Image.asset('assets/images/homebuttom2.png',
+                              color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,)
                               : Image.asset('assets/images/homebuttom.png'),
                         ),
                       ),
@@ -311,7 +315,7 @@ class _AppPageState extends State<AppPage> {
                                 width: doubleWidth(12),
                                 height: doubleHeight(0.4),
                                 decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
+                                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                                     borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(100),
                                       bottomRight: Radius.circular(100),
@@ -343,7 +347,8 @@ class _AppPageState extends State<AppPage> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: currentIndex == 1
-                                      ? Image.asset('assets/images/chat.png')
+                                      ? Image.asset('assets/images/chat.png',
+                                      color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue)
                                       : Image.asset(
                                           'assets/images/chat(1).png'),
                                 ),
@@ -367,7 +372,7 @@ class _AppPageState extends State<AppPage> {
                                 width: doubleWidth(12),
                                 height: doubleHeight(0.4),
                                 decoration: BoxDecoration(
-                                    color: mainBlue,
+                                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                                     borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(100),
                                       bottomRight: Radius.circular(100),
@@ -463,7 +468,7 @@ class _AppPageState extends State<AppPage> {
                             child: currentIndex == 3
                                 ? Icon(
                                     Icons.notifications_active_rounded,
-                                    color: Colors.deepPurple,
+                                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                                     size: 34,
                                   )
                                 // Image.asset('assets/images/flashlight.png')
@@ -482,7 +487,7 @@ class _AppPageState extends State<AppPage> {
                                 width: doubleWidth(12),
                                 height: doubleHeight(0.4),
                                 decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
+                                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                                     borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(100),
                                       bottomRight: Radius.circular(100),
@@ -536,7 +541,7 @@ class _AppPageState extends State<AppPage> {
                                     return Container(
                                       width: doubleWidth(12),
                                       decoration: BoxDecoration(
-                                          border: Border.all(color: mainBlue),
+                                          border: Border.all(color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue),
                                           image: DecorationImage(
                                               fit: BoxFit.fill,
                                               image: networkImage(state
@@ -568,8 +573,9 @@ class _AppPageState extends State<AppPage> {
               ),
             ],
           ),
-        ),
-      ),
+        );
+          },
+        )),
     );
   }
 

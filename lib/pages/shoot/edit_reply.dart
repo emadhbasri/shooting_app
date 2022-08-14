@@ -7,7 +7,7 @@ import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/theme_state.dart';
-
+import 'package:provider/provider.dart';
 class EditReply extends StatefulWidget {
   final DataCommentReply reply;
   const EditReply({
@@ -59,7 +59,7 @@ class _EditReplyState extends State<EditReply> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
 
     return SizedBox.expand(
       child: Align(
@@ -70,7 +70,7 @@ class _EditReplyState extends State<EditReply> {
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: isDarkMode
+            color: context.watch<ThemeState>().isDarkMode
                 ? MyThemes.darkTheme.scaffoldBackgroundColor
                 : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
@@ -90,7 +90,7 @@ class _EditReplyState extends State<EditReply> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                              color: context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                               size: 35,
                             ),
                           ),
@@ -100,7 +100,7 @@ class _EditReplyState extends State<EditReply> {
                               'Take a shot',
                               style: TextStyle(
                                   color:
-                                      isDarkMode ? Colors.white : Colors.black,
+                                      context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

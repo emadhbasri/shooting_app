@@ -197,7 +197,7 @@ class ChatListItem extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: roomUser.profilePhoto == null
-                        ? profilePlaceHolder()
+                        ? profilePlaceHolder(context)
                         : imageNetwork(roomUser.profilePhoto ?? '',
                             fit: BoxFit.fill)),
               ),

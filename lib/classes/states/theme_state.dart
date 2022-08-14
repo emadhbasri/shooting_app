@@ -1,18 +1,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shooting_app/classes/services/my_service.dart';
 
 import '../../main.dart';
 import '../dataTypes.dart';
 
 class ThemeState extends ChangeNotifier{
 
+  ThemeState(){
+    init();
+  }
+  init()async{
+    bool? temp = await getBool('isDarkMode');
+    if(temp!=null){
+      themeMode=temp?ThemeMode.dark:ThemeMode.light;
+    }
+  }
   ThemeMode themeMode = ThemeMode.light;
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
   notify()=>notifyListeners();
   void toggleTheme(){
     themeMode = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    setBool('isDarkMode', themeMode==ThemeMode.dark);
     notifyListeners();
   }
 
@@ -20,9 +31,7 @@ class ThemeState extends ChangeNotifier{
 
 class ThemeStateProvider extends StatelessWidget {
   final Widget child;
-  final Brightness brightness;
   const ThemeStateProvider({Key? key, required this.child,
-    required this.brightness
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,7 @@ class ThemeStateProvider extends StatelessWidget {
     );
   }
 }
-
+const headerColor = Color.fromRGBO(34, 44, 51, 1);
 class MyThemes {
 
   static final darkTheme = ThemeData(
@@ -54,8 +63,8 @@ class MyThemes {
     ),
     unselectedWidgetColor: Colors.white70,
     primaryColorLight: Colors.black,
-    scaffoldBackgroundColor: Colors.black87,
-    primaryColor: Color(0xFF1f1b24),
+    scaffoldBackgroundColor: Color.fromRGBO(20, 27, 23, 1),
+    primaryColor: headerColor,//Color(0xFF1f1b24),
     secondaryHeaderColor: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black,opacity: 0.8),
 
@@ -70,7 +79,7 @@ class MyThemes {
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 22,fontWeight: FontWeight.bold),
           actionsIconTheme: IconThemeData(color: white),
           iconTheme: IconThemeData(color: white),
-          color: Color(0xFF1f1b24)),
+          color: headerColor),
 
 
 

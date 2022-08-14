@@ -51,25 +51,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
+    // bool isDarkMode = Provider.of<ThemeState>(context,listen: false).isDarkMode;
     return Container(
       // color: Color.fromRGBO(244, 244, 244, 1),
       child: Column(
         children: <Widget>[
-          Container(
-            color: isDarkMode?Color(0xFF1f1b24):Colors.white,
-            child: TabBar(
+          Consumer<ThemeState>(
+            builder: (context, state, child) {
+            return Container(
+            color: state.isDarkMode?headerColor:Colors.white,
+            child: child,
+          );
+          },
+          child: TabBar(
               labelStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: doubleWidth(4)
               ),
-              indicatorColor: mainBlue,
+              indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
               indicatorPadding: EdgeInsets.symmetric(
                   horizontal: doubleWidth(10)),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: doubleHeight(0.4),
-              labelColor: mainBlue,
-              unselectedLabelColor: mainBlue,
+              labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+              unselectedLabelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
               tabs: [Tab(
                 // text: e,
                 child: Text(

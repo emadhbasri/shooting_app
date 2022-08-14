@@ -101,6 +101,7 @@ class _GroupChatListState extends State<GroupChatList> {
                   ),
           ),
           floatingActionButton: FloatingActionButton(
+            backgroundColor: mainGreen,
             onPressed: () async{
               bool? bb = await Go.pushSlideAnim(context, CreateGroup());
               if(bb!=null && bb){

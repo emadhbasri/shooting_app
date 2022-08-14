@@ -10,7 +10,7 @@ import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/theme_state.dart';
-
+import 'package:provider/provider.dart';
 class EditShoot extends StatefulWidget {
   final DataPost post;
   const EditShoot({
@@ -76,7 +76,7 @@ class _EditShootState extends State<EditShoot> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
 
     print('mediaIds $mediaIds');
     print('images $images');
@@ -89,7 +89,7 @@ class _EditShootState extends State<EditShoot> {
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: isDarkMode
+            color: context.watch<ThemeState>().isDarkMode
                 ? MyThemes.darkTheme.scaffoldBackgroundColor
                 : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
@@ -109,7 +109,7 @@ class _EditShootState extends State<EditShoot> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                              color: context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                               size: 35,
                             ),
                           ),
@@ -119,7 +119,7 @@ class _EditShootState extends State<EditShoot> {
                               'Take a shot',
                               style: TextStyle(
                                   color:
-                                      isDarkMode ? Colors.white : Colors.black,
+                                      context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

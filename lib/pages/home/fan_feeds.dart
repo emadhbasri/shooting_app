@@ -19,6 +19,10 @@ class _FanFeedsState extends State<FanFeeds> {
     print('FanFeeds init');
     MainState state = Provider.of<MainState>(context, listen: false);
     if (state.allPosts.isEmpty) state.getFanFeed();
+    else {
+      state.loadingPost=false;
+      state.notify();
+    }
 
     state.listController = ScrollController()
       ..addListener(() {

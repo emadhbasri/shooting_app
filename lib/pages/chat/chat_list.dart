@@ -100,6 +100,7 @@ class _ChatListState extends State<ChatList> {
                   ),
           ),
           floatingActionButton: FloatingActionButton(
+            backgroundColor: mainGreen,
             onPressed: () async {
               bool? bb = await Go.pushSlideAnim(context, CreateGroup());
               if (bb != null && bb) {
@@ -169,7 +170,7 @@ class ChatListItem extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: roomUser.profilePhoto == null
-                        ? profilePlaceHolder()
+                        ? profilePlaceHolder(context)
                         : imageNetwork(roomUser.profilePhoto ?? '',
                             fit: BoxFit.fill)),
               ),

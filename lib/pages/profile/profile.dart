@@ -201,7 +201,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                   ),
                                                 )
                                               : CircleAvatar(
-                                            backgroundColor: getIt<ThemeState>().isDarkMode?Colors.black:Colors.white,
+                                            backgroundColor: context.watch<ThemeState>().isDarkMode?Colors.black:Colors.white,
 
                                             // backgroundColor: Colors.white,
                                                   radius: doubleWidth(30),
@@ -348,13 +348,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         labelStyle: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: doubleWidth(4)),
-                        indicatorColor: mainBlue,
+                        indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         indicatorPadding:
                             EdgeInsets.symmetric(horizontal: doubleWidth(20)),
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorWeight: doubleHeight(0.4),
-                        labelColor: mainBlue,
-                        unselectedLabelColor: mainBlue,
+                        labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                        unselectedLabelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         tabs: state.tabs
                             .map((e) => Tab(
                                   // text: e,

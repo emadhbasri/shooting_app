@@ -294,7 +294,7 @@ class _UserItemState extends State<UserItem> {
                             : SizedBox(
                             width: doubleWidth(20),
                             height: doubleWidth(20),
-                            child:profilePlaceHolder())),
+                            child:profilePlaceHolder(context))),
                     Align(
                       alignment: Alignment(0.9, -0.9),
                       child: SizedBox(

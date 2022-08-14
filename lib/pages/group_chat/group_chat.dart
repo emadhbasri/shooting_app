@@ -410,7 +410,7 @@ class _ChatItemState extends State<ChatItem> {
                                 fit: BoxFit.fill,
                               );
                             }
-                            return profilePlaceHolder();
+                            return profilePlaceHolder(context);
                           },
                         )),
                   ),
@@ -546,7 +546,14 @@ class _ChatItemState extends State<ChatItem> {
                                         backgroundColor: Colors.white,
                                         boxShadow: [],
                                         urlLaunchMode: LaunchMode.externalApplication,
-                                        errorWidget: Text(e.text.trim()),
+                                        errorWidget: GestureDetector(
+                  onTap: (){
+                    openUrl(e.text.trim());
+                  },
+                  child: Text(e.text.trim(),style: TextStyle(
+                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  ),),
+                ),
                                         // errorImage: _errorImage,
                                       ),
                                     );

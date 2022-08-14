@@ -10,7 +10,7 @@ import '../classes/models.dart';
 import '../classes/states/theme_state.dart';
 import '../main.dart';
 import 'report_sheet.dart';
-
+import 'package:provider/provider.dart';
 class MyBottomSheet extends StatelessWidget {
   const MyBottomSheet(this.post, {Key? key}) : super(key: key);
   final DataPost post;
@@ -22,7 +22,7 @@ class MyBottomSheet extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: getIt<ThemeState>().isDarkMode
+          color: context.watch<ThemeState>().isDarkMode
               ? Color.fromRGBO(20, 20, 20, 1)
               : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(
@@ -194,7 +194,7 @@ class MyBottomSheetComment extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: getIt<ThemeState>().isDarkMode
+          color: context.watch<ThemeState>().isDarkMode
               ? Color.fromRGBO(20, 20, 20, 1)
               : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(
@@ -367,7 +367,7 @@ class MyBottomSheetReply extends StatelessWidget {
         child: Material(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: getIt<ThemeState>().isDarkMode
+          color: context.watch<ThemeState>().isDarkMode
               ? Color.fromRGBO(20, 20, 20, 1)
               : MyThemes.lightTheme.scaffoldBackgroundColor,
           child: Column(

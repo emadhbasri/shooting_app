@@ -12,7 +12,7 @@ import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../chat/chat.dart';
 import '../profile/profile.dart';
-
+import 'package:provider/provider.dart';
 class SearchUser extends StatefulWidget {
   const SearchUser({Key? key}) : super(key: key);
   @override
@@ -196,7 +196,7 @@ class _UserItemState extends State<UserItem> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return GestureDetector(
       onLongPress: widget.onLongPress != null
           ? () {
@@ -223,7 +223,7 @@ class _UserItemState extends State<UserItem> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(user.fullName ?? '',style: TextStyle(
-                      color: isDarkMode?white:black
+                      color: context.watch<ThemeState>().isDarkMode?white:black
                     ),),
                     SizedBox(width: doubleWidth(1)),
                     if (widget.roomUser != null && widget.roomUser!.isRoomOwner)
@@ -244,7 +244,7 @@ class _UserItemState extends State<UserItem> {
                 SizedBox(height: doubleHeight(0.5)),
                 Text(
                   '@${user.userName}',
-                  style: TextStyle(color: isDarkMode?white:grayCall, fontSize: 12),
+                  style: TextStyle(color: context.watch<ThemeState>().isDarkMode?white:grayCall, fontSize: 12),
                 ),
                 if (widget.user.userName != getIt<MainState>().userName)
                   Column(
@@ -354,7 +354,7 @@ class _UserItemState extends State<UserItem> {
                             : SizedBox(
                                 width: doubleWidth(20),
                                 height: doubleWidth(20),
-                                child: profilePlaceHolder())),
+                                child: profilePlaceHolder(context))),
                     Align(
                       alignment: Alignment(0.9, -0.9),
                       child: SizedBox(

@@ -203,13 +203,13 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                       fontWeight: FontWeight.bold,
                       fontSize: doubleWidth(3)
                   ),
-                  indicatorColor: mainBlue,
+                  indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                   indicatorPadding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(5)),
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorWeight: doubleHeight(0.4),
-                  labelColor: mainBlue,
-                  unselectedLabelColor: mainBlue,
+                  labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  unselectedLabelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                   tabs: state.tabs.map((e) => Tab(
                     // text: e,
                     child: Text(e.toUpperCase()),

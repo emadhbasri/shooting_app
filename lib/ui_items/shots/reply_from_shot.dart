@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
+import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
@@ -77,7 +79,7 @@ class _CommentReplyState extends State<CommentReply> {
                                         fit: BoxFit.fill,
                                       );
                                     }
-                                    return profilePlaceHolder();
+                                    return profilePlaceHolder(context);
                                   },
                                 )),
                           )),
@@ -156,7 +158,9 @@ class _CommentReplyState extends State<CommentReply> {
             // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
             // Text(reply.replyDetail??''),
-            convertHashtag(context, reply.replyDetail ?? '', (e) {}),
+            convertHashtag(context, reply.replyDetail ?? '', (e) {
+              
+            }),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -201,7 +205,7 @@ class _CommentReplyState extends State<CommentReply> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color:
-                                reply.replyLikedBythisUser ? greenCall : null),
+                                reply.replyLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(reply.replyLikeCount)),
@@ -238,7 +242,7 @@ class _CommentReplyState extends State<CommentReply> {
                               if (back) widget.delete();
                             }
                           },
-                          child: Icon(CupertinoIcons.trash_fill),
+                          child: trashIcon(context),
                         ),
                       ),
                     )

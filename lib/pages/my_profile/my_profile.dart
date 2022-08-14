@@ -88,7 +88,7 @@ class _MyProfileState extends State<MyProfile>
                                                   ),
                                               )
                                               : CircleAvatar(
-                                              backgroundColor: getIt<ThemeState>().isDarkMode?Colors.black:Colors.white,
+                                              backgroundColor:context.watch<ThemeState>().isDarkMode?Colors.black:Colors.white,
                                               radius: doubleWidth(30),
                                               backgroundImage:AssetImage(
                                                 'assets/images/playerbig.png',
@@ -227,12 +227,12 @@ class _MyProfileState extends State<MyProfile>
                             fontWeight: FontWeight.bold,
                             fontSize: doubleWidth(4)
                         ),
-                        indicatorColor: mainBlue,
+                        indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         indicatorPadding: EdgeInsets.symmetric(
                             horizontal: doubleWidth(20)),
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorWeight: doubleHeight(0.4),
-                        labelColor: mainBlue,
+                        labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         unselectedLabelColor: mainBlue,
                         tabs: tabs.map((e) => Tab(
                           // text: e,

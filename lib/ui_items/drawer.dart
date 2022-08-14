@@ -6,7 +6,7 @@ import '../classes/states/theme_state.dart';
 import '../main.dart';
 import '../pages/AppPage.dart';
 import '../pages/my_profile/edit_profile/settings.dart';
-
+import 'package:provider/provider.dart';
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key, required this.page}) : super(key: key);
   final String page;
@@ -34,7 +34,7 @@ class _MyDrawerState extends State<MyDrawer>
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Scaffold(
       backgroundColor: trans,
       appBar: AppBar(
@@ -60,7 +60,9 @@ class _MyDrawerState extends State<MyDrawer>
                   horizontal: doubleWidth(8), vertical: doubleHeight(2)),
               width: double.maxFinite,
               // height: doubleHeight(30),
-              color: isDarkMode?Color(0xFF1f1b24):Color.fromRGBO(244, 244, 244, 1),
+              color: context.watch<ThemeState>().isDarkMode
+                  ? headerColor
+                  : Color.fromRGBO(244, 244, 244, 1),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -80,20 +82,20 @@ class _MyDrawerState extends State<MyDrawer>
                                               .profilePhoto !=
                                           null
                                       ? SizedBox(
-                                    width: doubleWidth(15),
-                                    height: doubleWidth(15),
-                                        child: imageNetwork(
-                                            getIt<MainState>()
-                                                    .personalInformation!
-                                                    .profilePhoto ??
-                                                '',
-                                            fit: BoxFit.fill),
-                                      )
+                                          width: doubleWidth(15),
+                                          height: doubleWidth(15),
+                                          child: imageNetwork(
+                                              getIt<MainState>()
+                                                      .personalInformation!
+                                                      .profilePhoto ??
+                                                  '',
+                                              fit: BoxFit.fill),
+                                        )
                                       : SizedBox(
-                          width: doubleWidth(15),
-      height: doubleWidth(15),
-      child: profilePlaceHolder(),
-    )),
+                                          width: doubleWidth(15),
+                                          height: doubleWidth(15),
+                                          child: profilePlaceHolder(context),
+                                        )),
                               Align(
                                 alignment: Alignment(1, -0.9),
                                 child: SizedBox(
@@ -154,7 +156,9 @@ class _MyDrawerState extends State<MyDrawer>
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
+                      color: context.watch<ThemeState>().isDarkMode
+                          ? Colors.white
+                          : Colors.black,
                       size: 20,
                     ),
                   ),
@@ -206,7 +210,11 @@ class _MyDrawerState extends State<MyDrawer>
                   //   ),
                   // ),
 
-                  Divider(color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,),
+                  Divider(
+                    color: context.watch<ThemeState>().isDarkMode
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   ListTile(
                     onTap: () {
                       _controller.reverse().then((value) {
@@ -221,7 +229,9 @@ class _MyDrawerState extends State<MyDrawer>
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
+                      color: context.watch<ThemeState>().isDarkMode
+                          ? Colors.white
+                          : Colors.black,
                       size: 20,
                     ),
                   ),

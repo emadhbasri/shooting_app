@@ -6,7 +6,7 @@ import 'package:shooting_app/ui_items/gal.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:provider/provider.dart';
 import '../../classes/services/chat_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
@@ -83,7 +83,7 @@ class _PostFromShotState extends State<PostFromShot> {
   //     }).toList(),
   //   );
   // }
-  Widget _convertHashtag(context, String text, {double? fontSize}) {
+  Widget _convertHashtag(BuildContext context, String text, {double? fontSize}) {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
@@ -246,9 +246,13 @@ class _PostFromShotState extends State<PostFromShot> {
                 backgroundColor: Colors.white,
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
-                errorWidget: Container(
-                  color: Colors.grey[300],
-                  child: const Text('Oops!'),
+                errorWidget: GestureDetector(
+                  onTap: (){
+                    openUrl(e.text.trim());
+                  },
+                  child: Text(e.text.trim(),style: TextStyle(
+                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  ),),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -267,7 +271,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue,
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold)));
           case TextType.user:
@@ -280,7 +284,7 @@ class _PostFromShotState extends State<PostFromShot> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue,
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold)));
           default:
@@ -324,7 +328,7 @@ class _PostFromShotState extends State<PostFromShot> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       // height: doubleHeight(20),
@@ -367,7 +371,7 @@ class _PostFromShotState extends State<PostFromShot> {
                                   fit: BoxFit.fill,
                                 );
                               }
-                              return profilePlaceHolder();
+                              return profilePlaceHolder(context);
                             },
                           ),
                         ),
@@ -578,7 +582,7 @@ class _PostFromShotState extends State<PostFromShot> {
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postComments.length),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       ),)
                     ],
                   ),
@@ -635,11 +639,11 @@ class _PostFromShotState extends State<PostFromShot> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color:
-                                post.postLikes.isNotEmpty ? greenCall :  isDarkMode?white:black),
+                                post.postLikes.isNotEmpty ? greenCall :  context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
-                        color: isDarkMode?white:black
+                        color: context.watch<ThemeState>().isDarkMode?white:black
                       ),)
                     ],
                   ),
@@ -669,7 +673,7 @@ class _PostFromShotState extends State<PostFromShot> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(CupertinoIcons.trash_fill),
+                        child: trashIcon(context),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )
@@ -708,7 +712,7 @@ class PostFromShotProfile extends StatefulWidget {
 }
 
 class _PostFromShotProfileState extends State<PostFromShotProfile> {
-  Widget _convertHashtag(context, String text) {
+  Widget _convertHashtag(BuildContext context, String text) {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
@@ -746,9 +750,13 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 backgroundColor: Colors.white,
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
-                errorWidget: Container(
-                  color: Colors.grey[300],
-                  child: const Text('Oops!'),
+                errorWidget: GestureDetector(
+                  onTap: (){
+                    openUrl(e.text.trim());
+                  },
+                  child: Text(e.text.trim(),style: TextStyle(
+                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  ),),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -772,7 +780,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
@@ -783,7 +791,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
           default:
             return const SizedBox();
         }
@@ -822,7 +830,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       // height: doubleHeight(20),
@@ -872,7 +880,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                     fit: BoxFit.fill,
                                   );
                                 }
-                                return profilePlaceHolder();
+                                return profilePlaceHolder(context);
                               },
                             ),
                           ),
@@ -1122,11 +1130,11 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                             post.postLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : isDarkMode?white:black),
+                            color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       ))
                     ],
                   ),
@@ -1163,7 +1171,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(CupertinoIcons.trash_fill),
+                        child: trashIcon(context),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )
@@ -1246,7 +1254,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
   //     }).toList(),
   //   );
   // }
-  Widget _convertHashtag(context, String text) {
+  Widget _convertHashtag(BuildContext context, String text) {
     if (!text.contains('@') &&
         !text.contains('http://') &&
         !text.contains('https://') &&
@@ -1284,9 +1292,13 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 backgroundColor: Colors.white,
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
-                errorWidget: Container(
-                  color: Colors.grey[300],
-                  child: const Text('Oops!'),
+                errorWidget: GestureDetector(
+                  onTap: (){
+                    openUrl(e.text.trim());
+                  },
+                  child: Text(e.text.trim(),style: TextStyle(
+                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  ),),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -1310,7 +1322,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
@@ -1321,7 +1333,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
           default:
             return const SizedBox();
         }
@@ -1364,7 +1376,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     return Container(
       width: max,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
@@ -1413,7 +1425,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                                     fit: BoxFit.fill,
                                   );
                                 }
-                                return profilePlaceHolder();
+                                return profilePlaceHolder(context);
                               },
                             ),
                           ),
@@ -1600,7 +1612,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                               color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postComments.length),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       ))
                     ],
                   ),
@@ -1648,11 +1660,11 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             post.postLikedBythisUser
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : isDarkMode?white:black),
+                            color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       ))
                     ],
                   ),
@@ -1689,7 +1701,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
-                        child: Icon(CupertinoIcons.trash_fill),
+                        child: trashIcon(context),
                         // child: Image.asset('assets/images/share.png')
                       ),
                     )

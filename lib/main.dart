@@ -123,7 +123,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+class _MyAppState extends State<MyApp> {
   var _intentDataStreamSubscription;
   StreamSubscription? _sub;
   Future<void> _handleInitialUri() async {
@@ -194,14 +194,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       });
   }
 
-  ThemeState? themeState;
-  Brightness? _brightness;
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    _brightness = WidgetsBinding.instance.window.platformBrightness;
     super.initState();
-
     _handleIncomingLinks();
     _handleInitialUri();
     MainState state = getIt<MainState>();
@@ -266,31 +261,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     // _intentDataStreamSubscription.cancel();
     super.dispose();
   }
-  @override
-  void didChangePlatformBrightness() {
-    if (mounted) {
-      setState(() {
-        _brightness = WidgetsBinding.instance.window.platformBrightness;
-      });
-      if(themeState!=null){
-        themeState!.themeMode=
-        _brightness==Brightness.dark?ThemeMode.dark:ThemeMode.light;
-        themeState!.notify();
-      }
-
-    }
-    super.didChangePlatformBrightness();
-  }
+  
   @override
   Widget build(BuildContext context) {
     // final brightness = MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness;
     // MediaQuery.of(context).platformBrightness,
     return ThemeStateProvider(
-      brightness: MediaQueryData.fromWindow(WidgetsBinding.instance.window).platformBrightness,
       child: Consumer<ThemeState>(
           builder: (context, state, child){
-            if(themeState==null)themeState=state;
-
            return MaterialApp(
              themeMode: state.themeMode,
              theme: MyThemes.lightTheme,
@@ -311,29 +289,29 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
           }
       ),
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Shooting App',
-      theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromRGBO(244, 244, 244, 1),
-          primaryColor: mainBlue,
-          primarySwatch: mainColor,
-          appBarTheme:
-              AppBarTheme(
-                  elevation: 0,
-                  centerTitle: true,
-                  titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: white
-                  ),
-                  actionsIconTheme: IconThemeData(color: white),
-                  iconTheme: IconThemeData(color: white),
-                  color: mainBlue)),
-      home:
-      // const SizedBox(),
-      // MyApp1()
-      // UniLinksTest(),
-      AppFirst(),
-    );
+    // return MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: 'Shooting App',
+    //   theme: ThemeData(
+    //       scaffoldBackgroundColor: Color.fromRGBO(244, 244, 244, 1),
+    //       primaryColor: mainBlue,
+    //       primarySwatch: mainColor,
+    //       appBarTheme:
+    //           AppBarTheme(
+    //               elevation: 0,
+    //               centerTitle: true,
+    //               titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+    //                 color: white
+    //               ),
+    //               actionsIconTheme: IconThemeData(color: white),
+    //               iconTheme: IconThemeData(color: white),
+    //               color: mainBlue)),
+    //   home:
+    //   // const SizedBox(),
+    //   // MyApp1()
+    //   // UniLinksTest(),
+    //   AppFirst(),
+    // );
   }
 }
 

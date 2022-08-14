@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:provider/provider.dart';
 import '../main.dart';
 import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
@@ -66,7 +66,7 @@ List<TheText> makeText(String text){
 
 openUrl(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
-    launchUrl(Uri.parse(url));
+    launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication);
   }
 }
 
@@ -123,10 +123,10 @@ Widget simpleCircle({Color? color, double? size}) {
   }
 }
 
-profilePlaceHolder({bool isBig = false}) => Image.asset(
+profilePlaceHolder(BuildContext context,{bool isBig = false}) => Image.asset(
       isBig ? 'assets/images/playerbig.png' : 'assets/images/player.png',
       fit: BoxFit.fill,
-  color: getIt<ThemeState>().isDarkMode?Colors.white:Colors.black,
+  color: context.watch<ThemeState>().isDarkMode?Colors.black:Colors.white,
     );
 
 String makeDurationToString(DateTime date) {

@@ -70,8 +70,9 @@ class _MyNotificationState extends State<MyNotification> {
   @override
   Widget build(BuildContext context) {
     if (loading) return circle();
-    ThemeState theme = Provider.of<ThemeState>(context,listen: false);
-    return RefreshIndicator(
+    // ThemeState theme = Provider.of<ThemeState>(context,listen: false);
+    
+     return RefreshIndicator(
         onRefresh: () async {
           await getData(clean: true);
         },
@@ -142,7 +143,7 @@ class _MyNotificationState extends State<MyNotification> {
                                           .profilePhoto ??
                                           '',
                                       fit: BoxFit.fill)
-                                      : profilePlaceHolder()),
+                                      : profilePlaceHolder(context)),
                             ),
                           ),
                           Align(
@@ -179,7 +180,8 @@ class _MyNotificationState extends State<MyNotification> {
                       ),
                     ),
                   ),
-                  title: RichText(
+                  title: Consumer<ThemeState>(builder: (context, theme, child) {
+     return RichText(
                     textAlign: TextAlign.left,
                     text: TextSpan(
                         children: [
@@ -205,8 +207,8 @@ class _MyNotificationState extends State<MyNotification> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: doubleWidth(3)),
                           ),
-                      ])),
-
+                      ]));
+    }),
 
                   trailing: e.timeStamp == null
                       ? null
@@ -238,5 +240,6 @@ class _MyNotificationState extends State<MyNotification> {
           padding: EdgeInsets.symmetric(
               horizontal: doubleWidth(4), vertical: doubleHeight(2)),
         ));
-  }
+  
+    }
 }

@@ -12,7 +12,7 @@ import '../dialogs/dialog1.dart';
 import '../gal.dart';
 import 'index.dart';
 import 'video_item.dart';
-
+import 'package:provider/provider.dart';
 class CommentFromShot extends StatefulWidget {
   final VoidCallback delete;
   const CommentFromShot({Key? key, required this.comment, required this.delete})
@@ -58,7 +58,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
   TextEditingController controllerT = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     if(comment
         .personalInformationViewModel==null)return const SizedBox();
     return Container(
@@ -102,7 +102,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                       fit: BoxFit.fill,
                                     );
                                   }
-                                  return profilePlaceHolder();
+                                  return profilePlaceHolder(context);
                                 },
                               )),
                         ),
@@ -309,11 +309,11 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
                                 ? greenCall
-                                : isDarkMode?white:black),
+                                : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       )),
                     ],
                   ),
@@ -350,7 +350,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             if (back) widget.delete();
                           }
                         },
-                        child: Icon(CupertinoIcons.trash_fill),
+                        child: trashIcon(context),
                       ),
                     ),
                   )else const SizedBox(width: 24,)
@@ -425,7 +425,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                                   child: CircularProgressIndicator())
                               : Icon(
                                   Icons.send,
-                                  color: mainBlue,
+                                  color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
                                 )),
                       hintText: 'Write your reply...',
                       border: InputBorder.none),
@@ -484,7 +484,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   }
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
     if(comment
         .personalInformationViewModel==null)return const SizedBox();
     return Container(
@@ -527,7 +527,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                       fit: BoxFit.fill,
                                     );
                                   }
-                                  return profilePlaceHolder();
+                                  return profilePlaceHolder(context);
                                 },
                               )),
                         ),
@@ -728,11 +728,11 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                                 : Icons.favorite_border,
                             color: comment.commentLikedBythisUser
                                 ? greenCall
-                                : isDarkMode?white:black),
+                                : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount),style: TextStyle(
-                          color: isDarkMode?white:black
+                          color: context.watch<ThemeState>().isDarkMode?white:black
                       )),
                     ],
                   ),
@@ -767,7 +767,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                             if (back) widget.delete();
                           }
                         },
-                        child: Icon(CupertinoIcons.trash_fill),
+                        child: trashIcon(context),
                       ),
                     ),
                   )

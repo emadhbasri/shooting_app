@@ -560,3 +560,17 @@ Future<int?> getInt(String key) async {
   else
     return null;
 }
+
+
+void setBool(String key, bool value) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setBool(key, value);
+}
+
+Future<bool?> getBool(String key) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  if (pref.containsKey(key))
+    return pref.getBool(key)!;
+  else
+    return null;
+}

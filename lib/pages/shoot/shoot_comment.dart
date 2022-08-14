@@ -12,7 +12,7 @@ import '../../classes/models.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/theme_state.dart';
-
+import 'package:provider/provider.dart';
 class ShootComment extends StatefulWidget {
   const ShootComment(
       {Key? key, required this.postId, this.comment, required this.stadia})
@@ -82,7 +82,7 @@ class _ShootCommentState extends State<ShootComment> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = getIt<ThemeState>().isDarkMode;
+    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
 
     return SizedBox.expand(
       child: Align(
@@ -93,7 +93,7 @@ class _ShootCommentState extends State<ShootComment> {
           child: Material(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: isDarkMode
+            color: context.watch<ThemeState>().isDarkMode
                 ? MyThemes.darkTheme.scaffoldBackgroundColor
                 : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
@@ -113,7 +113,7 @@ class _ShootCommentState extends State<ShootComment> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                              color: context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                               size: 35,
                             ),
                           ),
@@ -123,7 +123,7 @@ class _ShootCommentState extends State<ShootComment> {
                               'Make A Comment',
                               style: TextStyle(
                                   color:
-                                      isDarkMode ? Colors.white : Colors.black,
+                                      context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

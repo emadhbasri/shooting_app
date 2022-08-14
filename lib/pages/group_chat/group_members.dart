@@ -96,6 +96,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                 }
               }
             },
+            backgroundColor: mainGreen,
             child: Icon(Icons.add),
             heroTag: '',
           ),
