@@ -41,11 +41,13 @@ class MyService {
       if(duration.inDays>25){
         print('asda');
         // return false;
+
         Map back = await httpPost('/api/v1/Administration/refreshToken', {
           'accessToken':_access,
           'refreshToken':_refresh,
-        },jsonType: true);
-        print('refresh back $back');
+        },
+        jsonType: true);
+        print('refresh back ${back['status']} $back ');
         if(back['status']){
           _access=back['data']['accessToken'];
           await setToken(refresh: _refresh!, access: _access!);

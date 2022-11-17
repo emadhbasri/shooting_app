@@ -331,7 +331,12 @@ class _TeamState extends State<Team> {
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10)),
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(mainBlue)
+                          ),
                         onPressed: () async {
                           print('searchTeam $searchTeam');
                           if (searchTeam == null) {
@@ -345,9 +350,6 @@ class _TeamState extends State<Team> {
                             }
                           }
                         },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        color: mainBlue,
                         child: Text(
                           'Join the line up',
                           style:

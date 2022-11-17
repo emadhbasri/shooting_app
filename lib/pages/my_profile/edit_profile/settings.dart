@@ -199,7 +199,7 @@ class _SettingsState extends State<Settings> {
                           elevation: MaterialStateProperty.all(0),
                           backgroundColor: MaterialStateProperty.all(
                               theme.isDarkMode?
-                              Color.fromRGBO(43, 29, 99, 1)
+                              mainColorDark
                                   :mainBlue),
                           padding: MaterialStateProperty.all(EdgeInsets.symmetric(
                               vertical: doubleHeight(2.5),

@@ -46,7 +46,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Consumer2<MatchState,ThemeState>(
-      builder: (context, state,theme, child) => WillPopScope(
+      builder: (context, state,themeState, child) => WillPopScope(
         onWillPop: () async {
           print('wilpop');
           state.matchPage = false;
@@ -58,9 +58,9 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: trans,
+            // backgroundColor: trans,
             leading: IconButton(
-              icon: Icon(Icons.adaptive.arrow_back, color: theme.isDarkMode?white:Colors.black),
+              icon: Icon(Icons.adaptive.arrow_back),
               onPressed: () {
                 state.matchPage = false;
                 state.notify();
@@ -88,8 +88,8 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                   height: doubleHeight(20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: theme.isDarkMode?Colors.grey:Colors.white
-                  ),
+                      color: themeState.isDarkMode?myDarkMatchItem: Colors.white
+                      ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -125,7 +125,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                                       : state.selectedMatch.homeGoals
                                           .toString(),
                                   style: TextStyle(
-                                      color: mainBlue,
+                                      // color: mainBlue,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24),
                                 ),
@@ -134,7 +134,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                                 ),
                                 Text(':',
                                     style: TextStyle(
-                                        color: Colors.black,
+                                        // color: Colors.black,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24)),
                                 SizedBox(
@@ -165,9 +165,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                                     .toString();
                               return Text(out,
                                   style:
-                                      TextStyle(
-                                          // color: grayCall,
-                                          fontSize: 10));
+                                      TextStyle(color: grayCall, fontSize: 10));
                             })
                           ],
                         ),
@@ -203,13 +201,13 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                       fontWeight: FontWeight.bold,
                       fontSize: doubleWidth(3)
                   ),
-                  indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  indicatorColor: themeState.isDarkMode?mainColorDark: mainColor,
                   indicatorPadding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(5)),
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorWeight: doubleHeight(0.4),
-                  labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                  unselectedLabelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                  labelColor: themeState.isDarkMode?mainColorDark: mainColor,
+                  unselectedLabelColor: themeState.isDarkMode?mainColorDark: mainColor,
                   tabs: state.tabs.map((e) => Tab(
                     // text: e,
                     child: Text(e.toUpperCase()),

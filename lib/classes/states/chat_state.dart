@@ -34,7 +34,6 @@ class ChatState extends ChangeNotifier {
       loadingListCaht = true;
       notifyListeners();
     }
-    ;
     Map<String, dynamic> back =
         await ChatService.getAllRoomsByUserId(service, pageNumber: pageNumber);
         // await ChatService.getMyPrivateChats(service, pageNumber: pageNumber);

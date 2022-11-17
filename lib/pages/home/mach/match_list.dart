@@ -29,7 +29,7 @@ class _MatchListState extends State<MatchList> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<MatchState,ThemeState>(
-        builder: (context, state,theme, child){
+        builder: (context, state,themeState, child){
           // if(state.loadCountry && state.loadMatchs)
           //   return circle();
 
@@ -50,8 +50,8 @@ class _MatchListState extends State<MatchList> {
                       Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: theme.isDarkMode?Colors.grey:Colors.white
-                      ),
+                          color: themeState.isDarkMode?myDarkMatchItem: Colors.white
+                          ),
                       child: DropdownButton<DataCountry>(
                         items: state.countries
                             .map((e) => DropdownMenuItem<DataCountry>(
@@ -77,7 +77,7 @@ class _MatchListState extends State<MatchList> {
                         ))
                             .toList(),
                         elevation: 3,
-                        dropdownColor: theme.isDarkMode?Colors.grey:grayCallLight,
+                        dropdownColor: themeState.isDarkMode?myDarkMatchItem: grayCallLight,
                         menuMaxHeight: doubleHeight(70),
                         onChanged: (e) {
                           if (e != null) {
@@ -118,9 +118,9 @@ class _MatchListState extends State<MatchList> {
                           child: Text(
                             e,
                             style: TextStyle(
-                                color: state.selectedDate == e
-                                    ? theme.isDarkMode?Colors.white:Colors.black
-                                    : Colors.grey,
+                                // color: state.selectedDate == e
+                                //     ? Colors.black
+                                //     : Colors.grey,
                                 fontSize: state.selectedDate == e ? 15 : 12),
                           )))
                           .toList(),
@@ -143,7 +143,7 @@ class _MatchListState extends State<MatchList> {
                           children: state.leagues
                               .map(
                                 (e) => MatchListItem(
-                                  isDarkMode: theme.isDarkMode,
+                                  themeState: themeState,
                               league: e,
                               state: state,
                             ),
@@ -192,11 +192,11 @@ class _MatchListState extends State<MatchList> {
 }
 
 class MatchListItem extends StatefulWidget {
-  const MatchListItem({Key? key, required this.league, required this.state, required this.isDarkMode})
+  const MatchListItem({Key? key, required this.league, required this.state, required this.themeState})
       : super(key: key);
-  final bool isDarkMode;
   final DataLeagueMain league;
   final MatchState state;
+  final ThemeState themeState;
   @override
   State<MatchListItem> createState() => _MatchListItemState();
 }
@@ -240,7 +240,7 @@ class _MatchListItemState extends State<MatchListItem>
           .map((e) => Column(
                 children: [
                   MatchItem1(
-                    isDarkMode: widget.isDarkMode,
+                    themeState: widget.themeState,
                     match: e,
                     state: widget.state,
                   ),
@@ -257,11 +257,11 @@ class _MatchListItemState extends State<MatchListItem>
 }
 
 class MatchItem1 extends StatelessWidget {
-  const MatchItem1({Key? key, required this.match, required this.state, required this.isDarkMode})
+  const MatchItem1({Key? key, required this.match, required this.state, required this.themeState})
       : super(key: key);
-  final bool isDarkMode;
   final DataMatch1 match;
   final MatchState state;
+  final ThemeState themeState;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -288,7 +288,7 @@ class MatchItem1 extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: isDarkMode?Colors.grey:Colors.white,
+          color: themeState.isDarkMode?myDarkMatchItem: Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
         width: double.maxFinite,

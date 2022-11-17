@@ -8,7 +8,6 @@ import 'package:shooting_app/classes/services/chat_service.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/ui_items/dialogs/choose_media_dialog.dart';
-import '../../classes/models.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
 import '../home/search_user.dart';
@@ -49,7 +48,7 @@ class _CreateGroupState extends State<CreateGroup> {
     }
     print('out $out');
     return Scaffold(
-      backgroundColor: white,
+      // backgroundColor: white,
         appBar: AppBar(
           title: Text(
               '${widget.isEdit?'Edit':'Create'} Group'.toUpperCase()),
@@ -80,7 +79,7 @@ class _CreateGroupState extends State<CreateGroup> {
           children: [
             SizedBox(height: doubleHeight(2)),
             Container(
-              color: Colors.white,
+              // color: Colors.white,
               width: double.maxFinite,
               child: Row(
                 children: [

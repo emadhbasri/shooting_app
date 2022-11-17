@@ -233,7 +233,7 @@ class _MyProfileState extends State<MyProfile>
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorWeight: doubleHeight(0.4),
                         labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                        unselectedLabelColor: mainBlue,
+                        // unselectedLabelColor: mainBlue,
                         tabs: tabs.map((e) => Tab(
                           // text: e,
                           child: Text(e),

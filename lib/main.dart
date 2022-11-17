@@ -8,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:shooting_app/main1.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'classes/models.dart';
@@ -44,7 +43,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('A bg message just showed up : ${message.messageId}');
 }
-
 void main() async {
   
   GetIt.I.registerLazySingleton(() => MyService());
@@ -328,6 +326,22 @@ MaterialColor mainColor = MaterialColor(
     700: mainBlue,
     800: mainBlue,
     900: mainBlue,
+  },
+);
+
+MaterialColor mainColorDark = MaterialColor(
+  myGreenLight.value,
+  <int, Color>{
+    50: myGreenLight,
+    100: myGreenLight,
+    200: myGreenLight,
+    300: myGreenLight,
+    400: myGreenLight,
+    500: myGreenLight,
+    600: myGreenLight,
+    700: myGreenLight,
+    800: myGreenLight,
+    900: myGreenLight,
   },
 );
 

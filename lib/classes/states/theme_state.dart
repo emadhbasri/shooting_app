@@ -63,7 +63,7 @@ class MyThemes {
     ),
     unselectedWidgetColor: Colors.white70,
     primaryColorLight: Colors.black,
-    scaffoldBackgroundColor: Color.fromRGBO(20, 27, 23, 1),
+    scaffoldBackgroundColor: myDarkScaffold,
     primaryColor: headerColor,//Color(0xFF1f1b24),
     secondaryHeaderColor: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black,opacity: 0.8),
@@ -71,6 +71,7 @@ class MyThemes {
       // scaffoldBackgroundColor: Color.fromRGBO(244, 244, 244, 1),
       // primaryColor: mainBlue,
       // primarySwatch: Color(0xFF1f1b24),
+      primarySwatch: mainColorDark,
       appBarTheme:
         AppBarTheme(
           elevation: 0,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shooting_app/pages/auth/verify_otp.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/dataTypes.dart';
@@ -67,13 +66,15 @@ class _AuthState extends State<Auth> {
                       child: Container(
                         decoration:
                             BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           onPressed: () {
                             Go.push(context, Register());
                           },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: mainBlue,
+                          style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(mainBlue)
+                          ),
                           child: Text(
                             'Sign Up',
                             style:
@@ -90,15 +91,18 @@ class _AuthState extends State<Auth> {
                       child: Container(
                         decoration:
                             BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                        child: RaisedButton(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(white)
+                          ),
                           onPressed: () {
                             Go.push(context, Login());
                             // Go.push(context, VerifyOtp(isRegister: false, username: 'asd', password: 'asdasd'));
 
                           },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: white,
+                          
                           child: Text(
                             'Login',
                             style: TextStyle(

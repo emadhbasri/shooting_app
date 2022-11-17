@@ -189,7 +189,12 @@ bool loading=false;
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10)),
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(mainBlue)
+                          ),
                         onPressed: () async {
 
                           // if (phone.value.text.trim()!='') {
@@ -224,9 +229,6 @@ bool loading=false;
                             print('nononono');
                           }
                         },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        color: mainBlue,
                         child: loading?simpleCircle(color: mainGreen):
                         Text(
                           'Sign Up',

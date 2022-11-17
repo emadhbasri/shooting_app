@@ -1,13 +1,13 @@
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import 'package:shooting_app/pages/home/mach/match_list.dart';
 import 'package:shooting_app/pages/home/stadia/stadia.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 
 import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import 'fan_feeds.dart';
+import 'mach/match_list.dart';
 
 class Home extends StatefulWidget {
   final int? index;

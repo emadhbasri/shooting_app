@@ -86,7 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: ElevatedButton(
                 style: ButtonStyle(
                     elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateProperty.all(mainBlue),
+                    // backgroundColor: MaterialStateProperty.all(mainBlue),
                     padding: MaterialStateProperty.all(
                         EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                 onPressed: () async{

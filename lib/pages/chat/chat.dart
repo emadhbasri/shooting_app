@@ -64,11 +64,14 @@ bool loadingImageSend=false;
   @override
   Widget build(BuildContext context) {
     return Consumer2<ChatState,ThemeState>(builder: (context, state,theme, child) {
+
       int index = state.selectedChat.personalInformations.indexWhere(
           (element) =>element==null?false:
               element.id != getIt<MainState>().userId);
       DataPersonalInformation? roomUser =
           state.selectedChat.personalInformations[index];
+      print('roomUser.profilePhoto ${roomUser!.profilePhoto}');
+
       return WillPopScope(
         onWillPop: () async {
           stopTimer = true;
@@ -82,7 +85,9 @@ bool loadingImageSend=false;
               children: [
                 ListTile(
                   contentPadding: EdgeInsets.only(bottom: 4),
-                  leading: GestureDetector(
+                  leading: roomUser
+                          .profilePhoto==null?null:
+                  GestureDetector(
                     onTap: () async {
                       stopTimer = true;
                       await Go.pushSlideAnim(
@@ -109,6 +114,7 @@ bool loadingImageSend=false;
                   ),
                   subtitle: Text('@${roomUser.userName}'),
                 ),
+              
               ],
             ):null,
           ),

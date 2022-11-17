@@ -108,7 +108,7 @@ class _ChatListState extends State<ChatList> {
               }
             },
             heroTag: 'Create New Group Chat',
-            child: Icon(Icons.group),
+            child: Icon(Icons.group,color: black,),
             // heroTag: 'Create New Chat',
             // child: Icon(Icons.message),
           ),

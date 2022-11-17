@@ -61,13 +61,13 @@ class MyBottomSheet extends StatelessWidget {
                     child: OutlinedButton(
                       style: ButtonStyle(
                           side: MaterialStateProperty.all(
-                              BorderSide(color: mainBlue)),
+                              BorderSide(color: getIt<ThemeState>().isDarkMode?mainColorDark: mainBlue)),
                           padding: MaterialStateProperty.all(
                               EdgeInsets.symmetric(
                                   vertical: doubleHeight(2.5)))),
                       child: Text(
                         'Copy Link',
-                        style: TextStyle(color: mainBlue),
+                        // style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
                         copyText('https://footballbuzz.co?shot=${post.id}');
@@ -82,13 +82,13 @@ class MyBottomSheet extends StatelessWidget {
                     child: OutlinedButton(
                       style: ButtonStyle(
                           side: MaterialStateProperty.all(
-                              BorderSide(color: mainBlue)),
+                              BorderSide(color: getIt<ThemeState>().isDarkMode?mainColorDark: mainBlue)),
                           padding: MaterialStateProperty.all(
                               EdgeInsets.symmetric(
                                   vertical: doubleHeight(2.5)))),
                       child: Text(
                         'Share...',
-                        style: TextStyle(color: mainBlue),
+                        // style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
                         sharePost('https://footballbuzz.co?shot=${post.id}');
@@ -109,7 +109,7 @@ class MyBottomSheet extends StatelessWidget {
                           child: OutlinedButton(
                             style: ButtonStyle(
                                 side: MaterialStateProperty.all(
-                                    BorderSide(color: mainBlue)),
+                                    BorderSide(color: getIt<ThemeState>().isDarkMode?mainColorDark: mainBlue)),
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.symmetric(
                                         vertical: doubleHeight(2.5)))),
@@ -161,13 +161,13 @@ class MyBottomSheet extends StatelessWidget {
                     child: OutlinedButton(
                       style: ButtonStyle(
                           side: MaterialStateProperty.all(
-                              BorderSide(color: mainBlue)),
+                              BorderSide(color: getIt<ThemeState>().isDarkMode?mainColorDark: mainBlue)),
                           padding: MaterialStateProperty.all(
                               EdgeInsets.symmetric(
                                   vertical: doubleHeight(2.5)))),
                       child: Text(
                         'Cancel',
-                        style: TextStyle(color: mainBlue),
+                        // style: TextStyle(color: mainBlue),
                       ),
                       onPressed: () {
                         Go.pop(context);

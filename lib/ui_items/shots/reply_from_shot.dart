@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../classes/services/my_service.dart';
@@ -158,9 +159,7 @@ class _CommentReplyState extends State<CommentReply> {
             // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
             // Text(reply.replyDetail??''),
-            convertHashtag(context, reply.replyDetail ?? '', (e) {
-              
-            }),
+            convertHashtag(context, reply.replyDetail ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
               width: max,
@@ -175,38 +174,52 @@ class _CommentReplyState extends State<CommentReply> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
-                          if (!reply.replyLikedBythisUser) {
-                            String? back = await ShotsService.replyLike(service,
-                                commentReplyId: reply.id);
-                            if (back != null)
-                              setState(() {
-                                reply.replyLikes.add(DataReplyLike(back, ''));
-                                reply.replyLikedBythisUser = true;
-                                reply.replyLikeCount++;
-                              });
-                          } else {
-                            if (reply.replyLikes.isNotEmpty) {
-                              bool back = await ShotsService.deleteReplyLike(
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
+                            if (!reply.replyLikedBythisUser) {
+                              String? back = await ShotsService.replyLike(
                                   service,
-                                  replyId: reply.replyLikes.first.id);
-                              if (back)
+                                  commentReplyId: reply.id);
+                              if (back != null)
                                 setState(() {
-                                  reply.replyLikes.clear();
-                                  reply.replyLikedBythisUser = false;
-                                  reply.replyLikeCount--;
+                                  reply.replyLikes.add(DataReplyLike(back, ''));
+                                  reply.replyLikedBythisUser = true;
+                                  reply.replyLikeCount++;
                                 });
+                            } else {
+                              if (reply.replyLikes.isNotEmpty) {
+                                bool back = await ShotsService.deleteReplyLike(
+                                    service,
+                                    replyId: reply.replyLikes.first.id);
+                                if (back)
+                                  setState(() {
+                                    reply.replyLikes.clear();
+                                    reply.replyLikedBythisUser = false;
+                                    reply.replyLikeCount--;
+                                  });
+                              }
                             }
-                          }
-                        },
-                        child: Icon(
-                            reply.replyLikedBythisUser
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color:
-                                reply.replyLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
-                      ),
+                          },
+                          child: SizedBox(
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: reply.replyLikedBythisUser
+                                      ? greenCall
+                                      : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          // Icon(
+                          //     reply.replyLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color:
+                          //         reply.replyLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
+                          ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(reply.replyLikeCount)),
                     ],

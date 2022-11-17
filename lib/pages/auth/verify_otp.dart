@@ -12,8 +12,6 @@ import '../../ui_items/my_toast.dart';
 import '../AppPage.dart';
 
 class VerifyOtp extends StatefulWidget {
-
-
   const VerifyOtp({Key? key,required this.isRegister,required this.username,required this.password}) : super(key: key);
   final String username;
   final String password;
@@ -69,34 +67,45 @@ class _VerifyOtpState extends State<VerifyOtp> {
     return MyToast(
         key: key,
       child: Scaffold(
+        appBar: AppBar(elevation: 0, title: Text('Email Verification')),
           body: SizedBox.expand(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
             child: Column(children: [
               SizedBox(height: doubleHeight(8)),
-              Text('A 6 digit code has been sent to your\nemail',
-                  textAlign: TextAlign.center,
-                  style: TextStyle( fontWeight: FontWeight.bold)),
+              SizedBox(
+                width: doubleWidth(40),
+                child: Image.asset('assets/images/email.png'),
+              ),
 
+              Text(
+                // 'A 6 digit code has been sent to your\nemail',
+                'Enter the 6 digit code sent to your email',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: doubleWidth(3.5),
+                     fontWeight: FontWeight.bold,color: myGray2)),
+SizedBox(height: doubleHeight(4)),
               Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1,color: Provider.of<ThemeState>(context,listen: false).isDarkMode?Colors.white:Colors.black),
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.greenAccent.withOpacity(.25),
+                    // border: Border.all(width: 1,color: Provider.of<ThemeState>(context,listen: false).isDarkMode?Colors.white:Colors.black),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   padding: EdgeInsets.symmetric(
-                    horizontal: doubleWidth(2),
-                    vertical: doubleHeight(1)
+                    horizontal: doubleWidth(5),
+                    vertical: doubleHeight(1.5)
                   ),
-                  child: Text('Please check your spam message if you can\'t see your OTP in your inbox',
+                  child: Text(
+                    '*Check your spam if you can\'t fin it in your inbox',
+                    // 'Please check your spam message if you can\'t see your OTP in your inbox',
                       textAlign: TextAlign.center,
-                      style: TextStyle( fontWeight: FontWeight.bold)),
+                      style: TextStyle( fontWeight: FontWeight.bold,color: green)),
                 ),
 
-              SizedBox(height: doubleHeight(2)),
-              Text(
-                'Enter code to verify',
-                style: TextStyle(color: grayCall),
-              ),
+              // Text(
+              //   'Enter code to verify',
+              //   style: TextStyle(color: grayCall),
+              // ),
               SizedBox(height: doubleHeight(6)),
               SizedBox(
                 child: Row(
@@ -169,12 +178,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     ));
                 }).toList()),
               ),
-              SizedBox(height: doubleHeight(4)),
+              SizedBox(height: doubleHeight(2)),
               SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
                     style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
+                        // elevation: MaterialStateProperty.all(0),
+                        
                         backgroundColor: MaterialStateProperty.all(mainBlue),
                         padding: MaterialStateProperty.all(
                             EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
@@ -207,7 +217,8 @@ class _VerifyOtpState extends State<VerifyOtp> {
               )
             ]),
           )),
-          appBar: AppBar(elevation: 0, title: Text('Verify'))),
+          
+          ),
     );
   }
 }

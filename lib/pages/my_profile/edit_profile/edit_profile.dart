@@ -242,8 +242,8 @@ class _EditProfileState extends State<EditProfile> {
                         width: double.maxFinite,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(mainBlue),
+                              // backgroundColor:
+                              //     MaterialStateProperty.all(mainBlue),
                               padding: MaterialStateProperty.all(
                                   EdgeInsets.symmetric(
                                       vertical: doubleHeight(2.5)))),

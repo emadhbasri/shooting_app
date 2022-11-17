@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/group_chat/group_chat.dart';
 import 'package:shooting_app/ui_items/dialogs/dialog1.dart';
@@ -575,10 +576,23 @@ class _PostFromShotState extends State<PostFromShot> {
                               }
                             : null,
                         child: SizedBox(
-                            width: doubleWidth(5),
-                            height: doubleWidth(5),
-                            child: Image.asset('assets/images/chat(2).png',
-                                color: greenCall)),
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/comment.svg',
+                              color: context.watch<ThemeState>().isDarkMode
+                                  ? greenCall
+                                  : mainBlue,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          )),
+                        // SizedBox(
+                        //     width: doubleWidth(5),
+                        //     height: doubleWidth(5),
+                        //     child: Image.asset('assets/images/chat(2).png',
+                        //         color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postComments.length),style: TextStyle(
@@ -634,12 +648,25 @@ class _PostFromShotState extends State<PostFromShot> {
                         //     color: post.postLikedBythisUser
                         //         ? greenCall
                         //         : null),
-                        child: Icon(
-                            post.postLikes.isNotEmpty
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color:
-                                post.postLikes.isNotEmpty ? greenCall :  context.watch<ThemeState>().isDarkMode?white:black),
+                        child: 
+                        SizedBox(
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/like.svg',
+                              color: post.postLikes.isNotEmpty?greenCall:null,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          ))
+                        // Icon(
+                        //     post.postLikes.isNotEmpty
+                        //         ? Icons.favorite
+                        //         : Icons.favorite_border,
+                        //     color:
+                        //         post.postLikes.isNotEmpty ? greenCall :
+                        //           context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
@@ -1077,10 +1104,23 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                               ));
                         },
                         child: SizedBox(
-                            width: doubleWidth(5),
-                            height: doubleWidth(5),
-                            child: Image.asset('assets/images/chat(2).png',
-                                color: greenCall)),
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/comment.svg',
+                              color: context.watch<ThemeState>().isDarkMode
+                                  ? greenCall
+                                  : mainBlue,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          )),
+                        // SizedBox(
+                        //     width: doubleWidth(5),
+                        //     height: doubleWidth(5),
+                        //     child: Image.asset('assets/images/chat(2).png',
+                        //         color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postCommentCount))
@@ -1126,11 +1166,23 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                             }
                           }
                         },
-                        child: Icon(
-                            post.postLikedBythisUser
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
+                        child: 
+                        SizedBox(
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/like.svg',
+                              color: post.postLikes.isNotEmpty?greenCall:null,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          ))
+                        // Icon(
+                        //     post.postLikedBythisUser
+                        //         ? Icons.favorite
+                        //         : Icons.favorite_border,
+                        //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
@@ -1606,10 +1658,23 @@ class _PostFromMatchState extends State<PostFromMatch> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       SizedBox(
-                          width: doubleWidth(5),
-                          height: doubleWidth(5),
-                          child: Image.asset('assets/images/chat(2).png',
-                              color: greenCall)),
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/comment.svg',
+                              color: context.watch<ThemeState>().isDarkMode
+                                  ? greenCall
+                                  : mainBlue,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          )),
+                      // SizedBox(
+                      //     width: doubleWidth(5),
+                      //     height: doubleWidth(5),
+                      //     child: Image.asset('assets/images/chat(2).png',
+                      //         color: greenCall)),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postComments.length),style: TextStyle(
                           color: context.watch<ThemeState>().isDarkMode?white:black
@@ -1656,11 +1721,22 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             }
                           }
                         },
-                        child: Icon(
-                            post.postLikedBythisUser
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
+                        child:SizedBox(
+                          width: doubleWidth(7),
+                          height: doubleWidth(7),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icons/like.svg',
+                              color: post.postLikes.isNotEmpty?greenCall:null,
+                              width: doubleWidth(7),
+                              height: doubleWidth(7),
+                            ),
+                          ))
+                        //  Icon(
+                        //     post.postLikedBythisUser
+                        //         ? Icons.favorite
+                        //         : Icons.favorite_border,
+                        //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
                       ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(post.postLikeCount),style: TextStyle(
