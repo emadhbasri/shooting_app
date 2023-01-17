@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
+import 'package:shooting_app/classes/states/google_sign_in_state.dart';
 import 'package:shooting_app/pages/AppPage.dart';
 import 'package:shooting_app/pages/auth/forgot_password.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 import 'package:shooting_app/ui_items/my_toast.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
@@ -26,7 +29,8 @@ class _LoginState extends State<Login> {
     statusSet(trans);
     super.initState();
   }
-  bool loading=false;
+
+  bool loading = false, loadingGoogle = false;
   bool obscureText = true;
   String username = '', password = '';
   @override
@@ -46,7 +50,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    SizedBox(height: doubleHeight(20)),
+                    SizedBox(height: doubleHeight(15)),
                     Text(
                       'WELCOME',
                       style: TextStyle(
@@ -62,9 +66,7 @@ class _LoginState extends State<Login> {
                         color: Color.fromRGBO(216, 216, 216, 1),
                         child: Center(
                           child: TextField(
-                            style: TextStyle(
-                                color: Colors.black
-                            ),
+                            style: TextStyle(color: Colors.black),
                             onChanged: (e) {
                               username = e;
                             },
@@ -85,7 +87,9 @@ class _LoginState extends State<Login> {
                         color: Color.fromRGBO(216, 216, 216, 1),
                         child: Center(
                           child: TextField(
-                            style: TextStyle(color: Colors.black,),
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
                             keyboardType: TextInputType.visiblePassword,
                             onChanged: (e) {
                               password = e;
@@ -98,9 +102,12 @@ class _LoginState extends State<Login> {
                                       obscureText = !obscureText;
                                     });
                                   },
-                                  child: Icon(!obscureText
-                                      ? Icons.remove_red_eye
-                                      : Icons.visibility_off,color: black,),
+                                  child: Icon(
+                                    !obscureText
+                                        ? Icons.remove_red_eye
+                                        : Icons.visibility_off,
+                                    color: black,
+                                  ),
                                 ),
                                 prefixText: '        ',
                                 border: InputBorder.none,
@@ -120,8 +127,9 @@ class _LoginState extends State<Login> {
                             return;
                           }
                           MyService service = getIt<MyService>();
-                          bool back = await AuthenticationService.forgotPassword(
-                              service,key, username.trim());
+                          bool back =
+                              await AuthenticationService.forgotPassword(
+                                  service, key, username.trim());
                           if (back) {
                             Go.pushSlideAnim(context,
                                 ForgotPassword(username: username.trim()));
@@ -130,64 +138,141 @@ class _LoginState extends State<Login> {
                         child: Text(
                           'Forgot Password?',
                           textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold,
-                              color: mainGreen1, fontSize: doubleWidth(3)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: mainGreen1,
+                              fontSize: doubleWidth(3)),
                         ),
                       ),
                     ),
                     sizeh(doubleHeight(6)),
                     Container(
                       width: max,
-                      height: doubleHeight(8),
+                      height: doubleHeight(7),
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStatePropertyAll(mainBlue)
-                          ),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(mainBlue)),
                           onPressed: () async {
                             if (username.trim() == '') {
-                              myToast(key,'The Username field is required.',isLong: true);
+                              myToast(key, 'The Username field is required.',
+                                  isLong: true);
                               return;
                             }
                             if (password.trim() == '') {
-                              myToast(key,'The Password field is required.');
+                              if (loadingGoogle) return;
+                              setState(() {
+                                loadingGoogle = true;
+                              });
+                              GoogleSignInAccount? backUser =
+                                  await googleLogin();
+                              setState(() {
+                                loadingGoogle = false;
+                              });
+                              if (backUser != null) {
+                                setState(() {
+                                  loading = true;
+                                });
+                                MyService service = getIt<MyService>();
+                                var back = await AuthenticationService
+                                    .registerWithGoogle(context, service, key,
+                                        user: backUser);
+                                print('back');
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
                               return;
                             }
                             setState(() {
-                              loading=true;
+                              loading = true;
                             });
                             bool? back = await AuthenticationService.login(
-                                service,key,
-                                username: username,
-                                password: password);
+                                service, key,
+                                username: username, password: password);
                             setState(() {
-                              loading=false;
+                              loading = false;
                             });
                             if (back != null) {
                               if (back) {
                                 bool bbo = await service.getToken();
                                 if (bbo)
-                                  Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
+                                  Go.pushAndRemoveSlideAnim(
+                                      context, AppPageBuilder());
                               } else {
                                 Go.pushSlideAnim(
                                     context,
                                     VerifyOtp(
-                                      isRegister: false,
-                                        username: username, password: password));
+                                        isRegister: false,
+                                        username: username,
+                                        password: password));
                               }
                             }
                           },
-                          child: loading?simpleCircle(color: mainGreen):Text(
-                            'Login',
-                            style:
-                                TextStyle(fontSize: doubleWidth(5), color: white),
-                          ),
+                          child: loading
+                              ? simpleCircle(color: mainGreen)
+                              : Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      fontSize: doubleWidth(5), color: white),
+                                ),
                         ),
                       ),
+                    ),
+                    sizeh(doubleHeight(3)),
+                    ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            minimumSize: Size(double.maxFinite, 50)),
+                        onPressed: () async {
+                          if (loadingGoogle) return;
+
+                          setState(() {
+                            loadingGoogle = true;
+                          });
+                          GoogleSignInAccount? backUser = await googleLogin();
+                          setState(() {
+                            loadingGoogle = false;
+                          });
+
+                          if (backUser != null) {
+                            setState(() {
+                              loading = true;
+                            });
+                            MyService service = getIt<MyService>();
+                            var back =
+                                await AuthenticationService.registerWithGoogle(
+                                    context, service, key,
+                                    user: backUser);
+                            print('back');
+                            setState(() {
+                              loading = false;
+                            });
+                          }
+                        },
+                        icon: Container(
+                          margin: EdgeInsets.only(right: doubleWidth(2)),
+                          width: 24,
+                          height: 24,
+                          child: loadingGoogle
+                              ? CircularProgressIndicator()
+                              : Image.asset('assets/images/google.png'),
+                        ),
+                        label: Text(loadingGoogle ? '' : 'Log In with Google')),
+                    sizeh(doubleHeight(3)),
+                    SignInWithAppleButton(
+                      height: 50,
+                      style: SignInWithAppleButtonStyle.white,
+                      onPressed: () {
+                        appleLogin();
+                      },
                     ),
                     sizeh(doubleHeight(3)),
                     GestureDetector(
@@ -202,7 +287,8 @@ class _LoginState extends State<Login> {
                               TextSpan(
                                   text: 'Sign Up',
                                   style: TextStyle(
-                                      color: mainGreen1,fontWeight: FontWeight.bold,
+                                      color: mainGreen1,
+                                      fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic)),
                             ],
                             style: TextStyle(
@@ -231,13 +317,15 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: (){
-                            showDialog(context: context, builder: (_)=>TeamDialog());
+                          onTap: () {
+                            showDialog(
+                                context: context, builder: (_) => TeamDialog());
                           },
                           child: Text('Terms of Use',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: mainGreen1,fontWeight: FontWeight.bold,
+                                  color: mainGreen1,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: doubleWidth(3),
                                   fontStyle: FontStyle.italic)),
                         ),
@@ -252,13 +340,14 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: (){
-                        showDialog(context: context, builder: (_)=>Privacy());
+                      onTap: () {
+                        showDialog(context: context, builder: (_) => Privacy());
                       },
                       child: Text('Privacy Policy',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: mainGreen1,fontWeight: FontWeight.bold,
+                              color: mainGreen1,
+                              fontWeight: FontWeight.bold,
                               fontSize: doubleWidth(3),
                               fontStyle: FontStyle.italic)),
                     ),

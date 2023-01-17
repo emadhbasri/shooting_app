@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-// 
+//
 import 'package:shooting_app/classes/functions.dart';
 import 'package:shooting_app/classes/live_match_model.dart';
 import '../models.dart';
@@ -50,21 +50,16 @@ class LiveMatchService {
     };
     http.Request request = http.Request('GET', Uri.parse(_server + url));
     request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send()
-        .catchError((e) {
-      FutureOr<http.StreamedResponse> out = http.StreamedResponse(Stream<List<int>>.empty(),403);
+    http.StreamedResponse response = await request.send().catchError((e) {
+      FutureOr<http.StreamedResponse> out =
+          http.StreamedResponse(Stream<List<int>>.empty(), 403);
       return out;
     });
     if (response.statusCode == 403) {
       return null;
     }
-return response;
-
-
-
+    return response;
   }
-
-  
 
   Future<List<DataCountry>> countries() async {
     debugPrint('countries()');
@@ -81,35 +76,38 @@ return response;
     return convertDataList<DataLeagueMain>(
         back['data'], 'response', 'DataLeagueMain');
   }
+
   Future<List<DataMatchTeam>> teams({required String search}) async {
     debugPrint('teams($search)');
     Map<String, dynamic> back = await httpGet('teams?search=$search');
-    if(back['status']){
+    if (back['status']) {
       List<DataMatchTeam> out = [];
-      for(int j=0;j<back['data']['response'].length;j++){
-        out.add(
-            convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
-        );
+      for (int j = 0; j < back['data']['response'].length; j++) {
+        out.add(convertData(back['data']['response'][j], 'team', DataType.clas,
+            classType: 'DataMatchTeam'));
       }
       // debugPrint('back ${back}');
       return out;
-    }else{
+    } else {
       print('back $back');
-      toast(back['error'],isLong: true);
+      toast(back['error'], isLong: true);
       return [];
     }
   }
-  Future<List<DataMatchTeam>> getTeams({required int league,required int season}) async {
+
+  Future<List<DataMatchTeam>> getTeams(
+      {required int league, required int season}) async {
     debugPrint('getTeams($league,$season)');
-    Map<String, dynamic> back = await httpGet('teams?league=$league&season=$season');
+    Map<String, dynamic> back =
+        await httpGet('teams?league=$league&season=$season');
     List<DataMatchTeam> out = [];
-    for(int j=0;j<back['data']['response'].length;j++){
-      out.add(
-          convertData(back['data']['response'][j], 'team', DataType.clas,classType: 'DataMatchTeam')
-      );
+    for (int j = 0; j < back['data']['response'].length; j++) {
+      out.add(convertData(back['data']['response'][j], 'team', DataType.clas,
+          classType: 'DataMatchTeam'));
     }
     return out;
   }
+
   Future<List<DataMatch1>> matchsV2({
     required String date,
   }) async {
@@ -117,58 +115,63 @@ return response;
     // return [];
     Map<String, dynamic> back = await httpGet('fixtures?date=$date');
     // debugPrint('back ${back}');
-    return convertDataList<DataMatch1>(
-        back['data'], 'response', 'DataMatch1');
+    return convertDataList<DataMatch1>(back['data'], 'response', 'DataMatch1');
   }
 
   Future<DataMatch1> match({
     required int id,
-}) async {
+  }) async {
     debugPrint('matchs($id)');
     // return [];
     Map<String, dynamic> back = await httpGet('fixtures?id=$id');
     debugPrint('back ${back['data']['response'].length}');
-    return DataMatch1.fromAllJson(back['data']['response'][0] as Map<String,dynamic>);
+    return DataMatch1.fromAllJson(
+        back['data']['response'][0] as Map<String, dynamic>);
   }
 
-  Future<Map<String,List<DataStatistics>>> matchStatics({required int fixture}) async {
+  Future<Map<String, List<DataStatistics>>> matchStatics(
+      {required int fixture}) async {
     debugPrint('matchStatics()');
-    Map<String, dynamic> back = await httpGet('fixtures/statistics?fixture=$fixture');
+    Map<String, dynamic> back =
+        await httpGet('fixtures/statistics?fixture=$fixture');
     // debugPrint('back ${back}');
-    List list=back['data']['response'];
-    if(list.isEmpty)return {
-      'home':[],
-      'away':[],
-    };
+    List list = back['data']['response'];
+    if (list.isEmpty)
+      return {
+        'home': [],
+        'away': [],
+      };
     return {
-      'home':convertDataList<DataStatistics>(
+      'home': convertDataList<DataStatistics>(
           list[0], 'statistics', 'DataStatistics'),
-      'away':convertDataList<DataStatistics>(
+      'away': convertDataList<DataStatistics>(
           list[1], 'statistics', 'DataStatistics'),
     };
   }
 
   Future<List<DataEvent>> matchEvents({required int fixture}) async {
     debugPrint('matchEvents($fixture)');
-    Map<String, dynamic> back = await httpGet('fixtures/events?fixture=$fixture');
+    Map<String, dynamic> back =
+        await httpGet('fixtures/events?fixture=$fixture');
     // debugPrint('back ${back}');
-    return convertDataList<DataEvent>(
-        back['data'], 'response', 'DataEvent');
+    return convertDataList<DataEvent>(back['data'], 'response', 'DataEvent');
   }
- 
-  Future<Map<String,DataLineUps?>> matchLineUps({required int fixture}) async {
+
+  Future<Map<String, DataLineUps?>> matchLineUps({required int fixture}) async {
     debugPrint('matchLineUps($fixture)');
-    Map<String, dynamic> back = await httpGet('fixtures/lineups?fixture=$fixture');
+    Map<String, dynamic> back =
+        await httpGet('fixtures/lineups?fixture=$fixture');
     debugPrint('back ${back}');
-    List<DataLineUps> list=convertDataList<DataLineUps>(
-        back['data'], 'response', 'DataLineUps');
-    if(list.isEmpty)return {
-      'home':null,
-      'away':null,
-    };
+    List<DataLineUps> list =
+        convertDataList<DataLineUps>(back['data'], 'response', 'DataLineUps');
+    if (list.isEmpty)
+      return {
+        'home': null,
+        'away': null,
+      };
     return {
-      'home':list[0],
-      'away':list[1],
+      'home': list[0],
+      'away': list[1],
     };
   }
 }

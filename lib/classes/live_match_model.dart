@@ -128,7 +128,7 @@ class DataMatch1 {
     awayLineUps=data.awayLineUps;
   }
   DataMatch1.fromJson(Map<String, dynamic> data) {
-    print('DataMatch1 $data');
+    // print('DataMatch1 $data');
     fixture =
         convertData(data, 'fixture', DataType.clas, classType: 'DataFixture');
     league =

@@ -10,8 +10,8 @@ import '../../../main.dart';
 import 'match/match.dart';
 
 class MatchList extends StatefulWidget {
-  const MatchList({Key? key}) : super(key: key);
-
+  const MatchList({Key? key, required this.state}) : super(key: key);
+  final MainState state;
   @override
   _MatchListState createState() => _MatchListState();
 }
@@ -42,6 +42,7 @@ class _MatchListState extends State<MatchList> {
                   await state.getMatchsV2();
                 },
                 child: ListView(
+                  controller: widget.state.matchListController,
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                       horizontal: doubleWidth(4), vertical: doubleHeight(2)),
@@ -118,9 +119,21 @@ class _MatchListState extends State<MatchList> {
                           child: Text(
                             e,
                             style: TextStyle(
+
+                              color: 
+                              themeState.isDarkMode?
+                              state.selectedDate == e? null
+                                    : Colors.grey
+
+
+                              :state.selectedDate == e? Colors.black
+                                    : Colors.grey
+                              
+                              ,
                                 // color: state.selectedDate == e
                                 //     ? Colors.black
                                 //     : Colors.grey,
+                                fontWeight: state.selectedDate == e ? FontWeight.bold:FontWeight.normal,
                                 fontSize: state.selectedDate == e ? 15 : 12),
                           )))
                           .toList(),
@@ -136,6 +149,7 @@ class _MatchListState extends State<MatchList> {
                     //     Icon(Icons.arrow_forward_ios)
                     //   ],
                     // ),
+                    
                     if(!state.loadMatchs)
                       if(state.leagues.isNotEmpty)
                         Column(
@@ -361,16 +375,21 @@ class MatchItem1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(height: doubleHeight(0.7)),
+                if(match.fixture.isLive!=2)
                 Text('Kick Off time', style: TextStyle(fontSize: 13)),
+                if(match.fixture.isLive!=2)
                 Spacer(),
                 Text(match.fixture.isLive==0?
                 // match.fixture.date.toString()
                     'start at ${match.fixture.date!.hour.toString().padLeft(2,'0')}:${match.fixture.date!.minute.toString().padLeft(2,'0')}'
-                    :match.fixture.status, style: TextStyle(fontSize: 13)),
+                    :match.fixture.status, style: TextStyle(fontSize: 12)),
                 Spacer(),
-                if (match.fixture.elapsed != null)
+                if(match.fixture.isLive==2)
+                  Text('Full Time',
+                    style: TextStyle(fontSize: 13))
+                else if (match.fixture.elapsed != null)
                   Text('${match.fixture.elapsed} \' ',
-                      style: TextStyle(fontSize: 13)),
+                    style: TextStyle(fontSize: 13)),
                 SizedBox(height: doubleHeight(0.7)),
               ],
             )),

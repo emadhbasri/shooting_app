@@ -27,6 +27,7 @@ class _TeamState extends State<Team> {
     countries = await liveMatch.countries();
     print('countries ${countries.length}');
     country =
+        // countries.singleWhere((element) => element.name == 'World'); //England
         countries.singleWhere((element) => element.name == 'England'); //England
     getLeagues();
   }
@@ -35,6 +36,7 @@ class _TeamState extends State<Team> {
   DataLeagueMain? league;
   getLeagues() async {
     leagues = await liveMatch.leagues(
+      // country: country==null?'world':country!.name,
       country: country==null?'England':country!.name,
     );
     setState(() {});

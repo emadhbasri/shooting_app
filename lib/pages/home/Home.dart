@@ -178,9 +178,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             child: TabBarView(
               controller: controller,
               children: [
-                MatchList(),
+                MatchList(
+                  state:state,
+                ),
                 FanFeeds(),
-                const Stadia()
+                Stadia(
+                )
                 // const StoryList()
               ],
             ),

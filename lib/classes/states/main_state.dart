@@ -118,6 +118,8 @@ class MainState extends ChangeNotifier {
 
   MyService service = getIt<MyService>();
   late ScrollController listController;
+  late ScrollController matchListController=ScrollController();
+  late ScrollController stadiaListController;
 
   late Soundpool pool;
   late int soundId;

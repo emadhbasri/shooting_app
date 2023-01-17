@@ -169,7 +169,7 @@ class MyService {
       // debugPrint("myOut $out");
       out = jsonEncode(body);
     }
-    debugPrint('post out $out');
+    debugPrint('put out $out');
 
     http.Response utf = await http
         .put(Uri.parse(_server + url), body: out, headers: headers)
@@ -216,7 +216,7 @@ class MyService {
       // debugPrint("myOut $out");
       out = jsonEncode(body);
     }
-    debugPrint('post out $out');
+    debugPrint('patch out $out');
 
     http.Response utf = await http
         .patch(Uri.parse(_server + url), body: out, headers: headers)

@@ -35,6 +35,19 @@ class UsersService {
     }
     return convertDataList<DataPersonalInformation>(back['data'], 'results', 'DataPersonalInformation');
   }
+  
+  static Future<String?> getEmailByUserName(MyService service,
+      {required String username,}) async {//todo
+    debugPrint('getEmailByUserName(${'/api/v1/Administration/users/getEmailByUserName/$username'})');
+    Map<String, dynamic> back = await service.httpGet(
+        '/api/v1/Administration/users/getEmailByUserName/$username');
+        print('back $back');
+    if(back['status']==false){
+      toast(back['error']);
+      return null;
+    }
+    return convertData(back['data'], 'data', DataType.string);
+  }
   static Future<DataPersonalInformation?> getUser(
       //todo
       MyService service,

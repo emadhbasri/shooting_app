@@ -13,28 +13,27 @@ class Intro1 extends StatefulWidget {
   State<Intro1> createState() => _Intro1State();
 }
 
-class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
+class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
-
-
-  init()async{
-    _controller=AnimationController(
-      vsync: this,value: 0,duration: Duration(milliseconds: 500),reverseDuration: Duration(milliseconds: 500)
-    );
+  init() async {
+    _controller = AnimationController(
+        vsync: this,
+        value: 0,
+        duration: Duration(milliseconds: 500),
+        reverseDuration: Duration(milliseconds: 500));
     _controller.forward();
     _controller.addStatusListener((status) {
-      if(status==AnimationStatus.completed)
+      if (status == AnimationStatus.completed)
         _controller.reverse();
-      else if(status==AnimationStatus.dismissed)
-        _controller.forward();
+      else if (status == AnimationStatus.dismissed) _controller.forward();
     });
-    
+
     MyService service = getIt<MyService>();
-    service.getToken().then((bool value) async{
+    service.getToken().then((bool value) async {
       if (value) {
         String? userName = await getString('username');
-        if(userName==null){
+        if (userName == null) {
           Go.pushAndRemoveSlideAnim(context, Auth());
           return;
         }
@@ -42,67 +41,78 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
         // Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update:false,));
 // return;
 
-        await getVersion(service,userName);
-        await getDevice(service,userName);
-        if(login==true){
+        await getVersion(service, userName);
+        await getDevice(service, userName);
+
+        if (login == true) {
           AuthenticationService.logOut(context);
           // Go.pushAndRemoveSlideAnim(context, Auth());
           return;
-        }else{
-          Go.pushAndRemoveSlideAnim(context, AppPageBuilder(update: update??false,));
+        } else {
+          Go.pushAndRemoveSlideAnim(
+              context,
+              AppPageBuilder(
+                update: update ?? false,
+              ));
           return;
         }
         // Future.delayed(Duration(seconds: 2),
         //         () {
         //           _controller.stop();
         //           _controller.dispose();
-      // });
+        // });
       } else {
-        Future.delayed(
-            Duration(seconds: 2), ()
-        {
-          _controller.stop();
-          _controller.dispose();
-        Go.pushAndRemoveSlideAnim(context, Auth());
-        }
-        );
+        Future.delayed(Duration(seconds: 2), () {
+          // _controller.stop();
+          // _controller.dispose();
+          Go.pushAndRemoveSlideAnim(context, Auth());
+        });
       }
     });
   }
 
-  bool? update,login;
+  bool? update, login;
 
-  getVersion(MyService service,String userName)async{
+  getVersion(MyService service, String userName) async {
     debugPrint('getVersion()');
     String out = '';
-    if(Platform.isAndroid){
-      out='androidVersion=24';
-    }else{
-      out='iosVersion=24';
+    if (Platform.isAndroid) {
+      out = 'androidVersion=25';
+    } else {
+      out = 'iosVersion=25';
     }
-    var back =
-    await service.httpPost('/api/v1/Authentication/CheckVersion?'
-        '$out&username=$userName', {});
+    var back = await service.httpPost(
+        '/api/v1/Authentication/CheckVersion?'
+        '$out&username=$userName',
+        {});
     print('back getVersion $back');
-    if(back['data']['message'].toString()=="Update : true"){
-      print('getVersiongetVersion true');
-      update=true;
-    }else{
-      print('getVersiongetVersion false');
-      update=false;
+    if (back['status']) {
+      if (back['data']['message'].toString() == "Update : true") {
+        print('getVersiongetVersion true');
+        update = true;
+      } else {
+        print('getVersiongetVersion false');
+        update = false;
+      }
     }
   }
-  getDevice(MyService service,String userName)async{
+
+  getDevice(MyService service, String userName) async {
     debugPrint('getDevice()');
-    String deviceId= await deviceData();
-    var back =
-    await service.httpPost('/api/v1/Authentication/Config?'
-        'deviceId=$deviceId&username=$userName', {});
+    String deviceId = await deviceData();
+    var back = await service.httpPost(
+        '/api/v1/Authentication/Config?'
+        'deviceId=$deviceId&username=$userName',
+        {});
     print('back2 $back');
-    if(back['data']['message'].toString()=="Login : true"){
-      login=true;
+    if (back['status']) {
+      if (back['data']['message'].toString() == "Login : true") {
+        login = true;
+      } else {
+        login = false;
+      }
     }else{
-      login=false;
+      login = true;
     }
   }
 
@@ -111,23 +121,30 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin{
     super.initState();
     init();
   }
-
+@override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(50, 255, 185, 1),
       body: Center(
         child: ScaleTransition(
-          scale: Tween<double>(begin: 1,end: 0.7).animate(_controller),
+          scale: Tween<double>(begin: 1, end: 0.7).animate(_controller),
           child:
-          // CircleAvatar(
-          //   backgroundImage: AssetImage('assets/images/appicon.png'),
-          //   radius: 70,
-          // )
-          SizedBox(
+              // CircleAvatar(
+              //   backgroundImage: AssetImage('assets/images/appicon.png'),
+              //   radius: 70,
+              // )
+              SizedBox(
             width: doubleWidth(30),
             height: doubleWidth(30),
-            child: Image.asset('assets/images/appicon.png',fit: BoxFit.fill,),
+            child: Image.asset(
+              'assets/images/appicon.png',
+              fit: BoxFit.fill,
+            ),
           ),
         ),
       ),

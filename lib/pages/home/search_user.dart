@@ -56,7 +56,7 @@ class _SearchUserState extends State<SearchUser> {
             IconButton(
               padding: EdgeInsets.zero,
               icon: Icon(
-                Icons.arrow_back,
+                Icons.adaptive.arrow_back,
                 color: Colors.white,
               ),
               onPressed: () {

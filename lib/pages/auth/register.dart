@@ -1,3 +1,5 @@
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shooting_app/classes/states/google_sign_in_state.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
@@ -27,13 +29,14 @@ class _RegisterState extends State<Register> {
     statusSet(trans);
     super.initState();
   }
-bool loading=false;
+
+  bool loading = false, loadingGoogle = false;
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: decorImage(img: 'assets/images/stadium.jpg'),
       child: MyToast(
-          key: key,
+        key: key,
         child: Scaffold(
           backgroundColor: trans,
           body: Container(
@@ -59,7 +62,10 @@ bool loading=false;
                       height: doubleHeight(7),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: TextField(style: TextStyle(color: Colors.black,),
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                           controller: name,
                           decoration: InputDecoration(
                               prefixText: '        ',
@@ -77,7 +83,10 @@ bool loading=false;
                       height: doubleHeight(7),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: TextField(style: TextStyle(color: Colors.black,),
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                           controller: username,
                           decoration: InputDecoration(
                               prefixText: '        ',
@@ -95,7 +104,10 @@ bool loading=false;
                       height: doubleHeight(7),
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
-                        child: TextField(style: TextStyle(color: Colors.black,),
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                           keyboardType: TextInputType.emailAddress,
                           controller: email,
                           decoration: InputDecoration(
@@ -134,7 +146,9 @@ bool loading=false;
                       color: Color.fromRGBO(216, 216, 216, 1),
                       child: Center(
                         child: TextField(
-                          style: TextStyle(color: Colors.black,),
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                           keyboardType: TextInputType.visiblePassword,
                           controller: password,
                           obscureText: obscureText,
@@ -145,9 +159,12 @@ bool loading=false;
                                     obscureText = !obscureText;
                                   });
                                 },
-                                child: Icon(!obscureText
-                                    ? Icons.remove_red_eye
-                                    : Icons.visibility_off,color: black,),
+                                child: Icon(
+                                  !obscureText
+                                      ? Icons.remove_red_eye
+                                      : Icons.visibility_off,
+                                  color: black,
+                                ),
                               ),
                               prefixText: '        ',
                               border: InputBorder.none,
@@ -162,23 +179,27 @@ bool loading=false;
                     child: TextButton(
                       onPressed: () async {
                         if (username.value.text.trim() == '') {
-                          myToast(key,'The Username field is required.');
+                          myToast(key, 'The Username field is required.');
+                          return;
+                        } else if (password.value.text.trim() == '') {
+                          myToast(key, 'The Password field is required.');
                           return;
                         }
-                        else if (password.value.text.trim() == '') {
-                          myToast(key,'The Password field is required.');
-                          return;
-                        }
-                        Go.pushSlideAnim(context, VerifyOtp(
-                          username: username.value.text.trim(),
-                          password: password.value.text.trim(),
-                          isRegister: true,));
+                        Go.pushSlideAnim(
+                            context,
+                            VerifyOtp(
+                              username: username.value.text.trim(),
+                              password: password.value.text.trim(),
+                              isRegister: true,
+                            ));
                       },
                       child: Text(
                         'Register With Otp',
                         textAlign: TextAlign.right,
-                        style: TextStyle(fontWeight: FontWeight.bold,
-                            color: mainGreen1, fontSize: doubleWidth(3)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: mainGreen1,
+                            fontSize: doubleWidth(3)),
                       ),
                     ),
                   ),
@@ -191,12 +212,12 @@ bool loading=false;
                           borderRadius: BorderRadius.circular(10)),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStatePropertyAll(mainBlue)
-                          ),
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            backgroundColor:
+                                MaterialStatePropertyAll(mainBlue)),
                         onPressed: () async {
-
                           // if (phone.value.text.trim()!='') {
                           //   if (!phone.value.text.trim().contains('+') ||
                           //       phone.value.text.trim().length < 12) {
@@ -205,39 +226,81 @@ bool loading=false;
                           //   }
                           // }
                           setState(() {
-                            loading=true;
+                            loading = true;
                           });
                           MyService service = getIt<MyService>();
-                          bool back = await AuthenticationService.register(
-                              service,key,
-                              fullName: name.value.text.trim(),
-                              userName: username.value.text.trim(),
-                              phoneNumber: '',//phone.value.text.trim()
-                              email: email.value.text.trim(),
-                              password: password.value.text.trim(),
-                              confirmPassword: password.value.text.trim());
+                          bool back =
+                              await AuthenticationService.register(service, key,
+                                  fullName: name.value.text.trim(),
+                                  userName: username.value.text.trim(),
+                                  phoneNumber: '', //phone.value.text.trim()
+                                  email: email.value.text.trim(),
+                                  password: password.value.text.trim(),
+                                  confirmPassword: password.value.text.trim());
                           setState(() {
-                            loading=false;
+                            loading = false;
                           });
                           if (back) {
-                            Go.pushSlideAnim(context, VerifyOtp(
-                                username: username.value.text.trim(),
-                                password: password.value.text.trim(),
-                            isRegister: true,));
-
+                            Go.pushSlideAnim(
+                                context,
+                                VerifyOtp(
+                                  username: username.value.text.trim(),
+                                  password: password.value.text.trim(),
+                                  isRegister: true,
+                                ));
                           } else {
                             print('nononono');
                           }
                         },
-                        child: loading?simpleCircle(color: mainGreen):
-                        Text(
-                          'Sign Up',
-                          style: TextStyle(
-                              fontSize: doubleWidth(5), color: white),
-                        ),
+                        child: loading
+                            ? simpleCircle(color: mainGreen)
+                            : Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                    fontSize: doubleWidth(5), color: white),
+                              ),
                       ),
                     ),
                   ),
+                  sizeh(doubleHeight(3)),
+                  ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          minimumSize: Size(double.maxFinite, 50)),
+                      onPressed: () async {
+                        if (loadingGoogle) return;
+                        setState(() {
+                          loadingGoogle = true;
+                        });
+                        GoogleSignInAccount? backUser = await googleLogin();
+                        setState(() {
+                          loadingGoogle = false;
+                        });
+                        if (backUser != null) {
+                          setState(() {
+                            loading = true;
+                          });
+                          MyService service = getIt<MyService>();
+                          var back =
+                              await AuthenticationService.registerWithGoogle(
+                                  context, service, key,
+                                  user: backUser);
+                          setState(() {
+                            loading = false;
+                          });
+                        }
+                      },
+                      icon: Container(
+                        margin: EdgeInsets.only(right: doubleWidth(2)),
+                        width: 24,
+                        height: 24,
+                        child:  loadingGoogle
+                              ? CircularProgressIndicator()
+                              :Image.asset('assets/images/google.png'),
+                      ),
+                      label: Text(loadingGoogle ? '' : 'Sign Up with Google')),
+
                   sizeh(doubleHeight(3)),
                   GestureDetector(
                     onTap: () {
@@ -280,13 +343,15 @@ bool loading=false;
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
-                          showDialog(context: context, builder: (_)=>TeamDialog());
+                        onTap: () {
+                          showDialog(
+                              context: context, builder: (_) => TeamDialog());
                         },
                         child: Text('Terms of Use',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: mainGreen1,fontWeight: FontWeight.bold,
+                                color: mainGreen1,
+                                fontWeight: FontWeight.bold,
                                 fontSize: doubleWidth(3),
                                 fontStyle: FontStyle.italic)),
                       ),
@@ -301,13 +366,14 @@ bool loading=false;
                     ],
                   ),
                   GestureDetector(
-                    onTap: (){
-                      showDialog(context: context, builder: (_)=>Privacy());
+                    onTap: () {
+                      showDialog(context: context, builder: (_) => Privacy());
                     },
                     child: Text('Privacy Policy',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: mainGreen1,fontWeight: FontWeight.bold,
+                            color: mainGreen1,
+                            fontWeight: FontWeight.bold,
                             fontSize: doubleWidth(3),
                             fontStyle: FontStyle.italic)),
                   ),

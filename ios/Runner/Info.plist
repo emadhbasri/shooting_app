@@ -22,6 +22,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+    
+    
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -31,10 +33,15 @@
 			<array>
 				<string>ShareMedia</string>
 				<string>footballbuzz</string>
+                
+                <string>com.googleusercontent.apps.1070447520557-4djqgb62naaouck9668pt9flpsn6hgso</string>
 			</array>
 		</dict>
 		<dict/>
 	</array>
+    
+    
+    
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FlutterDeepLinkingEnabled</key>
@@ -85,5 +92,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    
+    
+    
 </dict>
 </plist>

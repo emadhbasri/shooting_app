@@ -14,20 +14,21 @@ class Stadia extends StatefulWidget {
 }
 
 class _StadiaState extends State<Stadia> {
-  late ScrollController listController;
-
+  late MainState state;
   @override
   void initState() {
     super.initState();
     print('Stadia init');
-    MainState state = Provider.of<MainState>(context, listen: false);
+    state = Provider.of<MainState>(context, listen: false);
     if (state.stadiaShots.isEmpty) state.getStadia(add: false);
 
-    listController = ScrollController()
+    
+    state.stadiaListController = ScrollController()
       ..addListener(() {
-        if (state.selectedTag==null && state.stadiaShots.isNotEmpty)
-          if (listController.position.atEdge &&
-            listController.offset != 0.0) {
+        if (state.selectedTag == null &&
+            state.stadiaShots.isNotEmpty) if (state.stadiaListController
+                .position.atEdge &&
+            state.stadiaListController.offset != 0.0) {
           debugPrint("state.dataSearchPage!.hasNext ${state.stadiaHasNext}");
           if (state.stadiaHasNext) {
             state.stadiaPageNumber++;
@@ -39,9 +40,8 @@ class _StadiaState extends State<Stadia> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Consumer2<MainState,ThemeState>(
-      builder: (context, state,theme, child) {
+    return Consumer2<MainState, ThemeState>(
+      builder: (context, state, theme, child) {
         return Column(
           children: [
             SizedBox(height: doubleHeight(2)),
@@ -56,7 +56,8 @@ class _StadiaState extends State<Stadia> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: state.tags
                         .map((e) => Row(children: [
-                              if ((state.selectedTag == null && e == 'Global') ||
+                              if ((state.selectedTag == null &&
+                                      e == 'Global') ||
                                   state.selectedTag != null &&
                                       state.selectedTag == e)
                                 Container(
@@ -90,7 +91,9 @@ class _StadiaState extends State<Stadia> {
                                     child: Text(
                                       '#$e',
                                       style: TextStyle(
-                                          color: theme.isDarkMode?white:Colors.black,
+                                          color: theme.isDarkMode
+                                              ? white
+                                              : Colors.black,
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
                                     )),
@@ -108,7 +111,7 @@ class _StadiaState extends State<Stadia> {
                   ? circle()
                   : RefreshIndicator(
                       onRefresh: () async {
-                        if(state.selectedTag==null){
+                        if (state.selectedTag == null) {
                           state.stadiaPageNumber = 1;
                           state.stadiaHasNext = false;
                         }
@@ -127,19 +130,19 @@ class _StadiaState extends State<Stadia> {
                               ],
                             )
                           : ListView(
-                              controller: listController,
+                              controller: state.stadiaListController,
                               physics: AlwaysScrollableScrollPhysics(),
                               children: [
                                 ...state.stadiaShots
                                     .map((e) => PostFromShot(
-                                  delete: () {
-                                    state.stadiaShots.remove(e);
-                                    state.notify();
-                                  },
-                                  key: UniqueKey(),
-                                  post: e,
-                                  onTapTag: gogo,
-                                ))
+                                          delete: () {
+                                            state.stadiaShots.remove(e);
+                                            state.notify();
+                                          },
+                                          key: UniqueKey(),
+                                          post: e,
+                                          onTapTag: gogo,
+                                        ))
                                     .toList(),
                                 if (state.stadiaHasNext)
                                   Column(

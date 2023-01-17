@@ -29,6 +29,12 @@ dependencies:
   flutter_svg: ^1.0.3
   url_launcher: ^6.1.0
 
+  flutter_signin_button: ^2.0.0
+  sign_in_with_apple: ^4.3.0
+
+  # google_sign_in: ^5.4.2
+  # firebase_auth: any
+
 
   #  fluttertoast: any
 
@@ -42,10 +48,18 @@ dependencies:
 #  path_provider: ^2.0.9
 #  image: ^3.1.3
 #  animated_text_kit: ^4.2.1
+# ------------------------------
+  # cloud_firestore: ^3.1.10
+  # firebase_messaging: ^11.2.11
+  # firebase_core: ^1.13.1
+  # flutter_local_notifications: ^9.4.0
 
-  cloud_firestore: ^3.1.10
-  firebase_messaging: ^11.2.11
-  firebase_core: ^1.13.1
+
+  cloud_firestore: ^4.1.0
+  google_sign_in: ^5.4.2
+  firebase_auth: ^4.1.4
+  firebase_messaging: ^14.1.2
+  firebase_core: ^2.3.0
   flutter_local_notifications: ^9.4.0
 
   # photo_manager: ^2.1.1
@@ -75,4 +89,3 @@ flutter:
     - assets/
     - assets/images/
     - assets/icons/
-

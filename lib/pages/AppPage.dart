@@ -140,7 +140,13 @@ class _AppPageState extends State<AppPage> {
               color: white,
             ),
             onPressed: () {
+              //TODO
               Go.pushSlideAnim(context, SearchUser());
+              // Go.pushSlideAnim(context, VerifyOtp(
+              //   username: 'emadbasri',
+              //   password: '',
+              //   isRegister: false,
+              // ));
               // Go.pushSlideAnim(context, Search());
             },
           ),
@@ -328,11 +334,25 @@ class _AppPageState extends State<AppPage> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Provider.of<MainState>(context, listen: false)
-                              .listController
-                              .animateTo(0,
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.linear);
+                          MainState mainState =
+                              Provider.of<MainState>(context, listen: false);
+                          try {
+                            mainState.listController.animateTo(0,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.linear);
+                          } catch (e) {}
+
+                          try {
+                            mainState.matchListController.animateTo(0,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.linear);
+                          } catch (e) {}
+                          try {
+                            mainState.stadiaListController.animateTo(0,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.linear);
+                          } catch (e) {}
+
                           setState(() {
                             currentIndex = 0;
                           });
@@ -346,20 +366,21 @@ class _AppPageState extends State<AppPage> {
                                 height: max,
                                 padding: EdgeInsets.all(doubleWidth(3)),
                                 child: currentIndex == 0
-                                    ? 
- SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              'assets/icons/homeActive.svg',
-                                                   color: context
-                                                .watch<ThemeState>()
-                                                .isDarkMode?greenCall:mainBlue,
-                                              width: 35,
-                                              height: 35,
-                                            ),
-                                          ))
+                                    ? SizedBox(
+                                        width: 35,
+                                        height: 35,
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            'assets/icons/homeActive.svg',
+                                            color: context
+                                                    .watch<ThemeState>()
+                                                    .isDarkMode
+                                                ? greenCall
+                                                : mainBlue,
+                                            width: 35,
+                                            height: 35,
+                                          ),
+                                        ))
                                     // Image.asset(
                                     //     'assets/images/homebuttom2.png',
                                     //     color: context
@@ -368,21 +389,20 @@ class _AppPageState extends State<AppPage> {
                                     //         ? greenCall
                                     //         : mainBlue,
                                     //   )
-                                    : 
- SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              'assets/icons/homeDisabled.svg',
-                                              width: 35,
-                                              height: 35,
-                                            ),
-                                          ))
-                                    // Image.asset(
-                                    //     'assets/images/homebuttom.png')
-                                        
-                                        ,
+                                    : SizedBox(
+                                        width: 35,
+                                        height: 35,
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            'assets/icons/homeDisabled.svg',
+                                            width: 35,
+                                            height: 35,
+                                          ),
+                                        ))
+                                // Image.asset(
+                                //     'assets/images/homebuttom.png')
+
+                                ,
                               ),
                             ),
                             currentIndex == 0
@@ -428,64 +448,63 @@ class _AppPageState extends State<AppPage> {
                                       Align(
                                         alignment: Alignment.center,
                                         child: currentIndex == 1
-                                            ? 
-                                            
-                                            !context.watch<ThemeState>().isDarkMode?
+                                            ? !context
+                                                    .watch<ThemeState>()
+                                                    .isDarkMode
+                                                ? SizedBox(
+                                                    width: 35,
+                                                    height: 35,
+                                                    child: Center(
+                                                      child: SvgPicture.asset(
+                                                        'assets/icons/chatActive.svg',
+                                                        // color: context
+                                                        //           .watch<ThemeState>()
+                                                        //           .isDarkMode
+                                                        //       ? greenCall
+                                                        //       : mainBlue,
+                                                        width: 35,
+                                                        height: 35,
+                                                      ),
+                                                    ))
+                                                : Image.asset(
+                                                    'assets/images/chat.png',
+                                                    color: context
+                                                            .watch<ThemeState>()
+                                                            .isDarkMode
+                                                        ? greenCall
+                                                        : mainBlue)
+                                            :
+                                            //   SizedBox(
+                                            // width: 30,
+                                            // height: 30,
+                                            // child: Center(
+                                            //   child: SvgPicture.asset(
+                                            //     'assets/icons/chatDisabled.svg',
+                                            //     width: 30,
+                                            //     height: 30,
+                                            //   ),
+                                            // ))
 
-                                            SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              'assets/icons/chatActive.svg',
-                                              // color: context
-                                              //           .watch<ThemeState>()
-                                              //           .isDarkMode
-                                              //       ? greenCall
-                                              //       : mainBlue,
-                                              width: 35,
-                                              height: 35,
-                                            ),
-                                          ))
-                                            :
-                                            Image.asset(
-                                                'assets/images/chat.png',
-                                                color: context
-                                                        .watch<ThemeState>()
-                                                        .isDarkMode
-                                                    ? greenCall
-                                                    : mainBlue)
-                                            : 
-                                          //   SizedBox(
-                                          // width: 30,
-                                          // height: 30,
-                                          // child: Center(
-                                          //   child: SvgPicture.asset(
-                                          //     'assets/icons/chatDisabled.svg',
-                                          //     width: 30,
-                                          //     height: 30,
-                                          //   ),
-                                          // ))
-                                            
-                                            !context.watch<ThemeState>().isDarkMode?
-                                            SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              'assets/icons/chatDisabled.svg',
-                                              // color: context
-                                              //           .watch<ThemeState>()
-                                              //           .isDarkMode
-                                              //       ? greenCall
-                                              //       : mainBlue,
-                                              width: 35,
-                                              height: 35,
-                                            ),
-                                          ))
-                                            :
-                                            Image.asset(
-                                                'assets/images/chat(1).png'),
+                                            !context
+                                                    .watch<ThemeState>()
+                                                    .isDarkMode
+                                                ? SizedBox(
+                                                    width: 35,
+                                                    height: 35,
+                                                    child: Center(
+                                                      child: SvgPicture.asset(
+                                                        'assets/icons/chatDisabled.svg',
+                                                        // color: context
+                                                        //           .watch<ThemeState>()
+                                                        //           .isDarkMode
+                                                        //       ? greenCall
+                                                        //       : mainBlue,
+                                                        width: 35,
+                                                        height: 35,
+                                                      ),
+                                                    ))
+                                                : Image.asset(
+                                                    'assets/images/chat(1).png'),
                                       ),
                                       // Align(
                                       //     alignment: Alignment(1.4, -1.1),

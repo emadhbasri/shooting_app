@@ -19,4 +19,6 @@ samples, guidance on mobile development, and a full API reference.
 auto refresh for add comment in shot page
 
 
-
+org.gradle.jvmargs=-Xmx1536M
+android.useAndroidX=true
+android.enableJetifier=true

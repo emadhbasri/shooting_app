@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1070447520557-b53oremm2lq3gj7kcqfkkbs3phfnbdan.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.footballbuzz.android",
+            "certificate_hash": "54a179390cd236be135729c95d213bf7063b17a6"
+          }
+        },
+        {
+          "client_id": "1070447520557-qlejgvcs2ejruus7m22ig462m0f0527a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.footballbuzz.android",
+            "certificate_hash": "4600ee1a80c2e8a9df3498424225e64c069774dd"
+          }
+        },
+        {
           "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +45,13 @@
             {
               "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1070447520557-4djqgb62naaouck9668pt9flpsn6hgso.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.footballbuzz.ios"
+              }
             }
           ]
         }
@@ -58,6 +81,13 @@
             {
               "client_id": "1070447520557-81b6h6282m64md8n6kk3av6oub1nq7h3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1070447520557-4djqgb62naaouck9668pt9flpsn6hgso.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.footballbuzz.ios"
+              }
             }
           ]
         }
