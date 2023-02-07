@@ -36,13 +36,13 @@ class MatchState extends ChangeNotifier {
     countries = await liveMatch.countries();
     print('countries ${countries.length}');
     country = countries.singleWhere((element) {
-      return element.name == 'World';
+      // return element.name == 'World';
       if (mainState.personalInformation != null &&
           mainState.personalInformation!.team != null) {
         return element.name ==
             mainState.personalInformation!.team!.team_country!;
       } else {
-        return element.name == 'World'; //country!.name
+        return element.name == country!.name; //
       }
     });
     loadCountry = false;
@@ -83,12 +83,12 @@ class MatchState extends ChangeNotifier {
     leagues.clear();
 
     if (cont == '') {
-      cont = 'World';
-      // if (mainState.personalInformation != null &&
-      //     mainState.personalInformation!.team != null)
-      //   cont = mainState.personalInformation!.team!.team_country!;
-      // else
-      //   cont = 'England';
+      // cont = 'World';
+      if (mainState.personalInformation != null &&
+          mainState.personalInformation!.team != null)
+        cont = mainState.personalInformation!.team!.team_country!;
+      else
+        cont = 'England';
     }
     List<DataMatch1> back = await liveMatch.matchsV2(
       date:
@@ -107,15 +107,15 @@ class MatchState extends ChangeNotifier {
       }
     }
 
-    int index = leagues.indexWhere((element) => element.league.id == 1);
-    print('leag index $index');
-    DataLeagueMain world;
-    if (index != -1) {
-      DataLeagueMain world = leagues.removeAt(index);
-      print('world name ${world.league.name}');
-      print('world logo ${world.league.logo}');
-      leagues.insert(0, world);
-    }
+    // int index = leagues.indexWhere((element) => element.league.id == 1);
+    // print('leag index $index');
+    // DataLeagueMain world;
+    // if (index != -1) {
+    //   DataLeagueMain world = leagues.removeAt(index);
+    //   print('world name ${world.league.name}');
+    //   print('world logo ${world.league.logo}');
+    //   leagues.insert(0, world);
+    // }
 
     loadMatchs = false;
     notifyListeners();

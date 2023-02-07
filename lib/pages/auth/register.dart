@@ -1,8 +1,9 @@
-import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io' as io;
 import 'package:shooting_app/classes/states/google_sign_in_state.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
 import '../../main.dart';
@@ -30,7 +31,7 @@ class _RegisterState extends State<Register> {
     super.initState();
   }
 
-  bool loading = false, loadingGoogle = false;
+  bool loading = false, loadingGoogle = false, loadingApple = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -203,7 +204,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  sizeh(doubleHeight(4)),
+                  sizeh(doubleHeight(2)),
                   Container(
                     width: max,
                     height: doubleHeight(8),
@@ -262,46 +263,52 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  sizeh(doubleHeight(3)),
+                  if (io.Platform.isIOS)
+                    sizeh(doubleHeight(1))
+                  else
+                    sizeh(doubleHeight(2)),
                   ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
                           minimumSize: Size(double.maxFinite, 50)),
-                      onPressed: () async {
-                        if (loadingGoogle) return;
-                        setState(() {
-                          loadingGoogle = true;
-                        });
-                        GoogleSignInAccount? backUser = await googleLogin();
-                        setState(() {
-                          loadingGoogle = false;
-                        });
-                        if (backUser != null) {
-                          setState(() {
-                            loading = true;
-                          });
-                          MyService service = getIt<MyService>();
-                          var back =
-                              await AuthenticationService.registerWithGoogle(
-                                  context, service, key,
-                                  user: backUser);
-                          setState(() {
-                            loading = false;
-                          });
-                        }
+                      onPressed: () {
+                        googleLogin();
                       },
                       icon: Container(
                         margin: EdgeInsets.only(right: doubleWidth(2)),
                         width: 24,
                         height: 24,
-                        child:  loadingGoogle
-                              ? CircularProgressIndicator()
-                              :Image.asset('assets/images/google.png'),
+                        child: loadingGoogle
+                            ? CircularProgressIndicator()
+                            : Image.asset('assets/images/google.png'),
                       ),
                       label: Text(loadingGoogle ? '' : 'Sign Up with Google')),
 
-                  sizeh(doubleHeight(3)),
+                  if (io.Platform.isIOS)
+                    sizeh(doubleHeight(1))
+                  else
+                    sizeh(doubleHeight(2)),
+                  if (io.Platform.isIOS)
+                    if (loadingApple)
+                      Container(
+                        margin: EdgeInsets.only(right: doubleWidth(2)),
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(),
+                      )
+                    else
+                      SignInWithAppleButton(
+                        height: 50,
+                        style: SignInWithAppleButtonStyle.white,
+                        onPressed: () {
+                          appleLogin();
+                        },
+                      ),
+                  if (io.Platform.isIOS)
+                    sizeh(doubleHeight(1))
+                  else
+                    sizeh(doubleHeight(2)),
                   GestureDetector(
                     onTap: () {
                       Go.replace(context, Login());
@@ -344,8 +351,10 @@ class _RegisterState extends State<Register> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          showDialog(
-                              context: context, builder: (_) => TeamDialog());
+                          openUrl(
+                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
+                          // showDialog(
+                          //     context: context, builder: (_) => TeamDialog());
                         },
                         child: Text('Terms of Use',
                             textAlign: TextAlign.center,
@@ -367,7 +376,7 @@ class _RegisterState extends State<Register> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      showDialog(context: context, builder: (_) => Privacy());
+                      // showDialog(context: context, builder: (_) => Privacy());
                     },
                     child: Text('Privacy Policy',
                         textAlign: TextAlign.center,
@@ -385,5 +394,57 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  googleLogin() async {
+    if (loadingGoogle) return;
+
+    setState(() {
+      loadingGoogle = true;
+    });
+    DataSignIn? backUser = await googleSign();
+    setState(() {
+      loadingGoogle = false;
+    });
+
+    if (backUser != null) {
+      setState(() {
+        loading = true;
+      });
+      MyService service = getIt<MyService>();
+      var back = await AuthenticationService.registerWithGoogle(
+          context, service, key,
+          user: backUser);
+      print('back');
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  appleLogin() async {
+    if (loadingApple) return;
+
+    setState(() {
+      loadingApple = true;
+    });
+    DataSignIn? backUser = await appleSign();
+    setState(() {
+      loadingApple = false;
+    });
+
+    if (backUser != null) {
+      setState(() {
+        loading = true;
+      });
+      MyService service = getIt<MyService>();
+      var back = await AuthenticationService.registerWithGoogle(
+          context, service, key,
+          user: backUser);
+      print('back');
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

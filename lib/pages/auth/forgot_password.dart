@@ -265,7 +265,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         ),
                         GestureDetector(
                           onTap: (){
-                            showDialog(context: context, builder: (_)=>TeamDialog());
+                            openUrl(
+                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
+                            // showDialog(context: context, builder: (_)=>TeamDialog());
                           },
                           child: Text('Terms of Use',
                               textAlign: TextAlign.center,
@@ -286,7 +288,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                     GestureDetector(
                       onTap: (){
-                        showDialog(context: context, builder: (_)=>Privacy());
+                        openUrl('https://footballbuzz.co/privacypolicy/');
+                        // showDialog(context: context, builder: (_)=>Privacy());
                       },
                       child: Text('Privacy Policy',
                           textAlign: TextAlign.center,

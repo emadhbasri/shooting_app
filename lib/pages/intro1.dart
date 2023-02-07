@@ -77,9 +77,9 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin {
     debugPrint('getVersion()');
     String out = '';
     if (Platform.isAndroid) {
-      out = 'androidVersion=25';
+      out = 'androidVersion=27';
     } else {
-      out = 'iosVersion=25';
+      out = 'iosVersion=27';
     }
     var back = await service.httpPost(
         '/api/v1/Authentication/CheckVersion?'

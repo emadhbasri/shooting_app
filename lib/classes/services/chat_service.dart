@@ -8,10 +8,6 @@ import '../models.dart';
 import 'my_service.dart';
 class ChatService{
 
-
-
-
-
   ///-----------------------------------------------group
 
   static Future<DataChatRoom?> editRoom(MyService service,{//todo

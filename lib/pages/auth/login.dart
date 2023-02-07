@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/classes/states/google_sign_in_state.dart';
 import 'package:shooting_app/pages/AppPage.dart';
@@ -7,7 +6,8 @@ import 'package:shooting_app/pages/auth/forgot_password.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
 import 'package:shooting_app/ui_items/my_toast.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
+// import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:io' as io;
 import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/dataTypes.dart';
@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
-  bool loading = false, loadingGoogle = false;
+  bool loading = false, loadingGoogle = false, loadingApple = false;
   bool obscureText = true;
   String username = '', password = '';
   @override
@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    SizedBox(height: doubleHeight(15)),
+                    SizedBox(height: doubleHeight(10)),
                     Text(
                       'WELCOME',
                       style: TextStyle(
@@ -166,27 +166,10 @@ class _LoginState extends State<Login> {
                               return;
                             }
                             if (password.trim() == '') {
-                              if (loadingGoogle) return;
-                              setState(() {
-                                loadingGoogle = true;
-                              });
-                              GoogleSignInAccount? backUser =
-                                  await googleLogin();
-                              setState(() {
-                                loadingGoogle = false;
-                              });
-                              if (backUser != null) {
-                                setState(() {
-                                  loading = true;
-                                });
-                                MyService service = getIt<MyService>();
-                                var back = await AuthenticationService
-                                    .registerWithGoogle(context, service, key,
-                                        user: backUser);
-                                print('back');
-                                setState(() {
-                                  loading = false;
-                                });
+                              if (io.Platform.isAndroid) {
+                                await googleLogin();
+                              } else {
+                                await appleLogin();
                               }
                               return;
                             }
@@ -231,31 +214,8 @@ class _LoginState extends State<Login> {
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
                             minimumSize: Size(double.maxFinite, 50)),
-                        onPressed: () async {
-                          if (loadingGoogle) return;
-
-                          setState(() {
-                            loadingGoogle = true;
-                          });
-                          GoogleSignInAccount? backUser = await googleLogin();
-                          setState(() {
-                            loadingGoogle = false;
-                          });
-
-                          if (backUser != null) {
-                            setState(() {
-                              loading = true;
-                            });
-                            MyService service = getIt<MyService>();
-                            var back =
-                                await AuthenticationService.registerWithGoogle(
-                                    context, service, key,
-                                    user: backUser);
-                            print('back');
-                            setState(() {
-                              loading = false;
-                            });
-                          }
+                        onPressed: () {
+                          googleLogin();
                         },
                         icon: Container(
                           margin: EdgeInsets.only(right: doubleWidth(2)),
@@ -266,15 +226,24 @@ class _LoginState extends State<Login> {
                               : Image.asset('assets/images/google.png'),
                         ),
                         label: Text(loadingGoogle ? '' : 'Log In with Google')),
-                    sizeh(doubleHeight(3)),
-                    SignInWithAppleButton(
-                      height: 50,
-                      style: SignInWithAppleButtonStyle.white,
-                      onPressed: () {
-                        appleLogin();
-                      },
-                    ),
-                    sizeh(doubleHeight(3)),
+                    sizeh(doubleHeight(1)),
+                    if (io.Platform.isIOS)
+                      if (loadingApple)
+                        Container(
+                          margin: EdgeInsets.only(right: doubleWidth(2)),
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(),
+                        )
+                      else
+                        SignInWithAppleButton(
+                          height: 50,
+                          style: SignInWithAppleButtonStyle.white,
+                          onPressed: () {
+                            appleLogin();
+                          },
+                        ),
+                    if (io.Platform.isIOS) sizeh(doubleHeight(2)),
                     GestureDetector(
                       onTap: () {
                         Go.replace(context, Register());
@@ -297,7 +266,7 @@ class _LoginState extends State<Login> {
                             )),
                       ),
                     ),
-                    SizedBox(height: doubleHeight(7)),
+                    SizedBox(height: doubleHeight(4)),
                     Divider(
                       color: gray,
                       height: doubleHeight(6),
@@ -318,8 +287,10 @@ class _LoginState extends State<Login> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            showDialog(
-                                context: context, builder: (_) => TeamDialog());
+                            openUrl(
+                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
+                            // showDialog(
+                            //     context: context, builder: (_) => TeamDialog());
                           },
                           child: Text('Terms of Use',
                               textAlign: TextAlign.center,
@@ -341,7 +312,8 @@ class _LoginState extends State<Login> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        showDialog(context: context, builder: (_) => Privacy());
+                        openUrl('https://footballbuzz.co/privacypolicy/');
+                        // showDialog(context: context, builder: (_) => Privacy());
                       },
                       child: Text('Privacy Policy',
                           textAlign: TextAlign.center,
@@ -351,7 +323,7 @@ class _LoginState extends State<Login> {
                               fontSize: doubleWidth(3),
                               fontStyle: FontStyle.italic)),
                     ),
-                    sizeh(doubleHeight(7)),
+                    // sizeh(doubleHeight(10)),
                   ],
                 ),
               ),
@@ -360,5 +332,60 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  googleLogin() async {
+    if (loadingGoogle) return;
+
+    setState(() {
+      loadingGoogle = true;
+    });
+    DataSignIn? backUser = await googleSign();
+    setState(() {
+      loadingGoogle = false;
+    });
+
+    if (backUser != null) {
+      setState(() {
+        loading = true;
+      });
+      MyService service = getIt<MyService>();
+      var back = await AuthenticationService.registerWithGoogle(
+          context, service, key,
+          user: backUser);
+      print('back');
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  appleLogin() async {
+    if (loadingApple) return;
+
+    setState(() {
+      loadingApple = true;
+    });
+    print('asd1');
+
+    DataSignIn? backUser = await appleSign();
+    print('asd2');
+    setState(() {
+      loadingApple = false;
+    });
+    print('asd3');
+    if (backUser != null) {
+      setState(() {
+        loading = true;
+      });
+      MyService service = getIt<MyService>();
+      var back = await AuthenticationService.registerWithGoogle(
+          context, service, key,
+          user: backUser);
+      print('back');
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

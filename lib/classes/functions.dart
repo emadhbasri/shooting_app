@@ -7,7 +7,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:provider/provider.dart';
-import '../main.dart';
 import 'dataTypes.dart';
 import '../pages/profile/profile.dart';
 import 'package:url_launcher/url_launcher.dart';

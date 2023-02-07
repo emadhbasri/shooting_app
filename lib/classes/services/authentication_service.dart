@@ -9,6 +9,7 @@ import 'package:shooting_app/pages/auth/team.dart';
 import '../../ui_items/my_toast.dart';
 import '../functions.dart';
 import '../models.dart';
+import '../states/google_sign_in_state.dart';
 import 'my_service.dart';
 import 'package:device_info_plus/device_info_plus.dart' as dip;
 import 'dart:io';
@@ -88,26 +89,22 @@ class AuthenticationService {
 
   static Future registerWithGoogle(
       BuildContext context, MyService service, GlobalKey<MyToastState> key,
-      {required GoogleSignInAccount user}) async {
-    String email = user.email;
-    int index = email.lastIndexOf('@');
-    String username = email.substring(0, index);
+      {required DataSignIn user}) async {
     Map<String, dynamic> out = {
-      "fullName": user.displayName,
-      "userName": username,
-      "profilePhoto": user.photoUrl,
+      "fullName": user.fullName,
+      "userName": user.username,
+      "profilePhoto": user.profilePhoto,
       "isOnline": true,
       'deviceId': await deviceData(),
-      "email": email,
+      "email": user.email,
     };
     out['notificationToken'] = await messaging.getToken();
-    print('out $out');
+    print('registerWithGoogleOut $out');
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/ExternalLogin', out, jsonType: true);
     print('back ${back}');
     if (back['status'] == false) {
-      if(back['data']!=false)
-        myToast(key, back['error']);
+      if (back['data'] != false) myToast(key, back['error']);
       return false;
     }
     if (back['status'] &&
@@ -123,25 +120,23 @@ class AuthenticationService {
         back['data']['data'].containsKey('id') &&
         back['data']['data'].containsKey('applicationUserId') &&
         back['data']['data'].containsKey('teamId')) {
-
       await service.setToken(
-        refresh: back['data']['data']['refreshToken'],
-        access: back['data']['data']['accessToken']);
-MainState state = getIt<MainState>();
-DataPersonalInformation pif =
-        DataPersonalInformation.fromJson(back['data']['data']);
-    state.userId = pif.id;
-    state.userName = pif.userName;
-    await setString('userid', pif.id);
-    await setString('username', pif.userName);
-    await setString('applicationUserId', pif.applicationUserId);
-
+          refresh: back['data']['data']['refreshToken'],
+          access: back['data']['data']['accessToken']);
+      MainState state = getIt<MainState>();
+      DataPersonalInformation pif =
+          DataPersonalInformation.fromJson(back['data']['data']);
+      state.userId = pif.id;
+      state.userName = pif.userName;
+      await setString('userid', pif.id);
+      await setString('username', pif.userName);
+      await setString('applicationUserId', pif.applicationUserId);
 
       DataRegisterGoogleRespone googleData = DataRegisterGoogleRespone(
           refreshToken: back['data']['data']['refreshToken'],
           accessToken: back['data']['data']['accessToken'],
           userid: back['data']['data']['id'],
-          username: username,
+          username: user.username,
           applicationUserId: back['data']['data']['applicationUserId'],
           teamId: back['data']['data']['teamId']);
       if (googleData.teamId != null) {

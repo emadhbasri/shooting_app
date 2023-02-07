@@ -53,32 +53,36 @@ class _AuthState extends State<Auth> {
                     sizeh(doubleHeight(4)),
                     Container(
                       width: max,
-                      margin: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                       child: Text('Feel the buzz of the beautiful game',
                           textAlign: TextAlign.left,
-                          style: TextStyle(color: white, fontSize: doubleWidth(5))),
+                          style: TextStyle(
+                              color: white, fontSize: doubleWidth(5))),
                     ),
                     sizeh(doubleHeight(12)),
                     Container(
                       width: max,
                       height: doubleHeight(8),
-                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                       child: Container(
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           onPressed: () {
                             Go.push(context, Register());
                           },
                           style: ButtonStyle(
-                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStatePropertyAll(mainBlue)
-                          ),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(mainBlue)),
                           child: Text(
                             'Sign Up',
-                            style:
-                                TextStyle(fontSize: doubleWidth(5), color: white),
+                            style: TextStyle(
+                                fontSize: doubleWidth(5), color: white),
                           ),
                         ),
                       ),
@@ -87,22 +91,21 @@ class _AuthState extends State<Auth> {
                     Container(
                       width: max,
                       height: doubleHeight(8),
-                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                       child: Container(
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           style: ButtonStyle(
-                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                              backgroundColor: MaterialStatePropertyAll(white)
-                          ),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(white)),
                           onPressed: () {
                             Go.push(context, Login());
                             // Go.push(context, VerifyOtp(isRegister: false, username: 'asd', password: 'asdasd'));
-
                           },
-                          
                           child: Text(
                             'Login',
                             style: TextStyle(
@@ -112,7 +115,6 @@ class _AuthState extends State<Auth> {
                       ),
                     ),
                     SizedBox(height: doubleHeight(8)),
-
                   ],
                 ),
                 Align(
@@ -139,13 +141,17 @@ class _AuthState extends State<Auth> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: (){
-                              showDialog(context: context, builder: (_)=>TeamDialog());
+                            onTap: () {openUrl(
+                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (_) => TeamDialog());
                             },
                             child: Text('Terms of Use',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: mainGreen1,fontWeight: FontWeight.bold,
+                                    color: mainGreen1,
+                                    fontWeight: FontWeight.bold,
                                     fontSize: doubleWidth(3),
                                     fontStyle: FontStyle.italic)),
                           ),
@@ -160,13 +166,15 @@ class _AuthState extends State<Auth> {
                         ],
                       ),
                       GestureDetector(
-                        onTap: (){
-                          showDialog(context: context, builder: (_)=>Privacy());
+                        onTap: () {
+                          openUrl('https://footballbuzz.co/privacypolicy/');
+                          // showDialog(context: context, builder: (_)=>Privacy());
                         },
                         child: Text('Privacy Policy',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: mainGreen1,fontWeight: FontWeight.bold,
+                                color: mainGreen1,
+                                fontWeight: FontWeight.bold,
                                 fontSize: doubleWidth(3),
                                 fontStyle: FontStyle.italic)),
                       ),
