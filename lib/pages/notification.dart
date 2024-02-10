@@ -71,7 +71,7 @@ class _MyNotificationState extends State<MyNotification> {
   Widget build(BuildContext context) {
     if (loading) return circle();
     // ThemeState theme = Provider.of<ThemeState>(context,listen: false);
-    
+
      return RefreshIndicator(
         onRefresh: () async {
           await getData(clean: true);
@@ -84,7 +84,11 @@ class _MyNotificationState extends State<MyNotification> {
             SizedBox(
                 height: doubleHeight(70),
                 width: double.maxFinite,
-                child: Center(child: Text('no notification. 🙂'))),
+                child: Center(child: Text(
+                  '${
+                    AppLocalizations.of(context)!.nonotification
+                    // 'no notification.'
+                    } 🙂'))),
           ],
         )
             : ListView(
@@ -240,6 +244,6 @@ class _MyNotificationState extends State<MyNotification> {
           padding: EdgeInsets.symmetric(
               horizontal: doubleWidth(4), vertical: doubleHeight(2)),
         ));
-  
+
     }
 }

@@ -22,7 +22,6 @@ import '../../main.dart';
 import '../../package/any_link_preview/src/helpers/link_preview.dart';
 import '../../pages/group_chat/group_chat.dart';
 export '../../classes/dataTypes.dart';
-import 'package:provider/provider.dart';
 
 import '../../pages/profile/profile.dart';
 String? hasUrl(String text){
@@ -56,7 +55,7 @@ Widget convertHashtag(BuildContext context, String text,Function onTapTag) {
         case TextType.text:
           return GestureDetector(
               onLongPress: () {
-                copyText(e.text);
+                copyText(e.text,context);
               },
               child: Text(e.text, style: TextStyle(fontWeight: FontWeight.bold)));
         case TextType.link:
@@ -101,7 +100,7 @@ Widget convertHashtag(BuildContext context, String text,Function onTapTag) {
         case TextType.user:
           return GestureDetector(
               onLongPress: () {
-                copyText(text);
+                copyText(text,context);
               },
               onTap: () {
                 Go.pushSlideAnim(context, ProfileBuilder(username: e.text));

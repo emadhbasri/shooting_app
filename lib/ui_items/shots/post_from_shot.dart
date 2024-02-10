@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shooting_app/classes/services/my_service.dart';
 import 'package:shooting_app/pages/group_chat/group_chat.dart';
@@ -37,53 +36,6 @@ class PostFromShot extends StatefulWidget {
 }
 
 class _PostFromShotState extends State<PostFromShot> {
-  // Widget _convertHashtag(context, String text) {
-  //   List<String> split = text.split(' ');
-  //   return Wrap(
-  //     alignment: WrapAlignment.start,
-  //     crossAxisAlignment: WrapCrossAlignment.start,
-  //     runAlignment: WrapAlignment.start,
-  //     spacing: 3,
-  //     children: split.map((e) {
-  //       if (e.length == 0) return Text('');
-  //       // if (e[0] == '#') {
-  //       //   return GestureDetector(
-  //       //     onLongPress: (){
-  //       //       copyText(text);
-  //       //     },
-  //       //       onTap: () {
-  //       //         widget.onTapTag(context, e, false);
-  //       //       },
-  //       //       child: Text(e, style: TextStyle(color: mainBlue)));
-  //       // } else
-  //       if (e[0] == '@') {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             onTap: () {
-  //               widget.onTapTag(context, e, true);
-  //             },
-  //             child: Text(e, style: TextStyle(color: mainBlue)));
-  //       } else if (e.startsWith('http')) {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             onTap: () {
-  //               openUrl(e);
-  //             },
-  //             child: Text(e, style: TextStyle(color: mainBlue)));
-  //       } else {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             child: Text(e, style: TextStyle(color: black)));
-  //       }
-  //     }).toList(),
-  //   );
-  // }
   Widget _convertHashtag(BuildContext context, String text, {double? fontSize}) {
     if (!text.contains('@') &&
         !text.contains('http://') &&
@@ -94,127 +46,6 @@ class _PostFromShotState extends State<PostFromShot> {
         style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
       );
 
-    ///
-    // List<String> split = text.split(' ');
-    //
-    // List<Widget> out = [];
-    // split.forEach((e) {
-    //   if (e.trim().contains('\n')) {
-    //     List<String> split1 = e.split('\n');
-    //     if (split1.isNotEmpty)
-    //       split1.forEach((String f) {
-    //         print('ff: $f ${f.length}');
-    //         if (f.length == 0) {
-    //           out.add(Text(''));
-    //         } else {
-    //           if (f[0] == '@') {
-    //             out.add(GestureDetector(
-    //                 onLongPress: () {
-    //                   copyText(text);
-    //                 },
-    //                 onTap: () {
-    //                   widget.onTapTag(context, f, true);
-    //                 },
-    //                 child: Text(f, style: TextStyle(color: mainBlue))));
-    //           } else if (f.contains('http://') || f.contains('https://')) {
-    //             out.add(SizedBox(
-    //               width: double.maxFinite,
-    //               // height: 100,
-    //               child: AnyLinkPreview(
-    //                 doIt: () {},
-    //                 key: UniqueKey(),
-    //                 link: f.trim(),
-    //                 displayDirection: UIDirection.uiDirectionHorizontal,
-    //                 cache: const Duration(seconds: 1),
-    //                 backgroundColor: Colors.white,
-    //                 boxShadow: [],
-    //                 urlLaunchMode: LaunchMode.platformDefault,
-    //                 errorWidget: Container(
-    //                   color: Colors.grey[300],
-    //                   child: const Text('Oops!'),
-    //                 ),
-    //                 // errorImage: _errorImage,
-    //               ),
-    //             ));
-    //             //
-    //             // return GestureDetector(
-    //             //     onLongPress: () {
-    //             //       copyText(text);
-    //             //     },
-    //             //     onTap: () {
-    //             //       openUrl(e);
-    //             //     },
-    //             //     child: Text(e, style: TextStyle(color: mainBlue)));
-    //           } else {
-    //             out.add(GestureDetector(
-    //                 onLongPress: () {
-    //                   copyText(text);
-    //                 },
-    //                 child: Text(f, style: TextStyle(color: black))));
-    //           }
-    //         }
-    //       });
-    //   } else {
-    //     if (e.length == 0) {
-    //       out.add(Text(''));
-    //     } else {
-    //       if (e[0] == '@') {
-    //         out.add(GestureDetector(
-    //             onLongPress: () {
-    //               copyText(text);
-    //             },
-    //             onTap: () {
-    //               widget.onTapTag(context, e, true);
-    //             },
-    //             child: Text(e, style: TextStyle(color: mainBlue))));
-    //       } else if (e.contains('http://') || e.contains('https://')) {
-    //         out.add(SizedBox(
-    //           width: double.maxFinite,
-    //           // height: 100,
-    //           child: AnyLinkPreview(
-    //             doIt: () {},
-    //             key: UniqueKey(),
-    //             link: e.trim(),
-    //             displayDirection: UIDirection.uiDirectionHorizontal,
-    //             cache: const Duration(seconds: 1),
-    //             backgroundColor: Colors.white,
-    //             boxShadow: [],
-    //             urlLaunchMode: LaunchMode.platformDefault,
-    //             errorWidget: Container(
-    //               color: Colors.grey[300],
-    //               child: const Text('Oops!'),
-    //             ),
-    //             // errorImage: _errorImage,
-    //           ),
-    //         ));
-    //         //
-    //         // return GestureDetector(
-    //         //     onLongPress: () {
-    //         //       copyText(text);
-    //         //     },
-    //         //     onTap: () {
-    //         //       openUrl(e);
-    //         //     },
-    //         //     child: Text(e, style: TextStyle(color: mainBlue)));
-    //       } else {
-    //         out.add(GestureDetector(
-    //             onLongPress: () {
-    //               copyText(text);
-    //             },
-    //             child: Text(e, style: TextStyle(color: black))));
-    //       }
-    //     }
-    //   }
-    // });
-    //
-    // return Wrap(
-    //   alignment: WrapAlignment.start,
-    //   crossAxisAlignment: WrapCrossAlignment.start,
-    //   runAlignment: WrapAlignment.start,
-    //   spacing: 3,
-    //   runSpacing: 3,
-    //   children: out,
-    // );
     return Wrap(
       alignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
@@ -222,12 +53,11 @@ class _PostFromShotState extends State<PostFromShot> {
       spacing: 3,
       runSpacing: 3,
       children: makeText(text).map((e) {
-        // return Text(e.text);
         switch (e.type) {
           case TextType.text:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(e.text);
+                  copyText(e.text, context);
                 },
                 child: Text(e.text,
                     style: TextStyle(
@@ -248,12 +78,15 @@ class _PostFromShotState extends State<PostFromShot> {
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
                 errorWidget: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     openUrl(e.text.trim());
                   },
-                  child: Text(e.text.trim(),style: TextStyle(
-                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                  ),),
+                  child: Text(
+                    e.text.trim(),
+                    style: TextStyle(
+                      color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                    ),
+                  ),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -261,31 +94,27 @@ class _PostFromShotState extends State<PostFromShot> {
           case TextType.groupLink:
             return GestureDetector(
                 onTap: () async {
-                  String chatRoomId =
-                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
-                  DataChatRoom? back = await ChatService.joinGroupChat(
-                      getIt<MyService>(),
-                      chatRoomId: chatRoomId,
-                      userId: getIt<MainState>().userId);
-                  if (back != null)
-                    Go.pushSlideAnim(context, GroupChatBuilder(chatRoom: back));
+                  String chatRoomId = e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
+                  if (back != null) Go.pushSlideAnim(context, GroupChatBuilder(chatRoom: back));
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(e.text);
+                  copyText(e.text, context);
                 },
                 onTap: () {
                   widget.onTapTag(context, e.text, true);
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold)));
           default:
@@ -306,8 +135,7 @@ class _PostFromShotState extends State<PostFromShot> {
   }
 
   init() async {
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload')) {
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload')) {
       controller = VideoPlayerController.network(post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
@@ -320,8 +148,7 @@ class _PostFromShotState extends State<PostFromShot> {
   @override
   void dispose() {
     super.dispose();
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload'))
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -336,18 +163,14 @@ class _PostFromShotState extends State<PostFromShot> {
       // height: doubleHeight(post.videoImage!=null || post.image!=null ?35:20),
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
-        decoration:
-            BoxDecoration(
-
-                border: Border(bottom: BorderSide(color: grayCall))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
               onTap: () {
                 if (person != null)
-                  Go.pushSlideAnim(
-                      context, ProfileBuilder(username: person!.userName));
+                  Go.pushSlideAnim(context, ProfileBuilder(username: person!.userName));
               },
               contentPadding: EdgeInsets.zero,
               dense: true,
@@ -365,8 +188,7 @@ class _PostFromShotState extends State<PostFromShot> {
                           height: doubleHeight(5),
                           child: Builder(
                             builder: (context) {
-                              if (person != null &&
-                                  person!.profilePhoto != null) {
+                              if (person != null && person!.profilePhoto != null) {
                                 return imageNetwork(
                                   person!.profilePhoto!,
                                   fit: BoxFit.fill,
@@ -394,8 +216,7 @@ class _PostFromShotState extends State<PostFromShot> {
                                     border: Border.all(color: white, width: 2),
                                     borderRadius: BorderRadius.circular(100),
                                     image: DecorationImage(
-                                      image: networkImage(
-                                          person!.team!.team_badge!),
+                                      image: networkImage(person!.team!.team_badge!),
                                     )),
                               );
                             }
@@ -414,20 +235,6 @@ class _PostFromShotState extends State<PostFromShot> {
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-
-              // subtitle: Builder(builder: (context) {
-              //   if (person != null)
-              //     return Text('@${person!.userName}',
-              //         style: TextStyle(
-              //             color: grayCall,
-              //             fontWeight: FontWeight.bold,
-              //             fontSize: doubleWidth(2.5)));
-              //   return Text('',
-              //       style: TextStyle(
-              //           color: grayCall,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: doubleWidth(2.5)));
-              // }),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -439,12 +246,17 @@ class _PostFromShotState extends State<PostFromShot> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataPost? back = await Go.pushSlideAnimSheet(
-                          context, MyBottomSheet(post));
+                      dynamic back = await Go.pushSlideAnimSheet(context, MyBottomSheet(post));
                       if (back != null) {
-                        setState(() {
-                          post = back;
-                        });
+                        if (back is DataPost) {
+                          setState(() {
+                            post = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            post.details = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -453,32 +265,30 @@ class _PostFromShotState extends State<PostFromShot> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
                 ],
               ),
             ),
-            if(post.details!=null && post.details!.trim()!='')
-            ListTile(
-              onTap: widget.canTouch
-                  ? () {
-                Go.pushSlideAnim(
-                    context,
-                    Shot(
-                      post: post,
-                    ));
-              }
-                  : null,
-              dense: true,
-              minVerticalPadding: 0,
-              contentPadding: EdgeInsets.zero,
-              title: _convertHashtag(context, post.details ?? '',
-                  fontSize: widget.canTouch == false ? 19 : null),
-            ),
-
+            if (post.details != null && post.details!.trim() != '')
+              ListTile(
+                onTap: widget.canTouch
+                    ? () {
+                        Go.pushSlideAnim(
+                            context,
+                            Shot(
+                              post: post,
+                            ));
+                      }
+                    : null,
+                dense: true,
+                minVerticalPadding: 0,
+                contentPadding: EdgeInsets.zero,
+                title: _convertHashtag(context, post.details ?? '',
+                    fontSize: widget.canTouch == false ? 19 : null),
+              ),
             sizeh(doubleHeight(1)),
             if (post.mediaTypes.isNotEmpty)
               ClipRRect(
@@ -487,8 +297,6 @@ class _PostFromShotState extends State<PostFromShot> {
                   width: double.maxFinite,
                   height: doubleWidth(70),
                   child: Builder(builder: (context) {
-
-
                     if (post.mediaTypes.isNotEmpty &&
                         post.mediaTypes.first.media.contains('video/upload')) {
                       if (loadingVideo) {
@@ -498,12 +306,10 @@ class _PostFromShotState extends State<PostFromShot> {
                             children: [
                               const CircularProgressIndicator(),
                               SizedBox(height: doubleHeight(1)),
-                              const Text(
-                                'loading ...',
+                              Text(
+                                AppLocalizations.of(context)!.loading,
                                 textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: mainBlue, fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
@@ -516,33 +322,22 @@ class _PostFromShotState extends State<PostFromShot> {
                               aspectRatio: 2));
                     } else {
                       return PageView.builder(
-
-                        controller: PageController(
-                            initialPage: 0, viewportFraction: 1),
+                        controller: PageController(initialPage: 0, viewportFraction: 1),
                         physics: BouncingScrollPhysics(),
                         itemCount: post.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
-                          padding:EdgeInsets.only(
-                              right: post.mediaTypes.length - 1 != index
-                                  ? doubleWidth(2)
-                                  : 0),
+                          padding: EdgeInsets.only(
+                              right: post.mediaTypes.length - 1 != index ? doubleWidth(2) : 0),
                           child: GestureDetector(
                             onTap: () {
-                              Go.push(
-                                  context,
-                                  Gal(
-                                      images: post.mediaTypes
-                                          .map((e) => e.media)
-                                          .toList()));
+                              Go.push(context,
+                                  Gal(images: post.mediaTypes.map((e) => e.media).toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Container(
-                                  constraints: BoxConstraints(
-
-                                    maxWidth: 500,
-                                    minWidth: screenSize.width
-                                  ),
+                                  constraints:
+                                      BoxConstraints(maxWidth: 500, minWidth: screenSize.width),
                                   // width: screenSize.width,
                                   child: imageNetwork(
                                     post.mediaTypes[index].media,
@@ -576,18 +371,17 @@ class _PostFromShotState extends State<PostFromShot> {
                               }
                             : null,
                         child: SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/comment.svg',
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? greenCall
-                                  : mainBlue,
-                              width: doubleWidth(7),
-                              height: doubleWidth(7),
-                            ),
-                          )),
+                            width: doubleWidth(7),
+                            height: doubleWidth(7),
+                            child: Center(
+                              child: SvgPicture.asset(
+                                'assets/icons/comment.svg',
+                                color:
+                                    context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                                width: doubleWidth(7),
+                                height: doubleWidth(7),
+                              ),
+                            )),
                         // SizedBox(
                         //     width: doubleWidth(5),
                         //     height: doubleWidth(5),
@@ -595,92 +389,81 @@ class _PostFromShotState extends State<PostFromShot> {
                         //         color: greenCall)),
                       ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postComments.length),style: TextStyle(
-                          color: context.watch<ThemeState>().isDarkMode?white:black
-                      ),)
+                      Text(
+                        makeCount(post.postComments.length),
+                        style: TextStyle(
+                            color: context.watch<ThemeState>().isDarkMode ? white : black),
+                      )
                     ],
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: <Widget>[
-                  //     SizedBox(
-                  //         width: doubleWidth(5),
-                  //         height: doubleWidth(5),
-                  //         child: Image.asset('assets/images/heart.png')),
-                  //     sizew(doubleWidth(1)),
-                  //     Text('${post.likeCount}k')
-                  //   ],
-                  // ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
 
-                          if (!post.postLikedBythisUser) {
-                            String? back = await ShotsService.shotLike(service,
-                                postId: post.id);
-                            if (back != null)
-                              setState(() {
-                                post.postLikes.add(DataPostLike(back, ''));
-                                post.postLikedBythisUser = true;
-                                post.postLikeCount++;
-                              });
-                          } else {
-                            if (post.postLikes.isNotEmpty) {
-                              bool back = await ShotsService.deleteShotLike(
-                                  service,
-                                  shotId: post.postLikes.first.id);
-                              if (back)
+                            if (!post.postLikedBythisUser) {
+                              String? back = await ShotsService.shotLike(service, postId: post.id);
+                              if (back != null)
                                 setState(() {
-                                  post.postLikes.clear();
-                                  post.postLikedBythisUser = false;
-                                  post.postLikeCount--;
+                                  post.postLikes.add(DataPostLike(back, ''));
+                                  post.postLikedBythisUser = true;
+                                  post.postLikeCount++;
                                 });
+                            } else {
+                              if (post.postLikes.isNotEmpty) {
+                                bool back = await ShotsService.deleteShotLike(service,
+                                    shotId: post.postLikes.first.id);
+                                if (back)
+                                  setState(() {
+                                    post.postLikes.clear();
+                                    post.postLikedBythisUser = false;
+                                    post.postLikeCount--;
+                                  });
+                              }
                             }
-                          }
-                        },
-                        // child: Icon(
-                        //     post.postLikedBythisUser
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color: post.postLikedBythisUser
-                        //         ? greenCall
-                        //         : null),
-                        child: 
-                        SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/like.svg',
-                              color: post.postLikes.isNotEmpty?greenCall:null,
+                          },
+                          // child: Icon(
+                          //     post.postLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: post.postLikedBythisUser
+                          //         ? greenCall
+                          //         : null),
+                          child: SizedBox(
                               width: doubleWidth(7),
                               height: doubleWidth(7),
-                            ),
-                          ))
-                        // Icon(
-                        //     post.postLikes.isNotEmpty
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color:
-                        //         post.postLikes.isNotEmpty ? greenCall :
-                        //           context.watch<ThemeState>().isDarkMode?white:black),
-                      ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: post.postLikes.isNotEmpty ? greenCall : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          // Icon(
+                          //     post.postLikes.isNotEmpty
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color:
+                          //         post.postLikes.isNotEmpty ? greenCall :
+                          //           context.watch<ThemeState>().isDarkMode?white:black),
+                          ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount),style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?white:black
-                      ),)
+                      Text(
+                        makeCount(post.postLikeCount),
+                        style: TextStyle(
+                            color: context.watch<ThemeState>().isDarkMode ? white : black),
+                      )
                     ],
                   ),
                   if (widget.canTouch &&
-                      post.person!.personalInformationId ==
-                          getIt<MainState>().userId)
+                      post.person!.personalInformationId == getIt<MainState>().userId)
                     GestureDetector(
                       onTap: () async {
                         bool? alert = await MyAlertDialog(context,
-                            content: 'Do you want to delete the shot?');
+                            content: AppLocalizations.of(context)!.do_you_want_to_delete_the_shot);
                         // showDialog(
                         //   context: context,
                         //   barrierDismissible: true,
@@ -690,8 +473,7 @@ class _PostFromShotState extends State<PostFromShot> {
                         // );
                         if (alert != null && alert) {
                           MyService service = getIt<MyService>();
-                          bool back = await ShotsService.deleteShot(service,
-                              shotId: post.id);
+                          bool back = await ShotsService.deleteShot(service, shotId: post.id);
                           if (back) {
                             widget.delete();
                           }
@@ -759,11 +541,9 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
           case TextType.text:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(e.text);
+                  copyText(e.text, context);
                 },
-                child: Text(e.text,
-                    style:
-                        TextStyle( fontWeight: FontWeight.bold)));
+                child: Text(e.text, style: TextStyle(fontWeight: FontWeight.bold)));
           case TextType.link:
             return SizedBox(
               width: double.maxFinite,
@@ -778,12 +558,15 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
                 errorWidget: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     openUrl(e.text.trim());
                   },
-                  child: Text(e.text.trim(),style: TextStyle(
-                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                  ),),
+                  child: Text(
+                    e.text.trim(),
+                    style: TextStyle(
+                      color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                    ),
+                  ),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -791,12 +574,9 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
           case TextType.groupLink:
             return GestureDetector(
                 onTap: () async {
-                  String chatRoomId =
-                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
-                  DataChatRoom? back = await ChatService.joinGroupChat(
-                      getIt<MyService>(),
-                      chatRoomId: chatRoomId,
-                      userId: getIt<MainState>().userId);
+                  String chatRoomId = e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                   if (back != null) {
                     await Go.pushSlideAnim(
                         context,
@@ -807,18 +587,20 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        fontWeight: FontWeight.bold)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(text);
+                  copyText(text, context);
                 },
                 onTap: () {
                   widget.onTapTag(context, e.text, true);
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        fontWeight: FontWeight.bold)));
           default:
             return const SizedBox();
         }
@@ -837,8 +619,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
 
   late DataPost post;
   init() async {
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload')) {
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload')) {
       controller = VideoPlayerController.network(post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
@@ -850,8 +631,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
   @override
   void dispose() {
     super.dispose();
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload'))
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -864,8 +644,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
       // height: doubleHeight(post.videoImage!=null || post.image!=null ?35:20),
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
-        decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -890,9 +669,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         child: GestureDetector(
                           onTap: () {
                             Go.pushSlideAnim(
-                                context,
-                                ProfileBuilder(
-                                    username: widget.person.userName));
+                                context, ProfileBuilder(username: widget.person.userName));
                           },
                           child: Container(
                             color: white,
@@ -929,8 +706,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                                     border: Border.all(color: white, width: 2),
                                     borderRadius: BorderRadius.circular(100),
                                     image: DecorationImage(
-                                      image: networkImage(
-                                          widget.person.team!.team_badge!),
+                                      image: networkImage(widget.person.team!.team_badge!),
                                     )),
                               );
                             }
@@ -942,7 +718,6 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   ],
                 ),
               ),
-
               title: Text(
                 widget.person.userName,
                 style: TextStyle(
@@ -950,30 +725,6 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              // Builder(builder: (context) {
-              //   if (widget.person.fullName != null)
-              //     return Text(
-              //       widget.person.fullName!,
-              //       style: TextStyle(
-              //           color: black,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: doubleWidth(3.5)),
-              //     );
-              //   return Text(
-              //     '',
-              //     style: TextStyle(
-              //         color: black,
-              //         fontWeight: FontWeight.bold,
-              //         fontSize: doubleWidth(3.5)),
-              //   );
-              // }),
-              // subtitle: Builder(builder: (context) {
-              //   return Text('@${widget.person.userName}',
-              //       style: TextStyle(
-              //           color: grayCall,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: doubleWidth(2.5)));
-              // }),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -985,12 +736,17 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataPost? back = await Go.pushSlideAnimSheet(
-                          context, MyBottomSheet(post));
+                      dynamic back = await Go.pushSlideAnimSheet(context, MyBottomSheet(post));
                       if (back != null) {
-                        setState(() {
-                          post = back;
-                        });
+                        if (back is DataPost) {
+                          setState(() {
+                            post = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            post.details = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -999,8 +755,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -1036,11 +791,10 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                           children: [
                             const CircularProgressIndicator(),
                             SizedBox(height: doubleHeight(1)),
-                            const Text(
-                              'loading ...',
+                            Text(
+                              AppLocalizations.of(context)!.loading,
                               textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                  color: mainBlue, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: mainBlue, fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
@@ -1048,29 +802,20 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                     }
                     return Center(
                       child: VideoItem(
-                          controller: controller,
-                          url: post.mediaTypes.first.media,
-                          aspectRatio: 2),
+                          controller: controller, url: post.mediaTypes.first.media, aspectRatio: 2),
                     );
                   } else
                     return PageView.builder(
-                      controller: PageController(
-                          initialPage: 0, viewportFraction: 0.85),
+                      controller: PageController(initialPage: 0, viewportFraction: 0.85),
                       physics: BouncingScrollPhysics(),
                       itemCount: post.mediaTypes.length,
                       itemBuilder: (_, index) => Padding(
                         padding: EdgeInsets.only(
-                            right: post.mediaTypes.length - 1 != index
-                                ? doubleHeight(2)
-                                : 0),
+                            right: post.mediaTypes.length - 1 != index ? doubleHeight(2) : 0),
                         child: GestureDetector(
                           onTap: () {
                             Go.push(
-                                context,
-                                Gal(
-                                    images: post.mediaTypes
-                                        .map((e) => e.media)
-                                        .toList()));
+                                context, Gal(images: post.mediaTypes.map((e) => e.media).toList()));
                           },
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -1104,18 +849,17 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                               ));
                         },
                         child: SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/comment.svg',
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? greenCall
-                                  : mainBlue,
-                              width: doubleWidth(7),
-                              height: doubleWidth(7),
-                            ),
-                          )),
+                            width: doubleWidth(7),
+                            height: doubleWidth(7),
+                            child: Center(
+                              child: SvgPicture.asset(
+                                'assets/icons/comment.svg',
+                                color:
+                                    context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                                width: doubleWidth(7),
+                                height: doubleWidth(7),
+                              ),
+                            )),
                         // SizedBox(
                         //     width: doubleWidth(5),
                         //     height: doubleWidth(5),
@@ -1126,68 +870,54 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                       Text(makeCount(post.postCommentCount))
                     ],
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: <Widget>[
-                  //     SizedBox(
-                  //         width: doubleWidth(5),
-                  //         height: doubleWidth(5),
-                  //         child: Image.asset('assets/images/heart.png')),
-                  //     sizew(doubleWidth(1)),
-                  //     Text('${post.likeCount}k')
-                  //   ],
-                  // ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
-                          if (!post.postLikedBythisUser) {
-                            String? back = await ShotsService.shotLike(service,
-                                postId: post.id);
-                            if (back != null)
-                              setState(() {
-                                post.postLikes.add(DataPostLike(back, ''));
-                                post.postLikedBythisUser = true;
-                                post.postLikeCount++;
-                              });
-                          } else {
-                            if (post.postLikes.isNotEmpty) {
-                              bool back = await ShotsService.deleteShotLike(
-                                  service,
-                                  shotId: post.postLikes.first.id);
-                              if (back)
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
+                            if (!post.postLikedBythisUser) {
+                              String? back = await ShotsService.shotLike(service, postId: post.id);
+                              if (back != null)
                                 setState(() {
-                                  post.postLikes.clear();
-                                  post.postLikedBythisUser = false;
-                                  post.postLikeCount--;
+                                  post.postLikes.add(DataPostLike(back, ''));
+                                  post.postLikedBythisUser = true;
+                                  post.postLikeCount++;
                                 });
+                            } else {
+                              if (post.postLikes.isNotEmpty) {
+                                bool back = await ShotsService.deleteShotLike(service,
+                                    shotId: post.postLikes.first.id);
+                                if (back)
+                                  setState(() {
+                                    post.postLikes.clear();
+                                    post.postLikedBythisUser = false;
+                                    post.postLikeCount--;
+                                  });
+                              }
                             }
-                          }
-                        },
-                        child: 
-                        SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/like.svg',
-                              color: post.postLikes.isNotEmpty?greenCall:null,
+                          },
+                          child: SizedBox(
                               width: doubleWidth(7),
                               height: doubleWidth(7),
-                            ),
-                          ))
-                        // Icon(
-                        //     post.postLikedBythisUser
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
-                      ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: post.postLikes.isNotEmpty ? greenCall : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          // Icon(
+                          //     post.postLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
+                          ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount),style: TextStyle(
-                          color: context.watch<ThemeState>().isDarkMode?white:black
-                      ))
+                      Text(makeCount(post.postLikeCount),
+                          style: TextStyle(
+                              color: context.watch<ThemeState>().isDarkMode ? white : black))
                     ],
                   ),
                   if (widget.canDelete)
@@ -1202,7 +932,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         //     ));
                         // if(backDialog!=null){
                         bool? alert = await MyAlertDialog(context,
-                            content: 'Do you want to delete the shot?');
+                            content: AppLocalizations.of(context)!.do_you_want_to_delete_the_shot);
                         // showDialog(
                         //   context: context,
                         //   barrierDismissible: true,
@@ -1212,8 +942,7 @@ class _PostFromShotProfileState extends State<PostFromShotProfile> {
                         // );
                         if (alert != null && alert) {
                           MyService service = getIt<MyService>();
-                          bool back = await ShotsService.deleteShot(service,
-                              shotId: post.id);
+                          bool back = await ShotsService.deleteShot(service, shotId: post.id);
                           if (back) {
                             widget.delete();
                           }
@@ -1260,52 +989,6 @@ class PostFromMatch extends StatefulWidget {
 }
 
 class _PostFromMatchState extends State<PostFromMatch> {
-  // Widget _convertHashtag(context, String text) {
-  //   List<String> split = text.split(' ');
-  //   return Wrap(
-  //     alignment: WrapAlignment.start,
-  //     crossAxisAlignment: WrapCrossAlignment.start,
-  //     runAlignment: WrapAlignment.start,
-  //     spacing: 3,
-  //     children: split.map((e) {
-  //       if (e.length == 0) return Text('');
-  //       // if (e[0] == '#') {
-  //       //   return GestureDetector(onLongPress: (){
-  //       //     copyText(text);
-  //       //   },
-  //       //       onTap: () {
-  //       //         widget.onTapTag(context, e, false);
-  //       //       },
-  //       //       child: Text(e, style: TextStyle(color: mainBlue)));
-  //       // } else
-  //       if (e[0] == '@') {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             onTap: () {
-  //               widget.onTapTag(context, e, true);
-  //             },
-  //             child: Text(e, style: TextStyle(color: mainBlue)));
-  //       } else if (e.startsWith('http')) {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             onTap: () {
-  //               openUrl(e);
-  //             },
-  //             child: Text(e, style: TextStyle(color: mainBlue)));
-  //       } else {
-  //         return GestureDetector(
-  //             onLongPress: () {
-  //               copyText(text);
-  //             },
-  //             child: Text(e, style: TextStyle(color: black)));
-  //       }
-  //     }).toList(),
-  //   );
-  // }
   Widget _convertHashtag(BuildContext context, String text) {
     if (!text.contains('@') &&
         !text.contains('http://') &&
@@ -1326,11 +1009,9 @@ class _PostFromMatchState extends State<PostFromMatch> {
           case TextType.text:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(e.text);
+                  copyText(e.text, context);
                 },
-                child: Text(e.text,
-                    style:
-                        TextStyle( fontWeight: FontWeight.bold)));
+                child: Text(e.text, style: TextStyle(fontWeight: FontWeight.bold)));
           case TextType.link:
             return SizedBox(
               width: double.maxFinite,
@@ -1345,12 +1026,15 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 boxShadow: [],
                 urlLaunchMode: LaunchMode.externalApplication,
                 errorWidget: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     openUrl(e.text.trim());
                   },
-                  child: Text(e.text.trim(),style: TextStyle(
-                    color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                  ),),
+                  child: Text(
+                    e.text.trim(),
+                    style: TextStyle(
+                      color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                    ),
+                  ),
                 ),
                 // errorImage: _errorImage,
               ),
@@ -1358,12 +1042,9 @@ class _PostFromMatchState extends State<PostFromMatch> {
           case TextType.groupLink:
             return GestureDetector(
                 onTap: () async {
-                  String chatRoomId =
-                      e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
-                  DataChatRoom? back = await ChatService.joinGroupChat(
-                      getIt<MyService>(),
-                      chatRoomId: chatRoomId,
-                      userId: getIt<MainState>().userId);
+                  String chatRoomId = e.text.replaceAll('https://footballbuzz.co?joinchat=', '');
+                  DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+                      chatRoomId: chatRoomId, userId: getIt<MainState>().userId);
                   if (back != null) {
                     await Go.pushSlideAnim(
                         context,
@@ -1374,18 +1055,20 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        fontWeight: FontWeight.bold)));
           case TextType.user:
             return GestureDetector(
                 onLongPress: () {
-                  copyText(text);
+                  copyText(text, context);
                 },
                 onTap: () {
                   widget.onTapTag(context, e.text, true);
                 },
                 child: Text(e.text,
                     style: TextStyle(
-                        color: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue, fontWeight: FontWeight.bold)));
+                        color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        fontWeight: FontWeight.bold)));
           default:
             return const SizedBox();
         }
@@ -1406,8 +1089,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
   }
 
   init() async {
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload')) {
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload')) {
       controller = VideoPlayerController.network(post.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
@@ -1419,8 +1101,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
   @override
   void dispose() {
     super.dispose();
-    if (post.mediaTypes.isNotEmpty &&
-        post.mediaTypes.first.media.contains('video/upload'))
+    if (post.mediaTypes.isNotEmpty && post.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -1433,8 +1114,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
       width: max,
       padding: EdgeInsets.symmetric(horizontal: doubleWidth(3)),
       child: Container(
-        decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grayCall))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -1461,8 +1141,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                         child: GestureDetector(
                           onTap: () {
                             if (person != null)
-                              Go.pushSlideAnim(context,
-                                  ProfileBuilder(username: person!.userName));
+                              Go.pushSlideAnim(context, ProfileBuilder(username: person!.userName));
                           },
                           child: Container(
                             color: white,
@@ -1470,8 +1149,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             height: doubleHeight(5),
                             child: Builder(
                               builder: (context) {
-                                if (person != null &&
-                                    person!.profilePhoto != null) {
+                                if (person != null && person!.profilePhoto != null) {
                                   return imageNetwork(
                                     person!.profilePhoto!,
                                     fit: BoxFit.fill,
@@ -1500,8 +1178,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                                     border: Border.all(color: white, width: 2),
                                     borderRadius: BorderRadius.circular(100),
                                     image: DecorationImage(
-                                      image: networkImage(
-                                          person!.team!.team_badge!),
+                                      image: networkImage(person!.team!.team_badge!),
                                     )),
                               );
                             }
@@ -1520,20 +1197,6 @@ class _PostFromMatchState extends State<PostFromMatch> {
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-
-              // subtitle: Builder(builder: (context) {
-              //   if (person != null)
-              //     return Text('@${person!.userName}',
-              //         style: TextStyle(
-              //             color: grayCall,
-              //             fontWeight: FontWeight.bold,
-              //             fontSize: doubleWidth(2.5)));
-              //   return Text('',
-              //       style: TextStyle(
-              //           color: grayCall,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: doubleWidth(2.5)));
-              // }),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -1545,12 +1208,17 @@ class _PostFromMatchState extends State<PostFromMatch> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataPost? back = await Go.pushSlideAnimSheet(
-                          context, MyBottomSheet(post));
+                      dynamic back = await Go.pushSlideAnimSheet(context, MyBottomSheet(post));
                       if (back != null) {
-                        setState(() {
-                          post = back;
-                        });
+                        if (back is DataPost) {
+                          setState(() {
+                            post = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            post.details = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -1559,8 +1227,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -1599,12 +1266,10 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             children: [
                               const CircularProgressIndicator(),
                               SizedBox(height: doubleHeight(1)),
-                              const Text(
-                                'loading ...',
+                              Text(
+                                AppLocalizations.of(context)!.loading,
                                 textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: mainBlue, fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
@@ -1618,23 +1283,16 @@ class _PostFromMatchState extends State<PostFromMatch> {
                       );
                     } else
                       return PageView.builder(
-                        controller: PageController(
-                            initialPage: 0, viewportFraction: 0.85),
+                        controller: PageController(initialPage: 0, viewportFraction: 0.85),
                         physics: BouncingScrollPhysics(),
                         itemCount: post.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
                           padding: EdgeInsets.only(
-                              right: post.mediaTypes.length - 1 != index
-                                  ? doubleHeight(2)
-                                  : 0),
+                              right: post.mediaTypes.length - 1 != index ? doubleHeight(2) : 0),
                           child: GestureDetector(
                             onTap: () {
-                              Go.push(
-                                  context,
-                                  Gal(
-                                      images: post.mediaTypes
-                                          .map((e) => e.media)
-                                          .toList()));
+                              Go.push(context,
+                                  Gal(images: post.mediaTypes.map((e) => e.media).toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
@@ -1663,89 +1321,68 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           child: Center(
                             child: SvgPicture.asset(
                               'assets/icons/comment.svg',
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? greenCall
-                                  : mainBlue,
+                              color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                               width: doubleWidth(7),
                               height: doubleWidth(7),
                             ),
                           )),
-                      // SizedBox(
-                      //     width: doubleWidth(5),
-                      //     height: doubleWidth(5),
-                      //     child: Image.asset('assets/images/chat(2).png',
-                      //         color: greenCall)),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postComments.length),style: TextStyle(
-                          color: context.watch<ThemeState>().isDarkMode?white:black
-                      ))
+                      Text(makeCount(post.postComments.length),
+                          style: TextStyle(
+                              color: context.watch<ThemeState>().isDarkMode ? white : black))
                     ],
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: <Widget>[
-                  //     SizedBox(
-                  //         width: doubleWidth(5),
-                  //         height: doubleWidth(5),
-                  //         child: Image.asset('assets/images/heart.png')),
-                  //     sizew(doubleWidth(1)),
-                  //     Text('${post.likeCount}k')
-                  //   ],
-                  // ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
-                          if (!post.postLikedBythisUser) {
-                            String? back = await ShotsService.shotLike(service,
-                                postId: post.id);
-                            if (back != null)
-                              setState(() {
-                                post.postLikes.add(DataPostLike(back, ''));
-                                post.postLikedBythisUser = true;
-                                post.postLikeCount++;
-                              });
-                          } else {
-                            if (post.postLikes.isNotEmpty) {
-                              bool back = await ShotsService.deleteShotLike(
-                                  service,
-                                  shotId: post.postLikes.first.id);
-                              if (back)
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
+                            if (!post.postLikedBythisUser) {
+                              String? back = await ShotsService.shotLike(service, postId: post.id);
+                              if (back != null)
                                 setState(() {
-                                  post.postLikes.clear();
-                                  post.postLikedBythisUser = false;
-                                  post.postLikeCount--;
+                                  post.postLikes.add(DataPostLike(back, ''));
+                                  post.postLikedBythisUser = true;
+                                  post.postLikeCount++;
                                 });
+                            } else {
+                              if (post.postLikes.isNotEmpty) {
+                                bool back = await ShotsService.deleteShotLike(service,
+                                    shotId: post.postLikes.first.id);
+                                if (back)
+                                  setState(() {
+                                    post.postLikes.clear();
+                                    post.postLikedBythisUser = false;
+                                    post.postLikeCount--;
+                                  });
+                              }
                             }
-                          }
-                        },
-                        child:SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/like.svg',
-                              color: post.postLikes.isNotEmpty?greenCall:null,
+                          },
+                          child: SizedBox(
                               width: doubleWidth(7),
                               height: doubleWidth(7),
-                            ),
-                          ))
-                        //  Icon(
-                        //     post.postLikedBythisUser
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
-                      ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: post.postLikes.isNotEmpty ? greenCall : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          //  Icon(
+                          //     post.postLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: post.postLikedBythisUser ? greenCall : context.watch<ThemeState>().isDarkMode?white:black),
+                          ),
                       sizew(doubleWidth(1)),
-                      Text(makeCount(post.postLikeCount),style: TextStyle(
-                          color: context.watch<ThemeState>().isDarkMode?white:black
-                      ))
+                      Text(makeCount(post.postLikeCount),
+                          style: TextStyle(
+                              color: context.watch<ThemeState>().isDarkMode ? white : black))
                     ],
                   ),
-                  if (post.person!.personalInformationId ==
-                      getIt<MainState>().userId)
+                  if (post.person!.personalInformationId == getIt<MainState>().userId)
                     GestureDetector(
                       onTap: () async {
                         // DataPost? backDialog = await showDialog(
@@ -1756,7 +1393,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                         //     ));
                         // if(backDialog!=null){
                         bool? alert = await MyAlertDialog(context,
-                            content: 'Do you want to delete the shot?');
+                            content: AppLocalizations.of(context)!.do_you_want_to_delete_the_shot);
                         // showDialog(
                         //   context: context,
                         //   barrierDismissible: true,
@@ -1766,8 +1403,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                         // );
                         if (alert != null && alert) {
                           MyService service = getIt<MyService>();
-                          bool back = await ShotsService.deleteShot(service,
-                              shotId: post.id);
+                          bool back = await ShotsService.deleteShot(service, shotId: post.id);
                           if (back) {
                             widget.delete();
                           }
@@ -1798,8 +1434,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                           comment: e,
                           delete: () {
                             int index = post.postComments.indexOf(e);
-                            List<DataPostComment> temp =
-                                post.postComments.toList();
+                            List<DataPostComment> temp = post.postComments.toList();
                             temp.removeAt(index);
                             setState(() {
                               post.postComments = temp.toList();
@@ -1812,18 +1447,15 @@ class _PostFromMatchState extends State<PostFromMatch> {
                 child: TextField(
                   controller: controllerT,
                   decoration: InputDecoration(
-                      hintStyle:
-                          TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
+                      hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            print(
-                                'controllerT.value.text ${controllerT.value.text}');
-                            DataPostComment? back =
-                                await ShotsService.shotsComment(
-                                    getIt<MyService>(),
-                                    stadia: false,
-                                    postId: post.id,
-                                    comment: controllerT.value.text);
+                            print('controllerT.value.text ${controllerT.value.text}');
+                            DataPostComment? back = await ShotsService.shotsComment(
+                                getIt<MyService>(),
+                                stadia: false,
+                                postId: post.id,
+                                comment: controllerT.value.text);
                             if (back != null) {
                               setState(() {
                                 post.postComments.add(back);
@@ -1835,7 +1467,7 @@ class _PostFromMatchState extends State<PostFromMatch> {
                             Icons.send,
                             color: mainBlue,
                           )),
-                      hintText: 'Write your comment...',
+                      hintText: AppLocalizations.of(context)!.write_your_comment,
                       border: InputBorder.none),
                 ),
               )),

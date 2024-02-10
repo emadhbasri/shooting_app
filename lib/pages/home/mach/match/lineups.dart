@@ -14,13 +14,13 @@ class LineUps extends StatelessWidget {
     if(state.selectedMatch.isLive==0)
     return SizedBox.expand(
       child: Center(
-        child: Text('Match is not started'),
+        child: Text(AppLocalizations.of(context)!.match_is_not_started),
       ),
     );
     if(state.selectedMatch.homeLineUps==null){
       return SizedBox.expand(
         child: Center(
-          child: Text('no Lineups'),
+          child: Text(AppLocalizations.of(context)!.no_lineups),
         ),
       );
     }
@@ -83,30 +83,7 @@ class LineUps extends StatelessWidget {
                     ))
                         .toList(),
 
-                    // SizedBox(height: doubleHeight(2)),
-                    // ...state.selectedMatch.homeLineUps!.subPlayers
-                    //     .map((e) => Column(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     Row(
-                    //       textDirection: TextDirection.ltr,
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         Text(e.number
-                    //             .toString()),
-                    //         SizedBox(
-                    //           width: doubleWidth(4),
-                    //         ),
-                    //         Text(e.name),
-                    //       ],
-                    //     ),
-                    //     if (e != state.selectedMatch.homeLineUps!.players.last)
-                    //       SizedBox(
-                    //         height: doubleHeight(2),
-                    //       ),
-                    //   ],
-                    // ))
-                    //     .toList(),
+
                   ],
                 ),
               ),
@@ -145,85 +122,14 @@ class LineUps extends StatelessWidget {
                     ))
                         .toList(),
 
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //       margin: EdgeInsets.symmetric(vertical: doubleHeight(2)),
-                    //       width: double.maxFinite,
-                    //       height: 1,
-                    //       decoration: DottedDecoration(
-                    //           shape: Shape.line, linePosition: LinePosition.bottom),
-                    //     ),
-                    //   ],
-                    // ),
-                    // ...state.selectedMatch.awayLineUps!.subPlayers
-                    //     .map((e) => Column(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     Row(
-                    //       textDirection: TextDirection.rtl,
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         Text(e.number
-                    //             .toString()),
-                    //         SizedBox(
-                    //           width: doubleWidth(4),
-                    //         ),
-                    //         Text(e.name),
-                    //       ],
-                    //     ),
-                    //     if (e != state.selectedMatch.awayLineUps!.players.last)
-                    //       SizedBox(
-                    //         height: doubleHeight(2),
-                    //       ),
-                    //   ],
-                    // ))
-                    //     .toList(),
+
                   ],
                 ),
               ),
             ),
           ],
         ),
-        // ...List.generate(
-        //     state.teamALineups.players.length,
-        //     (index) => Column(
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: [
-        //             SizedBox(
-        //               height: doubleHeight(2),
-        //             ),
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //               children: [
-        //                 Row(
-        //                   textDirection: TextDirection.ltr,
-        //                   mainAxisSize: MainAxisSize.min,
-        //                   children: [
-        //                     Text(state.teamALineups.players[index].number
-        //                         .toString()),
-        //                     SizedBox(
-        //                       width: doubleWidth(4),
-        //                     ),
-        //                     Text(state.teamALineups.players[index].name),
-        //                   ],
-        //                 ),
-        //                 Row(
-        //                   textDirection: TextDirection.rtl,
-        //                   mainAxisSize: MainAxisSize.min,
-        //                   children: [
-        //                     Text(state.teamALineups.players[index].number
-        //                         .toString()),
-        //                     SizedBox(
-        //                       width: doubleWidth(4),
-        //                     ),
-        //                     Text(state.teamALineups.players[index].name),
-        //                   ],
-        //                 ),
-        //               ],
-        //             ),
-        //           ],
-        //         )),
+
       ],
     );
   }

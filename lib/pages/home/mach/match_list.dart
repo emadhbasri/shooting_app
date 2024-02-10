@@ -22,7 +22,7 @@ class _MatchListState extends State<MatchList> {
     super.initState();
     MatchState mainState = Provider.of(context, listen: false);
     if(mainState.loadCountry)
-      mainState.init();
+      mainState.init(context);
 
   }
 
@@ -120,7 +120,7 @@ class _MatchListState extends State<MatchList> {
                             e,
                             style: TextStyle(
 
-                              color: 
+                              color:
                               themeState.isDarkMode?
                               state.selectedDate == e? null
                                     : Colors.grey
@@ -128,7 +128,7 @@ class _MatchListState extends State<MatchList> {
 
                               :state.selectedDate == e? Colors.black
                                     : Colors.grey
-                              
+
                               ,
                                 // color: state.selectedDate == e
                                 //     ? Colors.black
@@ -142,14 +142,8 @@ class _MatchListState extends State<MatchList> {
                       height: doubleHeight(2),
                     ),
 
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text('Premier League'),
-                    //     Icon(Icons.arrow_forward_ios)
-                    //   ],
-                    // ),
-                    
+
+
                     if(!state.loadMatchs)
                       if(state.leagues.isNotEmpty)
                         Column(
@@ -164,37 +158,10 @@ class _MatchListState extends State<MatchList> {
                           )
                               .toList(),
                         )else
-                          Center(child: Text('No Matches For Today'),)
+                          Center(child: Text(AppLocalizations.of(context)!.no_matches_for_today),)
                     else simpleCircle(),
 
-                    // SizedBox(height: doubleHeight(2)),
-                    // ...state.premierLeagueListMatch.map((e) =>
-                    //   Column(
-                    //     children: [
-                    //       MatchItem(match: e),
-                    //       if(e!=state.premierLeagueListMatch.last)
-                    //         SizedBox(height: doubleHeight(1)),
-                    //     ],
-                    //   )
-                    // ).toList(),
-                    // SizedBox(height: doubleHeight(2)),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text('FA Cup'),
-                    //     Icon(Icons.arrow_forward_ios)
-                    //   ],
-                    // ),
-                    // SizedBox(height: doubleHeight(2)),
-                    // ...state.FACupListMatch.map((e) =>
-                    //     Column(
-                    //       children: [
-                    //         MatchItem(match: e),
-                    //         if(e!=state.FACupListMatch.last)
-                    //           SizedBox(height: doubleHeight(1)),
-                    //       ],
-                    //     )
-                    // ).toList(),
+
                   ],
                 ),
               ),
@@ -376,16 +343,15 @@ class MatchItem1 extends StatelessWidget {
               children: [
                 SizedBox(height: doubleHeight(0.7)),
                 if(match.fixture.isLive!=2)
-                Text('Kick Off time', style: TextStyle(fontSize: 13)),
+                Text(AppLocalizations.of(context)!.kick_off_time, style: TextStyle(fontSize: 13)),
                 if(match.fixture.isLive!=2)
                 Spacer(),
                 Text(match.fixture.isLive==0?
-                // match.fixture.date.toString()
-                    'start at ${match.fixture.date!.hour.toString().padLeft(2,'0')}:${match.fixture.date!.minute.toString().padLeft(2,'0')}'
+                    '${AppLocalizations.of(context)!.start_at} ${match.fixture.date!.hour.toString().padLeft(2,'0')}:${match.fixture.date!.minute.toString().padLeft(2,'0')}'
                     :match.fixture.status, style: TextStyle(fontSize: 12)),
                 Spacer(),
                 if(match.fixture.isLive==2)
-                  Text('Full Time',
+                  Text(AppLocalizations.of(context)!.full_time,
                     style: TextStyle(fontSize: 13))
                 else if (match.fixture.elapsed != null)
                   Text('${match.fixture.elapsed} \' ',

@@ -52,7 +52,7 @@ class _GroupChatListState extends State<GroupChatList> {
       builder: (context, state, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Group Chat'.toUpperCase()),
+            title: Text(AppLocalizations.of(context)!.group_chat.toUpperCase()),
           ),
           body: state.loadingListCaht?circle():RefreshIndicator(
             onRefresh: () async {
@@ -66,7 +66,7 @@ class _GroupChatListState extends State<GroupChatList> {
                       SizedBox(
                           height: doubleHeight(70),
                           width: double.maxFinite,
-                          child: Center(child: Text('no message. 🙂'))),
+                          child: Center(child: Text('${AppLocalizations.of(context)!.nomessage} 🙂'))),
                     ],
                   )
                 : ListView(
@@ -116,75 +116,3 @@ class _GroupChatListState extends State<GroupChatList> {
     );
   }
 }
-
-// class GroupChatListItem extends StatelessWidget {
-//   const GroupChatListItem({Key? key, required this.chat, required this.state})
-//       : super(key: key);
-//   final DataChatRoom chat;
-//   final GroupChatState state;
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     return ListTile(
-//       onTap: () async {
-//         state.selectedChat = chat;
-//         state.chats.clear();
-//         state.notify();
-//         DataChatMessage? message = await Go.pushSlideAnim(
-//             context,
-//             GroupChatBuilder(
-//               state: state,
-//             ));
-//         if (message != null) {
-//           state.selectedChat.chatMessages.insert(0, message);
-//           state.getChatsList(clean: true);
-//           state.notify();
-//         }
-//       },
-//       leading: AspectRatio(
-//         aspectRatio: 1,
-//         child: Container(
-//           decoration: BoxDecoration(
-//             border: Border.all(width: 1,color: Colors.black),
-//             borderRadius: BorderRadius.circular(100),
-//           ),
-//           // width: doubleWidth(10),
-//           child: Center(child: Text(chat.name==null?'':chat.name![0],style: TextStyle(
-//             color: Colors.black,
-//             fontSize: 17,
-//             fontWeight: FontWeight.bold
-//           ),)),
-//         ),
-//       ),
-//       title:
-//       Text(chat.name ?? ''),
-//       // Text(roomUser.personalInformation?.fullName ?? ''),
-//       subtitle: Text('${chat.personalInformations.length} members'),
-//       // subtitle: chat.chatMessages.isEmpty
-//       //     ? null
-//       //     : Text(
-//       //         chat.chatMessages.first.text ?? '',
-//       //         style: TextStyle(height: 2),
-//       //         maxLines: 1,
-//       //         overflow: TextOverflow.ellipsis,
-//       //       ),
-//       trailing: Column(
-//         crossAxisAlignment: CrossAxisAlignment.end,
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           // CircleAvatar(
-//           //   radius: 10,
-//           //   backgroundColor: greenCall,
-//           //   child: Text(chat.newMessages.toString()),
-//           // ),
-//           // SizedBox(height: doubleHeight(1)),
-//           // Text(chat.messages.isNotEmpty?
-//           //   '${chat.messages.last.date.hour}'
-//           //     ' : ${chat.messages.last.date.minute} ${
-//           //   chat.messages.last.date.hour<12?'AM':'PM'
-//           //   }':'')
-//         ],
-//       ),
-//     );
-//   }
-// }

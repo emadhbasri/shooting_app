@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 import '../../classes/services/my_service.dart';
 import '../../classes/services/shots_service.dart';
 import '../../classes/states/main_state.dart';
-import '../../classes/states/theme_state.dart';
 import '../../main.dart';
 import '../../pages/profile/profile.dart';
 import '../dialogs/dialog1.dart';
@@ -14,11 +11,7 @@ import 'index.dart';
 class CommentReply extends StatefulWidget {
   final String shotId;
   final VoidCallback delete;
-  const CommentReply(
-      {Key? key,
-      required this.reply,
-      required this.shotId,
-      required this.delete})
+  const CommentReply({Key? key, required this.reply, required this.shotId, required this.delete})
       : super(key: key);
   final DataCommentReply reply;
   @override
@@ -59,9 +52,7 @@ class _CommentReplyState extends State<CommentReply> {
                             Go.pushSlideAnim(
                                 context,
                                 ProfileBuilder(
-                                    username: reply
-                                        .personalInformationViewModel!
-                                        .userName));
+                                    username: reply.personalInformationViewModel!.userName));
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
@@ -71,12 +62,9 @@ class _CommentReplyState extends State<CommentReply> {
                                 height: doubleHeight(5),
                                 child: Builder(
                                   builder: (context) {
-                                    if (reply.personalInformationViewModel!
-                                            .profilePhoto !=
-                                        null) {
+                                    if (reply.personalInformationViewModel!.profilePhoto != null) {
                                       return imageNetwork(
-                                        reply.personalInformationViewModel!
-                                            .profilePhoto!,
+                                        reply.personalInformationViewModel!.profilePhoto!,
                                         fit: BoxFit.fill,
                                       );
                                     }
@@ -95,14 +83,11 @@ class _CommentReplyState extends State<CommentReply> {
                               color: white,
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
-                              image: reply.personalInformationViewModel!.team !=
-                                      null
+                              image: reply.personalInformationViewModel!.team != null
                                   ? DecorationImage(
-                                      image: networkImage(reply
-                                              .personalInformationViewModel!
-                                              .team!
-                                              .team_badge ??
-                                          ''),
+                                      image: networkImage(
+                                          reply.personalInformationViewModel!.team!.team_badge ??
+                                              ''),
                                     )
                                   : null),
                         ),
@@ -118,11 +103,6 @@ class _CommentReplyState extends State<CommentReply> {
                     fontWeight: FontWeight.bold,
                     fontSize: doubleWidth(3.5)),
               ),
-              // subtitle: Text('@${reply.personalInformationViewModel!.userName}',
-              //     style: TextStyle(
-              //         color: grayCall,
-              //         fontWeight: FontWeight.bold,
-              //         fontSize: doubleWidth(2.5))),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -134,12 +114,18 @@ class _CommentReplyState extends State<CommentReply> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataCommentReply? back = await Go.pushSlideAnimSheet(
+                      dynamic back = await Go.pushSlideAnimSheet(
                           context, MyBottomSheetReply(reply, widget.shotId));
                       if (back != null) {
-                        setState(() {
-                          reply = back;
-                        });
+                        if (back is DataCommentReply) {
+                          setState(() {
+                            reply = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            reply.replyDetail = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -148,17 +134,14 @@ class _CommentReplyState extends State<CommentReply> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
                 ],
               ),
             ),
-            // _convertHashtag(post.text),
             sizeh(doubleHeight(1)),
-            // Text(reply.replyDetail??''),
             convertHashtag(context, reply.replyDetail ?? '', (e) {}),
             sizeh(doubleHeight(1)),
             SizedBox(
@@ -177,9 +160,8 @@ class _CommentReplyState extends State<CommentReply> {
                           onTap: () async {
                             MyService service = await getIt<MyService>();
                             if (!reply.replyLikedBythisUser) {
-                              String? back = await ShotsService.replyLike(
-                                  service,
-                                  commentReplyId: reply.id);
+                              String? back =
+                                  await ShotsService.replyLike(service, commentReplyId: reply.id);
                               if (back != null)
                                 setState(() {
                                   reply.replyLikes.add(DataReplyLike(back, ''));
@@ -188,8 +170,7 @@ class _CommentReplyState extends State<CommentReply> {
                                 });
                             } else {
                               if (reply.replyLikes.isNotEmpty) {
-                                bool back = await ShotsService.deleteReplyLike(
-                                    service,
+                                bool back = await ShotsService.deleteReplyLike(service,
                                     replyId: reply.replyLikes.first.id);
                                 if (back)
                                   setState(() {
@@ -206,9 +187,7 @@ class _CommentReplyState extends State<CommentReply> {
                               child: Center(
                                 child: SvgPicture.asset(
                                   'assets/icons/like.svg',
-                                  color: reply.replyLikedBythisUser
-                                      ? greenCall
-                                      : null,
+                                  color: reply.replyLikedBythisUser ? greenCall : null,
                                   width: doubleWidth(7),
                                   height: doubleWidth(7),
                                 ),
@@ -224,22 +203,21 @@ class _CommentReplyState extends State<CommentReply> {
                       Text(makeCount(reply.replyLikeCount)),
                     ],
                   ),
-                  if (widget.reply.personalInformationId ==
-                      getIt<MainState>().userId)
+                  if (widget.reply.personalInformationId == getIt<MainState>().userId)
                     Tooltip(
-                      message: 'remove the reply',
+                      message: AppLocalizations.of(context)!.remove_the_reply,
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
                         child: GestureDetector(
                           onTap: () async {
-                            if (reply.personalInformationId !=
-                                getIt<MainState>().userId) {
-                              toast('you can not delete this reply');
+                            if (reply.personalInformationId != getIt<MainState>().userId) {
+                              toast(AppLocalizations.of(context)!.you_can_not_delete_this_reply);
                               return;
                             }
                             bool? alert = await MyAlertDialog(context,
-                                content: 'Do you want to delete the shot?');
+                                content:
+                                    AppLocalizations.of(context)!.do_you_want_to_delete_the_reply);
                             // showDialog(
                             //   context: context,
                             //   barrierDismissible: true,
@@ -249,9 +227,8 @@ class _CommentReplyState extends State<CommentReply> {
                             // );
                             if (alert != null && alert) {
                               MyService service = await getIt<MyService>();
-                              bool back = await ShotsService.deleteReply(
-                                  service,
-                                  replyId: reply.id);
+                              bool back =
+                                  await ShotsService.deleteReply(service, replyId: reply.id);
                               if (back) widget.delete();
                             }
                           },

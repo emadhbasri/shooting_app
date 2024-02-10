@@ -76,7 +76,7 @@ class _EditProfileState extends State<EditProfile> {
                           Align(
                               alignment: Alignment.center,
                               child: Text(
-                                'Edit profile',
+                                AppLocalizations.of(context)!.edit_profile,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -145,31 +145,6 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     SizedBox(height: doubleHeight(1)),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     color: Color.fromRGBO(244, 244, 244, 1),
-                    //     borderRadius: BorderRadius.circular(5),
-                    //   ),
-                    //   padding: EdgeInsets.symmetric(
-                    //     horizontal: doubleWidth(8),
-                    //     // vertical: doubleHeight(1)
-                    //   ),
-                    //   child: TextFormField(
-                    //     style: TextStyle(
-                    //         color: grayCallDark
-                    //     ),
-                    //     initialValue: widget.person.userName,
-                    //     keyboardType: TextInputType.emailAddress,
-                    //     decoration: InputDecoration(
-                    //         prefixText: 'Username    ',
-                    //         prefixStyle: TextStyle(
-                    //             fontWeight: FontWeight.w600,
-                    //             color: Colors.black
-                    //         ),
-                    //         border: InputBorder.none),
-                    //   ),
-                    // ),
-                    // SizedBox(height: doubleHeight(1)),
 
                     GestureDetector(
                       onTap: () async {
@@ -185,7 +160,7 @@ class _EditProfileState extends State<EditProfile> {
                             setState(() {
                               teamName=backTeam.name;
                             });
-                            toast('Team Changed Successfully');
+                            toast(AppLocalizations.of(context)!.team_changed_successfully);
                           }
                           print('backUser $backUser');
                         }
@@ -201,38 +176,15 @@ class _EditProfileState extends State<EditProfile> {
                         child: Row(
                           children: [
                             Text(
-                              'Team    ',
+                              AppLocalizations.of(context)!.team__,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black),
                             ),
                             Text(teamName == ''
-                                ? 'no team selected'
+                                ? AppLocalizations.of(context)!.no_team_selected
                                 : teamName,style: TextStyle(color: black),),
-                            // TextFormField(
-                            //   style: TextStyle(
-                            //       color: grayCallDark
-                            //   ),
-                            //   initialValue:
-                            //   widget.person.team==null?'no team selected':
-                            //   widget.person.team!.team_name,
-                            //   keyboardType: TextInputType.text,
-                            //   onFieldSubmitted: (e){
-                            //     print('submit $e');
-                            //   },
-                            //   decoration: InputDecoration(
-                            //       prefixText: 'Team    ',
-                            //       prefixStyle: TextStyle(
-                            //           fontWeight: FontWeight.w600,
-                            //           color: Colors.black
-                            //       ),
-                            //       suffixIcon: GestureDetector(
-                            //           onTap: (){
-                            //             print('search');
-                            //           },
-                            //           child: Icon(Icons.search)),
-                            //       border: InputBorder.none),
-                            // ),
+
                           ],
                         ),
                       ),
@@ -248,7 +200,7 @@ class _EditProfileState extends State<EditProfile> {
                                   EdgeInsets.symmetric(
                                       vertical: doubleHeight(2.5)))),
                           child: Text(
-                            'Save',
+                            AppLocalizations.of(context)!.save,
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {

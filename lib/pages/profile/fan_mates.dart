@@ -49,7 +49,7 @@ class _FanMatesState extends State<FanMates> {
                   height: doubleHeight(40),
                   width: double.maxFinite,
                   child: Center(
-                    child: Text('no fan mate. 🙂'),
+                    child: Text('${AppLocalizations.of(context)!.no_fan_mate} 🙂'),
                   ))
           ],
         ),
@@ -127,8 +127,8 @@ class _FanMateItemState extends State<FanMateItem> {
                         },
                         child: Text(
                           !fan.followByMe
-                              ? 'Add As Fan Mates'
-                              : 'Remove As Fan Mates',
+                              ? AppLocalizations.of(context)!.add_as_fan_mates
+                              : AppLocalizations.of(context)!.remove_as_fan_mates,
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(

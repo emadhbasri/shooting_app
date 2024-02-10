@@ -1,24 +1,28 @@
-# shooting_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 
 
-auto refresh for add comment in shot page
+de	German
+it	Italian
+es	Spanish
+fr	French
+pt	Portuguese
+sa	Arabic
 
 
-org.gradle.jvmargs=-Xmx1536M
-android.useAndroidX=true
-android.enableJetifier=true
+zh	Chinese
+ja	Japanese
+ru	Russian
+pl	Polish
+el	Greek
+sr  Serbian
+hi  India
+nl  Netherlands
+
+tr  Turkish
+da  Danish
+se  Sweden
+no  Norwegian
+bg	Bulgarian
+cs  Czech
+
+
+flutter gen-l10n

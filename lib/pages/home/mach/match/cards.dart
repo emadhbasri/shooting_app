@@ -14,7 +14,7 @@ class Cards extends StatelessWidget {
     if(state.selectedMatch.isLive==0)
       return SizedBox.expand(
         child: Center(
-          child: Text('Match is not started'),
+          child: Text(AppLocalizations.of(context)!.match_is_not_started),
         ),
       );
 
@@ -23,7 +23,7 @@ class Cards extends StatelessWidget {
     if(first.isEmpty && second.isEmpty){
       return SizedBox.expand(
         child: Center(
-          child: Text('no Cards'),
+          child: Text(AppLocalizations.of(context)!.no_cards),
         ),
       );
     }
@@ -123,4 +123,3 @@ class PlayCard extends StatelessWidget {
     );
   }
 }
-

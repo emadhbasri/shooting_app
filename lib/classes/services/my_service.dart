@@ -37,8 +37,8 @@ class MyService {
     if(dateStr!=null){
       time=DateTime.parse(dateStr);
       Duration duration = DateTimeRange(start: time, end: DateTime.now()).duration;
-      print('duration.inDays ${duration.inDays}');
-      if(duration.inDays>25){
+      print('duration.inHours ${duration.inHours}');
+      if(duration.inHours>24){
         print('asda');
         // return false;
 

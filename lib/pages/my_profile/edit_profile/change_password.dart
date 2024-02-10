@@ -17,7 +17,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController confirmPassword = TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0, title: Text('Change Password')),
+      appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.change_password)),
       // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
@@ -38,7 +38,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                   hintStyle: TextStyle(color: grayCall),
-                  hintText: 'Current Password',
+                  hintText: AppLocalizations.of(context)!.current_password,
                   border: InputBorder.none),
             ),
           ),
@@ -57,7 +57,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                   hintStyle: TextStyle(color: grayCall),
-                  hintText: 'new Password',
+                  hintText: AppLocalizations.of(context)!.new_password,
                   border: InputBorder.none),
             ),
           ),
@@ -76,7 +76,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
                   hintStyle: TextStyle(color: grayCall),
-                  hintText: 'Confirm new Password',
+                  hintText: AppLocalizations.of(context)!.confirm_new_password,
                   border: InputBorder.none),
             ),
           ),
@@ -98,13 +98,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                       newPasswordConfirm: confirmPassword.value.text.trim()
                        );
                     if(back){
-                      toast('password changed successfully.');
+                      toast(AppLocalizations.of(context)!.password_changed_successfully);
                       Go.pop(context);
                     }
                   } else
-                    toast('please fill the fields.');
+                    toast(AppLocalizations.of(context)!.please_fill_the_fields);
                 },
-                child: Text('Save')),
+                child: Text(AppLocalizations.of(context)!.save)),
           )
         ]),
       )),

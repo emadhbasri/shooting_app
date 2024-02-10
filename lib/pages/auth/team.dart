@@ -102,7 +102,7 @@ class _TeamState extends State<Team> {
                               vertical: doubleHeight(2)),
                           color: Color.fromRGBO(216, 216, 216, 1),
                           child: searchTeam == null
-                              ? Text('Search for teams...')
+                              ? Text(AppLocalizations.of(context)!.search_for_teams)
                               : Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -143,7 +143,7 @@ class _TeamState extends State<Team> {
                           height: doubleHeight(0.2),
                         ),
                         Text(
-                          'OR',
+                          AppLocalizations.of(context)!.or,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: doubleWidth(4.5),
@@ -168,7 +168,7 @@ class _TeamState extends State<Team> {
                   ),
                   sizeh(doubleHeight(4)),
                   Text(
-                    'Search by country',
+                    AppLocalizations.of(context)!.search_by_country,
                     style: TextStyle(fontSize: doubleWidth(4), color: white),
                   ),
                   sizeh(doubleHeight(3)),
@@ -220,7 +220,7 @@ class _TeamState extends State<Team> {
                                     borderRadius: BorderRadius.circular(10),
                                     value: country,
                                     isExpanded: true,
-                                    hint: Text('Countries'),
+                                    hint: Text(AppLocalizations.of(context)!.countries),
                                     icon: Icon(Icons.keyboard_arrow_down),
                                   ),
                                 ),
@@ -268,7 +268,7 @@ class _TeamState extends State<Team> {
                                     borderRadius: BorderRadius.circular(10),
                                     value: league,
                                     isExpanded: true,
-                                    hint: Text('Leagues'),
+                                    hint: Text(AppLocalizations.of(context)!.leagues),
                                     icon: Icon(Icons.keyboard_arrow_down),
                                   ),
                                 ),
@@ -312,7 +312,7 @@ class _TeamState extends State<Team> {
                                     borderRadius: BorderRadius.circular(10),
                                     value: team,
                                     isExpanded: true,
-                                    hint: Text('Teams'),
+                                    hint: Text(AppLocalizations.of(context)!.teams),
                                     icon: Icon(Icons.keyboard_arrow_down),
                                   ),
                                 ),
@@ -340,9 +340,8 @@ class _TeamState extends State<Team> {
                               backgroundColor: MaterialStatePropertyAll(mainBlue)
                           ),
                         onPressed: () async {
-                          print('searchTeam $searchTeam');
                           if (searchTeam == null) {
-                            toast('Please pick a team.');
+                            toast(AppLocalizations.of(context)!.please_pick_a_team);
                           } else {
                             bool back = await UsersService.changeTeam(
                                 getIt<MyService>(), searchTeam!);
@@ -353,7 +352,7 @@ class _TeamState extends State<Team> {
                           }
                         },
                         child: Text(
-                          'Join the line up',
+                          AppLocalizations.of(context)!.join_the_line_up,
                           style:
                               TextStyle(fontSize: doubleWidth(5), color: white),
                         ),
@@ -370,7 +369,7 @@ class _TeamState extends State<Team> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    'Choose your team',
+                    AppLocalizations.of(context)!.choose_your_team,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: doubleWidth(5),
@@ -378,7 +377,7 @@ class _TeamState extends State<Team> {
                   ),
                   sizeh(doubleHeight(3)),
                   Text(
-                    'What\s yout favorite team?',
+                    AppLocalizations.of(context)!.what_your_favorite_team,
                     style: TextStyle(fontSize: doubleWidth(4), color: white),
                   ),
                 ],

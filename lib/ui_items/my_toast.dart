@@ -9,7 +9,7 @@ class MyToast extends StatefulWidget {
   final Widget child;
   final Duration duration;
   final Function? doOnce;
-  const MyToast({ 
+  const MyToast({
     required Key key,
     this.duration = const Duration(seconds: 3),
     this.doOnce,
@@ -119,7 +119,6 @@ class MyToastState extends State<MyToast> with SingleTickerProviderStateMixin {
                                 style: const TextStyle(
                                     color: Color(0xffffffff),
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: "Peyda",
                                     fontStyle: FontStyle.normal,
                                     fontSize: 14.0),
                                 textAlign: TextAlign.left),

@@ -18,7 +18,7 @@ class ChooseSharingWay extends StatelessWidget {
           children: [
 
             Center(
-              child: Text('Select'.toUpperCase(),style: Theme.of(context).textTheme.titleLarge ),
+              child: Text(AppLocalizations.of(context)!.select.toUpperCase(),style: Theme.of(context).textTheme.titleLarge ),
             ),
             SizedBox(height: doubleHeight(2)),
             Container(
@@ -30,7 +30,7 @@ class ChooseSharingWay extends StatelessWidget {
                 onTap: ()async{
                   Go.pop(context,'stadia');
                 },
-                title: Text('SHARE IN STADIA'),
+                title: Text(AppLocalizations.of(context)!.sis),
                 trailing: SizedBox(
                     width: 24,
                     height: 24,
@@ -46,7 +46,7 @@ class ChooseSharingWay extends StatelessWidget {
                 onTap: ()async{
                   Go.pop(context,'shot');
                 },
-                title: Text('SHARE IN POST'),
+                title: Text(AppLocalizations.of(context)!.sof),
                 trailing: SizedBox(
                     width: 24,
                     height: 24,
@@ -62,7 +62,7 @@ class ChooseSharingWay extends StatelessWidget {
                 onTap: ()async{
                   Go.pop(context,'chat');
                 },
-                title: Text('SHARE IN GROUP/CHAT'),
+                title: Text(AppLocalizations.of(context)!.sog),
                 trailing: SizedBox(
                     width: 24,
                     height: 24,

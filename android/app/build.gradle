@@ -26,7 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 android {
-    compileSdkVersion 33
+    compileSdkVersion 33 //33 flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -44,9 +45,9 @@ android {
         applicationId "com.footballbuzz.android"
         minSdkVersion 22
         //noinspection OldTargetApi
-        targetSdkVersion 31
-        versionCode 27
-        versionName '1.27'
+        targetSdkVersion 33
+        versionCode 35
+        versionName '1.35'
         multiDexEnabled true
     }
 

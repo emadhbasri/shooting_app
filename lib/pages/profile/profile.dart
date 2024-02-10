@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Profile'),
+              title: Text(AppLocalizations.of(context)!.profile),
               elevation: 0,
               actions: [
                 if (state.personalInformation!.id != getIt<MainState>().userId)
@@ -80,7 +80,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     ));
                               }
                             },
-                            child: Text('Message')),
+                            child: Text(AppLocalizations.of(context)!.messages)),
                         PopupMenuItem(
                             onTap: () async {
                               bool? back = await UsersService.blockUser(
@@ -95,11 +95,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     animationType: AnimationType.shrink
                                   ),
                                   type: AlertType.success,
-                                  title: "User Unblocked Successfully",
+                                  title: AppLocalizations.of(context)!.user_unblocked_successfully,
                                 ).show();
                               }
                             },
-                            child: Text('Unblock'))
+                            child: Text(AppLocalizations.of(context)!.unblock))
                       ],
                     )
                   else
@@ -122,7 +122,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     ));
                               }
                             },
-                            child: Text('Message')),
+                            child: Text(AppLocalizations.of(context)!.message)),
                         PopupMenuItem(
                             onTap: () async {
                               bool? back = await UsersService.blockUser(
@@ -136,7 +136,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                   buttons: [
                                     DialogButton(
                                       child: Text(
-                                        "CLOSE",
+                                        AppLocalizations.of(context)!.close,
                                         style: TextStyle(color: Colors.white, fontSize: 20),
                                       ),
                                       onPressed: () => Navigator.pop(context),
@@ -147,13 +147,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                       animationType: AnimationType.shrink
                                   ),
                                   type: AlertType.success,
-                                  title: "User Blocked Successfully",
+                                  title: AppLocalizations.of(context)!.user_blocked_successfully,
                                 ).show();
                               }
                             },
-                            child: Text('Block')),
+                            child: Text(AppLocalizations.of(context)!.block)),
                       ],
                     ),
+
               ],
             ),
             // backgroundColor: Colors.white,
@@ -254,42 +255,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  // SizedBox(height: doubleHeight(1)),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //   children: [
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.postCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Shots')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.followersCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Followers')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.followingCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Following')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+
                   SizedBox(height: doubleHeight(2)),
                   if (state.personalInformation!.id !=
                       getIt<MainState>().userId)
@@ -319,8 +285,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         },
                         child: Text(
                           !value.personalInformation!.followedByMe
-                              ? 'Add As Fan Mates'
-                              : 'Remove As Fan Mates',
+                              ? AppLocalizations.of(context)!.add_as_fan_mates
+                              : AppLocalizations.of(context)!.remove_as_fan_mates,
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(

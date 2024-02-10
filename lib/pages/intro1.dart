@@ -77,9 +77,9 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin {
     debugPrint('getVersion()');
     String out = '';
     if (Platform.isAndroid) {
-      out = 'androidVersion=27';
+      out = 'androidVersion=35';
     } else {
-      out = 'iosVersion=27';
+      out = 'iosVersion=35';
     }
     var back = await service.httpPost(
         '/api/v1/Authentication/CheckVersion?'
@@ -104,7 +104,7 @@ class _Intro1State extends State<Intro1> with SingleTickerProviderStateMixin {
         '/api/v1/Authentication/Config?'
         'deviceId=$deviceId&username=$userName',
         {});
-    print('back2 $back');
+    print('getDevicesssssss back $back');
     if (back['status']) {
       if (back['data']['message'].toString() == "Login : true") {
         login = true;

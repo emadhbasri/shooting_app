@@ -83,14 +83,14 @@ class _VerifyOtpState extends State<VerifyOtp> {
        loading=false;
      });
   }
-  
+
   Widget build(BuildContext context) {
     return MyToast(
       key: key,
       child: Scaffold(
-        appBar: AppBar(elevation: 0, title: Text('Email Verification')),
+        appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.email_verification)),
         body: loading?circle():
-        
+
         SizedBox.expand(
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
@@ -102,8 +102,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
             ),
 
             Text(
-                // 'A 6 digit code has been sent to your\nemail',
-                'Enter the 6 digit code sent to',
+                AppLocalizations.of(context)!.enter_the_6,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: doubleWidth(3.5),
@@ -111,7 +110,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     color: myGray2)),
             SizedBox(height: doubleHeight(1)),
             Text(
-                email??'your email',
+                email??AppLocalizations.of(context)!.your_email,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: doubleWidth(3.5),
@@ -126,7 +125,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
               ),
               padding: EdgeInsets.symmetric(
                   horizontal: doubleWidth(5), vertical: doubleHeight(1.5)),
-              child: Text('*Check your spam if you can\'t find it in your inbox',
+              child: Text(AppLocalizations.of(context)!.check_your_spam,
                   // 'Please check your spam message if you can\'t see your OTP in your inbox',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, color: green)),
@@ -219,7 +218,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                           EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                   onPressed: () async {
                     if (code.length != 6) {
-                      myToast(key, 'please fill the field.');
+                      myToast(key, AppLocalizations.of(context)!.please_fill_the_field);
                       return;
                     } else {
                       MyService service = getIt<MyService>();
@@ -241,7 +240,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                       }
                     }
                   },
-                  child: Text('Verify')),
+                  child: Text(AppLocalizations.of(context)!.verify)),
             )
           ]),
         )),

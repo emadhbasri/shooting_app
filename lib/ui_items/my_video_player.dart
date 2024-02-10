@@ -64,8 +64,9 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                   children: [
                     simpleCircle(color: mainGreen),
                     SizedBox(height: doubleHeight(1)),
-                    const Text(
-                      'loading ...',
+                     Text(
+                      AppLocalizations.of(context)!.loading,
+                      // 'loading ...',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     )
@@ -103,11 +104,7 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                                 ),
                                 IconButton(
                                     onPressed: () async {
-                                      // WidgetsFlutterBinding.ensureInitialized();
-                                      // SystemChrome.setPreferredOrientations([
-                                      //   DeviceOrientation.portraitUp,
-                                      // ]);
-                                      // await widget.controller.pause();
+
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(
@@ -117,14 +114,7 @@ class MyVideoPlayerState extends State<MyVideoPlayer> {
                                 const SizedBox(
                                   width: 16,
                                 ),
-                                // Expanded(
-                                //   child: Text(
-                                //     widget.video.name,
-                                //           textDirection: TextDirection.rtl,
-                                //           textAlign: TextAlign.right,
-                                //     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                //   ),
-                                // ),
+
                                 IconButton(
                                     onPressed: () {
                                       WidgetsFlutterBinding.ensureInitialized();
@@ -295,8 +285,9 @@ class MyVideoPlayer1State extends State<MyVideoPlayer1> {
                 children: [
                   simpleCircle(color: mainGreen),
                   SizedBox(height: doubleHeight(1)),
-                  const Text(
-                    'loading ...',
+                  Text(
+                    AppLocalizations.of(context)!.loading,
+                    // 'loading ...',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   )
@@ -345,14 +336,7 @@ class MyVideoPlayer1State extends State<MyVideoPlayer1> {
                             const SizedBox(
                               width: 16,
                             ),
-                            // Expanded(
-                            //   child: Text(
-                            //     widget.video.name,
-                            //           textDirection: TextDirection.rtl,
-                            //           textAlign: TextAlign.right,
-                            //     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            //   ),
-                            // ),
+
                             IconButton(
                                 onPressed: () {
                                   WidgetsFlutterBinding.ensureInitialized();

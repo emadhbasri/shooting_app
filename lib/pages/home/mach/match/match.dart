@@ -72,11 +72,9 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
             elevation: 0,
             centerTitle: true,
             title: Text(
-              'Match Stats',
-              // style: TextStyle(color: Colors.black),
+              AppLocalizations.of(context)!.match_stats,
             ),
           ),
-          // backgroundColor: Color.fromRGBO(244, 244, 244, 1),
           body: SizedBox.expand(
               child: Padding(
             padding: EdgeInsets.all(doubleWidth(6)).copyWith(bottom: 0),
@@ -155,9 +153,9 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                             Builder(builder: (context) {
                               String out = '';
                               if (state.selectedMatch.isLive==2) {
-                                out = 'Full Time';
+                                out = AppLocalizations.of(context)!.full_time;
                               } else if (state.selectedMatch.isLive==0) {
-                                out = 'Not Started';
+                                out = AppLocalizations.of(context)!.not_started;
                               } else if(state.selectedMatch.fixture.elapsed==null){
                                 out='';
                               }else
@@ -214,26 +212,7 @@ class _MatchState extends State<Match> with SingleTickerProviderStateMixin{
                   )).toList(),
                   controller: _controller,
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: state.tabs
-                //       .map((e) => TextButton(
-                //           onPressed: () {
-                //             int index=state.tabs.indexOf(e);
-                //             _controller.animateTo(index);
-                //             state.selectedTab = e;
-                //             state.notify();
-                //           },
-                //           child: Text(
-                //             e,
-                //             style: TextStyle(
-                //                 color: state.selectedTab == e
-                //                     ? Colors.black
-                //                     : Colors.grey,
-                //                 fontSize: state.selectedTab == e ? 15 : 12),
-                //           )))
-                //       .toList(),
-                // ),
+
                 SizedBox(
                   height: doubleHeight(2),
                 ),

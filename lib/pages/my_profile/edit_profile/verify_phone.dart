@@ -62,13 +62,13 @@ class _VerifyPhoneState extends State<VerifyPhone> {
           padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
           child: Column(children: [
             SizedBox(height: doubleHeight(8)),
-            Text('A 6 digit code has been sent to your\nemail',
+            Text('${AppLocalizations.of(context)!.enter_the_6}\n${AppLocalizations.of(context)!.email}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black, fontWeight: FontWeight.bold)),
             SizedBox(height: doubleHeight(2)),
             Text(
-              'Enter code to verify phone',
+              AppLocalizations.of(context)!.enter_code_to_verify_phone,
               style: TextStyle(color: grayCall),
             ),
             SizedBox(height: doubleHeight(6)),
@@ -155,7 +155,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                           EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                   onPressed: () async{
                     if (code.length != 6) {
-                      toast('please fill the field.');
+                      toast(AppLocalizations.of(context)!.please_fill_the_field);
                       return;
                     }else{
                       MyService service = getIt<MyService>();
@@ -170,10 +170,10 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       }
                     }
                   },
-                  child: Text('Verify')),
+                  child: Text(AppLocalizations.of(context)!.verify)),
             )
           ]),
         )),
-        appBar: AppBar(elevation: 0, title: Text('Verify Phone')));
+        appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.verify_phone)));
   }
 }

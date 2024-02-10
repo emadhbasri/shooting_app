@@ -13,23 +13,24 @@ import '../../classes/services/shots_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../classes/states/main_state.dart';
 import '../../classes/states/theme_state.dart';
-import 'package:provider/provider.dart';
+
 class ShootBuilder extends StatelessWidget {
-  const ShootBuilder({Key? key, this.matchId, this.stadia = false})
-      : super(key: key);
+  const ShootBuilder({Key? key, this.matchId, this.stadia = false}) : super(key: key);
   final int? matchId;
   final bool stadia;
   @override
   Widget build(BuildContext context) {
     return MainStateProvider(
-      child: Shoot(matchId: matchId,stadia: stadia,),
+      child: Shoot(
+        matchId: matchId,
+        stadia: stadia,
+      ),
     );
   }
 }
 
 class Shoot extends StatefulWidget {
-  const Shoot({Key? key,
-    this.matchId, this.sharedFiles, this.sharedText,required this.stadia})
+  const Shoot({Key? key, this.matchId, this.sharedFiles, this.sharedText, required this.stadia})
       : super(key: key);
   final List<SharedMediaFile>? sharedFiles;
   final String? sharedText;
@@ -48,10 +49,8 @@ class _ShootState extends State<Shoot> {
   MyService service = getIt<MyService>();
   TextEditingController controller = TextEditingController();
   bool sending = false;
-  List<String> mediaIds=[];
-  editData(context)async{
-
-  }
+  List<String> mediaIds = [];
+  editData(context) async {}
 
   sendData(context) async {
     if (sending) return;
@@ -60,13 +59,13 @@ class _ShootState extends State<Shoot> {
       sending = true;
     });
     if (controller.value.text.trim() == '' && images.isEmpty && video == null) {
-      toast('Please Enter Text Or Image Or Video');
+      toast(AppLocalizations.of(context)!.please_enter_text_or_image_or_video);
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
     } else if (images.isNotEmpty && video != null) {
-      toast('You Can Upload Images Or Video');
+      toast(AppLocalizations.of(context)!.you_can_upload_images_or_video);
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
@@ -85,16 +84,15 @@ class _ShootState extends State<Shoot> {
       if (back != null) {
         MainState state = getIt<MainState>();
         if (widget.matchId == null) {
-          if(widget.stadia){
+          if (widget.stadia) {
             state.stadiaShots.insert(0, back);
             state.personalInformation!.posts.insert(0, back);
             state.notify();
-          }else{
+          } else {
             state.allPosts.insert(0, back);
             state.personalInformation!.posts.insert(0, back);
             state.notify();
           }
-
         }
         getIt<MainState>().play();
         Go.pop(context);
@@ -111,11 +109,9 @@ class _ShootState extends State<Shoot> {
     if (widget.sharedFiles != null) {
       for (int j = 0; j < widget.sharedFiles!.length; j++) {
         if (widget.sharedFiles![j].type == SharedMediaType.IMAGE) {
-          images.add(XFile(widget.sharedFiles![j].path,
-              name: widget.sharedFiles![j].path));
+          images.add(XFile(widget.sharedFiles![j].path, name: widget.sharedFiles![j].path));
         } else if (widget.sharedFiles![j].type == SharedMediaType.VIDEO) {
-          video = XFile(widget.sharedFiles![j].path,
-              name: widget.sharedFiles![j].path);
+          video = XFile(widget.sharedFiles![j].path, name: widget.sharedFiles![j].path);
         }
       }
     }
@@ -132,9 +128,11 @@ class _ShootState extends State<Shoot> {
           width: double.maxFinite,
           height: doubleHeight(90),
           child: Material(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-            color: context.watch<ThemeState>().isDarkMode?MyThemes.darkTheme.scaffoldBackgroundColor:MyThemes.lightTheme.scaffoldBackgroundColor,
+            borderRadius:
+                BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+            color: context.watch<ThemeState>().isDarkMode
+                ? MyThemes.darkTheme.scaffoldBackgroundColor
+                : MyThemes.lightTheme.scaffoldBackgroundColor,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
               child: Column(
@@ -152,16 +150,20 @@ class _ShootState extends State<Shoot> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: context.watch<ThemeState>().isDarkMode?Colors.white:Colors.black,
+                              color: context.watch<ThemeState>().isDarkMode
+                                  ? Colors.white
+                                  : Colors.black,
                               size: 35,
                             ),
                           ),
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Take a shot',
+                              AppLocalizations.of(context)!.take_a_shot,
                               style: TextStyle(
-                                  color: context.watch<ThemeState>().isDarkMode?Colors.white:Colors.black,
+                                  color: context.watch<ThemeState>().isDarkMode
+                                      ? Colors.white
+                                      : Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                           )
@@ -190,31 +192,23 @@ class _ShootState extends State<Shoot> {
                                   if (e.endsWith('@')) {
                                     isInOtherPage = true;
                                     DataPersonalInformation? user =
-                                        await Go.pushSlideAnim(
-                                            context, SearchUserMention());
-                                    print(
-                                        'controller.value.text ${controller.value.text}');
+                                        await Go.pushSlideAnim(context, SearchUserMention());
+                                    print('controller.value.text ${controller.value.text}');
                                     controller.text = controller.value.text
-                                        .substring(0,
-                                            controller.value.text.length - 1);
-                                    print(
-                                        'controller.value.subText ${controller.value.text}');
+                                        .substring(0, controller.value.text.length - 1);
+                                    print('controller.value.subText ${controller.value.text}');
                                     print('user ${user}');
                                     if (user != null) {
                                       String pp = '';
-                                      if (!controller.value.text.endsWith(' '))
-                                        pp = ' ';
-                                      controller.text = controller.value.text +
-                                          pp +
-                                          '@' +
-                                          user.userName +
-                                          ' ';
+                                      if (!controller.value.text.endsWith(' ')) pp = ' ';
+                                      controller.text =
+                                          controller.value.text + pp + '@' + user.userName + ' ';
                                     }
                                     isInOtherPage = false;
                                   }
                                 },
                                 decoration: InputDecoration(
-                                    hintText: 'Take a shot...',
+                                    hintText: AppLocalizations.of(context)!.take_a_shot_,
                                     hintStyle: TextStyle(color: grayCall),
                                     border: InputBorder.none
                                     // border: OutlineInputBorder()
@@ -240,23 +234,17 @@ class _ShootState extends State<Shoot> {
                                                 alignment: Alignment.bottomLeft,
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: mainColor)),
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      border:
+                                                          Border.all(width: 1, color: mainColor)),
                                                   width: doubleWidth(20),
                                                   height: doubleWidth(20),
                                                   child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
+                                                    borderRadius: BorderRadius.circular(5),
                                                     child: Container(
                                                       width: doubleWidth(20),
                                                       height: doubleWidth(20),
-                                                      child: Icon(
-                                                          Icons.video_library),
+                                                      child: Icon(Icons.video_library),
                                                     ),
                                                   ),
                                                 ),
@@ -272,8 +260,7 @@ class _ShootState extends State<Shoot> {
                                                   child: CircleAvatar(
                                                     radius: doubleWidth(2.5),
                                                     backgroundColor:
-                                                        Color.fromRGBO(
-                                                            107, 79, 187, 1),
+                                                        Color.fromRGBO(107, 79, 187, 1),
                                                     child: Icon(
                                                       Icons.close,
                                                       color: Colors.white,
@@ -295,61 +282,39 @@ class _ShootState extends State<Shoot> {
                                                     child: Stack(
                                                       children: [
                                                         Align(
-                                                          alignment: Alignment
-                                                              .bottomLeft,
+                                                          alignment: Alignment.bottomLeft,
                                                           child: SizedBox(
-                                                            width:
-                                                                doubleWidth(20),
-                                                            height:
-                                                                doubleWidth(20),
+                                                            width: doubleWidth(20),
+                                                            height: doubleWidth(20),
                                                             child: ClipRRect(
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
+                                                                  BorderRadius.circular(5),
                                                               child: SizedBox(
-                                                                width:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                height:
-                                                                    doubleWidth(
-                                                                        20),
-                                                                child:
-                                                                    Image.file(
+                                                                width: doubleWidth(20),
+                                                                height: doubleWidth(20),
+                                                                child: Image.file(
                                                                   File(e.path),
-                                                                  fit: BoxFit
-                                                                      .fill,
+                                                                  fit: BoxFit.fill,
                                                                 ),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
                                                         Align(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child:
-                                                              GestureDetector(
+                                                          alignment: Alignment.topRight,
+                                                          child: GestureDetector(
                                                             onTap: () {
                                                               setState(() {
-                                                                images
-                                                                    .remove(e);
+                                                                images.remove(e);
                                                               });
                                                             },
                                                             child: CircleAvatar(
-                                                              radius:
-                                                                  doubleWidth(
-                                                                      2.5),
+                                                              radius: doubleWidth(2.5),
                                                               backgroundColor:
-                                                                  Color
-                                                                      .fromRGBO(
-                                                                          107,
-                                                                          79,
-                                                                          187,
-                                                                          1),
+                                                                  Color.fromRGBO(107, 79, 187, 1),
                                                               child: Icon(
                                                                 Icons.close,
-                                                                color: Colors
-                                                                    .white,
+                                                                color: Colors.white,
                                                                 size: 15,
                                                               ),
                                                             ),
@@ -359,8 +324,7 @@ class _ShootState extends State<Shoot> {
                                                     ),
                                                   ),
                                                   if (e != images.last)
-                                                    SizedBox(
-                                                        width: doubleWidth(3)),
+                                                    SizedBox(width: doubleWidth(3)),
                                                 ],
                                               ))
                                           .toList()
@@ -381,8 +345,7 @@ class _ShootState extends State<Shoot> {
                                 children: [
                                   Positioned(
                                     child: GestureDetector(
-                                      onVerticalDragStart:
-                                          (DragStartDetails e) {
+                                      onVerticalDragStart: (DragStartDetails e) {
                                         if (positionStart == null)
                                           positionStart = e.globalPosition.dy;
                                       },
@@ -393,25 +356,21 @@ class _ShootState extends State<Shoot> {
                                           position = null;
                                         });
                                       },
-                                      onVerticalDragUpdate:
-                                          (DragUpdateDetails e) {
+                                      onVerticalDragUpdate: (DragUpdateDetails e) {
                                         setState(() {
                                           position = e.globalPosition.dy;
-                                          if (positionStart != null &&
-                                              position != null) {
+                                          if (positionStart != null && position != null) {
                                             pos = positionStart! - position!;
                                           }
                                         });
-                                        if (doubleHeight(25) < pos &&
-                                            sending == false) {
-                                            sendData(context);
+                                        if (doubleHeight(25) < pos && sending == false) {
+                                          sendData(context);
                                         }
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
                                             color: greenCall,
-                                            borderRadius:
-                                                BorderRadius.circular(100),
+                                            borderRadius: BorderRadius.circular(100),
                                             boxShadow: [
                                               BoxShadow(
                                                   color: Colors.black45,
@@ -423,8 +382,7 @@ class _ShootState extends State<Shoot> {
                                         padding: EdgeInsets.all(doubleWidth(3)),
                                         child: sending
                                             ? simpleCircle()
-                                            : Image.asset(
-                                                'assets/images/soccer.png'),
+                                            : Image.asset('assets/images/soccer.png'),
                                       ),
                                     ),
                                     left: doubleWidth(1),
@@ -450,8 +408,8 @@ class _ShootState extends State<Shoot> {
                           FloatingActionButton(
                             heroTag: UniqueKey(),
                             onPressed: () async {
-                              XFile? file = await ImagePicker()
-                                  .pickImage(source: ImageSource.camera);
+                              XFile? file =
+                                  await ImagePicker().pickImage(source: ImageSource.camera);
                               if (file != null) {
                                 setState(() {
                                   images.add(file);
@@ -469,8 +427,7 @@ class _ShootState extends State<Shoot> {
                           FloatingActionButton(
                             heroTag: UniqueKey(),
                             onPressed: () async {
-                              List<XFile>? files =
-                                  await ImagePicker().pickMultiImage();
+                              List<XFile>? files = await ImagePicker().pickMultiImage();
                               if (files != null) {
                                 setState(() {
                                   images.addAll(files);
@@ -488,27 +445,24 @@ class _ShootState extends State<Shoot> {
                           FloatingActionButton(
                             heroTag: UniqueKey(),
                             onPressed: () async {
-                              final XFile? video = await ImagePicker()
-                                  .pickVideo(source: ImageSource.gallery);
+                              final XFile? video =
+                                  await ImagePicker().pickVideo(source: ImageSource.gallery);
 
                               if (video != null) {
                                 print('video.mimeType ${video.name}');
 
                                 if (!video.name.endsWith('.mp4')) {
-                                  toast('The video format should be mp4');
+                                  toast(AppLocalizations.of(context)!.video_mp4);
                                   return;
                                 }
 
                                 if (await video.length() > 50000000) {
-                                  print(
-                                      'await video.length() ${await video.length()}');
-                                  toast('The video should be less than 50M.',
-                                      isLong: true);
+                                  print('await video.length() ${await video.length()}');
+                                  toast(AppLocalizations.of(context)!.video_less_50, isLong: true);
                                   return;
                                 }
                                 VideoPlayerController _controller =
-                                    VideoPlayerController.file(
-                                        File(video.path));
+                                    VideoPlayerController.file(File(video.path));
                                 await _controller.initialize();
                                 Duration duration = _controller.value.duration;
                                 if (duration.inSeconds <= 121) {
@@ -517,9 +471,7 @@ class _ShootState extends State<Shoot> {
                                   });
                                   //todo
                                 } else {
-                                  toast(
-                                      'The video should be less than 60 seconds.',
-                                      isLong: true);
+                                  toast(AppLocalizations.of(context)!.video_less_than_60, isLong: true);
                                 }
                               }
                             },
@@ -533,7 +485,7 @@ class _ShootState extends State<Shoot> {
                         ],
                       ),
                       Text(
-                        'Swipe up to take the shot',
+                        AppLocalizations.of(context)!.swipe_up_to_take_the_shot,
                         style: TextStyle(color: grayCall),
                       )
                     ],

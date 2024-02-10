@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:shooting_app/classes/states/theme_state.dart';
 import '../../classes/functions.dart';
 import '../../classes/dataTypes.dart';
-import '../../ui_items/dialogs/privacy.dart';
-import '../../ui_items/dialogs/team.dart';
 import 'login.dart';
 import 'register.dart';
 
@@ -23,7 +21,6 @@ class _AuthState extends State<Auth> {
   Widget build(BuildContext context) {
     return Container(
       decoration: decorImage(img: 'assets/images/stadium.jpg'),
-//    color: black,
       child: WillPopScope(
         onWillPop: () async {
           statusSet(white);
@@ -43,46 +40,43 @@ class _AuthState extends State<Auth> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
                       child: Text(
-                        'Experience being a fan like never before',
+                        AppLocalizations.of(context)!.dxperience_being_fan,
                         style: TextStyle(
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: doubleWidth(11)),
+                            color: white, fontWeight: FontWeight.bold, fontSize: doubleWidth(11)),
                       ),
                     ),
                     sizeh(doubleHeight(4)),
                     Container(
                       width: max,
-                      margin:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
-                      child: Text('Feel the buzz of the beautiful game',
+                      margin: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      child: Text(AppLocalizations.of(context)!.feel_the_buzz,
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: white, fontSize: doubleWidth(5))),
+                          style: TextStyle(color: white, fontSize: doubleWidth(5))),
                     ),
-                    sizeh(doubleHeight(12)),
+                    sizeh(doubleHeight(8)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      child: ChangeLang(),
+                    ),
+                    sizeh(doubleHeight(2)),
                     Container(
                       width: max,
                       height: doubleHeight(8),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                       child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           onPressed: () {
                             Go.push(context, Register());
                           },
                           style: ButtonStyle(
                               shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              backgroundColor:
-                                  MaterialStatePropertyAll(mainBlue)),
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(mainBlue)),
                           child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                                fontSize: doubleWidth(5), color: white),
+                            AppLocalizations.of(context)!.signup,
+                            // 'Sign Up',
+                            style: TextStyle(fontSize: doubleWidth(5), color: white),
                           ),
                         ),
                       ),
@@ -91,25 +85,33 @@ class _AuthState extends State<Auth> {
                     Container(
                       width: max,
                       height: doubleHeight(8),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(4.5)),
                       child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           style: ButtonStyle(
                               shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               backgroundColor: MaterialStatePropertyAll(white)),
-                          onPressed: () {
+                          onPressed: () async {
+                            // print('emad');
+                            // String text = 'حال شما چطور است';
+                            // // حال شما چطور است?
+                            // String? start = await detectlang(text: text);
+                            // if (start != null) {
+                            //   String? out =
+                            //       await azureTranslation(text: text, start: start, end: 'en');
+                            //   print('out $out');
+                            // }
+
+                            // print('detectlang ${await detectlang(text: 'سلام خوبی خانواده خوب هستن؟')}');
+                            // context.read<ThemeState>().changeLang('en');
                             Go.push(context, Login());
-                            // Go.push(context, VerifyOtp(isRegister: false, username: 'asd', password: 'asdasd'));
                           },
                           child: Text(
-                            'Login',
-                            style: TextStyle(
-                                fontSize: doubleWidth(5), color: mainBlue),
+                            AppLocalizations.of(context)!.login,
+                            // 'Login',
+                            style: TextStyle(fontSize: doubleWidth(5), color: mainBlue),
                           ),
                         ),
                       ),
@@ -129,11 +131,11 @@ class _AuthState extends State<Auth> {
                         endIndent: doubleWidth(6),
                         thickness: doubleHeight(0.2),
                       ), //Privacy
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                      Wrap(
+                        // mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'By signing up you agree to our ',
+                            AppLocalizations.of(context)!.signing_agree,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: white,
@@ -141,13 +143,12 @@ class _AuthState extends State<Auth> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {openUrl(
-                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (_) => TeamDialog());
+                            onTap: () {
+                              String out = "https://footballbuzz.co/terms-of-use-footballbuzz";
+                              openUrl(out);
+                              // openUrl('https://footballbuzz.co/terms-of-use-for-football-buzz/');
                             },
-                            child: Text('Terms of Use',
+                            child: Text(AppLocalizations.of(context)!.terms_of_use,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: mainGreen1,
@@ -156,7 +157,7 @@ class _AuthState extends State<Auth> {
                                     fontStyle: FontStyle.italic)),
                           ),
                           Text(
-                            ' and',
+                            AppLocalizations.of(context)!.and,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: white,
@@ -167,10 +168,12 @@ class _AuthState extends State<Auth> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          openUrl('https://footballbuzz.co/privacypolicy/');
-                          // showDialog(context: context, builder: (_)=>Privacy());
+                          String out = "https://footballbuzz.co/privacy-policy";
+
+                          openUrl(out);
+                          // openUrl('https://footballbuzz.co/privacypolicy/');
                         },
-                        child: Text('Privacy Policy',
+                        child: Text(AppLocalizations.of(context)!.privacy_policy,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: mainGreen1,

@@ -88,7 +88,7 @@ class _SearchUserMentionState extends State<SearchUserMention> {
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.search),
                             border: InputBorder.none,
-                            hintText: 'SearchUser'),
+                            hintText: AppLocalizations.of(context)!.searchuser),
                       ),
                     ),
                   ),
@@ -102,11 +102,11 @@ class _SearchUserMentionState extends State<SearchUserMention> {
       body: SizedBox.expand(
         child: Builder(builder: (context) {
           if (controller.value.text == '')
-            return Center(child: Text('Please Search In Users.'));
+            return Center(child: Text(AppLocalizations.of(context)!.please_search_in_users));
           if (users == null) {
               return circle();
             } else if (users!.isEmpty) {
-              return Center(child: Text('No User Found'));
+              return Center(child: Text(AppLocalizations.of(context)!.no_user_found));
             } else {
               return ListView(
                   padding: EdgeInsets.symmetric(
@@ -194,8 +194,8 @@ class _UserItemState extends State<_UserItem> {
                         },
                         child: Text(
                           !user.followedByMe
-                              ? 'Add As Fan Mates'
-                              : 'Remove As Fan Mates',
+                              ? AppLocalizations.of(context)!.add_as_fan_mates
+                              : AppLocalizations.of(context)!.remove_as_fan_mates,
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(

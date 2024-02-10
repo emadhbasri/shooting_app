@@ -12,8 +12,6 @@ import '../../classes/functions.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/dataTypes.dart';
 import '../../main.dart';
-import '../../ui_items/dialogs/privacy.dart';
-import '../../ui_items/dialogs/team.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -52,11 +50,9 @@ class _LoginState extends State<Login> {
                   children: <Widget>[
                     SizedBox(height: doubleHeight(10)),
                     Text(
-                      'WELCOME',
+                      AppLocalizations.of(context)!.welcome,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: doubleWidth(5),
-                          color: white),
+                          fontWeight: FontWeight.bold, fontSize: doubleWidth(5), color: white),
                     ),
                     sizeh(doubleHeight(5)),
                     ClipRRect(
@@ -73,7 +69,7 @@ class _LoginState extends State<Login> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'Username'),
+                                hintText: AppLocalizations.of(context)!.username),
                           ),
                         ),
                       ),
@@ -103,15 +99,13 @@ class _LoginState extends State<Login> {
                                     });
                                   },
                                   child: Icon(
-                                    !obscureText
-                                        ? Icons.remove_red_eye
-                                        : Icons.visibility_off,
+                                    !obscureText ? Icons.remove_red_eye : Icons.visibility_off,
                                     color: black,
                                   ),
                                 ),
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'Password'),
+                                hintText: AppLocalizations.of(context)!.password),
                           ),
                         ),
                       ),
@@ -123,20 +117,18 @@ class _LoginState extends State<Login> {
                       child: TextButton(
                         onPressed: () async {
                           if (username.trim() == '') {
-                            myToast(key, 'The Username field is required.');
+                            myToast(key, AppLocalizations.of(context)!.the_username_field_is_required);
                             return;
                           }
                           MyService service = getIt<MyService>();
-                          bool back =
-                              await AuthenticationService.forgotPassword(
-                                  service, key, username.trim());
+                          bool back = await AuthenticationService.forgotPassword(
+                              service, key, username.trim());
                           if (back) {
-                            Go.pushSlideAnim(context,
-                                ForgotPassword(username: username.trim()));
+                            Go.pushSlideAnim(context, ForgotPassword(username: username.trim()));
                           }
                         },
                         child: Text(
-                          'Forgot Password?',
+                          AppLocalizations.of(context)!.forgot_password,
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -150,19 +142,15 @@ class _LoginState extends State<Login> {
                       width: max,
                       height: doubleHeight(7),
                       child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                         child: ElevatedButton(
                           style: ButtonStyle(
                               shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              backgroundColor:
-                                  MaterialStatePropertyAll(mainBlue)),
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                              backgroundColor: MaterialStatePropertyAll(mainBlue)),
                           onPressed: () async {
                             if (username.trim() == '') {
-                              myToast(key, 'The Username field is required.',
-                                  isLong: true);
+                              myToast(key, AppLocalizations.of(context)!.the_username_field_is_required, isLong: true);
                               return;
                             }
                             if (password.trim() == '') {
@@ -176,8 +164,7 @@ class _LoginState extends State<Login> {
                             setState(() {
                               loading = true;
                             });
-                            bool? back = await AuthenticationService.login(
-                                service, key,
+                            bool? back = await AuthenticationService.login(service, key,
                                 username: username, password: password);
                             setState(() {
                               loading = false;
@@ -185,25 +172,20 @@ class _LoginState extends State<Login> {
                             if (back != null) {
                               if (back) {
                                 bool bbo = await service.getToken();
-                                if (bbo)
-                                  Go.pushAndRemoveSlideAnim(
-                                      context, AppPageBuilder());
+                                if (bbo) Go.pushAndRemoveSlideAnim(context, AppPageBuilder());
                               } else {
                                 Go.pushSlideAnim(
                                     context,
                                     VerifyOtp(
-                                        isRegister: false,
-                                        username: username,
-                                        password: password));
+                                        isRegister: false, username: username, password: password));
                               }
                             }
                           },
                           child: loading
                               ? simpleCircle(color: mainGreen)
                               : Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      fontSize: doubleWidth(5), color: white),
+                                  AppLocalizations.of(context)!.login,
+                                  style: TextStyle(fontSize: doubleWidth(5), color: white),
                                 ),
                         ),
                       ),
@@ -225,7 +207,7 @@ class _LoginState extends State<Login> {
                               ? CircularProgressIndicator()
                               : Image.asset('assets/images/google.png'),
                         ),
-                        label: Text(loadingGoogle ? '' : 'Log In with Google')),
+                        label: Text(loadingGoogle ? '' : AppLocalizations.of(context)!.log_in_with_google)),
                     sizeh(doubleHeight(1)),
                     if (io.Platform.isIOS)
                       if (loadingApple)
@@ -238,6 +220,7 @@ class _LoginState extends State<Login> {
                       else
                         SignInWithAppleButton(
                           height: 50,
+                          text: AppLocalizations.of(context)!.sign_in_with_apple,
                           style: SignInWithAppleButtonStyle.white,
                           onPressed: () {
                             appleLogin();
@@ -252,9 +235,9 @@ class _LoginState extends State<Login> {
                         textAlign: TextAlign.center,
                         text: TextSpan(
                             children: [
-                              TextSpan(text: 'Don\'t have an account?  '),
+                              TextSpan(text: AppLocalizations.of(context)!.dont_have_account),
                               TextSpan(
-                                  text: 'Sign Up',
+                                  text: AppLocalizations.of(context)!.signup,
                                   style: TextStyle(
                                       color: mainGreen1,
                                       fontWeight: FontWeight.bold,
@@ -274,11 +257,11 @@ class _LoginState extends State<Login> {
                       endIndent: doubleWidth(6),
                       thickness: doubleHeight(0.2),
                     ), //Privacy
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                    Wrap(
+                      // mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'By signing up you agree to our ',
+                          AppLocalizations.of(context)!.signing_agree,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: white,
@@ -287,12 +270,12 @@ class _LoginState extends State<Login> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            openUrl(
-                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
-                            // showDialog(
-                            //     context: context, builder: (_) => TeamDialog());
+                            String out = "https://footballbuzz.co/terms-of-use-footballbuzz";
+                            openUrl(out);
+                            // openUrl(
+                            // 'https://footballbuzz.co/terms-of-use-for-football-buzz/');
                           },
-                          child: Text('Terms of Use',
+                          child: Text(AppLocalizations.of(context)!.terms_of_use,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: mainGreen1,
@@ -301,7 +284,7 @@ class _LoginState extends State<Login> {
                                   fontStyle: FontStyle.italic)),
                         ),
                         Text(
-                          ' and',
+                          AppLocalizations.of(context)!.and,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: white,
@@ -312,10 +295,13 @@ class _LoginState extends State<Login> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openUrl('https://footballbuzz.co/privacypolicy/');
+                        String out = "https://footballbuzz.co/privacy-policy";
+
+                        openUrl(out);
+                        // openUrl('https://footballbuzz.co/privacypolicy/');
                         // showDialog(context: context, builder: (_) => Privacy());
                       },
-                      child: Text('Privacy Policy',
+                      child: Text(AppLocalizations.of(context)!.privacy_policy,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: mainGreen1,
@@ -350,9 +336,8 @@ class _LoginState extends State<Login> {
         loading = true;
       });
       MyService service = getIt<MyService>();
-      var back = await AuthenticationService.registerWithGoogle(
-          context, service, key,
-          user: backUser);
+      var back =
+          await AuthenticationService.registerWithGoogle(context, service, key, user: backUser);
       print('back');
       setState(() {
         loading = false;
@@ -379,9 +364,8 @@ class _LoginState extends State<Login> {
         loading = true;
       });
       MyService service = getIt<MyService>();
-      var back = await AuthenticationService.registerWithGoogle(
-          context, service, key,
-          user: backUser);
+      var back =
+          await AuthenticationService.registerWithGoogle(context, service, key, user: backUser);
       print('back');
       setState(() {
         loading = false;

@@ -80,7 +80,7 @@ class _TeamSearchState extends State<TeamSearch> {
 
                               prefixIcon: Icon(Icons.search),
                               border: InputBorder.none,
-                              hintText: 'Search'),
+                              hintText: AppLocalizations.of(context)!.search),
                         ),
                       ),
                     ),
@@ -96,12 +96,12 @@ class _TeamSearchState extends State<TeamSearch> {
             if(loading)
               return circle();
             else if (controller.value.text == '' && teams == null)
-              return Center(child: Text('waiting for user search'));
+              return Center(child: Text(AppLocalizations.of(context)!.waiting_for_user_search));
             else if(teams == null && controller.value.text.length<3)
-              return Center(child: Text('3 characters required.'));
+              return Center(child: Text(AppLocalizations.of(context)!.characters_required));
             else
               return teams==null || teams!.isEmpty
-                  ? Center(child: Text('no results'))
+                  ? Center(child: Text(AppLocalizations.of(context)!.no_results))
                   : ListView.builder(
                       itemCount: teams!.length,
                       itemBuilder: (context, index) => ListTile(

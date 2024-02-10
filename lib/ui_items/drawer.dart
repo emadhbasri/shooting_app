@@ -44,7 +44,10 @@ class _MyDrawerState extends State<MyDrawer>
             _controller.reverse().then((value) => Go.pop(context, null));
           },
         ),
-        title: Text('Menu'),
+        title: Text(
+          AppLocalizations.of(context)!.menu
+          // 'Menu'
+          ),
       ),
       body: SizedBox.expand(
           child: Stack(
@@ -151,7 +154,8 @@ class _MyDrawerState extends State<MyDrawer>
                     },
                     contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     title: Text(
-                      'Home',
+                      // 'Home',
+                      AppLocalizations.of(context)!.home1,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     trailing: Icon(
@@ -162,53 +166,7 @@ class _MyDrawerState extends State<MyDrawer>
                       size: 20,
                     ),
                   ),
-                  // ListTile(
-                  //   onTap: (){
-                  //     if(widget.page=='live scores'){
-                  //       _controller.reverse().then((value) => Go.pop(context, null));
-                  //     }else{
-                  //       _controller.reverse().then((value) {
-                  //         Go.pop(context, null);
-                  //         Go.pushSlideAnim(context, MatchListBuilder());
-                  //       });
-                  //     }
-                  //   },
-                  //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                  //   title: Text(
-                  //     'Live Scores',
-                  //     style: TextStyle(fontWeight: FontWeight.bold),
-                  //   ),
-                  //   trailing: Icon(
-                  //     Icons.arrow_forward_ios,
-                  //     color: Colors.black,
-                  //     size: 20,
-                  //   ),
-                  // ),
-                  // ListTile(
-                  //   onTap: (){
-                  //     Go.pushSlideAnim(context, GroupChatListBuilder());
-                  //   },
-                  //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                  //   title: Row(
-                  //     mainAxisSize: MainAxisSize.min,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Text(
-                  //         'SQUADS ',
-                  //         style: TextStyle(fontWeight: FontWeight.bold),
-                  //       ),
-                  //       // Text(
-                  //       //   '*coming soon*',
-                  //       //   style: TextStyle(color: mainBlue, fontSize: 12),
-                  //       // ),
-                  //     ],
-                  //   ),
-                  //   trailing: Icon(
-                  //     Icons.arrow_forward_ios,
-                  //     color: Colors.black,
-                  //     size: 20,
-                  //   ),
-                  // ),
+
 
                   Divider(
                     color: context.watch<ThemeState>().isDarkMode
@@ -224,7 +182,8 @@ class _MyDrawerState extends State<MyDrawer>
                     },
                     contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     title: Text(
-                      'Settings',
+                      AppLocalizations.of(context)!.settings,
+                      // 'Settings',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     trailing: Icon(

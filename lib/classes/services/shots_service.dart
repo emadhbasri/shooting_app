@@ -485,14 +485,14 @@ class ShotsService {
     return back['data']['data'];
   }
 
-  static Future<bool> shotReport(MyService service,
+  static Future<bool> shotReport(MyService service,context,
       {required DataPost post, required String message}) async {
     debugPrint('shotReport()');
 
     List<bool> checks = [];
     bool? cText = await checkReportText(post.details ?? '');
     if (cText == null) {
-      toast('please check your connection');
+      toast(AppLocalizations.of(context)!.please_check_your_connection);
       return false;
     } else {
       checks.add(cText);
@@ -500,7 +500,7 @@ class ShotsService {
     for (int j = 0; j < post.mediaTypes.length; j++) {
       bool? cImage = await checkReportImage(post.mediaTypes[j].media);
       if (cImage == null) {
-        toast('please check your connection');
+        toast(AppLocalizations.of(context)!.please_check_your_connection);
         return false;
       } else {
         checks.add(cImage);
@@ -533,19 +533,19 @@ class ShotsService {
       }
       return back['status'];
     } else {
-      toast('Report Send Successfully');
+      toast(AppLocalizations.of(context)!.report_send_successfully);
       return false;
     }
   }
 
-  static Future<bool> commentReport(MyService service,
+  static Future<bool> commentReport(MyService service,context,
       {required DataPostComment comment, required String message}) async {
     debugPrint('shotReport()');
 
     List<bool> checks = [];
     bool? cText = await checkReportText(comment.comment ?? '');
     if (cText == null) {
-      toast('please check your connection');
+      toast(AppLocalizations.of(context)!.please_check_your_connection);
       return false;
     } else {
       checks.add(cText);
@@ -553,7 +553,7 @@ class ShotsService {
     for (int j = 0; j < comment.mediaTypes.length; j++) {
       bool? cImage = await checkReportImage(comment.mediaTypes[j].media);
       if (cImage == null) {
-        toast('please check your connection');
+        toast(AppLocalizations.of(context)!.please_check_your_connection);
         return false;
       } else {
         checks.add(cImage);
@@ -585,19 +585,19 @@ class ShotsService {
       }
       return back['status'];
     } else {
-      toast('Report Send Successfully');
+      toast(AppLocalizations.of(context)!.report_send_successfully);
       return false;
     }
   }
 
-  static Future<bool> replyReport(MyService service,
+  static Future<bool> replyReport(MyService service,context,
       {required DataCommentReply reply, required String message}) async {
     debugPrint('shotReport()');
 
     List<bool> checks = [];
     bool? cText = await checkReportText(reply.replyDetail ?? '');
     if (cText == null) {
-      toast('Report Send Successfully');
+      toast(AppLocalizations.of(context)!.report_send_successfully);
       return false;
     } else {
       checks.add(cText);
@@ -605,7 +605,7 @@ class ShotsService {
     // for(int j=0;j<post.mediaTypes.length;j++){
     //   bool? cImage = await checkReportImage(post.mediaTypes[j].media);
     //   if(cImage==null){
-    //     toast('please check your connection');
+    //     toast(AppLocalizations.of(context)!.please_check_your_connection);
     //     return false;
     //   }else{
     //     checks.add(cImage);
@@ -637,13 +637,12 @@ class ShotsService {
       }
       return back['status'];
     } else {
-      toast('Report Send Successfully');
+      toast(AppLocalizations.of(context)!.report_send_successfully);
       return false;
     }
   }
 
   static Future<bool?> checkReportText(String text) async {
-    print('checkReportText($text)');
     String url = ""
         "http://api1.webpurify.com/services/rest/?"
         "format=json&api_key=64b03d7273c0635157a724ac65a56835&text="

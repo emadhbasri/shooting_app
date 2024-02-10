@@ -46,7 +46,7 @@ class _ShotState extends State<Shot> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Shot'),
+          title: Text(AppLocalizations.of(context)!.shot),
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: 'makeComment',

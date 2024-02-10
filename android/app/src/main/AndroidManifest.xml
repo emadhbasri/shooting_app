@@ -47,6 +47,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
+
+
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -96,7 +98,7 @@
             <!-- Accepts URIs that begin with https://YOUR_HOST -->
             <data
                 android:scheme="https"
-                android:host="footballbuzz.co" />
+                android:host="https://permona.ir/app/" />
             </intent-filter>
 
 <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect

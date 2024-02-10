@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-//
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:shooting_app/main.dart';
 import 'package:shooting_app/pages/AppPage.dart';
@@ -112,8 +110,8 @@ class AuthenticationService {
       myToast(key, back['data']['message']);
       return false;
     }
-    DataPersonalInformation pif =
-        DataPersonalInformation.fromJson(back['data']['data']);
+    // DataPersonalInformation pif =
+    //     DataPersonalInformation.fromJson(back['data']['data']);
 
     if (back['data']['data'].containsKey('accessToken') &&
         back['data']['data'].containsKey('refreshToken') &&
@@ -151,7 +149,7 @@ class AuthenticationService {
 
   static Future<bool> register(
     MyService service,
-    GlobalKey<MyToastState> key, {
+    GlobalKey<MyToastState> key,context, {
     required String fullName,
     required String userName,
     required String phoneNumber,
@@ -161,21 +159,18 @@ class AuthenticationService {
   }) async {
     debugPrint('register()');
     if (fullName.trim() == '') {
-      myToast(key, 'The fullName field is required.');
+      myToast(key, AppLocalizations.of(context)!.the_fullName_field_is_required);
       return false;
     } else if (userName.trim() == '') {
-      myToast(key, 'The userName field is required.');
+      myToast(key, AppLocalizations.of(context)!.the_username_field_is_required);
       return false;
     }
-    // else if (phoneNumber.trim() == '') {
-    //   toast('The phoneNumber field is required.');
-    //   return false;
-    // }
+
     else if (email.trim() == '') {
-      myToast(key, 'The email field is required.');
+      myToast(key, AppLocalizations.of(context)!.the_email_field_is_required);
       return false;
     } else if (password.trim() == '') {
-      myToast(key, 'The password field is required.');
+      myToast(key, AppLocalizations.of(context)!.the_password_field_is_required);
       return false;
     }
     Map<String, dynamic> out = {
@@ -190,6 +185,7 @@ class AuthenticationService {
       "confirmPassword": confirmPassword.trim()
     };
     out['notificationToken'] = await messaging.getToken();
+    print('outsssssss $out');
     Map<String, dynamic> back = await service
         .httpPost('/api/v1/Authentication/register', out, jsonType: true);
     if (back['status'] == false) {
@@ -198,15 +194,7 @@ class AuthenticationService {
         myToast(key, error['email'].first);
       } else {
         myToast(key, error, isLong: true);
-        // if(error is String && error.contains('is already in use')) {
-        //   // myToast(key,'If You Register Already You Can Use The The Otp Button.',isLong: true);
-        //   myToast(key, error
-        //       + '\n\n' +
-        //       'If You Register Already You Can Use The The Otp Button.',
-        //       isLong: true);
-        // }else{
-        //   myToast(key,error,isLong: true);
-        // }
+
       }
       return false;
     }

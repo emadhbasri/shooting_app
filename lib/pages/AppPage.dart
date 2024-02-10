@@ -114,22 +114,11 @@ class _AppPageState extends State<AppPage> {
                 ),
               )),
         ),
-        // IconButton(
-        //   icon: Icon(
-        //     Icons.menu,
-        //     color: white,
-        //   ),
-        //   onPressed: () {
-        //     Go.pushSlideAnimDrawer(
-        //         context,
-        //         MyDrawer(
-        //           page: 'home',
-        //         ));
-        //   },
-        // ),
+
         centerTitle: true,
         title: Text(
-          'HOME',
+          AppLocalizations.of(context)!.home,
+          // 'HOME',
           style: TextStyle(color: white),
         ),
         actions: <Widget>[
@@ -142,12 +131,7 @@ class _AppPageState extends State<AppPage> {
             onPressed: () {
               //TODO
               Go.pushSlideAnim(context, SearchUser());
-              // Go.pushSlideAnim(context, VerifyOtp(
-              //   username: 'emadbasri',
-              //   password: '',
-              //   isRegister: false,
-              // ));
-              // Go.pushSlideAnim(context, Search());
+
             },
           ),
         ],
@@ -177,7 +161,8 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Messages'.toUpperCase(),
+          AppLocalizations.of(context)!.messages.toUpperCase(),
+          // 'Messages'.toUpperCase(),
           style: TextStyle(color: white),
         ),
         actions: [
@@ -213,7 +198,8 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'notification'.toUpperCase(),
+          AppLocalizations.of(context)!.notification.toUpperCase(),
+          // 'notification'.toUpperCase(),
           style: TextStyle(color: white),
         ),
       );
@@ -242,7 +228,8 @@ class _AppPageState extends State<AppPage> {
         ),
         centerTitle: true,
         title: Text(
-          'Profile'.toUpperCase(),
+          AppLocalizations.of(context)!.profile.toUpperCase(),
+          // 'Profile'.toUpperCase(),
           style: TextStyle(color: white),
         ),
         actions: [
@@ -259,7 +246,9 @@ class _AppPageState extends State<AppPage> {
                       width: 25,
                       height: 25,
                     ),
-                  )))
+                  ))),
+              ChangeLang(samll: true,)
+
         ],
       );
     }
@@ -574,9 +563,9 @@ class _AppPageState extends State<AppPage> {
                                             state.personalInformation!.team!
                                                 .team_key) {
                                       if (state.match!.isLive == 0) {
-                                        toast('Match Is Not Started');
+                                        toast(AppLocalizations.of(context)!.match_is_not_started);
                                       } else if (state.match!.isLive == 2) {
-                                        toast('The Match In Finished.');
+                                        toast(AppLocalizations.of(context)!.the_match_in_finished);
                                       } else {
                                         Go.pushSlideAnimSheet(
                                             context,
@@ -586,10 +575,10 @@ class _AppPageState extends State<AppPage> {
                                       }
                                     } else {
                                       toast(
-                                          'You Are Not Allowed To Shoot For This Match.');
+                                          AppLocalizations.of(context)!.you_are_not_allowed_);
                                     }
                                   } else {
-                                    toast('Please Select A Match.');
+                                    toast(AppLocalizations.of(context)!.please_select_a_match);
                                   }
                                 } else {
                                   state.tab = MyTab.fanFeed;

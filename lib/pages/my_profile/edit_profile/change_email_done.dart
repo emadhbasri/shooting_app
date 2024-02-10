@@ -23,7 +23,7 @@ class _ChangeEmailDoneState extends State<ChangeEmailDone> {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(elevation: 0, title: Text('Change Email'),automaticallyImplyLeading: false),
+        appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.change_email),automaticallyImplyLeading: false),
         // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
         body: SizedBox.expand(
             child: Padding(
@@ -31,36 +31,17 @@ class _ChangeEmailDoneState extends State<ChangeEmailDone> {
           child: Column(children: [
             SizedBox(height: doubleHeight(6)),
             Text(
-              'A link has been sent to\n${widget.email}',
+              '${AppLocalizations.of(context)!.a_link_has}\n${widget.email}',
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: doubleHeight(2)),
             Text(
-              'Please Check Your Email/spam',
-              // 'TextCheck your email to verify these changes',
+              AppLocalizations.of(context)!.please_check_your_email_spam,
               style: TextStyle(color: grayCall),
             ),
             SizedBox(height: doubleHeight(8)),
-            // SizedBox(
-            //     width: double.maxFinite,
-            //     child: Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: doubleWidth(4)),
-            //       child: OutlinedButton(
-            //         style: ButtonStyle(
-            //             side: MaterialStateProperty.all(
-            //                 BorderSide(color: mainBlue)),
-            //             padding: MaterialStateProperty.all(
-            //                 EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
-            //         child: Text(
-            //           'Back to Profile',
-            //           style: TextStyle(color: mainBlue),
-            //         ),
-            //         onPressed: () {
-            //           Go.pop(context);
-            //         },
-            //       ),
-            //     )),
+
           ]),
         )),
       ),

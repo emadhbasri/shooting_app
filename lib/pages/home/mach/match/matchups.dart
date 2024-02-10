@@ -16,7 +16,7 @@ class MatchUps extends StatelessWidget {
     if(getIt<MainState>().personalInformation!.team==null){
         return SizedBox.expand(
           child: Center(
-            child: Text('You are not allowed to see this section'),
+            child: Text(AppLocalizations.of(context)!.you_are_not_allowed),
           ),
         );
     }
@@ -24,26 +24,21 @@ class MatchUps extends StatelessWidget {
     && state.selectedMatch.away.id.toString()!=getIt<MainState>().personalInformation!.team!.team_key) {
       return SizedBox.expand(
         child: Center(
-          child: Text('You Are Not Allowed To see This Section'),
+          child: Text(AppLocalizations.of(context)!.you_are_not_allowed),
         ),
       );
     }
     if(state.selectedMatch.isLive==0)
       return SizedBox.expand(
         child: Center(
-          child: Text('Match Is Not started'),
+          child: Text(AppLocalizations.of(context)!.match_is_not_started),
         ),
       );
-    // if(state.selectedMatch.isLive==2)
-    //   return SizedBox.expand(
-    //     child: Center(
-    //       child: Text('Match Is Finished'),
-    //     ),
-    //   );
+
     if(state.selectedMatch.matchUps.isEmpty){
       return SizedBox.expand(
         child: Center(
-          child: Text('No Shots'),
+          child: Text(AppLocalizations.of(context)!.no_shots),
         ),
       );
     }

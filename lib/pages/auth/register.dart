@@ -1,13 +1,11 @@
 import 'dart:io' as io;
 import 'package:shooting_app/classes/states/google_sign_in_state.dart';
 import 'package:shooting_app/pages/auth/verify_otp.dart';
-import 'package:shooting_app/ui_items/dialogs/privacy.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
 import '../../main.dart';
-import '../../ui_items/dialogs/team.dart';
 import '../../ui_items/my_toast.dart';
 import 'login.dart';
 
@@ -50,7 +48,7 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    'WELCOME',
+                    AppLocalizations.of(context)!.welcome,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: doubleWidth(5),
@@ -71,7 +69,7 @@ class _RegisterState extends State<Register> {
                           decoration: InputDecoration(
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'FullName'),
+                              hintText: AppLocalizations.of(context)!.fullname),
                         ),
                       ),
                     ),
@@ -92,7 +90,7 @@ class _RegisterState extends State<Register> {
                           decoration: InputDecoration(
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'Username'),
+                              hintText: AppLocalizations.of(context)!.username),
                         ),
                       ),
                     ),
@@ -114,31 +112,13 @@ class _RegisterState extends State<Register> {
                           decoration: InputDecoration(
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'Email'),
+                              hintText: AppLocalizations.of(context)!.email),
                         ),
                       ),
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  // sizeh(doubleHeight(2)),
-                  // ClipRRect(
-                  //   child: Container(
-                  //     width: max,
-                  //     height: doubleHeight(7),
-                  //     color: Color.fromRGBO(216, 216, 216, 1),
-                  //     child: Center(
-                  //       child: TextField(
-                  //         keyboardType: TextInputType.phone,
-                  //         controller: phone,
-                  //         decoration: InputDecoration(
-                  //             prefixText: '        ',
-                  //             border: InputBorder.none,
-                  //             hintText: 'PhoneNumber (optinal)'),
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   borderRadius: BorderRadius.circular(10),
-                  // ),
+
                   sizeh(doubleHeight(2)),
                   ClipRRect(
                     child: Container(
@@ -169,7 +149,7 @@ class _RegisterState extends State<Register> {
                               ),
                               prefixText: '        ',
                               border: InputBorder.none,
-                              hintText: 'Password'),
+                              hintText: AppLocalizations.of(context)!.password),
                         ),
                       ),
                     ),
@@ -180,10 +160,10 @@ class _RegisterState extends State<Register> {
                     child: TextButton(
                       onPressed: () async {
                         if (username.value.text.trim() == '') {
-                          myToast(key, 'The Username field is required.');
+                          myToast(key, AppLocalizations.of(context)!.the_username_field_is_required);
                           return;
                         } else if (password.value.text.trim() == '') {
-                          myToast(key, 'The Password field is required.');
+                          myToast(key, AppLocalizations.of(context)!.the_password_field_is_required);
                           return;
                         }
                         Go.pushSlideAnim(
@@ -195,7 +175,7 @@ class _RegisterState extends State<Register> {
                             ));
                       },
                       child: Text(
-                        'Register With Otp',
+                        AppLocalizations.of(context)!.register_with_otp,
                         textAlign: TextAlign.right,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -231,7 +211,7 @@ class _RegisterState extends State<Register> {
                           });
                           MyService service = getIt<MyService>();
                           bool back =
-                              await AuthenticationService.register(service, key,
+                              await AuthenticationService.register(service, key,context,
                                   fullName: name.value.text.trim(),
                                   userName: username.value.text.trim(),
                                   phoneNumber: '', //phone.value.text.trim()
@@ -256,7 +236,7 @@ class _RegisterState extends State<Register> {
                         child: loading
                             ? simpleCircle(color: mainGreen)
                             : Text(
-                                'Sign Up',
+                                AppLocalizations.of(context)!.signup,
                                 style: TextStyle(
                                     fontSize: doubleWidth(5), color: white),
                               ),
@@ -283,7 +263,7 @@ class _RegisterState extends State<Register> {
                             ? CircularProgressIndicator()
                             : Image.asset('assets/images/google.png'),
                       ),
-                      label: Text(loadingGoogle ? '' : 'Sign Up with Google')),
+                      label: Text(loadingGoogle ? '' : AppLocalizations.of(context)!.signup_with_google)),
 
                   if (io.Platform.isIOS)
                     sizeh(doubleHeight(1))
@@ -300,6 +280,7 @@ class _RegisterState extends State<Register> {
                     else
                       SignInWithAppleButton(
                         height: 50,
+                        text: AppLocalizations.of(context)!.sign_in_with_apple,
                         style: SignInWithAppleButtonStyle.white,
                         onPressed: () {
                           appleLogin();
@@ -317,9 +298,13 @@ class _RegisterState extends State<Register> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           children: [
-                            TextSpan(text: 'Already have an account?  '),
+                            TextSpan(text:
+                            AppLocalizations.of(context)!.already_have_account
+                            ),
                             TextSpan(
-                                text: 'Log In',
+                                text:
+                                AppLocalizations.of(context)!.login
+                                ,
                                 style: TextStyle(
                                     color: mainGreen1,
                                     fontWeight: FontWeight.bold,
@@ -338,11 +323,11 @@ class _RegisterState extends State<Register> {
                     endIndent: doubleWidth(6),
                     thickness: doubleHeight(0.2),
                   ), //Privacy
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+                  Wrap(
+                    // mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'By signing up you agree to our ',
+                        AppLocalizations.of(context)!.signing_agree,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: white,
@@ -351,12 +336,13 @@ class _RegisterState extends State<Register> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          openUrl(
-                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
-                          // showDialog(
-                          //     context: context, builder: (_) => TeamDialog());
+                          String out =
+                                  "https://footballbuzz.co/terms-of-use-footballbuzz";
+                              openUrl(out);
+                          // openUrl(
+                    // 'https://footballbuzz.co/terms-of-use-for-football-buzz/');
                         },
-                        child: Text('Terms of Use',
+                        child: Text(AppLocalizations.of(context)!.terms_of_use,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: mainGreen1,
@@ -365,7 +351,7 @@ class _RegisterState extends State<Register> {
                                 fontStyle: FontStyle.italic)),
                       ),
                       Text(
-                        ' and',
+                        AppLocalizations.of(context)!.and,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: white,
@@ -376,9 +362,14 @@ class _RegisterState extends State<Register> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      String out =
+                              "https://footballbuzz.co/privacy-policy";
+
+                          openUrl(out);
+                      // openUrl('https://footballbuzz.co/privacypolicy/');
                       // showDialog(context: context, builder: (_) => Privacy());
                     },
-                    child: Text('Privacy Policy',
+                    child: Text(AppLocalizations.of(context)!.privacy_policy,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: mainGreen1,

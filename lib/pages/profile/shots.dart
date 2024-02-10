@@ -55,7 +55,7 @@ class _ShotsState extends State<Shots> {
               SizedBox(
                   height: doubleHeight(40),
                   width: double.maxFinite,
-                  child: Center(child: Text('No Shots'))),
+                  child: Center(child: Text(AppLocalizations.of(context)!.no_shots))),
             ],
           ),
         );

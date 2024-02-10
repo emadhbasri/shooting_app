@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
 import 'package:video_player/video_player.dart';
@@ -17,8 +16,7 @@ import 'package:provider/provider.dart';
 
 class CommentFromShot extends StatefulWidget {
   final VoidCallback delete;
-  const CommentFromShot({Key? key, required this.comment, required this.delete})
-      : super(key: key);
+  const CommentFromShot({Key? key, required this.comment, required this.delete}) : super(key: key);
   final DataPostComment comment;
   @override
   _CommentFromShotState createState() => _CommentFromShotState();
@@ -37,10 +35,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
   }
 
   init() async {
-    if (comment.mediaTypes.isNotEmpty &&
-        comment.mediaTypes.first.media.contains('video/upload')) {
-      controller =
-          VideoPlayerController.network(comment.mediaTypes.first.media);
+    if (comment.mediaTypes.isNotEmpty && comment.mediaTypes.first.media.contains('video/upload')) {
+      controller = VideoPlayerController.network(comment.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
         loadingVideo = false;
@@ -51,8 +47,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
   @override
   void dispose() {
     super.dispose();
-    if (comment.mediaTypes.isNotEmpty &&
-        comment.mediaTypes.first.media.contains('video/upload'))
+    if (comment.mediaTypes.isNotEmpty && comment.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -84,8 +79,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           Go.pushSlideAnim(
                               context,
                               ProfileBuilder(
-                                  username: comment
-                                      .personalInformationViewModel!.userName));
+                                  username: comment.personalInformationViewModel!.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -95,12 +89,9 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               height: doubleHeight(5),
                               child: Builder(
                                 builder: (context) {
-                                  if (comment.personalInformationViewModel!
-                                          .profilePhoto !=
-                                      null) {
+                                  if (comment.personalInformationViewModel!.profilePhoto != null) {
                                     return imageNetwork(
-                                      comment.personalInformationViewModel!
-                                          .profilePhoto!,
+                                      comment.personalInformationViewModel!.profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
                                   }
@@ -120,17 +111,13 @@ class _CommentFromShotState extends State<CommentFromShot> {
                               color: white,
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
-                              image:
-                                  comment.personalInformationViewModel!.team !=
-                                          null
-                                      ? DecorationImage(
-                                          image: networkImage(comment
-                                                  .personalInformationViewModel!
-                                                  .team!
-                                                  .team_badge ??
+                              image: comment.personalInformationViewModel!.team != null
+                                  ? DecorationImage(
+                                      image: networkImage(
+                                          comment.personalInformationViewModel!.team!.team_badge ??
                                               ''),
-                                        )
-                                      : null),
+                                    )
+                                  : null),
                         ),
                       ),
                     )
@@ -162,12 +149,18 @@ class _CommentFromShotState extends State<CommentFromShot> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataPostComment? back = await Go.pushSlideAnimSheet(
-                          context, MyBottomSheetComment(comment));
+                      dynamic back =
+                          await Go.pushSlideAnimSheet(context, MyBottomSheetComment(comment));
                       if (back != null) {
-                        setState(() {
-                          comment = back;
-                        });
+                        if (back is DataPostComment) {
+                          setState(() {
+                            comment = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            comment.comment = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -176,8 +169,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -195,8 +187,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                   height: doubleWidth(70),
                   child: Builder(builder: (context) {
                     if (comment.mediaTypes.isNotEmpty &&
-                        comment.mediaTypes.first.media
-                            .contains('video/upload')) {
+                        comment.mediaTypes.first.media.contains('video/upload')) {
                       if (loadingVideo) {
                         return Center(
                           child: Column(
@@ -204,12 +195,10 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             children: [
                               const CircularProgressIndicator(),
                               SizedBox(height: doubleHeight(1)),
-                              const Text(
-                                'loading ...',
+                              Text(
+                                AppLocalizations.of(context)!.loading,
                                 textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: mainBlue, fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
@@ -223,23 +212,16 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       );
                     } else
                       return PageView.builder(
-                        controller: PageController(
-                            initialPage: 0, viewportFraction: 0.85),
+                        controller: PageController(initialPage: 0, viewportFraction: 0.85),
                         physics: BouncingScrollPhysics(),
                         itemCount: comment.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
                           padding: EdgeInsets.only(
-                              right: comment.mediaTypes.length - 1 != index
-                                  ? doubleHeight(2)
-                                  : 0),
+                              right: comment.mediaTypes.length - 1 != index ? doubleHeight(2) : 0),
                           child: GestureDetector(
                             onTap: () {
-                              Go.push(
-                                  context,
-                                  Gal(
-                                      images: comment.mediaTypes
-                                          .map((e) => e.media)
-                                          .toList()));
+                              Go.push(context,
+                                  Gal(images: comment.mediaTypes.map((e) => e.media).toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
@@ -268,9 +250,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
                           child: Center(
                             child: SvgPicture.asset(
                               'assets/icons/comment.svg',
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? greenCall
-                                  : mainBlue,
+                              color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                               width: doubleWidth(7),
                               height: doubleWidth(7),
                             ),
@@ -290,80 +270,74 @@ class _CommentFromShotState extends State<CommentFromShot> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
-                          if (!comment.commentLikedBythisUser) {
-                            String? back = await ShotsService.commentLike(
-                                service,
-                                postCommentId: comment.id);
-                            if (back != null) {
-                              setState(() {
-                                comment.commentLikes
-                                    .add(DataCommentLike(back, ''));
-                                comment.commentLikedBythisUser = true;
-                                comment.commentLikeCount++;
-                              });
-                            }
-                          } else {
-                            if (comment.commentLikes.isNotEmpty) {
-                              bool back = await ShotsService.deleteCommentLike(
-                                  service,
-                                  commentId: comment.commentLikes.first.id);
-                              if (back)
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
+                            if (!comment.commentLikedBythisUser) {
+                              String? back = await ShotsService.commentLike(service,
+                                  postCommentId: comment.id);
+                              if (back != null) {
                                 setState(() {
-                                  comment.commentLikes.clear();
-                                  comment.commentLikedBythisUser = false;
-                                  comment.commentLikeCount--;
+                                  comment.commentLikes.add(DataCommentLike(back, ''));
+                                  comment.commentLikedBythisUser = true;
+                                  comment.commentLikeCount++;
                                 });
+                              }
+                            } else {
+                              if (comment.commentLikes.isNotEmpty) {
+                                bool back = await ShotsService.deleteCommentLike(service,
+                                    commentId: comment.commentLikes.first.id);
+                                if (back)
+                                  setState(() {
+                                    comment.commentLikes.clear();
+                                    comment.commentLikedBythisUser = false;
+                                    comment.commentLikeCount--;
+                                  });
+                              }
                             }
-                          }
-                        },
-                        child: SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/like.svg',
-                              color: comment.commentLikedBythisUser?greenCall:null,
+                          },
+                          child: SizedBox(
                               width: doubleWidth(7),
                               height: doubleWidth(7),
-                            ),
-                          ))
-                        // Icon(
-                        //     comment.commentLikedBythisUser
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color: comment.commentLikedBythisUser
-                        //         ? greenCall
-                        //         : context.watch<ThemeState>().isDarkMode
-                        //             ? white
-                        //             : black),
-                      ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: comment.commentLikedBythisUser ? greenCall : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          // Icon(
+                          //     comment.commentLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: comment.commentLikedBythisUser
+                          //         ? greenCall
+                          //         : context.watch<ThemeState>().isDarkMode
+                          //             ? white
+                          //             : black),
+                          ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount),
                           style: TextStyle(
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? white
-                                  : black)),
+                              color: context.watch<ThemeState>().isDarkMode ? white : black)),
                     ],
                   ),
-                  if (comment.personalInformationId ==
-                      getIt<MainState>().userId)
+                  if (comment.personalInformationId == getIt<MainState>().userId)
                     Tooltip(
-                      message: 'remove the comment',
+                      message: AppLocalizations.of(context)!.remove_the_comment,
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
                         child: GestureDetector(
                           onTap: () async {
-                            if (comment.personalInformationId !=
-                                getIt<MainState>().userId) {
-                              toast('you can not delete this comment');
+                            if (comment.personalInformationId != getIt<MainState>().userId) {
+                              toast(AppLocalizations.of(context)!.you_can_not_delete_this_comment);
                               return;
                             }
 
                             bool? alert = await MyAlertDialog(context,
-                                content: 'Do you want to delete the shot?');
+                                content:
+                                    AppLocalizations.of(context)!.do_you_want_to_delete_the_comment);
                             print('alert $alert');
                             // showDialog(
                             //   context: context,
@@ -374,9 +348,8 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             // );
                             if (alert != null && alert) {
                               MyService service = await getIt<MyService>();
-                              bool back = await ShotsService.deleteComment(
-                                  service,
-                                  commentId: comment.id);
+                              bool back =
+                                  await ShotsService.deleteComment(service, commentId: comment.id);
                               if (back) widget.delete();
                             }
                           },
@@ -417,37 +390,31 @@ class _CommentFromShotState extends State<CommentFromShot> {
                       isInOtherPage = true;
                       DataPersonalInformation? userName =
                           await Go.pushSlideAnim(context, SearchUserMention());
-                      controllerT.text = controllerT.value.text
-                          .substring(0, controllerT.value.text.length - 1);
+                      controllerT.text =
+                          controllerT.value.text.substring(0, controllerT.value.text.length - 1);
                       if (userName != null) {
                         String pp = '';
                         if (!controllerT.value.text.endsWith(' ')) pp = ' ';
-                        controllerT.text = controllerT.value.text +
-                            pp +
-                            '@' +
-                            userName.userName +
-                            ' ';
+                        controllerT.text =
+                            controllerT.value.text + pp + '@' + userName.userName + ' ';
                       }
                       isInOtherPage = false;
                     }
                   },
                   decoration: InputDecoration(
-                      hintStyle:
-                          TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
+                      hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
                       suffixIcon: GestureDetector(
                           onTap: () async {
-                            if (loading || controllerT.value.text.trim() == '')
-                              return;
+                            if (loading || controllerT.value.text.trim() == '') return;
                             setState(() {
                               loading = true;
                             });
 
-                            DataCommentReply? back =
-                                await ShotsService.commentReply(
-                                    getIt<MyService>(),
-                                    stadia: comment.stadiaId != null,
-                                    commentId: comment.id,
-                                    reply: controllerT.value.text.trim());
+                            DataCommentReply? back = await ShotsService.commentReply(
+                                getIt<MyService>(),
+                                stadia: comment.stadiaId != null,
+                                commentId: comment.id,
+                                reply: controllerT.value.text.trim());
                             setState(() {
                               loading = false;
                             });
@@ -459,16 +426,13 @@ class _CommentFromShotState extends State<CommentFromShot> {
                             }
                           },
                           child: loading
-                              ? Transform.scale(
-                                  scale: 0.5,
-                                  child: CircularProgressIndicator())
+                              ? Transform.scale(scale: 0.5, child: CircularProgressIndicator())
                               : Icon(
                                   Icons.send,
-                                  color: context.watch<ThemeState>().isDarkMode
-                                      ? greenCall
-                                      : mainBlue,
+                                  color:
+                                      context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                                 )),
-                      hintText: 'Write your reply...',
+                      hintText: AppLocalizations.of(context)!.write_your_reply,
                       border: InputBorder.none),
                 ),
               )),
@@ -484,9 +448,7 @@ class _CommentFromShotState extends State<CommentFromShot> {
 
 class CommentFromMatch extends StatefulWidget {
   final VoidCallback delete;
-  const CommentFromMatch(
-      {Key? key, required this.comment, required this.delete})
-      : super(key: key);
+  const CommentFromMatch({Key? key, required this.comment, required this.delete}) : super(key: key);
   final DataPostComment comment;
   @override
   _CommentFromMatchState createState() => _CommentFromMatchState();
@@ -505,10 +467,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   }
 
   init() async {
-    if (comment.mediaTypes.isNotEmpty &&
-        comment.mediaTypes.first.media.contains('video/upload')) {
-      controller =
-          VideoPlayerController.network(comment.mediaTypes.first.media);
+    if (comment.mediaTypes.isNotEmpty && comment.mediaTypes.first.media.contains('video/upload')) {
+      controller = VideoPlayerController.network(comment.mediaTypes.first.media);
       await controller.initialize();
       setState(() {
         loadingVideo = false;
@@ -519,8 +479,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
   @override
   void dispose() {
     super.dispose();
-    if (comment.mediaTypes.isNotEmpty &&
-        comment.mediaTypes.first.media.contains('video/upload'))
+    if (comment.mediaTypes.isNotEmpty && comment.mediaTypes.first.media.contains('video/upload'))
       controller.dispose();
   }
 
@@ -548,8 +507,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                           Go.pushSlideAnim(
                               context,
                               ProfileBuilder(
-                                  username: comment
-                                      .personalInformationViewModel!.userName));
+                                  username: comment.personalInformationViewModel!.userName));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -559,12 +517,9 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               height: doubleHeight(5),
                               child: Builder(
                                 builder: (context) {
-                                  if (comment.personalInformationViewModel!
-                                          .profilePhoto !=
-                                      null) {
+                                  if (comment.personalInformationViewModel!.profilePhoto != null) {
                                     return imageNetwork(
-                                      comment.personalInformationViewModel!
-                                          .profilePhoto!,
+                                      comment.personalInformationViewModel!.profilePhoto!,
                                       fit: BoxFit.fill,
                                     );
                                   }
@@ -584,17 +539,13 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                               color: white,
                               border: Border.all(color: white, width: 2),
                               borderRadius: BorderRadius.circular(100),
-                              image:
-                                  comment.personalInformationViewModel!.team !=
-                                          null
-                                      ? DecorationImage(
-                                          image: networkImage(comment
-                                                  .personalInformationViewModel!
-                                                  .team!
-                                                  .team_badge ??
+                              image: comment.personalInformationViewModel!.team != null
+                                  ? DecorationImage(
+                                      image: networkImage(
+                                          comment.personalInformationViewModel!.team!.team_badge ??
                                               ''),
-                                        )
-                                      : null),
+                                    )
+                                  : null),
                         ),
                       ),
                     )
@@ -625,12 +576,18 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                   SizedBox(width: doubleWidth(4)),
                   GestureDetector(
                     onTap: () async {
-                      DataPostComment? back = await Go.pushSlideAnimSheet(
-                          context, MyBottomSheetComment(comment));
+                      dynamic back =
+                          await Go.pushSlideAnimSheet(context, MyBottomSheetComment(comment));
                       if (back != null) {
-                        setState(() {
-                          comment = back;
-                        });
+                        if (back is DataPostComment) {
+                          setState(() {
+                            comment = back;
+                          });
+                        } else if (back is String) {
+                          setState(() {
+                            comment.comment = back;
+                          });
+                        }
                       }
                     },
                     child: Container(
@@ -639,8 +596,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       decoration: BoxDecoration(
                           color: Color.fromRGBO(226, 224, 235, 1),
                           borderRadius: BorderRadius.circular(5)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
+                      padding: EdgeInsets.symmetric(horizontal: doubleWidth(0.8)),
                       child: Image.asset('assets/images/menu.png'),
                     ),
                   )
@@ -658,8 +614,7 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                   height: doubleWidth(70),
                   child: Builder(builder: (context) {
                     if (comment.mediaTypes.isNotEmpty &&
-                        comment.mediaTypes.first.media
-                            .contains('video/upload')) {
+                        comment.mediaTypes.first.media.contains('video/upload')) {
                       if (loadingVideo) {
                         return Center(
                           child: Column(
@@ -667,12 +622,10 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                             children: [
                               const CircularProgressIndicator(),
                               SizedBox(height: doubleHeight(1)),
-                              const Text(
-                                'loading ...',
+                              Text(
+                                AppLocalizations.of(context)!.loading,
                                 textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                    color: mainBlue,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: mainBlue, fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
@@ -686,23 +639,16 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                       );
                     } else
                       return PageView.builder(
-                        controller: PageController(
-                            initialPage: 0, viewportFraction: 0.85),
+                        controller: PageController(initialPage: 0, viewportFraction: 0.85),
                         physics: BouncingScrollPhysics(),
                         itemCount: comment.mediaTypes.length,
                         itemBuilder: (_, index) => Padding(
                           padding: EdgeInsets.only(
-                              right: comment.mediaTypes.length - 1 != index
-                                  ? doubleHeight(2)
-                                  : 0),
+                              right: comment.mediaTypes.length - 1 != index ? doubleHeight(2) : 0),
                           child: GestureDetector(
                             onTap: () {
-                              Go.push(
-                                  context,
-                                  Gal(
-                                      images: comment.mediaTypes
-                                          .map((e) => e.media)
-                                          .toList()));
+                              Go.push(context,
+                                  Gal(images: comment.mediaTypes.map((e) => e.media).toList()));
                             },
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
@@ -731,96 +677,82 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                           child: Center(
                             child: SvgPicture.asset(
                               'assets/icons/comment.svg',
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? greenCall
-                                  : mainBlue,
+                              color: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
                               width: doubleWidth(7),
                               height: doubleWidth(7),
                             ),
                           )),
-                      // SizedBox(
-                      //     width: doubleWidth(5),
-                      //     height: doubleWidth(5),
-                      //     child: Image.asset('assets/images/chat(2).png',
-                      //         color: greenCall)),
                       sizew(doubleWidth(1)),
-                      // Text(makeCount(comment.commentReplyCount))
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () async {
-                          MyService service = await getIt<MyService>();
-                          if (!comment.commentLikedBythisUser) {
-                            String? back = await ShotsService.commentLike(
-                                service,
-                                postCommentId: comment.id);
-                            if (back != null)
-                              setState(() {
-                                comment.commentLikes
-                                    .add(DataCommentLike(back, ''));
-                                comment.commentLikedBythisUser = true;
-                                comment.commentLikeCount++;
-                              });
-                          } else {
-                            bool back = await ShotsService.deleteCommentLike(
-                                service,
-                                commentId: comment.commentLikes.first.id);
-                            if (back)
-                              setState(() {
-                                comment.commentLikes.clear();
-                                comment.commentLikedBythisUser = false;
-                                comment.commentLikeCount--;
-                              });
-                          }
-                        },
-                        child: SizedBox(
-                          width: doubleWidth(7),
-                          height: doubleWidth(7),
-                          child: Center(
-                            child: SvgPicture.asset(
-                              'assets/icons/like.svg',
-                              color: comment.commentLikedBythisUser?greenCall:null,
+                          onTap: () async {
+                            MyService service = await getIt<MyService>();
+                            if (!comment.commentLikedBythisUser) {
+                              String? back = await ShotsService.commentLike(service,
+                                  postCommentId: comment.id);
+                              if (back != null)
+                                setState(() {
+                                  comment.commentLikes.add(DataCommentLike(back, ''));
+                                  comment.commentLikedBythisUser = true;
+                                  comment.commentLikeCount++;
+                                });
+                            } else {
+                              bool back = await ShotsService.deleteCommentLike(service,
+                                  commentId: comment.commentLikes.first.id);
+                              if (back)
+                                setState(() {
+                                  comment.commentLikes.clear();
+                                  comment.commentLikedBythisUser = false;
+                                  comment.commentLikeCount--;
+                                });
+                            }
+                          },
+                          child: SizedBox(
                               width: doubleWidth(7),
                               height: doubleWidth(7),
-                            ),
-                          ))
-                        // Icon(
-                        //     comment.commentLikedBythisUser
-                        //         ? Icons.favorite
-                        //         : Icons.favorite_border,
-                        //     color: comment.commentLikedBythisUser
-                        //         ? greenCall
-                        //         : context.watch<ThemeState>().isDarkMode
-                        //             ? white
-                        //             : black),
-                      ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/like.svg',
+                                  color: comment.commentLikedBythisUser ? greenCall : null,
+                                  width: doubleWidth(7),
+                                  height: doubleWidth(7),
+                                ),
+                              ))
+                          // Icon(
+                          //     comment.commentLikedBythisUser
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: comment.commentLikedBythisUser
+                          //         ? greenCall
+                          //         : context.watch<ThemeState>().isDarkMode
+                          //             ? white
+                          //             : black),
+                          ),
                       sizew(doubleWidth(1)),
                       Text(makeCount(comment.commentLikeCount),
                           style: TextStyle(
-                              color: context.watch<ThemeState>().isDarkMode
-                                  ? white
-                                  : black)),
+                              color: context.watch<ThemeState>().isDarkMode ? white : black)),
                     ],
                   ),
-                  if (comment.personalInformationId ==
-                      getIt<MainState>().userId)
+                  if (comment.personalInformationId == getIt<MainState>().userId)
                     Tooltip(
-                      message: 'remove the comment',
+                      message: AppLocalizations.of(context)!.remove_the_comment,
                       child: SizedBox(
                         width: doubleWidth(5),
                         height: doubleWidth(5),
                         child: GestureDetector(
                           onTap: () async {
-                            if (comment.personalInformationId !=
-                                getIt<MainState>().userId) {
-                              toast('you can not delete this comment');
+                            if (comment.personalInformationId != getIt<MainState>().userId) {
+                              toast(AppLocalizations.of(context)!.you_can_not_delete_this_comment);
                               return;
                             }
                             bool? alert = await MyAlertDialog(context,
-                                content: 'Do you want to delete the shot?');
+                                content:
+                                    AppLocalizations.of(context)!.do_you_want_to_delete_the_comment);
                             // showDialog(
                             //   context: context,
                             //   barrierDismissible: true,
@@ -830,9 +762,8 @@ class _CommentFromMatchState extends State<CommentFromMatch> {
                             // );
                             if (alert != null && alert) {
                               MyService service = await getIt<MyService>();
-                              bool back = await ShotsService.deleteComment(
-                                  service,
-                                  commentId: comment.id);
+                              bool back =
+                                  await ShotsService.deleteComment(service, commentId: comment.id);
                               if (back) widget.delete();
                             }
                           },

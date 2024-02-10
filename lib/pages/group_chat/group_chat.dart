@@ -9,7 +9,6 @@ import 'package:shooting_app/pages/group_chat/group_members.dart';
 import 'package:shooting_app/pages/profile/profile.dart';
 import 'package:shooting_app/ui_items/shots/index.dart';
 import 'package:shooting_app/ui_items/shots/video_item.dart';
-import 'package:shooting_app/ui_items/theme_switcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import '../../classes/states/chat_state.dart';
@@ -108,7 +107,7 @@ class _GroupChatState extends State<GroupChat> {
                 title: Text(state.selectedChat.name??'',style: TextStyle(//
                   color: white
                 ),),
-                subtitle: Text('${state.selectedChat.personalInformations.length} members',style: TextStyle(
+                subtitle: Text('${state.selectedChat.personalInformations.length} ${AppLocalizations.of(context)!.members}',style: TextStyle(
                     color: white
                 )),
               ),
@@ -136,15 +135,15 @@ class _GroupChatState extends State<GroupChat> {
                   PopupMenuItem(
                     value: null,
                       onTap: () async {
-                        copyText('https://footballbuzz.co?joinchat=${state.selectedChat.id}');
+                        copyText('https://footballbuzz.co?joinchat=${state.selectedChat.id}',context);
                       },
-                      child: Text('Copy The Group Link')),
+                      child: Text(AppLocalizations.of(context)!.copy_the_group_link)),
                   if (state.myRole != null &&
                       (state.myRole!.isRoomOwner ||
                           state.myRole!.userRole == 1))
                     PopupMenuItem(
-                        value: 'Edit',
-                        child: Text('Edit Group')),
+                        value: AppLocalizations.of(context)!.edit,
+                        child: Text(AppLocalizations.of(context)!.edit_group)),
                 ],
               )
             ],
@@ -252,7 +251,7 @@ class _GroupChatState extends State<GroupChat> {
                                 hintStyle: TextStyle(
                                     // color: Color.fromRGBO(214, 216, 217, 1)
                                 ),
-                                hintText: 'Write your message...',
+                                hintText: AppLocalizations.of(context)!.write_your_message,
                                 border: InputBorder.none),
                           ),
                         ),
@@ -423,14 +422,14 @@ class _ChatItemState extends State<ChatItem> {
                   // if(hasurl!=null)
                   //   PopupMenuItem<String>(child: Text('open'),value: 'open'),
                   if(widget.message.messageMediaTypes==null)
-                    PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
-                    PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
+                    PopupMenuItem<String>(child: Text(AppLocalizations.of(context)!.copy),value: 'Copy'),
+                    PopupMenuItem<String>(child: Text(AppLocalizations.of(context)!.delete,style: TextStyle(color: red),),value: 'Delete'),
                 ],
                 onSelected: (String e){
                   if(e=='Delete'){
                     ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
                   }else if(e=='Copy'){
-                    copyText(widget.message.text??'');
+                    copyText(widget.message.text??'',context);
                   }
                   // else if(e=='open'){
                   //   openUrl(hasurl!);
@@ -461,8 +460,8 @@ class _ChatItemState extends State<ChatItem> {
                               children: [
                                 const CircularProgressIndicator(),
                                 SizedBox(height: doubleHeight(1)),
-                                const Text(
-                                  'loading ...',
+                                 Text(
+                                  AppLocalizations.of(context)!.loading,
                                   textDirection: TextDirection.ltr,
                                   style: TextStyle(
                                       color: mainBlue,
@@ -528,7 +527,7 @@ class _ChatItemState extends State<ChatItem> {
                                   case TextType.text:
                                     return GestureDetector(
                                         onLongPress: () {
-                                          copyText(e.text);
+                                          copyText(e.text,context);
                                         },
                                         child: Text(e.text, style: TextStyle(color: black)));
                                   case TextType.link:
@@ -578,7 +577,7 @@ class _ChatItemState extends State<ChatItem> {
                                   case TextType.user:
                                     return GestureDetector(
                                         onLongPress: () {
-                                          copyText(e.text);
+                                          copyText(e.text,context);
                                         },
                                         onTap: () {
                                           Go.pushSlideAnim(context, ProfileBuilder(username: e.text));
@@ -591,7 +590,6 @@ class _ChatItemState extends State<ChatItem> {
                             );
                           },
                         )
-                        // Text(widget.message.text ?? '',),
                       );
                     }
 

@@ -75,9 +75,9 @@ class MainState extends ChangeNotifier {
       print('uupdate1 ${update}');
 
       bool? alert = await MyAlertDialog(appPageContext,
-          content: 'THERE IS A NEW VERSION OF FOOTBALL BUZZ',
+          content: AppLocalizations.of(appPageContext!)!.new_version,
           type: AlertType.success,
-          yes: 'UPDATE',no: false);
+          yes: AppLocalizations.of(appPageContext!)!.update,no: false);
       //yes to update green
       //not dismiss
       if(alert==true){

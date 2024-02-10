@@ -51,7 +51,7 @@ class _CreateGroupState extends State<CreateGroup> {
       // backgroundColor: white,
         appBar: AppBar(
           title: Text(
-              '${widget.isEdit?'Edit':'Create'} Group'.toUpperCase()),
+              '${widget.isEdit?AppLocalizations.of(context)!.edit:AppLocalizations.of(context)!.create} ${AppLocalizations.of(context)!.group}'.toUpperCase()),
         ),
         floatingActionButton: widget.isEdit?null:FloatingActionButton(
           heroTag: 'Find User',
@@ -127,7 +127,7 @@ class _CreateGroupState extends State<CreateGroup> {
                         decoration: InputDecoration(
                             hintStyle: TextStyle(
                                 color: Color.fromRGBO(214, 216, 217, 1)),
-                            hintText: 'Write The Group Name...',
+                            hintText: AppLocalizations.of(context)!.write_the_group_name,
                             border: InputBorder.none),
                       ),
                     ),

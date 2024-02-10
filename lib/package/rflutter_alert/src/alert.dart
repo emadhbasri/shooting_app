@@ -9,6 +9,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shooting_app/ui_items/shots/index.dart';
 
 import 'alert_style.dart';
 import 'animation_transition.dart';
@@ -233,7 +234,8 @@ class Alert {
       } else {
         Widget cancelButton = DialogButton(
           child: Text(
-            "CANCEL",
+            AppLocalizations.of(context)!.camcelc,
+            // "CANCEL",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pop(context),

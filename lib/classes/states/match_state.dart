@@ -10,6 +10,8 @@ import '../models.dart';
 import '../services/shots_service.dart';
 import 'main_state.dart';
 
+late BuildContext firstContext;
+
 class MatchState extends ChangeNotifier {
   bool matchPage = false;
 
@@ -21,7 +23,25 @@ class MatchState extends ChangeNotifier {
   String cont = '';
   bool loadCountry = true;
   bool loadMatchs = true;
-  init() async {
+  init(context) async {
+    await Future.delayed(Duration(milliseconds: 200));
+    dates = [
+      '${date.add(Duration(days: -2)).day} ${getMonString(date.add(Duration(days: -2)))}',
+      AppLocalizations.of(context)!.yesterday,
+      AppLocalizations.of(context)!.today,
+      '${date.add(Duration(days: 1)).day} ${getMonString(date.add(Duration(days: 1)))}',
+      '${date.add(Duration(days: 2)).day} ${getMonString(date.add(Duration(days: 2)))}'
+    ];
+    selectedDate = AppLocalizations.of(context)!.today;
+    selectedTab = AppLocalizations.of(context)!.in_play;
+    tabs = [
+      AppLocalizations.of(context)!.in_play,
+      AppLocalizations.of(context)!.lineups,
+      AppLocalizations.of(context)!.goals,
+      AppLocalizations.of(context)!.cards,
+      AppLocalizations.of(context)!.stats
+    ];
+
     List<Future> futures = [];
     futures.add(getCountries());
     // futures.add(getLeagues());
@@ -37,10 +57,8 @@ class MatchState extends ChangeNotifier {
     print('countries ${countries.length}');
     country = countries.singleWhere((element) {
       // return element.name == 'World';
-      if (mainState.personalInformation != null &&
-          mainState.personalInformation!.team != null) {
-        return element.name ==
-            mainState.personalInformation!.team!.team_country!;
+      if (mainState.personalInformation != null && mainState.personalInformation!.team != null) {
+        return element.name == mainState.personalInformation!.team!.team_country!;
       } else {
         return element.name == country!.name; //
       }
@@ -84,8 +102,7 @@ class MatchState extends ChangeNotifier {
 
     if (cont == '') {
       // cont = 'World';
-      if (mainState.personalInformation != null &&
-          mainState.personalInformation!.team != null)
+      if (mainState.personalInformation != null && mainState.personalInformation!.team != null)
         cont = mainState.personalInformation!.team!.team_country!;
       else
         cont = 'England';
@@ -121,8 +138,7 @@ class MatchState extends ChangeNotifier {
     notifyListeners();
   }
 
-  int hasLeague(int id) =>
-      leagues.indexWhere((element) => element.league.id == id);
+  int hasLeague(int id) => leagues.indexWhere((element) => element.league.id == id);
   late int selectedLeagueIndex;
   getMatch() async {
     //1min todo todo
@@ -144,15 +160,12 @@ class MatchState extends ChangeNotifier {
   getMatchStatics() async {
     //1min todo
     if (selectedMatch.isLive == 0) return;
-    if (selectedMatch.homeStatistics.isNotEmpty &&
-        selectedMatch.awayStatistics.isNotEmpty) return;
+    if (selectedMatch.homeStatistics.isNotEmpty && selectedMatch.awayStatistics.isNotEmpty) return;
     Map<String, List<DataStatistics>> map =
         await liveMatch.matchStatics(fixture: selectedMatch.fixture.id);
     if (leagues[selectedLeagueIndex].matchs.isNotEmpty) {
-      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeStatistics =
-          map['home']!;
-      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayStatistics =
-          map['away']!;
+      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeStatistics = map['home']!;
+      leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayStatistics = map['away']!;
       selectedMatch.homeStatistics = map['home']!;
       selectedMatch.awayStatistics = map['away']!;
     }
@@ -163,8 +176,7 @@ class MatchState extends ChangeNotifier {
     //1min todo
     if (selectedMatch.isLive == 0) return;
     if (selectedMatch.events.isNotEmpty) return;
-    List<DataEvent> back =
-        await liveMatch.matchEvents(fixture: selectedMatch.fixture.id);
+    List<DataEvent> back = await liveMatch.matchEvents(fixture: selectedMatch.fixture.id);
     selectedMatch.events = back;
     leagues[selectedLeagueIndex].matchs[selectedMatchIndex].events = back;
     notifyListeners();
@@ -175,18 +187,14 @@ class MatchState extends ChangeNotifier {
     //15min todo
     if (selectedMatch.isLive == 0) return;
 
-    if (selectedMatch.homeLineUps != null && selectedMatch.awayLineUps != null)
-      return;
-    Map<String, DataLineUps?> map =
-        await liveMatch.matchLineUps(fixture: selectedMatch.fixture.id);
+    if (selectedMatch.homeLineUps != null && selectedMatch.awayLineUps != null) return;
+    Map<String, DataLineUps?> map = await liveMatch.matchLineUps(fixture: selectedMatch.fixture.id);
     loadingLineUps = false;
     notifyListeners();
     if (map['home'] != null) {
       if (leagues[selectedLeagueIndex].matchs.isNotEmpty) {
-        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeLineUps =
-            map['home']!;
-        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayLineUps =
-            map['away']!;
+        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].homeLineUps = map['home']!;
+        leagues[selectedLeagueIndex].matchs[selectedMatchIndex].awayLineUps = map['away']!;
         selectedMatch.homeLineUps = map['home']!;
         selectedMatch.awayLineUps = map['away']!;
       }
@@ -198,10 +206,8 @@ class MatchState extends ChangeNotifier {
   getMatchUps({int? pageNumber}) async {
     if (selectedMatch.isLive == 0 || selectedMatch.isLive == 2) return;
     if (mainState.personalInformation!.team == null) return;
-    if (selectedMatch.home.id.toString() !=
-            mainState.personalInformation!.team!.team_key &&
-        selectedMatch.away.id.toString() !=
-            mainState.personalInformation!.team!.team_key) return;
+    if (selectedMatch.home.id.toString() != mainState.personalInformation!.team!.team_key &&
+        selectedMatch.away.id.toString() != mainState.personalInformation!.team!.team_key) return;
     print('getMatchUps()');
     List<DataPost> back = await ShotsService.getMatchUps(
       service,
@@ -219,13 +225,7 @@ class MatchState extends ChangeNotifier {
   }
 
   static DateTime date = DateTime.now();
-  List<String> dates = [
-    '${date.add(Duration(days: -2)).day} ${getMonString(date.add(Duration(days: -2)))}',
-    'Yesterday',
-    'Today',
-    '${date.add(Duration(days: 1)).day} ${getMonString(date.add(Duration(days: 1)))}',
-    '${date.add(Duration(days: 2)).day} ${getMonString(date.add(Duration(days: 2)))}'
-  ];
+  List<String> dates = [];
   List<DateTime> dateTimes = [
     date.add(Duration(days: -2)),
     date.add(Duration(days: -1)),
@@ -233,11 +233,17 @@ class MatchState extends ChangeNotifier {
     date.add(Duration(days: 1)),
     date.add(Duration(days: 2))
   ];
-  String selectedDate = 'Today';
+  late String selectedDate;
   DateTime selectedDateTime = date;
 
-  List<String> tabs = ['in-play', 'Lineups', 'Goals', 'Cards', 'Stats'];
-  String selectedTab = 'in-play';
+  List<String> tabs = [];
+  late String selectedTab;
+  // init1(){
+
+  // }
+  // MatchState() {
+
+  // }
 
   notify() => notifyListeners();
 }

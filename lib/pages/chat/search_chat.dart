@@ -89,7 +89,7 @@ class _SearchChatState extends State<SearchChat> {
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.search),
                             border: InputBorder.none,
-                            hintText: 'SearchChat'),
+                            hintText: AppLocalizations.of(context)!.searchChat),
                       ),
                     ),
                   ),
@@ -102,52 +102,13 @@ class _SearchChatState extends State<SearchChat> {
       ),
       body: SizedBox.expand(
         child: Builder(builder: (context) {
-          // if (controller.value.text == '')
-          //   return ListView(
-          //       physics: BouncingScrollPhysics(),
-          //       padding: EdgeInsets.symmetric(
-          //           horizontal: doubleWidth(5), vertical: doubleHeight(2)),
-          //       children: [
-          //         Text(
-          //           'Trending Tags',
-          //           style: TextStyle(
-          //               color: black,
-          //               fontWeight: FontWeight.bold,
-          //               fontSize: doubleWidth(6)),
-          //         ),
-          //         ...hashtags
-          //             .map((e) => Container(
-          //                   decoration: BoxDecoration(
-          //                       border: Border(
-          //                           bottom: BorderSide(color: grayCall))),
-          //                   child: ListTile(
-          //                     onTap: () {
-          //                       // controller.text=e;
-          //                       controller.value = TextEditingValue(text: e);
-          //                       getData();
-          //                     },
-          //                     dense: true,
-          //                     contentPadding: EdgeInsets.zero,
-          //                     leading: Text(
-          //                       ' # $e',
-          //                       style: TextStyle(
-          //                           color: black, fontSize: doubleWidth(4)),
-          //                     ),
-          //                     trailing: Icon(
-          //                       Icons.arrow_forward_ios,
-          //                       color: grayCall,
-          //                     ),
-          //                   ),
-          //                 ))
-          //             .toList()
-          //       ]);
-          // else {
+
           if (controller.value.text == '')
-            return Center(child: Text('Please Search In Users.'));
+            return Center(child: Text(AppLocalizations.of(context)!.please_search_in_users));
           if (users == null) {
               return circle();
             } else if (users!.isEmpty) {
-              return Center(child: Text('No User Found'));
+              return Center(child: Text(AppLocalizations.of(context)!.no_user_found));
             } else {
               return ListView(
                   padding: EdgeInsets.symmetric(
@@ -250,8 +211,8 @@ class _UserItemState extends State<UserItem> {
                         },
                         child: Text(
                           !user.followedByMe
-                              ? 'Add As Fan Mates'
-                              : 'Remove As Fan Mates',
+                              ? AppLocalizations.of(context)!.add_as_fan_mates
+                              : AppLocalizations.of(context)!.remove_as_fan_mates,
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(

@@ -22,7 +22,7 @@ class _StadiaState extends State<Stadia> {
     state = Provider.of<MainState>(context, listen: false);
     if (state.stadiaShots.isEmpty) state.getStadia(add: false);
 
-    
+
     state.stadiaListController = ScrollController()
       ..addListener(() {
         if (state.selectedTag == null &&
@@ -126,7 +126,7 @@ class _StadiaState extends State<Stadia> {
                                 SizedBox(
                                     height: doubleHeight(70),
                                     width: double.maxFinite,
-                                    child: Center(child: Text('No Shots'))),
+                                    child: Center(child: Text(AppLocalizations.of(context)!.no_shots))),
                               ],
                             )
                           : ListView(

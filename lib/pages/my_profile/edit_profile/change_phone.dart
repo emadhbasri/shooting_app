@@ -47,7 +47,7 @@ class _ChangePhoneState extends State<ChangePhone> {
   String numberStr = '';
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0, title: Text('Change Phone')),
+      appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.change_phone)),
       // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
@@ -55,7 +55,7 @@ class _ChangePhoneState extends State<ChangePhone> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(height: doubleHeight(6)),
           Text(
-            widget.number!=null?'Your current phone number is:':'',
+            widget.number!=null?AppLocalizations.of(context)!.your_current_phone_number_is:'',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: doubleHeight(2)),
@@ -104,27 +104,7 @@ class _ChangePhoneState extends State<ChangePhone> {
                   )).toList(),
                   value: prefStr,
                 )
-                // TextField(
-                //   style: TextStyle(
-                //       color: Colors.black
-                //   ),
-                //   controller: pref,
-                //   onChanged: (e) {
-                //     if (e.length > 4) {
-                //       pref.text = prefStr;
-                //     } else {
-                //       setState(() {
-                //         prefStr = e;
-                //       });
-                //     }
-                //   },
-                //   keyboardType: TextInputType.phone,
-                //   decoration: InputDecoration(
-                //       hintStyle: TextStyle(color: grayCallDark),
-                //       hintText: '234',
-                //       prefixText: '+',
-                //       border: InputBorder.none),
-                // ),
+
               ),
               SizedBox(width: doubleWidth(4)),
               Expanded(
@@ -175,9 +155,9 @@ class _ChangePhoneState extends State<ChangePhone> {
                           VerifyPhone(number: '+'+prefStr!.trim()+number.value.text.trim(),));
                     }
                   } else
-                    toast('please fill the field.');
+                    toast(AppLocalizations.of(context)!.please_fill_the_field);
                 },
-                child: Text('Continue')),
+                child: Text(AppLocalizations.of(context)!.continue1)),
           )
         ]),
       )),

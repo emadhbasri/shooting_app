@@ -13,16 +13,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'states/theme_state.dart';
 
-enum TextType {link,groupLink,user,text}
-class TheText{
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+export 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+enum TextType { link, groupLink, user, text }
+
+class TheText {
   final TextType type;
   final String text;
 
   TheText({required this.type, required this.text});
 }
-List<TheText> makeText(String text){
 
-  List<TheText> out=[];
+List<TheText> makeText(String text) {
+  List<TheText> out = [];
   List<String> split = text.split(' ');
   split.forEach((e) {
     if (e.contains('\n')) {
@@ -36,7 +40,7 @@ List<TheText> makeText(String text){
               out.add(TheText(type: TextType.user, text: f));
             } else if (f.contains('http://') || f.contains('https://')) {
               out.add(TheText(type: TextType.link, text: f.trim()));
-            } else if(f.contains('https://footballbuzz.co?joinchat=')){
+            } else if (f.contains('https://footballbuzz.co?joinchat=')) {
               out.add(TheText(type: TextType.groupLink, text: f));
             } else {
               out.add(TheText(type: TextType.text, text: f));
@@ -51,7 +55,7 @@ List<TheText> makeText(String text){
           out.add(TheText(type: TextType.user, text: e));
         } else if (e.contains('http://') || e.contains('https://')) {
           out.add(TheText(type: TextType.link, text: e.trim()));
-        } else if(e.contains('https://footballbuzz.co?joinchat=')){
+        } else if (e.contains('https://footballbuzz.co?joinchat=')) {
           out.add(TheText(type: TextType.groupLink, text: e));
         } else {
           out.add(TheText(type: TextType.text, text: e));
@@ -62,10 +66,9 @@ List<TheText> makeText(String text){
   return out;
 }
 
-
 openUrl(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
-    launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication);
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
 }
 
@@ -122,10 +125,10 @@ Widget simpleCircle({Color? color, double? size}) {
   }
 }
 
-profilePlaceHolder(BuildContext context,{bool isBig = false}) => Image.asset(
+profilePlaceHolder(BuildContext context, {bool isBig = false}) => Image.asset(
       isBig ? 'assets/images/playerbig.png' : 'assets/images/player.png',
       fit: BoxFit.fill,
-  color: context.watch<ThemeState>().isDarkMode?Colors.black:Colors.white,
+      color: context.watch<ThemeState>().isDarkMode ? Colors.black : Colors.white,
     );
 
 String makeDurationToString(DateTime date) {
@@ -149,6 +152,7 @@ String makeDurationToString(DateTime date) {
   } else
     return '';
 }
+
 String getWeekString(DateTime date) {
   switch (date.weekday) {
     case 1:
@@ -169,6 +173,7 @@ String getWeekString(DateTime date) {
       return '';
   }
 }
+
 String getMonString(DateTime date) {
   switch (date.month) {
     case 1:
@@ -200,17 +205,18 @@ String getMonString(DateTime date) {
   }
 }
 
-copyText(String text, {String payam = 'text copied to clipboard'}) =>
-    FlutterClipboard.copy(text).then((value) => toast(payam));
+copyText( String text,context, {String? payam}) {
+  payam ??= AppLocalizations.of(context)!.textcopy;
+  return FlutterClipboard.copy(text).then((value) => toast(payam!));
+}
 
-sharePost(String text, {String payam = 'Post'}) =>
-    Share.share('Check Out The $payam $text');
+sharePost(context,String text, {String payam = 'Post'}) =>
+    Share.share('${AppLocalizations.of(context)!.check_out_the} $payam $text');
 
-toast(String str, {bool isLong=false}) {
-  print('toast $str');//todo
+toast(String str, {bool isLong = false}) {
   Fluttertoast.showToast(
       msg: str,
-      toastLength: isLong?Toast.LENGTH_LONG:Toast.LENGTH_SHORT,
+      toastLength: isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: mainGreen1,
@@ -260,18 +266,16 @@ abstract class Go {
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
             fullscreenDialog: full,
-            pageBuilder: (context, Animation<double> animation,
-                Animation<double> secendAnimation) {
+            pageBuilder: (context, Animation<double> animation, Animation<double> secendAnimation) {
               return page;
             },
             transitionsBuilder: (context, Animation<double> animation,
                 Animation<double> secendAnimation, Widget widget) {
               return SlideTransition(
-                position: Tween(begin: Offset(1, 0), end: Offset(0, 0))
-                    .animate(CurvedAnimation(
-                        curve: first, //Curves.easeOutBack
-                        parent: animation,
-                        reverseCurve: second)),
+                position: Tween(begin: Offset(1, 0), end: Offset(0, 0)).animate(CurvedAnimation(
+                    curve: first, //Curves.easeOutBack
+                    parent: animation,
+                    reverseCurve: second)),
                 child: widget,
               );
             }),
@@ -285,9 +289,7 @@ abstract class Go {
     print('Platform.isIOS ${Platform.isIOS}');
     if (Platform.isIOS) {
       return await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => page, fullscreenDialog: full))
+              context, MaterialPageRoute(builder: (context) => page, fullscreenDialog: full))
           .catchError((e) => print('Error 1 $e'));
     }
     return await Navigator.push(
@@ -295,18 +297,16 @@ abstract class Go {
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
             fullscreenDialog: full,
-            pageBuilder: (context, Animation<double> animation,
-                Animation<double> secendAnimation) {
+            pageBuilder: (context, Animation<double> animation, Animation<double> secendAnimation) {
               return page;
             },
             transitionsBuilder: (context, Animation<double> animation,
                 Animation<double> secendAnimation, Widget widget) {
               return SlideTransition(
-                position: Tween(begin: Offset(1, 0), end: Offset(0, 0))
-                    .animate(CurvedAnimation(
-                        curve: first, //Curves.easeOutBack
-                        parent: animation,
-                        reverseCurve: second)),
+                position: Tween(begin: Offset(1, 0), end: Offset(0, 0)).animate(CurvedAnimation(
+                    curve: first, //Curves.easeOutBack
+                    parent: animation,
+                    reverseCurve: second)),
                 child: widget,
               );
             })).catchError((e) => print('Error 1 $e'));
@@ -325,8 +325,7 @@ abstract class Go {
           barrierColor: Colors.black.withOpacity(0.5),
           barrierDismissible: true,
           opaque: false,
-          pageBuilder: (context, Animation<double> animation,
-              Animation<double> secendAnimation) {
+          pageBuilder: (context, Animation<double> animation, Animation<double> secendAnimation) {
             return page;
           },
         ));
@@ -337,10 +336,7 @@ abstract class Go {
   }
 
   static Future<dynamic> pushSlideAnimSheet(BuildContext context, Widget page,
-      {bool full: false,
-      var first,
-      var second,
-      Duration? reverseTransitionDuration}) async {
+      {bool full= false, var first, var second, Duration? reverseTransitionDuration}) async {
     reverseTransitionDuration ??= Duration(milliseconds: 300);
     if (first == null) first = Cubic(0.175, 0.885, 0.32, 1.1);
     if (second == null) second = Curves.easeOutCirc;
@@ -352,19 +348,17 @@ abstract class Go {
             barrierColor: Colors.black.withOpacity(0.5),
             barrierDismissible: true,
             opaque: false,
-            pageBuilder: (context, Animation<double> animation,
-                Animation<double> secendAnimation) {
+            pageBuilder: (context, Animation<double> animation, Animation<double> secendAnimation) {
               return page;
             },
             reverseTransitionDuration: reverseTransitionDuration,
             transitionsBuilder: (context, Animation<double> animation,
                 Animation<double> secendAnimation, Widget widget) {
               return SlideTransition(
-                position: Tween(begin: Offset(0, 1), end: Offset(0, 0))
-                    .animate(CurvedAnimation(
-                        curve: first, //Curves.easeOutBack
-                        parent: animation,
-                        reverseCurve: second)),
+                position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(CurvedAnimation(
+                    curve: first, //Curves.easeOutBack
+                    parent: animation,
+                    reverseCurve: second)),
                 child: widget,
               );
             })).catchError((e) => print('Error 1 $e'));
@@ -379,34 +373,28 @@ abstract class Go {
         PageRouteBuilder(
             transitionDuration: Duration(seconds: 1),
             fullscreenDialog: full,
-            pageBuilder: (context, Animation<double> animation,
-                Animation<double> secendAnimation) {
+            pageBuilder: (context, Animation<double> animation, Animation<double> secendAnimation) {
               return page;
             },
             transitionsBuilder: (context, Animation<double> animation,
                 Animation<double> secendAnimation, Widget widget) {
               return SlideTransition(
-                position: Tween(begin: Offset(1, 0), end: Offset(0, 0))
-                    .animate(CurvedAnimation(
-                        curve: first, //Curves.easeOutBack
-                        parent: animation,
-                        reverseCurve: second)),
+                position: Tween(begin: Offset(1, 0), end: Offset(0, 0)).animate(CurvedAnimation(
+                    curve: first, //Curves.easeOutBack
+                    parent: animation,
+                    reverseCurve: second)),
                 child: widget,
               );
             })).catchError((e) => print('Error 1 $e'));
   }
 
-  static dynamic push(BuildContext context, Widget page,
-      {bool full: false}) async {
+  static dynamic push(BuildContext context, Widget page, {bool full: false}) async {
     return await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => page, fullscreenDialog: full))
+            context, MaterialPageRoute(builder: (context) => page, fullscreenDialog: full))
         .catchError((e) => print('Error 1 $e'));
   }
 
-  static void pushHero(BuildContext context, Widget page, Duration dur,
-      {bool full: false}) {
+  static void pushHero(BuildContext context, Widget page, Duration dur, {bool full: false}) {
     Navigator.push(
         context,
         PageRouteBuilder(
@@ -416,23 +404,17 @@ abstract class Go {
         ));
   }
 
-  static void replace(BuildContext context, Widget newPage,
-      {bool full: false}) {
+  static void replace(BuildContext context, Widget newPage, {bool full: false}) {
     Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => newPage, fullscreenDialog: full))
+            context, MaterialPageRoute(builder: (context) => newPage, fullscreenDialog: full))
         .catchError((e) => print('Error 2 $e'));
   }
 
-  static void replaceHero(BuildContext context, Widget newPage, Duration dur,
-      {bool full: false}) {
+  static void replaceHero(BuildContext context, Widget newPage, Duration dur, {bool full: false}) {
     Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-            transitionDuration: dur,
-            pageBuilder: (_, __, ___) => newPage,
-            fullscreenDialog: full));
+            transitionDuration: dur, pageBuilder: (_, __, ___) => newPage, fullscreenDialog: full));
   }
 
   static void pop(BuildContext context, [dynamic data]) {
@@ -443,31 +425,27 @@ abstract class Go {
     return Navigator.canPop(context);
   }
 
-  static Future popAndPushNamed_(BuildContext context, Widget page,
-      {bool full: false}) {
+  static Future popAndPushNamed_(BuildContext context, Widget page, {bool full: false}) {
     return Navigator.popAndPushNamed(context, '');
   }
 
   static void removeRoute(BuildContext context, Widget page) {
-    Navigator.removeRoute(
-        context, MaterialPageRoute(builder: (context) => page));
+    Navigator.removeRoute(context, MaterialPageRoute(builder: (context) => page));
   }
 
   static void removeRouteBelow(BuildContext context, Widget page) {
-    Navigator.removeRouteBelow(
-        context, MaterialPageRoute(builder: (context) => page));
+    Navigator.removeRouteBelow(context, MaterialPageRoute(builder: (context) => page));
   }
 
-  static void replaceRouteBelow(
-      BuildContext context, Widget oldPage, Widget newPage) {
+  static void replaceRouteBelow(BuildContext context, Widget oldPage, Widget newPage) {
     Navigator.replaceRouteBelow(context,
         anchorRoute: MaterialPageRoute(builder: (context) => oldPage),
         newRoute: MaterialPageRoute(builder: (context) => newPage));
   }
 
   static void pushAndRemove(BuildContext context, Widget page) {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => page), (route) => false);
+    Navigator.of(context)
+        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => page), (route) => false);
   }
 }
 

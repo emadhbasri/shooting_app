@@ -114,109 +114,15 @@ bool loadingImageSend=false;
                   ),
                   subtitle: Text('@${roomUser.userName}'),
                 ),
-              
+
               ],
             ):null,
           ),
-          // floatingActionButton: FloatingActionButton(
-          //   tooltip: 'Send Message',
-          //   onPressed: (){},
-          //   elevation: 2,
-          //   backgroundColor: mainGreen,
-          //   child: Container(
-          //       width: doubleWidth(9),
-          //       height: doubleWidth(9),
-          //       child: Padding(
-          //         padding: EdgeInsets.all(4.0),
-          //         child: Image.asset('assets/images/soccer(1).png'),
-          //       )),
-          // ),
+
           body: SafeArea(
             child: Column(
               children: [
-                // SizedBox(
-                //   width: double.maxFinite,
-                //   height: doubleHeight(17),
-                //   child: Stack(
-                //     children: [
-                //       Container(
-                //         width: double.maxFinite,
-                //         color: mainBlue,
-                //         height: doubleHeight(6),
-                //         padding:
-                //             EdgeInsets.symmetric(vertical: doubleHeight(1)),
-                //         alignment: Alignment(-0.9, 0),
-                //         child: GestureDetector(
-                //           onTap: () {
-                //             stopTimer = true;
-                //             Go.pop(
-                //                 context,
-                //                 state.chats.isNotEmpty
-                //                     ? state.chats.last
-                //                     : null);
-                //           },
-                //           child: Icon(
-                //             Icons.adaptive.arrow_back,
-                //             color: Colors.white,
-                //             size: 30,
-                //           ),
-                //         ),
-                //       ),
-                //       if (roomUser != null)
-                //         Positioned(
-                //           left: 0,
-                //           right: 0,
-                //           top: doubleHeight(2),
-                //           child: Column(
-                //             mainAxisSize: MainAxisSize.min,
-                //             children: [
-                //               if (roomUser.profilePhoto !=
-                //                       null)
-                //                 GestureDetector(
-                //                   onTap: () async {
-                //                     stopTimer = true;
-                //                     await Go.pushSlideAnim(
-                //                         context,
-                //                         ProfileBuilder(
-                //                             username: roomUser
-                //
-                //                                 .userName));
-                //                     stopTimer = false;
-                //                     startTimer();
-                //                   },
-                //                   child: CircleAvatar(
-                //                     radius: doubleWidth(8),
-                //                     backgroundColor: Colors.white,
-                //                     backgroundImage: networkImage(roomUser
-                //                         .profilePhoto!),
-                //                   ),
-                //                 ),
-                //               SizedBox(height: doubleHeight(1)),
-                //               Row(
-                //                 mainAxisSize: MainAxisSize.min,
-                //                 children: [
-                //                   CircleAvatar(
-                //                     backgroundColor: greenCall,
-                //                     radius: 6,
-                //                   ),
-                //                   SizedBox(width: doubleWidth(3)),
-                //                   Text(
-                //                     roomUser.fullName ??
-                //                         '',
-                //                     style: TextStyle(
-                //                         fontWeight: FontWeight.bold,
-                //                         color: mainBlue),
-                //                   )
-                //                 ],
-                //               ),
-                //               SizedBox(height: doubleHeight(1)),
-                //               Text('@${roomUser.userName}')
-                //             ],
-                //           ),
-                //         ),
-                //     ],
-                //   ),
-                // ),
+
                 Flexible(
 
                     child: Container(
@@ -243,11 +149,6 @@ bool loadingImageSend=false;
                             message: state.chats[index],
                             hasDate: (first == second) ? false : true,
                           );
-
-                          // return ChatItem(
-                          //   message: state.chats[index],
-                          //   hasDate: true,
-                          // );
 
                         } else {
                           return ChatItem(
@@ -295,7 +196,7 @@ bool loadingImageSend=false;
                                 hintStyle: TextStyle(
                                     // color: Color.fromRGBO(214, 216, 217, 1)
                                 ),
-                                hintText: 'Write your message...',
+                                hintText: AppLocalizations.of(context)!.write_your_message,
                                 border: InputBorder.none),
                           ),
                         ),
@@ -428,17 +329,16 @@ class _ChatItemState extends State<ChatItem> {
           PopupMenuButton<String>(
             key: popupkey,
             itemBuilder: (_)=>[
-              // if(hasurl!=null)
-              //   PopupMenuItem<String>(child: Text('open'),value: 'open'),
+
               if(widget.message.messageMediaTypes==null)
-                PopupMenuItem<String>(child: Text('Copy'),value: 'Copy'),
-                PopupMenuItem<String>(child: Text('Delete',style: TextStyle(color: red),),value: 'Delete'),
+                PopupMenuItem<String>(child: Text(AppLocalizations.of(context)!.copy),value: 'Copy'),
+                PopupMenuItem<String>(child: Text(AppLocalizations.of(context)!.delete,style: TextStyle(color: red),),value: 'Delete'),
             ],
             onSelected: (String e){
               if(e=='Delete'){
                 ChatService.deleteMessage(getIt<MyService>(), messageId: widget.message.id);
               }else if(e=='Copy'){
-                copyText(widget.message.text??'');
+                copyText(widget.message.text??'',context);
               }
               // else if(e=='open'){
               //   openUrl(hasurl!);
@@ -469,8 +369,8 @@ class _ChatItemState extends State<ChatItem> {
                           children: [
                             const CircularProgressIndicator(),
                             SizedBox(height: doubleHeight(1)),
-                            const Text(
-                              'loading ...',
+                             Text(
+                              AppLocalizations.of(context)!.loading,
                               textDirection: TextDirection.ltr,
                               style: TextStyle(
                                   color: mainBlue,
@@ -531,7 +431,7 @@ class _ChatItemState extends State<ChatItem> {
                                 case TextType.text:
                                   return GestureDetector(
                                       onLongPress: () {
-                                        copyText(e.text);
+                                        copyText(e.text,context);
                                       },
                                       child: Text(e.text, style: TextStyle(color: black)));
                                 case TextType.link:
@@ -581,7 +481,7 @@ class _ChatItemState extends State<ChatItem> {
                                 case TextType.user:
                                   return GestureDetector(
                                       onLongPress: () {
-                                        copyText(e.text);
+                                        copyText(e.text,context);
                                       },
                                       onTap: () {
                                         Go.pushSlideAnim(context, ProfileBuilder(username: e.text));
@@ -594,7 +494,6 @@ class _ChatItemState extends State<ChatItem> {
                           );
                         },
                       )
-                    // Text(widget.message.text ?? '',),
                   );
                 }
 

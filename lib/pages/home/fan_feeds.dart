@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shooting_app/classes/states/main_state.dart';
-import '../../classes/dataTypes.dart';
 import '../../classes/functions.dart';
 import '../../ui_items/shots/post_from_shot.dart';
 
@@ -55,7 +54,7 @@ class _FanFeedsState extends State<FanFeeds> {
                 SizedBox(
                     height: doubleHeight(70),
                     width: double.maxFinite,
-                    child: Center(child: Text('No Shots'))),
+                    child: Center(child: Text(AppLocalizations.of(context)!.no_shots))),
               ],
             ):ListView(
               padding: EdgeInsets.symmetric(vertical: doubleHeight(1)),

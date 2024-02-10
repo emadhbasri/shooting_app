@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -59,8 +60,7 @@ void main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('app_icon');
 
-  final IOSInitializationSettings initializationSettingsIOS =
-      IOSInitializationSettings(
+  final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,
     requestSoundPermission: true,
@@ -163,10 +163,8 @@ class _MyAppState extends State<MyApp> {
         } else if (key.toLowerCase() == 'user') {
           Go.pushSlideAnim(appContext!, ProfileBuilder(username: value));
         } else if (key.toLowerCase() == 'joinchat') {
-          DataChatRoom? back = await ChatService.joinGroupChat(
-              getIt<MyService>(),
-              chatRoomId: value,
-              userId: getIt<MainState>().userId);
+          DataChatRoom? back = await ChatService.joinGroupChat(getIt<MyService>(),
+              chatRoomId: value, userId: getIt<MainState>().userId);
           print('back $back');
           if (back != null) {
             await Go.pushSlideAnim(
@@ -198,8 +196,8 @@ class _MyAppState extends State<MyApp> {
     _handleInitialUri();
     MainState state = getIt<MainState>();
     // For sharing images coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) {
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
       if (value.isNotEmpty) state.receiveShare(sharedFiles: value);
       setState(() {
         if (value.isNotEmpty) {
@@ -224,11 +222,9 @@ class _MyAppState extends State<MyApp> {
       });
     });
 
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
+    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen((String value) {
       if (value != '') {
-        if (!value.startsWith('https://footballbuzz.co'))
-          state.receiveShare(sharedText: value);
+        if (!value.startsWith('https://footballbuzz.co')) state.receiveShare(sharedText: value);
       }
       setState(() {
         print("Shared: getTextStream $value");
@@ -240,8 +236,7 @@ class _MyAppState extends State<MyApp> {
     // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String? value) {
       if (value != '' && value != null) {
-        if (!value.startsWith('https://footballbuzz.co'))
-          state.receiveShare(sharedText: value);
+        if (!value.startsWith('https://footballbuzz.co')) state.receiveShare(sharedText: value);
       }
       setState(() {
         print("Shared: getInitialText $value");
@@ -274,7 +269,40 @@ class _MyAppState extends State<MyApp> {
           theme: MyThemes.lightTheme,
           darkTheme: MyThemes.darkTheme,
           debugShowCheckedModeBanner: false,
-          title: 'Shooting App',
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          locale: state.lang.local,
+          supportedLocales: [
+            Locale('en'),
+            Locale('ar'),
+            Locale('bg'),
+            Locale('cs'),
+            Locale('da'),
+            Locale('de'),
+            Locale('el'),
+            Locale('es'),
+            Locale('fa'),
+            Locale('fr'),
+            Locale('hi'),
+
+            Locale('it'),
+            Locale('ja'),
+            Locale('nl'),
+            Locale('no'),
+            Locale('pl'),
+            Locale('pt'),
+            Locale('ru'),
+            Locale('sv'),
+            Locale('sr'),
+            Locale('tr'),
+            Locale('zh'),
+
+          ],
+          title: 'Fotball Buzz',
           home:
               // const SizedBox(),
               // MyApp1()
@@ -393,8 +421,8 @@ class _AppFirstState extends State<AppFirst> {
         print('message.notification!.body:${message.notification!.body}');
         print(
             'message.notification!.android!.channelId:${message.notification!.android!.channelId}');
-        _showNotificationCustomSound(notification.hashCode, notification.title!,
-            notification.body!, jsonEncode(message.data));
+        _showNotificationCustomSound(notification.hashCode, notification.title!, notification.body!,
+            jsonEncode(message.data));
       }
     });
 
@@ -420,8 +448,7 @@ class _AppFirstState extends State<AppFirst> {
 
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -437,30 +464,25 @@ class _AppFirstState extends State<AppFirst> {
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
+    firstContext = context;
 
     return Intro1();
   }
 }
 
-Future<void> _showNotificationCustomSound(
-    int id, String title, String body, String data) async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
+Future<void> _showNotificationCustomSound(int id, String title, String body, String data) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
     'channel 1',
     'your other channel name',
     channelDescription: 'your other channel description',
     sound: RawResourceAndroidNotificationSound('notif'),
   );
-  const IOSNotificationDetails iOSPlatformChannelSpecifics =
-      IOSNotificationDetails(
-          sound: 'notif.aiff',
-          presentSound: true,
-          presentAlert: true,
-          badgeNumber: 0);
+  const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(
+      sound: 'notif.aiff', presentSound: true, presentAlert: true, badgeNumber: 0);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
     android: androidPlatformChannelSpecifics,
     iOS: iOSPlatformChannelSpecifics,
   );
-  await flutterLocalNotificationsPlugin
-      .show(id, title, body, platformChannelSpecifics, payload: data);
+  await flutterLocalNotificationsPlugin.show(id, title, body, platformChannelSpecifics,
+      payload: data);
 }

@@ -39,13 +39,13 @@ class _EditCommentState extends State<EditComment> {
     });
 
     if (controller.value.text.trim() == '' && images.isEmpty && video == null) {
-      toast('Please Enter Text Or Image Or Video');
+      toast(AppLocalizations.of(context)!.please_enter_text_or_image_or_video);
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
       });
     } else if (images.isNotEmpty && video != null) {
-      toast('You Can Upload Images Or Video');
+      toast(AppLocalizations.of(context)!.you_can_upload_images_or_video);
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
@@ -76,10 +76,6 @@ class _EditCommentState extends State<EditComment> {
   bool isInOtherPage = false;
   @override
   Widget build(BuildContext context) {
-    // bool isDarkMode = getIt<ThemeState>().isDarkMode;
-
-    print('mediaIds $mediaIds');
-    print('images $images');
     return SizedBox.expand(
       child: Align(
         alignment: Alignment.bottomCenter,
@@ -116,7 +112,7 @@ class _EditCommentState extends State<EditComment> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Take a shot',
+                              AppLocalizations.of(context)!.edit_a_comment,
                               style: TextStyle(
                                   color:
                                       context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
@@ -172,7 +168,7 @@ class _EditCommentState extends State<EditComment> {
                                   }
                                 },
                                 decoration: InputDecoration(
-                                    hintText: 'Take a shot...',
+                                    hintText: AppLocalizations.of(context)!.write_your_comment,
                                     hintStyle: TextStyle(color: grayCall),
                                     border: InputBorder.none
                                     // border: OutlineInputBorder()
@@ -577,14 +573,12 @@ class _EditCommentState extends State<EditComment> {
                                 print('video.mimeType ${video.name}');
 
                                 if (!video.name.endsWith('.mp4')) {
-                                  toast('The video format should be mp4');
+                                  toast(AppLocalizations.of(context)!.video_mp4);
                                   return;
                                 }
 
                                 if (await video.length() > 50000000) {
-                                  print(
-                                      'await video.length() ${await video.length()}');
-                                  toast('The video should be less than 50M.',
+                                  toast(AppLocalizations.of(context)!.video_less_50,
                                       isLong: true);
                                   return;
                                 }
@@ -600,7 +594,7 @@ class _EditCommentState extends State<EditComment> {
                                   //todo
                                 } else {
                                   toast(
-                                      'The video should be less than 60 seconds.',
+                                      AppLocalizations.of(context)!.video_less_than_60,
                                       isLong: true);
                                 }
                               }
@@ -615,7 +609,7 @@ class _EditCommentState extends State<EditComment> {
                         ],
                       ),
                       Text(
-                        'Swipe up to take the shot',
+                        AppLocalizations.of(context)!.swipe_up_to_edit_a_comment,
                         style: TextStyle(color: grayCall),
                       )
                     ],

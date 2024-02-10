@@ -93,7 +93,7 @@ class _ChooseChatState extends State<ChooseChat> {
     if (loadingListCaht) return circle();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select a Chat'.toUpperCase()),
+        title: Text(AppLocalizations.of(context)!.select_a_chat.toUpperCase()),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -107,7 +107,7 @@ class _ChooseChatState extends State<ChooseChat> {
             SizedBox(
                 height: doubleHeight(70),
                 width: double.maxFinite,
-                child: Center(child: Text('no message. 🙂'))),
+                child: Center(child: Text('${AppLocalizations.of(context)!.nomessage} 🙂'))),
           ],
         )
             : ListView(
@@ -225,17 +225,7 @@ class ChatListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // CircleAvatar(
-          //   radius: 10,
-          //   backgroundColor: greenCall,
-          //   child: Text(chat.newMessages.toString()),
-          // ),
-          // SizedBox(height: doubleHeight(1)),
-          // Text(chat.messages.isNotEmpty?
-          //   '${chat.messages.last.date.hour}'
-          //     ' : ${chat.messages.last.date.minute} ${
-          //   chat.messages.last.date.hour<12?'AM':'PM'
-          //   }':'')
+
         ],
       ),
     );
@@ -298,31 +288,13 @@ class GroupChatListItem extends StatelessWidget {
         ),
       ),
       title: Text(chat.name ?? ''),
-      // Text(roomUser.personalInformation?.fullName ?? ''),
-      subtitle: Text('${chat.personalInformations.length} members'),
-      // subtitle: chat.chatMessages.isEmpty
-      //     ? null
-      //     : Text(
-      //         chat.chatMessages.first.text ?? '',
-      //         style: TextStyle(height: 2),
-      //         maxLines: 1,
-      //         overflow: TextOverflow.ellipsis,
-      //       ),
+      subtitle: Text('${chat.personalInformations.length} ${AppLocalizations.of(context)!.members}'),
+
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // CircleAvatar(
-          //   radius: 10,
-          //   backgroundColor: greenCall,
-          //   child: Text(chat.newMessages.toString()),
-          // ),
-          // SizedBox(height: doubleHeight(1)),
-          // Text(chat.messages.isNotEmpty?
-          //   '${chat.messages.last.date.hour}'
-          //     ' : ${chat.messages.last.date.minute} ${
-          //   chat.messages.last.date.hour<12?'AM':'PM'
-          //   }':'')
+
         ],
       ),
     );

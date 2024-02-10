@@ -59,7 +59,7 @@ class _ChatListState extends State<ChatList> {
                       SizedBox(
                           height: doubleHeight(70),
                           width: double.maxFinite,
-                          child: Center(child: Text('no message. 🙂'))),
+                          child: Center(child: Text('${AppLocalizations.of(context)!.nomessage} 🙂'))),
                     ],
                   )
                 : ListView(
@@ -128,20 +128,7 @@ class ChatListItem extends StatelessWidget {
     int index = chat.personalInformations.indexWhere((element) =>
         element == null ? false : element.id != getIt<MainState>().userId);
     print('emad personalInformations ${chat.personalInformations.length}');
-    // if (chat.personalInformations.length == 1)
-    //   return ListTile(
-    //     leading: SizedBox(
-    //       width: doubleWidth(15),
-    //       child: SizedBox(
-    //           width: doubleHeight(5),
-    //           height: doubleHeight(5),
-    //           child: ClipRRect(
-    //               borderRadius: BorderRadius.circular(100),
-    //               child: Image.asset('assets/images/playerbig.png',
-    //                   fit: BoxFit.fill))),
-    //     ),
-    //     title: Text('Deleted Account'),
-    //   );
+
     DataPersonalInformation? roomUser = chat.personalInformations[index];
     return ListTile(
       onTap: () async {
@@ -218,23 +205,6 @@ class ChatListItem extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-      // trailing: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.end,
-      //   mainAxisSize: MainAxisSize.min,
-      //   children: [
-      //     // CircleAvatar(
-      //     //   radius: 10,
-      //     //   backgroundColor: greenCall,
-      //     //   child: Text(chat.newMessages.toString()),
-      //     // ),
-      //     // SizedBox(height: doubleHeight(1)),
-      //     // Text(chat.messages.isNotEmpty?
-      //     //   '${chat.messages.last.date.hour}'
-      //     //     ' : ${chat.messages.last.date.minute} ${
-      //     //   chat.messages.last.date.hour<12?'AM':'PM'
-      //     //   }':'')
-      //   ],
-      // ),
     );
   }
 }
@@ -286,31 +256,13 @@ class GroupChatListItem extends StatelessWidget {
         ),
       ),
       title: Text(chat.name ?? ''),
-      // Text(roomUser.personalInformation?.fullName ?? ''),
-      subtitle: Text('${chat.personalInformations.length} members'),
-      // subtitle: chat.chatMessages.isEmpty
-      //     ? null
-      //     : Text(
-      //         chat.chatMessages.first.text ?? '',
-      //         style: TextStyle(height: 2),
-      //         maxLines: 1,
-      //         overflow: TextOverflow.ellipsis,
-      //       ),
+      subtitle: Text('${chat.personalInformations.length} ${AppLocalizations.of(context)!.members}'),
+
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // CircleAvatar(
-          //   radius: 10,
-          //   backgroundColor: greenCall,
-          //   child: Text(chat.newMessages.toString()),
-          // ),
-          // SizedBox(height: doubleHeight(1)),
-          // Text(chat.messages.isNotEmpty?
-          //   '${chat.messages.last.date.hour}'
-          //     ' : ${chat.messages.last.date.minute} ${
-          //   chat.messages.last.date.hour<12?'AM':'PM'
-          //   }':'')
+
         ],
       ),
     );

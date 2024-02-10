@@ -20,7 +20,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
   TextEditingController controller=TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0, title: Text('Change Email')),
+      appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.change_email)),
       // backgroundColor: Color.fromRGBO(247, 247, 247, 1),
       body: SizedBox.expand(
           child: Padding(
@@ -28,7 +28,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(height: doubleHeight(6)),
           Text(
-            'Your current email is:',
+            AppLocalizations.of(context)!.your_current_email_is,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: doubleHeight(2)),
@@ -51,7 +51,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   hintStyle: TextStyle(color: Color.fromRGBO(214, 216, 217, 1)),
-                  hintText: 'Enter new email',
+                  hintText: AppLocalizations.of(context)!.enter_new_email,
                   border: InputBorder.none),
             ),
           ),
@@ -73,9 +73,9 @@ class _ChangeEmailState extends State<ChangeEmail> {
                       Go.replaceSlideAnim(context, ChangeEmailDone(email: controller.value.text,));
                     }
                   } else
-                    toast('please fill the field.');
+                    toast(AppLocalizations.of(context)!.please_fill_the_field);
                 },
-                child: Text('Verify')),
+                child: Text(AppLocalizations.of(context)!.verify)),
           )
         ]),
       )),

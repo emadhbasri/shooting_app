@@ -32,7 +32,7 @@ class _EditReplyState extends State<EditReply> {
     });
 
     if (controller.value.text.trim() == '') {
-      toast('You Can Upload Images Or Video');
+      toast(AppLocalizations.of(context)!.you_can_upload_images_or_video);
       await Future.delayed(Duration(seconds: 1));
       setState(() {
         sending = false;
@@ -97,7 +97,7 @@ class _EditReplyState extends State<EditReply> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Take a shot',
+                              AppLocalizations.of(context)!.edit_a_reply,
                               style: TextStyle(
                                   color:
                                       context.watch<ThemeState>().isDarkMode ? Colors.white : Colors.black,
@@ -153,7 +153,7 @@ class _EditReplyState extends State<EditReply> {
                                   }
                                 },
                                 decoration: InputDecoration(
-                                    hintText: 'Take a shot...',
+                                    hintText: AppLocalizations.of(context)!.write_your_reply,
                                     hintStyle: TextStyle(color: grayCall),
                                     border: InputBorder.none
                                     // border: OutlineInputBorder()
@@ -237,7 +237,7 @@ class _EditReplyState extends State<EditReply> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Swipe up to take the shot',
+                        AppLocalizations.of(context)!.swipe_up_to_edit_a_reply,
                         style: TextStyle(color: grayCall),
                       )
                     ],

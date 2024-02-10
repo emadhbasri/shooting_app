@@ -16,32 +16,45 @@ class MyProfile extends StatefulWidget {
   _MyProfileState createState() => _MyProfileState();
 }
 
-class _MyProfileState extends State<MyProfile>
-    with SingleTickerProviderStateMixin {
+class _MyProfileState extends State<MyProfile> with SingleTickerProviderStateMixin {
   MyService service = getIt<MyService>();
   late TabController _controller;
-  String selectedTab = 'Shots';
-  List<String> tabs = ['Shots', 'Fan Mates']; //'Media',
+  late String selectedTab;
+  List<String> tabs = []; //'Media',
 
   @override
   void initState() {
     super.initState();
+
     MainState state = Provider.of(context, listen: false);
     state.getProfile(force: true);
     _controller = TabController(length: 2, vsync: this, initialIndex: 0);
-      // ..addListener(() {
-      //   print('_controller.index ${_controller.index}');
-      //   print('_controller ${_controller}');
-      //   setState(() {
-      //     selectedTab = tabs[_controller.index];
-      //   });
-      // });
+    // ..addListener(() {
+    //   print('_controller.index ${_controller.index}');
+    //   print('_controller ${_controller}');
+    //   setState(() {
+    //     selectedTab = tabs[_controller.index];
+    //   });
+    // });
+    Future.delayed(Duration(milliseconds: 200),(){
+      init(context);
+    });
+  }
+
+  init(context) {
+    selectedTab = AppLocalizations.of(context)!.shots;
+    tabs = [AppLocalizations.of(context)!.shots, AppLocalizations.of(context)!.fan_mates];
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MainState>(builder: (context, state, child) {
-      if (state.personalInformation == null) {
+      if (
+tabs.isEmpty ||
+        state.personalInformation == null) {
         return circle();
       } else {
         return Scaffold(
@@ -70,29 +83,31 @@ class _MyProfileState extends State<MyProfile>
                                     alignment: Alignment.center,
                                     children: [
                                       ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: state.personalInformation!
-                                                      .profilePhoto !=
-                                                  null
+                                          borderRadius: BorderRadius.circular(100),
+                                          child: state.personalInformation!.profilePhoto != null
                                               ? GestureDetector(
-                                            onTap:(){
-                                              Go.push(context, Gal(images: [state.personalInformation!
-                                                  .profilePhoto!]));
-                                            },
-                                                child: CircleAvatar(
+                                                  onTap: () {
+                                                    Go.push(
+                                                        context,
+                                                        Gal(images: [
+                                                          state.personalInformation!.profilePhoto!
+                                                        ]));
+                                                  },
+                                                  child: CircleAvatar(
                                                     radius: doubleWidth(30),
                                                     backgroundImage: networkImage(
-                                                        state.personalInformation!
-                                                            .profilePhoto!),
+                                                        state.personalInformation!.profilePhoto!),
                                                   ),
-                                              )
+                                                )
                                               : CircleAvatar(
-                                              backgroundColor:context.watch<ThemeState>().isDarkMode?Colors.black:Colors.white,
-                                              radius: doubleWidth(30),
-                                              backgroundImage:AssetImage(
-                                                'assets/images/playerbig.png',
-                                              ))),
+                                                  backgroundColor:
+                                                      context.watch<ThemeState>().isDarkMode
+                                                          ? Colors.black
+                                                          : Colors.white,
+                                                  radius: doubleWidth(30),
+                                                  backgroundImage: AssetImage(
+                                                    'assets/images/playerbig.png',
+                                                  ))),
                                       Align(
                                         alignment: Alignment(0.9, -0.9),
                                         child: SizedBox(
@@ -101,16 +116,10 @@ class _MyProfileState extends State<MyProfile>
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: white,
-                                                border: Border.all(
-                                                    color: white, width: 3),
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                image: state.personalInformation!
-                                                                .team !=
-                                                            null &&
-                                                        state
-                                                                .personalInformation!
-                                                                .team!
+                                                border: Border.all(color: white, width: 3),
+                                                borderRadius: BorderRadius.circular(100),
+                                                image: state.personalInformation!.team != null &&
+                                                        state.personalInformation!.team!
                                                                 .team_badge !=
                                                             null
                                                     ? DecorationImage(
@@ -140,13 +149,13 @@ class _MyProfileState extends State<MyProfile>
                             width: doubleWidth(25),
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  await Go.pushSlideAnimSheet(context,
-                                      EditProfile(state.personalInformation!));
+                                  await Go.pushSlideAnimSheet(
+                                      context, EditProfile(state.personalInformation!));
                                   // state.getProfile(force: true);
                                 },
                                 style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromRGBO(235, 234, 241, 1)),
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Color.fromRGBO(235, 234, 241, 1)),
                                     elevation: MaterialStateProperty.all(0),
                                     maximumSize: MaterialStateProperty.all(
                                         Size(doubleWidth(16), doubleHeight(5))),
@@ -157,21 +166,17 @@ class _MyProfileState extends State<MyProfile>
                                     //   doubleWidth(20),
                                     //   doubleHeight(3)
                                     // )),
-                                    shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
+                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(7),
                                     )),
-                                    padding: MaterialStateProperty.all(
-                                        EdgeInsets.symmetric(
-                                            vertical: doubleHeight(1.5),
-                                            horizontal: doubleWidth(1)))),
+                                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+                                        vertical: doubleHeight(1.5), horizontal: doubleWidth(1)))),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      'Edit Profile',
-                                      style: TextStyle(
-                                          fontSize: 12, color: mainBlue),
+                                      AppLocalizations.of(context)!.edit_profile,
+                                      style: TextStyle(fontSize: 12, color: mainBlue),
                                     ),
                                     SizedBox(width: doubleWidth(1)),
                                     Icon(Icons.edit, size: 15, color: mainBlue)
@@ -182,131 +187,28 @@ class _MyProfileState extends State<MyProfile>
                       ],
                     ),
                   ),
-                  // SizedBox(height: doubleHeight(1)),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //   children: [
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.postCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Shots')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.followersCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Followers')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         children: [
-                  //           Text(state.personalInformation!.followingCount.toString()),
-                  //           SizedBox(height: doubleHeight(1)),
-                  //           Text('Following')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(height: doubleHeight(2)),
                   Expanded(
                       child: Column(
                     children: [
                       TabBar(
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: doubleWidth(4)
-                        ),
-                        indicatorColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                        indicatorPadding: EdgeInsets.symmetric(
-                            horizontal: doubleWidth(20)),
+                        labelStyle:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: doubleWidth(4)),
+                        indicatorColor:
+                            context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        indicatorPadding: EdgeInsets.symmetric(horizontal: doubleWidth(20)),
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicatorWeight: doubleHeight(0.4),
-                        labelColor: context.watch<ThemeState>().isDarkMode?greenCall:mainBlue,
-                        // unselectedLabelColor: mainBlue,
-                        tabs: tabs.map((e) => Tab(
-                          // text: e,
-                          child: Text(e),
-                        )).toList(),
+                        labelColor: context.watch<ThemeState>().isDarkMode ? greenCall : mainBlue,
+                        tabs: tabs
+                            .map((e) => Tab(
+                                  child: Text(e),
+                                ))
+                            .toList(),
                         controller: _controller,
                       ),
-                      // SizedBox(
-                      //   width: double.maxFinite,
-                      //   height: doubleHeight(6),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //     children: tabs
-                      //         .map((e) => GestureDetector(
-                      //       onTap: () {
-                      //         int index=tabs.indexOf(e);
-                      //         _controller.animateTo(index);
-                      //         setState(() {
-                      //           selectedTab = e;
-                      //         });
-                      //       },
-                      //       child: Container(
-                      //         color: Colors.white,
-                      //         width: doubleWidth(30),
-                      //         child: Center(
-                      //           child: Stack(
-                      //             children: <Widget>[
-                      //               Container(
-                      //                 width: doubleWidth(30),
-                      //                 height: double.maxFinite,
-                      //                 padding:
-                      //                 EdgeInsets.all(doubleWidth(3)),
-                      //                 child: Center(
-                      //                   child: Text(
-                      //                     e,
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         color: mainBlue,
-                      //                         fontSize: doubleWidth(4)),
-                      //                   ),
-                      //                 ),
-                      //               ),
-                      //               selectedTab == e
-                      //                   ? Align(
-                      //                 alignment:
-                      //                 Alignment.bottomCenter,
-                      //                 child: Container(
-                      //                   width: doubleWidth(10),
-                      //                   height: doubleHeight(0.4),
-                      //                   decoration: BoxDecoration(
-                      //                       color: mainBlue,
-                      //                       borderRadius:
-                      //                       BorderRadius.only(
-                      //                         topRight:
-                      //                         Radius.circular(
-                      //                             100),
-                      //                         topLeft:
-                      //                         Radius.circular(
-                      //                             100),
-                      //                       )),
-                      //                 ),
-                      //               )
-                      //                   : const SizedBox()
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ))
-                      //         .toList(),
-                      //   ),
-                      // ),
                       Expanded(
                           child: TabBarView(
-                        // controller: DefaultTabController,
                         controller: _controller,
                         children: [Shots(), FanMates()],
                       ))

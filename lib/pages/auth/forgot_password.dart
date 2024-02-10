@@ -5,8 +5,6 @@ import '../../classes/dataTypes.dart';
 import '../../classes/services/authentication_service.dart';
 import '../../classes/services/my_service.dart';
 import '../../main.dart';
-import '../../ui_items/dialogs/privacy.dart';
-import '../../ui_items/dialogs/team.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key,required this.username}) : super(key: key);
@@ -93,7 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         decoration: InputDecoration(
                             prefixText: '        ',
                             border: InputBorder.none,
-                            hintText: 'Username'),
+                            hintText: AppLocalizations.of(context)!.username),
                       ),
                     ),
                   ),
@@ -114,7 +112,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'New Password'),
+                                hintText: AppLocalizations.of(context)!.new_password),
                           ),
                         ),
                       ),
@@ -135,7 +133,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             decoration: InputDecoration(
                                 prefixText: '        ',
                                 border: InputBorder.none,
-                                hintText: 'Confirm New Password'),
+                                hintText: AppLocalizations.of(context)!.confirm_new_password),
                           ),
                         ),
                       ),
@@ -224,13 +222,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               EdgeInsets.symmetric(vertical: doubleHeight(2.5)))),
                       onPressed: () async{
                         if (code.length != 6) {
-                          toast('please fill the field.');
+                          toast(AppLocalizations.of(context)!.please_fill_the_field);
                           return;
                         }else if(password.value.text.trim()==''){
-                          toast('The password field is required.');
+                          toast(AppLocalizations.of(context)!.the_password_field_is_required);
                           return;
                         }else if(confirmPassword.value.text.trim()==''){
-                          toast('The confirmPassword field is required.');
+                          toast(AppLocalizations.of(context)!.the_confirmpassword_field_is_required);
                           return;
                         }else{
                           MyService service = getIt<MyService>();
@@ -242,7 +240,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           }
                         }
                       },
-                      child: Text('Update')),
+                      child: Text(AppLocalizations.of(context)!.update)),
                 ),
                     SizedBox(height: doubleHeight(5)),
                     Divider(
@@ -252,11 +250,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       endIndent: doubleWidth(6),
                       thickness: doubleHeight(0.2),
                     ), //Privacy
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                    Wrap(
+                      // mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'By signing up you agree to our ',
+                          AppLocalizations.of(context)!.signing_agree,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: white,
@@ -265,11 +263,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         ),
                         GestureDetector(
                           onTap: (){
-                            openUrl(
-                    'https://footballbuzz.co/terms-of-use-for-football-buzz/');
-                            // showDialog(context: context, builder: (_)=>TeamDialog());
+                            String out =
+                                  "https://footballbuzz.co/terms-of-use-footballbuzz";
+                              openUrl(out);
+
+                            // openUrl(
+                    // 'https://footballbuzz.co/terms-of-use-for-football-buzz/');
                           },
-                          child: Text('Terms of Use',
+                          child: Text(AppLocalizations.of(context)!.terms_of_use,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: mainGreen1,fontWeight: FontWeight.bold,
@@ -277,7 +278,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   fontStyle: FontStyle.italic)),
                         ),
                         Text(
-                          ' and',
+                          AppLocalizations.of(context)!.and,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: white,
@@ -288,10 +289,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                     GestureDetector(
                       onTap: (){
-                        openUrl('https://footballbuzz.co/privacypolicy/');
+                        String out =
+                              "https://footballbuzz.co/privacy-policy";
+
+                          openUrl(out);
+                        // openUrl('https://footballbuzz.co/privacypolicy/');
                         // showDialog(context: context, builder: (_)=>Privacy());
                       },
-                      child: Text('Privacy Policy',
+                      child: Text(AppLocalizations.of(context)!.privacy_policy,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: mainGreen1,fontWeight: FontWeight.bold,
@@ -302,7 +307,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ]),
             ),
           )),
-          appBar: AppBar(elevation: 0, title: Text('Update Password'.toUpperCase()))),
+          appBar: AppBar(elevation: 0, title: Text(AppLocalizations.of(context)!.update_password.toUpperCase()))),
     );
   }
 }

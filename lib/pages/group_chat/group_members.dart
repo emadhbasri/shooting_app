@@ -101,7 +101,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
             heroTag: '',
           ),
           appBar: AppBar(
-            title: Text('Group Info'.toUpperCase()),
+            title: Text(AppLocalizations.of(context)!.group_info.toUpperCase()),
             actions: [
               PopupMenuButton<String?>(
                 onSelected: (String? value) async{
@@ -125,15 +125,15 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                     value: null,
                       onTap: () async {
                         copyText(
-                            'https://footballbuzz.co?joinchat=${state.selectedChat.id}');
+                            'https://footballbuzz.co?joinchat=${state.selectedChat.id}',context);
                       },
-                      child: Text('Copy The Group Link')),
+                      child: Text(AppLocalizations.of(context)!.copy_the_group_link)),
                   if (state.myRole != null &&
                       (state.myRole!.isRoomOwner ||
                           state.myRole!.userRole == 1))
                     PopupMenuItem(
-                      value: 'Edit',
-                        child: Text('Edit Group')),
+                      value: AppLocalizations.of(context)!.edit,
+                        child: Text(AppLocalizations.of(context)!.edit_group)),
                 ],
               )
             ],
@@ -188,7 +188,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                               color: theme.isDarkMode?white:black
                             )),
                             Text(
-                              '${state.selectedChat.personalInformations.length} members',
+                              '${state.selectedChat.personalInformations.length} ${AppLocalizations.of(context)!.members}',
                               style: TextStyle(color: grayCall, fontSize: 12),
                             ),
                           ],
@@ -223,7 +223,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                                   ? () async {
                                       bool? alert = await MyAlertDialog(context,
                                           content:
-                                              'Add As Admin?');
+                                              AppLocalizations.of(context)!.add_as_admin);
                                       if (alert == true) {
                                         bool back = await ChatService.addAdmin(
                                             getIt<MyService>(),
@@ -243,7 +243,7 @@ class _GroupChatMemberState extends State<GroupChatMember> {
                                                     AnimationType.shrink),
                                             type: AlertType.success,
                                             title:
-                                                "User Become Admin Successfully",
+                                                AppLocalizations.of(context)!.user_become_admin_successfully,
                                           ).show();
                                         }
                                       }

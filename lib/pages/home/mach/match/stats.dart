@@ -14,13 +14,13 @@ class Stats extends StatelessWidget {
     if(state.selectedMatch.isLive==0)
       return SizedBox.expand(
         child: Center(
-          child: Text('Match is not started'),
+          child: Text(AppLocalizations.of(context)!.match_is_not_started),
         ),
       );
     if(state.selectedMatch.homeStatistics.isEmpty){
       return SizedBox.expand(
         child: Center(
-          child: Text('no Stats'),
+          child: Text(AppLocalizations.of(context)!.no_stats),
         ),
       );
     }
@@ -53,26 +53,6 @@ class Stats extends StatelessWidget {
                     ),
                   ],
                 )),
-
-        // ...state.listStats.map((e) =>
-        //   Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       SizedBox(
-        //           height: doubleHeight(2),
-        //       ),
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Text(e.teamA),
-        //           Text(e.title),
-        //           Text(e.teamB),
-        //         ],
-        //       ),
-        //     ],
-        //   )
-        // ).toList()
-
       ],
     );
   }
