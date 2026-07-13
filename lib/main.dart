@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:uni_links/uni_links.dart';
+// import 'package:uni_links/uni_links.dart';
 
 import 'classes/models.dart';
 import 'classes/services/chat_service.dart';

@@ -98,7 +98,7 @@
             <!-- Accepts URIs that begin with https://YOUR_HOST -->
             <data
                 android:scheme="https"
-                android:host="https://permona.ir/app/" />
+                android:host="https://footballbuzz.co/" />
             </intent-filter>
 
 <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect
